@@ -115,7 +115,7 @@ typedef struct NSVGgradient {
 	char spread;
 	float fx, fy;
 	int nstops;
-	NSVGgradientStop stops[1];
+	NSVGgradientStop stops[0];
 } NSVGgradient;
 
 typedef struct NSVGpaint {
@@ -847,7 +847,7 @@ static NSVGgradient* nsvg__createGradient(NSVGparser* p, const char* id, const f
 	}
 	if (stops == NULL) return NULL;
 
-	grad = (NSVGgradient*)malloc(sizeof(NSVGgradient) + sizeof(NSVGgradientStop)*(nstops-1));
+	grad = (NSVGgradient*)malloc(sizeof(NSVGgradient) + sizeof(NSVGgradientStop)*(nstops));
 	if (grad == NULL) return NULL;
 
 	// The shape width and height.
