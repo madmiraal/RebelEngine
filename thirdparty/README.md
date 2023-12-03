@@ -212,17 +212,14 @@ Files extracted from upstream source:
 ## libwebp
 
 - Upstream: https://chromium.googlesource.com/webm/libwebp/
-- Version: 1.1.0 (d7844e9762b61c9638c263657bd49e1690184832, 2020)
+- Version: 1.3.2 (ca332209cb5567c9b249c86788cb2dbf8847e760)
 - License: BSD-3-Clause
 
 Files extracted from upstream source:
 
-- `src/*` except from: .am, .rc and .in files
-- AUTHORS, COPYING, PATENTS
-
-Important: The files `utils/bit_reader_utils.{c,h}` have Godot-made
-changes to ensure they build for Javascript/HTML5. Those
-changes are marked with `// -- GODOT --` comments.
+- `sharpyuv/*` except `.am`, `.rc` and `.in` files
+- `src/*` except `.am`, `.rc` and `.in` files
+- `AUTHORS`, `COPYING`, `PATENTS`
 
 
 ## mbedtls
