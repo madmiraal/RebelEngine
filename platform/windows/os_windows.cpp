@@ -2578,29 +2578,29 @@ void OS_Windows::set_window_per_pixel_transparency_enabled(bool p_enabled) {
     if (!is_layered_allowed()) {
         return;
     }
-    if (layered_window != p_enabled) {
-        if (p_enabled) {
-            // enable per-pixel alpha
-
-            DWM_BLURBEHIND bb = {0};
-            HRGN hRgn         = CreateRectRgn(0, 0, -1, -1);
-            bb.dwFlags        = DWM_BB_ENABLE | DWM_BB_BLURREGION;
-            bb.hRgnBlur       = hRgn;
-            bb.fEnable        = TRUE;
-            DwmEnableBlurBehindWindow(hWnd, &bb);
-
-            layered_window = true;
-        } else {
-            // disable per-pixel alpha
-            layered_window = false;
-
-            DWM_BLURBEHIND bb = {0};
-            HRGN hRgn         = CreateRectRgn(0, 0, -1, -1);
-            bb.dwFlags        = DWM_BB_ENABLE | DWM_BB_BLURREGION;
-            bb.hRgnBlur       = hRgn;
-            bb.fEnable        = FALSE;
-            DwmEnableBlurBehindWindow(hWnd, &bb);
-        }
+    if (layered_window == p_enabled) {
+        return;
+    }
+    if (p_enabled) {
+        // Enable per-pixel alpha.
+        DWM_BLURBEHIND blur_behind = {
+            DWM_BB_ENABLE | DWM_BB_BLURREGION,
+            TRUE,
+            CreateRectRgn(0, 0, -1, -1),
+            FALSE
+        };
+        DwmEnableBlurBehindWindow(hWnd, &blur_behind);
+        layered_window = true;
+    } else {
+        // Disable per-pixel alpha.
+        DWM_BLURBEHIND blur_behind = {
+            DWM_BB_ENABLE | DWM_BB_BLURREGION,
+            FALSE,
+            CreateRectRgn(0, 0, -1, -1),
+            FALSE
+        };
+        DwmEnableBlurBehindWindow(hWnd, &blur_behind);
+        layered_window = false;
     }
 }
 
