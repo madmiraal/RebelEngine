@@ -111,6 +111,7 @@ cmake-build-debug
 *.project
 *.workspace
 .codelite/
+.ctagsd/
 
 # Cppcheck
 *.cppcheck
@@ -142,6 +143,9 @@ gmon.out
 
 # Kdevelop
 *.kdev4
+
+# npm
+node_modules/
 
 # Qt Creator
 *.config
