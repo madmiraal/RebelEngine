@@ -1,59 +1,34 @@
 name: 🏁 Windows Builds
 on: [push, pull_request]
 
-# Global Settings
-# SCONS_CACHE for windows must be set in the build environment
-env:
-  BRANCH_NAME: main
-  SCONSFLAGS: verbose=yes warnings=all werror=yes debug_symbols=no
-  SCONS_CACHE_MSVC_CONFIG: true
-
 concurrency:
-  group: ci-${{github.actor}}-${{github.head_ref || github.run_number}}-${{github.ref}}-windows
+  group: ${{ github.workflow }}-${{ github.event.pull_request.number || github.ref }}
   cancel-in-progress: true
 
 jobs:
   build-windows:
-    # Windows 10 with latest image
-    runs-on: "windows-latest"
     name: ${{ matrix.name }}
+    runs-on: ${{ matrix.os }}
     strategy:
       fail-fast: false
       matrix:
         include:
-          - name: Editor (target=release_debug, tools=yes)
-            cache-name: windows-editor
-            target: release_debug
-            tools: true
-            bin: "./bin/rebel.windows.opt.tools.64.exe"
+          - name: Windows Editor
+            os: windows-latest
+            artifact: windows-editor
+            build-options: dev=yes target=release_debug
+            rebel-executable: rebel.windows.opt.tools.64.msvc.exe
 
-          - name: Template (target=release, tools=no)
-            cache-name: windows-template
-            target: release
-            tools: false
+          - name: Windows Template
+            os: windows-latest
+            artifact: windows-template
+            build-options: dev=yes tools=no target=release
+            rebel-executable: rebel.windows.opt.64.msvc.exe
 
     steps:
-      - uses: actions/checkout@v4
-
-      - name: Setup build cache
-        uses: ./.github/actions/build-cache
+      - name: Build Rebel
+        uses: madmiraal/RebelBuildAction@v3
         with:
-          cache-name: ${{ matrix.cache-name }}
-        continue-on-error: true
-
-      - name: Setup build dependencies
-        uses: ./.github/actions/build-dependencies
-
-      - name: Build
-        uses: ./.github/actions/build
-        with:
-          sconsflags: ${{ env.SCONSFLAGS }}
-          platform: windows
-          target: ${{ matrix.target }}
-          tools: ${{ matrix.tools }}
-          scons-cache-limit: 3072
-
-      - name: Upload artifact
-        uses: ./.github/actions/upload-artifact
-        with:
-          name: ${{ matrix.cache-name }}
+          artifact: ${{ matrix.artifact }}
+          build-options: ${{ matrix.build-options }}
+          rebel-executable: ${{ matrix.rebel-executable }}
