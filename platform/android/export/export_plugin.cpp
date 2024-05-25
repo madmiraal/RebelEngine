@@ -6,6 +6,74 @@
 
 #include "export_plugin.h"
 
+constexpr String project_dir           = "res://android/build";
+constexpr String src_main_dir          = custom_project_folder + "src/main";
+constexpr String assets_dir            = src_main_dir + "assets";
+constexpr String jnilibs_dir           = src_main_dir + "jniLibs";
+constexpr String res_dir               = src_main_dir + "res";
+constexpr String drawable_dir          = res_dir + "drawable";
+constexpr String drawable_nodpi_dir    = res_dir + "drawable-nodpi";
+constexpr String drawable_nodpi_v4_dir = res_dir + "drawable-no-dpi-v4";
+
+constexpr String splash_image_path = drawable_nodpi_dir + "splash.png";
+constexpr String legacy_splash_image_path =
+    drawable_nodpi_v4_dir + "splash.png";
+
+static const char* SPLASH_IMAGE_EXPORT_PATH = "res/drawable-nodpi/splash.png";
+static const char* LEGACY_BUILD_SPLASH_IMAGE_EXPORT_PATH =
+    "res/drawable-nodpi-v4/splash.png";
+static const char* SPLASH_BG_COLOR_PATH =
+    "res/drawable-nodpi/splash_bg_color.png";
+static const char* LEGACY_BUILD_SPLASH_BG_COLOR_PATH =
+    "res/drawable-nodpi-v4/splash_bg_color.png";
+static const char* SPLASH_CONFIG_PATH =
+    "res://android/build/res/drawable/splash_drawable.xml";
+static const char* GDNATIVE_LIBS_PATH =
+    "res://android/build/libs/gdnativelibs.json";
+
+static const int icon_densities_count   = 6;
+static const char* launcher_icon_option = "launcher_icons/main_192x192";
+static const char* launcher_adaptive_icon_foreground_option =
+    "launcher_icons/adaptive_foreground_432x432";
+static const char* launcher_adaptive_icon_background_option =
+    "launcher_icons/adaptive_background_432x432";
+
+static const LauncherIcon launcher_icons[icon_densities_count] = {
+    {"res/mipmap-xxxhdpi-v4/icon.png", 192},
+    {"res/mipmap-xxhdpi-v4/icon.png",  144},
+    {"res/mipmap-xhdpi-v4/icon.png",   96 },
+    {"res/mipmap-hdpi-v4/icon.png",    72 },
+    {"res/mipmap-mdpi-v4/icon.png",    48 },
+    {"res/mipmap/icon.png",            192}
+};
+
+static const LauncherIcon
+    launcher_adaptive_icon_foregrounds[icon_densities_count] = {
+        {"res/mipmap-xxxhdpi-v4/icon_foreground.png", 432},
+        {"res/mipmap-xxhdpi-v4/icon_foreground.png",  324},
+        {"res/mipmap-xhdpi-v4/icon_foreground.png",   216},
+        {"res/mipmap-hdpi-v4/icon_foreground.png",    162},
+        {"res/mipmap-mdpi-v4/icon_foreground.png",    108},
+        {"res/mipmap/icon_foreground.png",            432}
+};
+
+static const LauncherIcon
+    launcher_adaptive_icon_backgrounds[icon_densities_count] = {
+        {"res/mipmap-xxxhdpi-v4/icon_background.png", 432},
+        {"res/mipmap-xxhdpi-v4/icon_background.png",  324},
+        {"res/mipmap-xhdpi-v4/icon_background.png",   216},
+        {"res/mipmap-hdpi-v4/icon_background.png",    162},
+        {"res/mipmap-mdpi-v4/icon_background.png",    108},
+        {"res/mipmap/icon_background.png",            432}
+};
+
+static const int EXPORT_FORMAT_APK = 0;
+static const int EXPORT_FORMAT_AAB = 1;
+
+static const char* APK_ASSETS_DIRECTORY = "res://android/build/src/main/assets";
+static const char* AAB_ASSETS_DIRECTORY =
+    "res://android/build/assetPacks/installTime/src/main/assets";
+
 static const char* android_perms[] = {
     "ACCESS_CHECKIN_PROPERTIES",
     "ACCESS_COARSE_LOCATION",
@@ -155,62 +223,7 @@ static const char* android_perms[] = {
     nullptr
 };
 
-static const char* SPLASH_IMAGE_EXPORT_PATH = "res/drawable-nodpi/splash.png";
-static const char* LEGACY_BUILD_SPLASH_IMAGE_EXPORT_PATH =
-    "res/drawable-nodpi-v4/splash.png";
-static const char* SPLASH_BG_COLOR_PATH =
-    "res/drawable-nodpi/splash_bg_color.png";
-static const char* LEGACY_BUILD_SPLASH_BG_COLOR_PATH =
-    "res/drawable-nodpi-v4/splash_bg_color.png";
-static const char* SPLASH_CONFIG_PATH =
-    "res://android/build/res/drawable/splash_drawable.xml";
-static const char* GDNATIVE_LIBS_PATH =
-    "res://android/build/libs/gdnativelibs.json";
-
-static const int icon_densities_count   = 6;
-static const char* launcher_icon_option = "launcher_icons/main_192x192";
-static const char* launcher_adaptive_icon_foreground_option =
-    "launcher_icons/adaptive_foreground_432x432";
-static const char* launcher_adaptive_icon_background_option =
-    "launcher_icons/adaptive_background_432x432";
-
-static const LauncherIcon launcher_icons[icon_densities_count] = {
-    {"res/mipmap-xxxhdpi-v4/icon.png", 192},
-    {"res/mipmap-xxhdpi-v4/icon.png",  144},
-    {"res/mipmap-xhdpi-v4/icon.png",   96 },
-    {"res/mipmap-hdpi-v4/icon.png",    72 },
-    {"res/mipmap-mdpi-v4/icon.png",    48 },
-    {"res/mipmap/icon.png",            192}
-};
-
-static const LauncherIcon
-    launcher_adaptive_icon_foregrounds[icon_densities_count] = {
-        {"res/mipmap-xxxhdpi-v4/icon_foreground.png", 432},
-        {"res/mipmap-xxhdpi-v4/icon_foreground.png",  324},
-        {"res/mipmap-xhdpi-v4/icon_foreground.png",   216},
-        {"res/mipmap-hdpi-v4/icon_foreground.png",    162},
-        {"res/mipmap-mdpi-v4/icon_foreground.png",    108},
-        {"res/mipmap/icon_foreground.png",            432}
-};
-
-static const LauncherIcon
-    launcher_adaptive_icon_backgrounds[icon_densities_count] = {
-        {"res/mipmap-xxxhdpi-v4/icon_background.png", 432},
-        {"res/mipmap-xxhdpi-v4/icon_background.png",  324},
-        {"res/mipmap-xhdpi-v4/icon_background.png",   216},
-        {"res/mipmap-hdpi-v4/icon_background.png",    162},
-        {"res/mipmap-mdpi-v4/icon_background.png",    108},
-        {"res/mipmap/icon_background.png",            432}
-};
-
-static const int EXPORT_FORMAT_APK = 0;
-static const int EXPORT_FORMAT_AAB = 1;
-
-static const char* APK_ASSETS_DIRECTORY = "res://android/build/assets";
-static const char* AAB_ASSETS_DIRECTORY =
-    "res://android/build/assetPacks/installTime/src/main/assets";
-
-// Also update platform/android/java/app/config.gradle:
+// Also update platform/android/project/app/config.gradle:
 // - minSdk
 // - targetSdk
 static const int DEFAULT_MIN_SDK_VERSION    = 21;
