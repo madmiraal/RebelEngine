@@ -330,8 +330,8 @@ void WebOS::mouse_move_callback(
     os->input->parse_input_event(ev);
 }
 
-static const char* rebel2dom_cursor(OS::CursorShape p_shape) {
-    switch (p_shape) {
+static const char* rebel2dom_cursor(OS::CursorType p_type) {
+    switch (p_type) {
         case OS::CURSOR_ARROW:
         default:
             return "auto";
@@ -370,18 +370,18 @@ static const char* rebel2dom_cursor(OS::CursorShape p_shape) {
     }
 }
 
-void WebOS::set_cursor_shape(CursorShape p_shape) {
-    ERR_FAIL_INDEX(p_shape, CURSOR_MAX);
-    if (cursor_shape == p_shape) {
+void WebOS::set_cursor_type(CursorType p_type) {
+    ERR_FAIL_INDEX(p_type, CURSOR_MAX);
+    if (cursor_type == p_type) {
         return;
     }
-    cursor_shape = p_shape;
-    rebel_js_display_cursor_set_shape(rebel2dom_cursor(cursor_shape));
+    cursor_type = p_type;
+    rebel_js_display_cursor_set_shape(rebel2dom_cursor(cursor_type));
 }
 
 void WebOS::set_custom_mouse_cursor(
     const RES& p_cursor,
-    CursorShape p_shape,
+    CursorType p_type,
     const Vector2& p_hotspot
 ) {
     if (p_cursor.is_valid()) {
@@ -469,7 +469,7 @@ void WebOS::set_custom_mouse_cursor(
 
         r = png.read();
         rebel_js_display_cursor_set_custom_shape(
-            rebel2dom_cursor(p_shape),
+            rebel2dom_cursor(p_type),
             r.ptr(),
             len,
             p_hotspot.x,
@@ -479,7 +479,7 @@ void WebOS::set_custom_mouse_cursor(
 
     } else {
         rebel_js_display_cursor_set_custom_shape(
-            rebel2dom_cursor(p_shape),
+            rebel2dom_cursor(p_type),
             NULL,
             0,
             0,
@@ -1212,7 +1212,7 @@ WebOS::WebOS() {
     rebel_js_config_canvas_id_get(canvas_id, sizeof(canvas_id));
 
     cursor_inside_canvas = true;
-    cursor_shape         = OS::CURSOR_ARROW;
+    cursor_type          = OS::CURSOR_ARROW;
 
     last_click_button_index = -1;
     last_click_ms           = 0;
