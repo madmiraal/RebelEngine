@@ -775,17 +775,20 @@ Input::CursorType InputDefault::get_current_cursor_type() const {
     return (Input::CursorType)OS::get_singleton()->get_cursor_type();
 }
 
-void InputDefault::set_custom_mouse_cursor(
-    const RES& p_cursor,
-    CursorType p_type,
-    const Vector2& p_hotspot
+void InputDefault::set_custom_cursor(
+    CursorType cursor_type,
+    const RES& cursor_image,
+    const Vector2& cursor_hotspot
 ) {
     if (Engine::get_singleton()->is_editor_hint()) {
         return;
     }
 
-    OS::get_singleton()
-        ->set_custom_mouse_cursor(p_cursor, (OS::CursorType)p_type, p_hotspot);
+    OS::get_singleton()->set_custom_cursor(
+        (OS::CursorType)cursor_type,
+        cursor_image,
+        cursor_hotspot
+    );
 }
 
 void InputDefault::parse_input_event(const Ref<InputEvent>& p_event) {

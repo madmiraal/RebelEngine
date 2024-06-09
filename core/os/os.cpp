@@ -218,10 +218,10 @@ OS::CursorType OS::get_cursor_type() const {
     return CURSOR_ARROW;
 }
 
-void OS::set_custom_mouse_cursor(
-    const RES& p_cursor,
-    CursorType p_type,
-    const Vector2& p_hotspot
+void OS::set_custom_cursor(
+    CursorType cursor_type,
+    const RES& cursor_image,
+    const Vector2& cursor_hotspot
 ) {}
 
 void OS::print_all_resources(String p_to_file) {
