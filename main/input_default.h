@@ -9,8 +9,6 @@
 
 #include "core/os/input.h"
 
-#undef CursorShape
-
 class InputDefault : public Input {
     GDCLASS(InputDefault, Input);
     _THREAD_SAFE_CLASS_
@@ -88,7 +86,7 @@ class InputDefault : public Input {
     Map<int, Joypad> joy_names;
     int fallback_mapping;
 
-    CursorShape default_shape;
+    CursorType default_type;
 
 public:
     enum HatMask {
@@ -302,12 +300,12 @@ public:
     void set_emulate_mouse_from_touch(bool p_emulate);
     virtual bool is_emulating_mouse_from_touch() const;
 
-    virtual CursorShape get_default_cursor_shape() const;
-    virtual void set_default_cursor_shape(CursorShape p_shape);
-    virtual CursorShape get_current_cursor_shape() const;
+    virtual CursorType get_default_cursor_type() const;
+    virtual void set_default_cursor_type(CursorType p_type);
+    virtual CursorType get_current_cursor_type() const;
     virtual void set_custom_mouse_cursor(
         const RES& p_cursor,
-        CursorShape p_shape      = Input::CURSOR_ARROW,
+        CursorType p_type        = Input::CURSOR_ARROW,
         const Vector2& p_hotspot = Vector2()
     );
 

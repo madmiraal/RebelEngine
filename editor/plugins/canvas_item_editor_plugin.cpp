@@ -3978,7 +3978,7 @@ void CanvasItemEditor::_gui_input_viewport(const Ref<InputEvent>& p_event) {
     _gui_input_hover(p_event);
 
     // Compute an eventual rotation of the cursor
-    CursorShape rotation_array[4] =
+    CursorType rotation_array[4] =
         {CURSOR_HSIZE, CURSOR_BDIAGSIZE, CURSOR_VSIZE, CURSOR_FDIAGSIZE};
     int rotation_array_index = 0;
 
@@ -4004,21 +4004,21 @@ void CanvasItemEditor::_gui_input_viewport(const Ref<InputEvent>& p_event) {
     }
 
     // Choose the correct cursor
-    CursorShape c = CURSOR_ARROW;
+    CursorType cursor_type = CURSOR_ARROW;
     switch (drag_type) {
         case DRAG_NONE:
             switch (tool) {
                 case TOOL_MOVE:
-                    c = CURSOR_MOVE;
+                    cursor_type = CURSOR_MOVE;
                     break;
                 case TOOL_EDIT_PIVOT:
-                    c = CURSOR_CROSS;
+                    cursor_type = CURSOR_CROSS;
                     break;
                 case TOOL_PAN:
-                    c = CURSOR_DRAG;
+                    cursor_type = CURSOR_DRAG;
                     break;
                 case TOOL_RULER:
-                    c = CURSOR_CROSS;
+                    cursor_type = CURSOR_CROSS;
                     break;
                 default:
                     break;
@@ -4026,43 +4026,43 @@ void CanvasItemEditor::_gui_input_viewport(const Ref<InputEvent>& p_event) {
             break;
         case DRAG_LEFT:
         case DRAG_RIGHT:
-            c = rotation_array[rotation_array_index];
+            cursor_type = rotation_array[rotation_array_index];
             break;
         case DRAG_V_GUIDE:
-            c = CURSOR_HSIZE;
+            cursor_type = CURSOR_HSIZE;
             break;
         case DRAG_TOP:
         case DRAG_BOTTOM:
-            c = rotation_array[(rotation_array_index + 2) % 4];
+            cursor_type = rotation_array[(rotation_array_index + 2) % 4];
             break;
         case DRAG_H_GUIDE:
-            c = CURSOR_VSIZE;
+            cursor_type = CURSOR_VSIZE;
             break;
         case DRAG_TOP_LEFT:
         case DRAG_BOTTOM_RIGHT:
-            c = rotation_array[(rotation_array_index + 3) % 4];
+            cursor_type = rotation_array[(rotation_array_index + 3) % 4];
             break;
         case DRAG_DOUBLE_GUIDE:
-            c = CURSOR_FDIAGSIZE;
+            cursor_type = CURSOR_FDIAGSIZE;
             break;
         case DRAG_TOP_RIGHT:
         case DRAG_BOTTOM_LEFT:
-            c = rotation_array[(rotation_array_index + 1) % 4];
+            cursor_type = rotation_array[(rotation_array_index + 1) % 4];
             break;
         case DRAG_MOVE:
-            c = CURSOR_MOVE;
+            cursor_type = CURSOR_MOVE;
             break;
         default:
             break;
     }
 
     if (is_hovering_h_guide) {
-        c = CURSOR_VSIZE;
+        cursor_type = CURSOR_VSIZE;
     } else if (is_hovering_v_guide) {
-        c = CURSOR_HSIZE;
+        cursor_type = CURSOR_HSIZE;
     }
 
-    viewport->set_default_cursor_shape(c);
+    viewport->set_default_cursor_type(cursor_type);
 
     // Grab focus
     if (!viewport->has_focus()

@@ -1416,7 +1416,7 @@ EditorPropertyEasing::EditorPropertyEasing() {
     easing_draw = memnew(Control);
     easing_draw->connect("draw", this, "_draw_easing");
     easing_draw->connect("gui_input", this, "_drag_easing");
-    easing_draw->set_default_cursor_shape(Control::CURSOR_MOVE);
+    easing_draw->set_default_cursor_type(Control::CURSOR_MOVE);
     add_child(easing_draw);
 
     preset = memnew(PopupMenu);

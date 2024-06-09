@@ -212,15 +212,15 @@ int OS::get_virtual_keyboard_height() const {
     return 0;
 }
 
-void OS::set_cursor_shape(CursorShape p_shape) {}
+void OS::set_cursor_type(CursorType p_type) {}
 
-OS::CursorShape OS::get_cursor_shape() const {
+OS::CursorType OS::get_cursor_type() const {
     return CURSOR_ARROW;
 }
 
 void OS::set_custom_mouse_cursor(
     const RES& p_cursor,
-    CursorShape p_shape,
+    CursorType p_type,
     const Vector2& p_hotspot
 ) {}
 

@@ -49,8 +49,6 @@
 #undef KEY_TAB
 #endif
 
-#undef CursorShape
-
 #include <X11/XKBlib.h>
 
 // 2.2 is the first release with multitouch
@@ -494,7 +492,7 @@ Error LinuxOS::initialize(
         img[i]     = nullptr;
     }
 
-    current_cursor = CURSOR_ARROW;
+    current_cursor_type = CURSOR_ARROW;
 
     for (int i = 0; i < CURSOR_MAX; i++) {
         static const char* cursor_file[] = {
@@ -570,7 +568,7 @@ Error LinuxOS::initialize(
 
         null_cursor = cursor;
     }
-    set_cursor_shape(CURSOR_BUSY);
+    set_cursor_type(CURSOR_BUSY);
 
     // Set Xdnd (drag & drop) support
     Atom XdndAware = XInternAtom(x11_display, "XdndAware", False);
@@ -940,7 +938,7 @@ void LinuxOS::set_mouse_mode(MouseMode p_mode) {
         XDefineCursor(
             x11_display,
             x11_window,
-            cursors[current_cursor]
+            cursors[current_cursor_type]
         ); // show cursor
     } else {
         XDefineCursor(x11_display, x11_window, null_cursor); // hide cursor
@@ -4019,45 +4017,45 @@ void LinuxOS::move_window_to_foreground() {
     XFlush(x11_display);
 }
 
-void LinuxOS::set_cursor_shape(CursorShape p_shape) {
-    ERR_FAIL_INDEX(p_shape, CURSOR_MAX);
+void LinuxOS::set_cursor_type(CursorType p_type) {
+    ERR_FAIL_INDEX(p_type, CURSOR_MAX);
 
-    if (p_shape == current_cursor) {
+    if (p_type == current_cursor_type) {
         return;
     }
 
     if (mouse_mode == MOUSE_MODE_VISIBLE || mouse_mode == MOUSE_MODE_CONFINED) {
-        if (cursors[p_shape] != None) {
-            XDefineCursor(x11_display, x11_window, cursors[p_shape]);
+        if (cursors[p_type] != None) {
+            XDefineCursor(x11_display, x11_window, cursors[p_type]);
         } else if (cursors[CURSOR_ARROW] != None) {
             XDefineCursor(x11_display, x11_window, cursors[CURSOR_ARROW]);
         }
     }
 
-    current_cursor = p_shape;
+    current_cursor_type = p_type;
 }
 
-OS::CursorShape LinuxOS::get_cursor_shape() const {
-    return current_cursor;
+OS::CursorType LinuxOS::get_cursor_type() const {
+    return current_cursor_type;
 }
 
 void LinuxOS::set_custom_mouse_cursor(
     const RES& p_cursor,
-    CursorShape p_shape,
+    CursorType p_type,
     const Vector2& p_hotspot
 ) {
     if (p_cursor.is_valid()) {
-        Map<CursorShape, Vector<Variant>>::Element* cursor_c =
-            cursors_cache.find(p_shape);
+        Map<CursorType, Vector<Variant>>::Element* cursor_c =
+            cursors_cache.find(p_type);
 
         if (cursor_c) {
             if (cursor_c->get()[0] == p_cursor
                 && cursor_c->get()[1] == p_hotspot) {
-                set_cursor_shape(p_shape);
+                set_cursor_type(p_type);
                 return;
             }
 
-            cursors_cache.erase(p_shape);
+            cursors_cache.erase(p_type);
         }
 
         Ref<Texture> texture            = p_cursor;
@@ -4133,17 +4131,17 @@ void LinuxOS::set_custom_mouse_cursor(
         ERR_FAIL_COND(cursor_image->pixels == nullptr);
 
         // Save it for a further usage
-        cursors[p_shape] = XcursorImageLoadCursor(x11_display, cursor_image);
+        cursors[p_type] = XcursorImageLoadCursor(x11_display, cursor_image);
 
         Vector<Variant> params;
         params.push_back(p_cursor);
         params.push_back(p_hotspot);
-        cursors_cache.insert(p_shape, params);
+        cursors_cache.insert(p_type, params);
 
-        if (p_shape == current_cursor) {
+        if (p_type == current_cursor_type) {
             if (mouse_mode == MOUSE_MODE_VISIBLE
                 || mouse_mode == MOUSE_MODE_CONFINED) {
-                XDefineCursor(x11_display, x11_window, cursors[p_shape]);
+                XDefineCursor(x11_display, x11_window, cursors[p_type]);
             }
         }
 
@@ -4151,16 +4149,15 @@ void LinuxOS::set_custom_mouse_cursor(
         XcursorImageDestroy(cursor_image);
     } else {
         // Reset to default system cursor
-        if (img[p_shape]) {
-            cursors[p_shape] =
-                XcursorImageLoadCursor(x11_display, img[p_shape]);
+        if (img[p_type]) {
+            cursors[p_type] = XcursorImageLoadCursor(x11_display, img[p_type]);
         }
 
-        CursorShape c  = current_cursor;
-        current_cursor = CURSOR_MAX;
-        set_cursor_shape(c);
+        CursorType c        = current_cursor_type;
+        current_cursor_type = CURSOR_MAX;
+        set_cursor_type(c);
 
-        cursors_cache.erase(p_shape);
+        cursors_cache.erase(p_type);
     }
 }
 

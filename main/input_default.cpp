@@ -752,18 +752,18 @@ bool InputDefault::is_emulating_mouse_from_touch() const {
     return emulate_mouse_from_touch;
 }
 
-Input::CursorShape InputDefault::get_default_cursor_shape() const {
-    return default_shape;
+Input::CursorType InputDefault::get_default_cursor_type() const {
+    return default_type;
 }
 
-void InputDefault::set_default_cursor_shape(CursorShape p_shape) {
-    if (default_shape == p_shape) {
+void InputDefault::set_default_cursor_type(CursorType p_type) {
+    if (default_type == p_type) {
         return;
     }
 
-    default_shape = p_shape;
-    // The default shape is set in Viewport::_gui_input_event. To instantly
-    // see the shape in the viewport we need to trigger a mouse motion event.
+    default_type = p_type;
+    // The default type is set in Viewport::_gui_input_event. To instantly
+    // see the type in the viewport we need to trigger a mouse motion event.
     Ref<InputEventMouseMotion> mm;
     mm.instance();
     mm->set_position(mouse_pos);
@@ -771,24 +771,21 @@ void InputDefault::set_default_cursor_shape(CursorShape p_shape) {
     parse_input_event(mm);
 }
 
-Input::CursorShape InputDefault::get_current_cursor_shape() const {
-    return (Input::CursorShape)OS::get_singleton()->get_cursor_shape();
+Input::CursorType InputDefault::get_current_cursor_type() const {
+    return (Input::CursorType)OS::get_singleton()->get_cursor_type();
 }
 
 void InputDefault::set_custom_mouse_cursor(
     const RES& p_cursor,
-    CursorShape p_shape,
+    CursorType p_type,
     const Vector2& p_hotspot
 ) {
     if (Engine::get_singleton()->is_editor_hint()) {
         return;
     }
 
-    OS::get_singleton()->set_custom_mouse_cursor(
-        p_cursor,
-        (OS::CursorShape)p_shape,
-        p_hotspot
-    );
+    OS::get_singleton()
+        ->set_custom_mouse_cursor(p_cursor, (OS::CursorType)p_type, p_hotspot);
 }
 
 void InputDefault::parse_input_event(const Ref<InputEvent>& p_event) {
@@ -855,7 +852,7 @@ InputDefault::InputDefault() {
     emulate_mouse_from_touch = false;
     mouse_from_touch_index   = -1;
     main_loop                = nullptr;
-    default_shape            = CURSOR_ARROW;
+    default_type             = CURSOR_ARROW;
 
     fallback_mapping = -1;
 

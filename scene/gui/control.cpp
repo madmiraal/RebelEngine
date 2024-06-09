@@ -2564,17 +2564,17 @@ Control* Control::make_custom_tooltip(const String& p_text) const {
     return nullptr;
 }
 
-void Control::set_default_cursor_shape(CursorShape p_shape) {
-    ERR_FAIL_INDEX(int(p_shape), CURSOR_MAX);
+void Control::set_default_cursor_type(CursorType p_type) {
+    ERR_FAIL_INDEX(int(p_type), CURSOR_MAX);
 
-    data.default_cursor = p_shape;
+    data.default_cursor = p_type;
 }
 
-Control::CursorShape Control::get_default_cursor_shape() const {
+Control::CursorType Control::get_default_cursor_type() const {
     return data.default_cursor;
 }
 
-Control::CursorShape Control::get_cursor_shape(const Point2& p_pos) const {
+Control::CursorType Control::get_cursor_type(const Point2& p_pos) const {
     return data.default_cursor;
 }
 
@@ -3415,16 +3415,16 @@ void Control::_bind_methods() {
     ClassDB::bind_method(D_METHOD("_get_tooltip"), &Control::_get_tooltip);
 
     ClassDB::bind_method(
-        D_METHOD("set_default_cursor_shape", "shape"),
-        &Control::set_default_cursor_shape
+        D_METHOD("set_default_cursor_type", "shape"),
+        &Control::set_default_cursor_type
     );
     ClassDB::bind_method(
-        D_METHOD("get_default_cursor_shape"),
-        &Control::get_default_cursor_shape
+        D_METHOD("get_default_cursor_type"),
+        &Control::get_default_cursor_type
     );
     ClassDB::bind_method(
-        D_METHOD("get_cursor_shape", "position"),
-        &Control::get_cursor_shape,
+        D_METHOD("get_cursor_type", "position"),
+        &Control::get_cursor_type,
         DEFVAL(Point2())
     );
 
@@ -3834,15 +3834,15 @@ void Control::_bind_methods() {
     ADD_PROPERTY(
         PropertyInfo(
             Variant::INT,
-            "mouse_default_cursor_shape",
+            "mouse_default_cursor_type",
             PROPERTY_HINT_ENUM,
             "Arrow,Ibeam,Pointing hand,Cross,Wait,Busy,Drag,Can "
             "drop,Forbidden,Vertical resize,Horizontal resize,Secondary "
             "diagonal resize,Main diagonal resize,Move,Vertical "
             "split,Horizontal split,Help"
         ),
-        "set_default_cursor_shape",
-        "get_default_cursor_shape"
+        "set_default_cursor_type",
+        "get_default_cursor_type"
     );
 
     ADD_GROUP("Input", "input_");

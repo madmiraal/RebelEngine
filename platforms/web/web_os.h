@@ -38,7 +38,7 @@ private:
     EMSCRIPTEN_WEBGL_CONTEXT_HANDLE webgl_ctx;
 
     InputDefault* input;
-    CursorShape cursor_shape;
+    CursorType cursor_type;
     Point2 touches[32];
 
     char canvas_id[256];
@@ -155,10 +155,10 @@ public:
 
     virtual Point2 get_mouse_position() const;
     virtual int get_mouse_button_state() const;
-    virtual void set_cursor_shape(CursorShape p_shape);
+    virtual void set_cursor_type(CursorType p_type);
     virtual void set_custom_mouse_cursor(
         const RES& p_cursor,
-        CursorShape p_shape,
+        CursorType p_type,
         const Vector2& p_hotspot
     );
     virtual void set_mouse_mode(MouseMode p_mode);

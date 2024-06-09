@@ -222,13 +222,13 @@ void Input::_bind_methods() {
         &Input::action_release
     );
     ClassDB::bind_method(
-        D_METHOD("set_default_cursor_shape", "shape"),
-        &Input::set_default_cursor_shape,
+        D_METHOD("set_default_cursor_type", "type"),
+        &Input::set_default_cursor_type,
         DEFVAL(CURSOR_ARROW)
     );
     ClassDB::bind_method(
-        D_METHOD("get_current_cursor_shape"),
-        &Input::get_current_cursor_shape
+        D_METHOD("get_current_cursor_type"),
+        &Input::get_current_cursor_type
     );
     ClassDB::bind_method(
         D_METHOD("set_custom_mouse_cursor", "image", "shape", "hotspot"),

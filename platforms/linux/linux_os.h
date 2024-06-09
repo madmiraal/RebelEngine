@@ -51,8 +51,6 @@ typedef struct _xrr_monitor_info {
     RROutput* outputs;
 } xrr_monitor_info;
 
-#undef CursorShape
-
 class LinuxOS : public UnixOS {
     Atom wm_delete;
     Atom xdnd_enter;
@@ -202,8 +200,8 @@ class LinuxOS : public UnixOS {
     XcursorImage* img[CURSOR_MAX];
     Cursor cursors[CURSOR_MAX];
     Cursor null_cursor;
-    CursorShape current_cursor;
-    Map<CursorShape, Vector<Variant>> cursors_cache;
+    CursorType current_cursor_type;
+    Map<CursorType, Vector<Variant>> cursors_cache;
 
     InputDefault* input;
 
@@ -270,11 +268,11 @@ protected:
 public:
     virtual String get_name() const;
 
-    virtual void set_cursor_shape(CursorShape p_shape);
-    virtual CursorShape get_cursor_shape() const;
+    virtual void set_cursor_type(CursorType p_type);
+    virtual CursorType get_cursor_type() const;
     virtual void set_custom_mouse_cursor(
         const RES& p_cursor,
-        CursorShape p_shape,
+        CursorType p_type,
         const Vector2& p_hotspot
     );
 

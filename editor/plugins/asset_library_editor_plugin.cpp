@@ -98,7 +98,7 @@ EditorAssetLibraryItem::EditorAssetLibraryItem() {
 
     icon = memnew(TextureButton);
     icon->set_custom_minimum_size(Size2(64, 64) * EDSCALE);
-    icon->set_default_cursor_shape(CURSOR_POINTING_HAND);
+    icon->set_default_cursor_type(CURSOR_POINTING_HAND);
     icon->connect("pressed", this, "_asset_clicked");
 
     hb->add_child(icon);
@@ -176,7 +176,7 @@ void EditorAssetLibraryItemDescription::set_image(
                         preview_images[i].button->set_icon(tex);
                         // Make it clearer that clicking it will open an
                         // external link
-                        preview_images[i].button->set_default_cursor_shape(
+                        preview_images[i].button->set_default_cursor_type(
                             CURSOR_POINTING_HAND
                         );
                     } else {

@@ -430,9 +430,9 @@ void AnimationNodeStateMachineEditor::_state_machine_gui_input(
 
         if (over_text != over_text_now) {
             if (over_text_now) {
-                state_machine_draw->set_default_cursor_shape(CURSOR_IBEAM);
+                state_machine_draw->set_default_cursor_type(CURSOR_IBEAM);
             } else {
-                state_machine_draw->set_default_cursor_shape(CURSOR_ARROW);
+                state_machine_draw->set_default_cursor_type(CURSOR_ARROW);
             }
 
             over_text = over_text_now;

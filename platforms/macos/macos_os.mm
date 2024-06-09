@@ -737,9 +737,9 @@ static const NSRange kEmptyRange = {NSNotFound, 0};
 }
 
 - (void)cursorUpdate:(NSEvent*)event {
-    OS::CursorShape p_shape          = MacOSOS::singleton->cursor_shape;
-    MacOSOS::singleton->cursor_shape = OS::CURSOR_MAX;
-    MacOSOS::singleton->set_cursor_shape(p_shape);
+    OS::CursorType p_type           = MacOSOS::singleton->cursor_type;
+    MacOSOS::singleton->cursor_type = OS::CURSOR_MAX;
+    MacOSOS::singleton->set_cursor_type(p_type);
 }
 
 static void _mouseDownEvent(NSEvent* event, int index, int mask, bool pressed) {
@@ -939,9 +939,9 @@ static void _mouseDownEvent(NSEvent* event, int index, int mask, bool pressed) {
         );
     }
 
-    OS::CursorShape p_shape          = MacOSOS::singleton->cursor_shape;
-    MacOSOS::singleton->cursor_shape = OS::CURSOR_MAX;
-    MacOSOS::singleton->set_cursor_shape(p_shape);
+    OS::CursorType p_type           = MacOSOS::singleton->cursor_type;
+    MacOSOS::singleton->cursor_type = OS::CURSOR_MAX;
+    MacOSOS::singleton->set_cursor_type(p_type);
 }
 
 - (void)magnifyWithEvent:(NSEvent*)event {
@@ -2131,20 +2131,20 @@ Error MacOSOS::open_dynamic_library(
     return OK;
 }
 
-void MacOSOS::set_cursor_shape(CursorShape p_shape) {
-    if (cursor_shape == p_shape) {
+void MacOSOS::set_cursor_type(CursorType p_type) {
+    if (cursor_type == p_type) {
         return;
     }
 
     if (mouse_mode != MOUSE_MODE_VISIBLE && mouse_mode != MOUSE_MODE_CONFINED) {
-        cursor_shape = p_shape;
+        cursor_type = p_type;
         return;
     }
 
-    if (cursors[p_shape] != NULL) {
-        [cursors[p_shape] set];
+    if (cursors[p_type] != NULL) {
+        [cursors[p_type] set];
     } else {
-        switch (p_shape) {
+        switch (p_type) {
             case CURSOR_ARROW:
                 [[NSCursor arrowCursor] set];
                 break;
@@ -2211,30 +2211,30 @@ void MacOSOS::set_cursor_shape(CursorShape p_shape) {
         }
     }
 
-    cursor_shape = p_shape;
+    cursor_type = p_type;
 }
 
-OS::CursorShape MacOSOS::get_cursor_shape() const {
-    return cursor_shape;
+OS::CursorType MacOSOS::get_cursor_type() const {
+    return cursor_type;
 }
 
 void MacOSOS::set_custom_mouse_cursor(
     const RES& p_cursor,
-    CursorShape p_shape,
+    CursorType p_type,
     const Vector2& p_hotspot
 ) {
     if (p_cursor.is_valid()) {
-        Map<CursorShape, Vector<Variant>>::Element* cursor_c =
-            cursors_cache.find(p_shape);
+        Map<CursorType, Vector<Variant>>::Element* cursor_c =
+            cursors_cache.find(p_type);
 
         if (cursor_c) {
             if (cursor_c->get()[0] == p_cursor
                 && cursor_c->get()[1] == p_hotspot) {
-                set_cursor_shape(p_shape);
+                set_cursor_type(p_type);
                 return;
             }
 
-            cursors_cache.erase(p_shape);
+            cursors_cache.erase(p_type);
         }
 
         Ref<Texture> texture            = p_cursor;
@@ -2327,15 +2327,15 @@ void MacOSOS::set_custom_mouse_cursor(
             initWithImage:nsimage
                   hotSpot:NSMakePoint(p_hotspot.x, p_hotspot.y)];
 
-        [cursors[p_shape] release];
-        cursors[p_shape] = cursor;
+        [cursors[p_type] release];
+        cursors[p_type] = cursor;
 
         Vector<Variant> params;
         params.push_back(p_cursor);
         params.push_back(p_hotspot);
-        cursors_cache.insert(p_shape, params);
+        cursors_cache.insert(p_type, params);
 
-        if (p_shape == cursor_shape) {
+        if (p_type == cursor_type) {
             if (mouse_mode == MOUSE_MODE_VISIBLE
                 || mouse_mode == MOUSE_MODE_CONFINED) {
                 [cursor set];
@@ -2346,16 +2346,16 @@ void MacOSOS::set_custom_mouse_cursor(
         [nsimage release];
     } else {
         // Reset to default system cursor
-        if (cursors[p_shape] != NULL) {
-            [cursors[p_shape] release];
-            cursors[p_shape] = NULL;
+        if (cursors[p_type] != NULL) {
+            [cursors[p_type] release];
+            cursors[p_type] = NULL;
         }
 
-        CursorShape c = cursor_shape;
-        cursor_shape  = CURSOR_MAX;
-        set_cursor_shape(c);
+        CursorType c = cursor_type;
+        cursor_type  = CURSOR_MAX;
+        set_cursor_type(c);
 
-        cursors_cache.erase(p_shape);
+        cursors_cache.erase(p_type);
     }
 }
 
@@ -3816,9 +3816,9 @@ void MacOSOS::set_mouse_mode(MouseMode p_mode) {
     mouse_mode = p_mode;
 
     if (mouse_mode == MOUSE_MODE_VISIBLE || mouse_mode == MOUSE_MODE_CONFINED) {
-        CursorShape p_shape = cursor_shape;
-        cursor_shape        = OS::CURSOR_MAX;
-        set_cursor_shape(p_shape);
+        CursorType p_type = cursor_type;
+        cursor_type       = OS::CURSOR_MAX;
+        set_cursor_type(p_type);
     }
 }
 
@@ -3964,7 +3964,7 @@ MacOSOS::MacOSOS() {
     ERR_FAIL_COND(!delegate);
     [NSApp setDelegate:delegate];
 
-    cursor_shape = CURSOR_ARROW;
+    cursor_type = CURSOR_ARROW;
 
     maximized      = false;
     minimized      = false;

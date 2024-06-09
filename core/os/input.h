@@ -27,9 +27,7 @@ public:
         MOUSE_MODE_CONFINED
     };
 
-#undef CursorShape
-
-    enum CursorShape {
+    enum CursorType {
         CURSOR_ARROW,
         CURSOR_IBEAM,
         CURSOR_POINTING_HAND,
@@ -154,12 +152,12 @@ public:
     virtual bool is_emulating_touch_from_mouse() const = 0;
     virtual bool is_emulating_mouse_from_touch() const = 0;
 
-    virtual CursorShape get_default_cursor_shape() const       = 0;
-    virtual void set_default_cursor_shape(CursorShape p_shape) = 0;
-    virtual CursorShape get_current_cursor_shape() const       = 0;
+    virtual CursorType get_default_cursor_type() const      = 0;
+    virtual void set_default_cursor_type(CursorType p_type) = 0;
+    virtual CursorType get_current_cursor_type() const      = 0;
     virtual void set_custom_mouse_cursor(
         const RES& p_cursor,
-        CursorShape p_shape      = CURSOR_ARROW,
+        CursorType p_type        = CURSOR_ARROW,
         const Vector2& p_hotspot = Vector2()
     ) = 0;
 
@@ -178,6 +176,6 @@ public:
 };
 
 VARIANT_ENUM_CAST(Input::MouseMode);
-VARIANT_ENUM_CAST(Input::CursorShape);
+VARIANT_ENUM_CAST(Input::CursorType);
 
 #endif // INPUT_H
