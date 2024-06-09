@@ -6405,7 +6405,7 @@ void TextEdit::insert_text_at_cursor(const String& p_text) {
     update();
 }
 
-Control::CursorShape TextEdit::get_cursor_shape(const Point2& p_pos) const {
+Control::CursorType TextEdit::get_cursor_type(const Point2& p_pos) const {
     if (highlighted_word != String()) {
         return CURSOR_POINTING_HAND;
     }
@@ -6478,7 +6478,7 @@ Control::CursorShape TextEdit::get_cursor_shape(const Point2& p_pos) const {
         }
     }
 
-    return get_default_cursor_shape();
+    return get_default_cursor_type();
 }
 
 void TextEdit::set_text(String p_text) {
@@ -9557,7 +9557,7 @@ TextEdit::TextEdit() {
     fold_gutter_width             = 0;
     info_gutter_width             = 0;
     cache.info_gutter_width       = 0;
-    set_default_cursor_shape(CURSOR_IBEAM);
+    set_default_cursor_type(CURSOR_IBEAM);
 
     indent_size = 4;
     text.set_indent_size(indent_size);
