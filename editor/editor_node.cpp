@@ -7208,13 +7208,10 @@ EditorNode::EditorNode() {
     InputDefault* id = Object::cast_to<InputDefault>(Input::get_singleton());
 
     if (id) {
-        if (!OS::get_singleton()->has_touchscreen_ui_hint()
-            && Input::get_singleton()) {
-            // only if no touchscreen ui hint, set emulation
-            id->set_emulate_touch_from_mouse(false); // just disable just in
-                                                     // case
+        if (!OS::get_singleton()->has_touchscreen_ui_hint()) {
+            id->set_emulate_touch_from_mouse(false);
         }
-        id->set_custom_mouse_cursor(RES());
+        id->set_custom_cursor(Input::CURSOR_ARROW, RES());
     }
 
     singleton            = this;

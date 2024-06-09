@@ -155,10 +155,10 @@ public:
     virtual CursorType get_default_cursor_type() const      = 0;
     virtual void set_default_cursor_type(CursorType p_type) = 0;
     virtual CursorType get_current_cursor_type() const      = 0;
-    virtual void set_custom_mouse_cursor(
-        const RES& p_cursor,
-        CursorType p_type        = CURSOR_ARROW,
-        const Vector2& p_hotspot = Vector2()
+    virtual void set_custom_cursor(
+        CursorType cursor_type,
+        const RES& cursor_image,
+        const Vector2& cursor_hotspot = Vector2()
     ) = 0;
 
     virtual String get_joy_button_string(int p_button)            = 0;

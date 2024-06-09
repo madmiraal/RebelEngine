@@ -2049,16 +2049,19 @@ Error Main::setup2(Thread::ID p_main_tid_override) {
             "display/mouse_cursor/custom_image"
         ))
         != String()) {
-        Ref<Texture> cursor =
+        Ref<Texture> cursor_image =
             ResourceLoader::load(ProjectSettings::get_singleton()->get(
                 "display/mouse_cursor/custom_image"
             ));
-        if (cursor.is_valid()) {
-            Vector2 hotspot = ProjectSettings::get_singleton()->get(
+        if (cursor_image.is_valid()) {
+            Vector2 cursor_hotspot = ProjectSettings::get_singleton()->get(
                 "display/mouse_cursor/custom_image_hotspot"
             );
-            Input::get_singleton()
-                ->set_custom_mouse_cursor(cursor, Input::CURSOR_ARROW, hotspot);
+            Input::get_singleton()->set_custom_cursor(
+                Input::CURSOR_ARROW,
+                cursor_image,
+                cursor_hotspot
+            );
         }
     }
 

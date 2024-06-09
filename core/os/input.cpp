@@ -231,9 +231,13 @@ void Input::_bind_methods() {
         &Input::get_current_cursor_type
     );
     ClassDB::bind_method(
-        D_METHOD("set_custom_mouse_cursor", "image", "shape", "hotspot"),
-        &Input::set_custom_mouse_cursor,
-        DEFVAL(CURSOR_ARROW),
+        D_METHOD(
+            "set_custom_cursor",
+            "cursor_type",
+            "cursor_image",
+            "cursor_hotspot"
+        ),
+        &Input::set_custom_cursor,
         DEFVAL(Vector2())
     );
     ClassDB::bind_method(

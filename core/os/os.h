@@ -569,11 +569,11 @@ public:
     // hidden)
     virtual int get_virtual_keyboard_height() const;
 
-    virtual void set_cursor_type(CursorType p_type);
+    virtual void set_cursor_type(CursorType cursor_type);
     virtual CursorType get_cursor_type() const;
-    virtual void set_custom_mouse_cursor(
-        const RES& p_cursor,
-        CursorType p_type,
+    virtual void set_custom_cursor(
+        CursorType cursor_type,
+        const RES& cursor_image,
         const Vector2& p_hotspot
     );
 
