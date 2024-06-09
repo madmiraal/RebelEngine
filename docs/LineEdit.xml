@@ -149,7 +149,7 @@ SPDX-License-Identifier: MIT
             # `text_change_rejected` is emitted with "bye" as parameter.
             [/codeblock]
         </member>
-        <member name="mouse_default_cursor_type" type="int" setter="set_default_cursor_type" getter="get_default_cursor_type" override="true" enum="Control.CursorType" default="1" />
+        <member name="mouse_default_cursor_type" type="int" setter="set_default_cursor_type" getter="get_default_cursor_type" override="true" enum="Input.CursorType" default="1" />
         <member name="placeholder_alpha" type="float" setter="set_placeholder_alpha" getter="get_placeholder_alpha" default="0.6">
             Opacity of the [member placeholder_text]. From [code]0[/code] to [code]1[/code].
         </member>

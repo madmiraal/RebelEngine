@@ -259,10 +259,10 @@ SPDX-License-Identifier: MIT
             </description>
         </method>
         <method name="get_cursor_type" qualifiers="const">
-            <return type="int" enum="Control.CursorType" />
+            <return type="int" enum="Input.CursorType" />
             <argument index="0" name="position" type="Vector2" default="Vector2( 0, 0 )" />
             <description>
-                Returns the mouse cursor type the control displays on mouse hover. See [enum CursorType].
+                Returns the mouse cursor type the control displays on mouse hover. See [enum Input.CursorType].
             </description>
         </method>
         <method name="get_drag_data" qualifiers="virtual">
@@ -769,7 +769,7 @@ SPDX-License-Identifier: MIT
             Distance between the node's top edge and its parent control, based on [member anchor_top].
             Margins are often controlled by one or multiple parent [Container] nodes, so you should not modify them manually if your node is a direct child of a [Container]. Margins update automatically when you move or resize the node.
         </member>
-        <member name="mouse_default_cursor_type" type="int" setter="set_default_cursor_type" getter="get_default_cursor_type" enum="Control.CursorType" default="0">
+        <member name="mouse_default_cursor_type" type="int" setter="set_default_cursor_type" getter="get_default_cursor_type" enum="Input.CursorType" default="0">
             The default cursor type for this control. Useful for Rebel Engine plugins and applications or games that use the system's mouse cursors.
             [b]Note:[/b] On Linux, shapes may vary depending on the cursor theme of the system.
         </member>
@@ -907,57 +907,6 @@ SPDX-License-Identifier: MIT
         </constant>
         <constant name="NOTIFICATION_SCROLL_END" value="48">
             Sent when this node is inside a [ScrollContainer] which has stopped being scrolled.
-        </constant>
-        <constant name="CURSOR_ARROW" value="0" enum="CursorType">
-            Show the system's arrow mouse cursor when the user hovers the node. Use with [member mouse_default_cursor_type].
-        </constant>
-        <constant name="CURSOR_IBEAM" value="1" enum="CursorType">
-            Show the system's I-beam mouse cursor when the user hovers the node. The I-beam pointer has a shape similar to "I". It tells the user they can highlight or insert text.
-        </constant>
-        <constant name="CURSOR_POINTING_HAND" value="2" enum="CursorType">
-            Show the system's pointing hand mouse cursor when the user hovers the node.
-        </constant>
-        <constant name="CURSOR_CROSS" value="3" enum="CursorType">
-            Show the system's cross mouse cursor when the user hovers the node.
-        </constant>
-        <constant name="CURSOR_WAIT" value="4" enum="CursorType">
-            Show the system's wait mouse cursor, often an hourglass, when the user hovers the node.
-        </constant>
-        <constant name="CURSOR_BUSY" value="5" enum="CursorType">
-            Show the system's busy mouse cursor when the user hovers the node. Often an hourglass.
-        </constant>
-        <constant name="CURSOR_DRAG" value="6" enum="CursorType">
-            Show the system's drag mouse cursor, often a closed fist or a cross symbol, when the user hovers the node. It tells the user they're currently dragging an item, like a node in the Scene dock.
-        </constant>
-        <constant name="CURSOR_CAN_DROP" value="7" enum="CursorType">
-            Show the system's drop mouse cursor when the user hovers the node. It can be an open hand. It tells the user they can drop an item they're currently grabbing, like a node in the Scene dock.
-        </constant>
-        <constant name="CURSOR_FORBIDDEN" value="8" enum="CursorType">
-            Show the system's forbidden mouse cursor when the user hovers the node. Often a crossed circle.
-        </constant>
-        <constant name="CURSOR_VSIZE" value="9" enum="CursorType">
-            Show the system's vertical resize mouse cursor when the user hovers the node. A double-headed vertical arrow. It tells the user they can resize the window or the panel vertically.
-        </constant>
-        <constant name="CURSOR_HSIZE" value="10" enum="CursorType">
-            Show the system's horizontal resize mouse cursor when the user hovers the node. A double-headed horizontal arrow. It tells the user they can resize the window or the panel horizontally.
-        </constant>
-        <constant name="CURSOR_BDIAGSIZE" value="11" enum="CursorType">
-            Show the system's window resize mouse cursor when the user hovers the node. The cursor is a double-headed arrow that goes from the bottom left to the top right. It tells the user they can resize the window or the panel both horizontally and vertically.
-        </constant>
-        <constant name="CURSOR_FDIAGSIZE" value="12" enum="CursorType">
-            Show the system's window resize mouse cursor when the user hovers the node. The cursor is a double-headed arrow that goes from the top left to the bottom right, the opposite of [constant CURSOR_BDIAGSIZE]. It tells the user they can resize the window or the panel both horizontally and vertically.
-        </constant>
-        <constant name="CURSOR_MOVE" value="13" enum="CursorType">
-            Show the system's move mouse cursor when the user hovers the node. It shows 2 double-headed arrows at a 90 degree angle. It tells the user they can move a UI element freely.
-        </constant>
-        <constant name="CURSOR_VSPLIT" value="14" enum="CursorType">
-            Show the system's vertical split mouse cursor when the user hovers the node. On Windows, it's the same as [constant CURSOR_VSIZE].
-        </constant>
-        <constant name="CURSOR_HSPLIT" value="15" enum="CursorType">
-            Show the system's horizontal split mouse cursor when the user hovers the node. On Windows, it's the same as [constant CURSOR_HSIZE].
-        </constant>
-        <constant name="CURSOR_HELP" value="16" enum="CursorType">
-            Show the system's help mouse cursor when the user hovers the node, a question mark.
         </constant>
         <constant name="PRESET_TOP_LEFT" value="0" enum="LayoutPreset">
             Snap all 4 anchors to the top-left of the parent control's bounds. Use with [method set_anchors_preset].

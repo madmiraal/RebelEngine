@@ -8,6 +8,7 @@
 #define CONTROL_H
 
 #include "core/math/transform_2d.h"
+#include "core/os/input.h"
 #include "core/rid.h"
 #include "scene/2d/canvas_item.h"
 #include "scene/gui/shortcut.h"
@@ -53,27 +54,6 @@ public:
         MOUSE_FILTER_STOP,
         MOUSE_FILTER_PASS,
         MOUSE_FILTER_IGNORE
-    };
-
-    enum CursorType {
-        CURSOR_ARROW,
-        CURSOR_IBEAM,
-        CURSOR_POINTING_HAND,
-        CURSOR_CROSS,
-        CURSOR_WAIT,
-        CURSOR_BUSY,
-        CURSOR_DRAG,
-        CURSOR_CAN_DROP,
-        CURSOR_FORBIDDEN,
-        CURSOR_VSIZE,
-        CURSOR_HSIZE,
-        CURSOR_BDIAGSIZE,
-        CURSOR_FDIAGSIZE,
-        CURSOR_MOVE,
-        CURSOR_VSPLIT,
-        CURSOR_HSPLIT,
-        CURSOR_HELP,
-        CURSOR_MAX
     };
 
     enum LayoutPreset {
@@ -155,7 +135,7 @@ private:
         Ref<Theme> theme;
         Control* theme_owner;
         String tooltip;
-        CursorType default_cursor;
+        Input::CursorType default_cursor;
 
         List<Control*>::Element* MI; // modal item
         List<Control*>::Element* SI;
@@ -519,9 +499,10 @@ public:
 
     /* CURSOR */
 
-    void set_default_cursor_type(CursorType p_type);
-    CursorType get_default_cursor_type() const;
-    virtual CursorType get_cursor_type(const Point2& p_pos = Point2i()) const;
+    void set_default_cursor_type(Input::CursorType p_type);
+    Input::CursorType get_default_cursor_type() const;
+    virtual Input::CursorType get_cursor_type(const Point2& p_pos = Point2i())
+        const;
 
     virtual Transform2D get_transform() const;
 
@@ -560,7 +541,6 @@ public:
 
 VARIANT_ENUM_CAST(Control::FocusMode);
 VARIANT_ENUM_CAST(Control::SizeFlags);
-VARIANT_ENUM_CAST(Control::CursorType);
 VARIANT_ENUM_CAST(Control::LayoutPreset);
 VARIANT_ENUM_CAST(Control::LayoutPresetMode);
 VARIANT_ENUM_CAST(Control::MouseFilter);
