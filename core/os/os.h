@@ -533,7 +533,7 @@ public:
 
     virtual void initialize_debugging() {}
 
-    enum CursorShape {
+    enum CursorType {
         CURSOR_ARROW,
         CURSOR_IBEAM,
         CURSOR_POINTING_HAND,
@@ -569,11 +569,11 @@ public:
     // hidden)
     virtual int get_virtual_keyboard_height() const;
 
-    virtual void set_cursor_shape(CursorShape p_shape);
-    virtual CursorShape get_cursor_shape() const;
+    virtual void set_cursor_type(CursorType p_type);
+    virtual CursorType get_cursor_type() const;
     virtual void set_custom_mouse_cursor(
         const RES& p_cursor,
-        CursorShape p_shape,
+        CursorType p_type,
         const Vector2& p_hotspot
     );
 
