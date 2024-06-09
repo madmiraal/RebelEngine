@@ -11,6 +11,26 @@
 #include "core/os/main_loop.h"
 #include "core/os/thread_safe.h"
 
+enum class CursorType {
+    ARROW,
+    IBEAM,
+    POINTING_HAND,
+    CROSS,
+    WAIT,
+    BUSY,
+    DRAG,
+    CAN_DROP,
+    FORBIDDEN,
+    VSIZE,
+    HSIZE,
+    BDIAGSIZE,
+    FDIAGSIZE,
+    MOVE,
+    VSPLIT,
+    HSPLIT,
+    HELP
+};
+
 class Input : public Object {
     GDCLASS(Input, Object);
 
@@ -25,27 +45,6 @@ public:
         MOUSE_MODE_HIDDEN,
         MOUSE_MODE_CAPTURED,
         MOUSE_MODE_CONFINED
-    };
-
-    enum CursorType {
-        CURSOR_ARROW,
-        CURSOR_IBEAM,
-        CURSOR_POINTING_HAND,
-        CURSOR_CROSS,
-        CURSOR_WAIT,
-        CURSOR_BUSY,
-        CURSOR_DRAG,
-        CURSOR_CAN_DROP,
-        CURSOR_FORBIDDEN,
-        CURSOR_VSIZE,
-        CURSOR_HSIZE,
-        CURSOR_BDIAGSIZE,
-        CURSOR_FDIAGSIZE,
-        CURSOR_MOVE,
-        CURSOR_VSPLIT,
-        CURSOR_HSPLIT,
-        CURSOR_HELP,
-        CURSOR_MAX
     };
 
     void set_mouse_mode(MouseMode p_mode);
@@ -156,7 +155,7 @@ public:
     virtual void set_default_cursor_type(CursorType p_type) = 0;
     virtual CursorType get_current_cursor_type() const      = 0;
     virtual void set_custom_cursor(
-        CursorType cursor_type,
+        const CursorType& cursor_type,
         const RES& cursor_image,
         const Vector2& cursor_hotspot = Vector2()
     ) = 0;
@@ -176,6 +175,14 @@ public:
 };
 
 VARIANT_ENUM_CAST(Input::MouseMode);
-VARIANT_ENUM_CAST(Input::CursorType);
+// VARIANT_ENUM_CAST(CursorType);
+MAKE_ENUM_TYPE_INFO(CursorType)
+
+template <>
+struct VariantCaster<CursorType> {
+    static _FORCE_INLINE_ CursorType cast(const Variant& p_variant) {
+        return (CursorType)p_variant.operator int();
+    }
+};
 
 #endif // INPUT_H

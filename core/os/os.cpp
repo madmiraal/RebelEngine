@@ -219,7 +219,7 @@ Input::CursorType OS::get_cursor_type() const {
 }
 
 void OS::set_custom_cursor(
-    Input::CursorType cursor_type,
+    CursorType cursor_type,
     const RES& cursor_image,
     const Vector2& cursor_hotspot
 ) {}

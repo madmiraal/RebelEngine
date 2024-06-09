@@ -148,7 +148,7 @@ public:
         const;
     virtual void drop_data(const Point2& p_point, const Variant& p_data);
 
-    virtual Input::CursorType get_cursor_type(const Point2& p_pos) const;
+    virtual const CursorType& get_cursor_type(const Point2& p_pos) const;
 
     void menu_option(int p_option);
     void set_context_menu_enabled(bool p_enable);

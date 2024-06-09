@@ -51,7 +51,7 @@ public:
     void set_dragger_visibility(DraggerVisibility p_visibility);
     DraggerVisibility get_dragger_visibility() const;
 
-    virtual Input::CursorType get_cursor_type(const Point2& p_pos = Point2i())
+    virtual const CursorType& get_cursor_type(const Point2& p_pos = Point2i())
         const;
 
     virtual Size2 get_minimum_size() const;
