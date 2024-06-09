@@ -536,14 +536,14 @@ Error OS_X11::initialize(
         cursor_theme = "default";
     }
 
-    for (int i = 0; i < CURSOR_MAX; i++) {
+    for (int i = 0; i < Input::CURSOR_MAX; i++) {
         cursors[i] = None;
         img[i]     = nullptr;
     }
 
-    current_cursor = CURSOR_ARROW;
+    current_cursor_type = Input::CURSOR_ARROW;
 
-    for (int i = 0; i < CURSOR_MAX; i++) {
+    for (int i = 0; i < Input::CURSOR_MAX; i++) {
         static const char* cursor_file[] = {
             "left_ptr",
             "xterm",
@@ -617,7 +617,7 @@ Error OS_X11::initialize(
 
         null_cursor = cursor;
     }
-    set_cursor_type(CURSOR_BUSY);
+    set_cursor_type(Input::CURSOR_BUSY);
 
     // Set Xdnd (drag & drop) support
     Atom XdndAware = XInternAtom(x11_display, "XdndAware", False);
@@ -941,7 +941,7 @@ void OS_X11::finalize() {
 #if defined(OPENGL_ENABLED)
     memdelete(context_gl);
 #endif
-    for (int i = 0; i < CURSOR_MAX; i++) {
+    for (int i = 0; i < Input::CURSOR_MAX; i++) {
         if (cursors[i] != None) {
             XFreeCursor(x11_display, cursors[i]);
         }
@@ -983,7 +983,7 @@ void OS_X11::set_mouse_mode(MouseMode p_mode) {
         XDefineCursor(
             x11_display,
             x11_window,
-            cursors[current_cursor]
+            cursors[current_cursor_type]
         ); // show cursor
     } else {
         XDefineCursor(x11_display, x11_window, null_cursor); // hide cursor
@@ -4057,35 +4057,35 @@ void OS_X11::move_window_to_foreground() {
     XFlush(x11_display);
 }
 
-void OS_X11::set_cursor_type(CursorType p_type) {
-    ERR_FAIL_INDEX(p_type, CURSOR_MAX);
+void OS_X11::set_cursor_type(Input::CursorType p_type) {
+    ERR_FAIL_INDEX(p_type, Input::CURSOR_MAX);
 
-    if (p_type == current_cursor) {
+    if (p_type == current_cursor_type) {
         return;
     }
 
     if (mouse_mode == MOUSE_MODE_VISIBLE || mouse_mode == MOUSE_MODE_CONFINED) {
         if (cursors[p_type] != None) {
             XDefineCursor(x11_display, x11_window, cursors[p_type]);
-        } else if (cursors[CURSOR_ARROW] != None) {
-            XDefineCursor(x11_display, x11_window, cursors[CURSOR_ARROW]);
+        } else if (cursors[Input::CURSOR_ARROW] != None) {
+            XDefineCursor(x11_display, x11_window, cursors[Input::CURSOR_ARROW]);
         }
     }
 
-    current_cursor = p_type;
+    current_cursor_type = p_type;
 }
 
-OS::CursorType OS_X11::get_cursor_type() const {
-    return current_cursor;
+Input::CursorType OS_X11::get_cursor_type() const {
+    return current_cursor_type;
 }
 
 void OS_X11::set_custom_mouse_cursor(
     const RES& p_cursor,
-    CursorType p_type,
+    Input::CursorType p_type,
     const Vector2& p_hotspot
 ) {
     if (p_cursor.is_valid()) {
-        Map<CursorType, Vector<Variant>>::Element* cursor_c =
+        Map<Input::CursorType, Vector<Variant>>::Element* cursor_c =
             cursors_cache.find(p_type);
 
         if (cursor_c) {
@@ -4178,7 +4178,7 @@ void OS_X11::set_custom_mouse_cursor(
         params.push_back(p_hotspot);
         cursors_cache.insert(p_type, params);
 
-        if (p_type == current_cursor) {
+        if (p_type == current_cursor_type) {
             if (mouse_mode == MOUSE_MODE_VISIBLE
                 || mouse_mode == MOUSE_MODE_CONFINED) {
                 XDefineCursor(x11_display, x11_window, cursors[p_type]);
@@ -4194,9 +4194,9 @@ void OS_X11::set_custom_mouse_cursor(
                 XcursorImageLoadCursor(x11_display, img[p_type]);
         }
 
-        CursorType c  = current_cursor;
-        current_cursor = CURSOR_MAX;
-        set_cursor_type(c);
+        Input::CursorType cursor_type  = current_cursor_type;
+        current_cursor_type = Input::CURSOR_MAX;
+        set_cursor_type(cursor_type);
 
         cursors_cache.erase(p_type);
     }

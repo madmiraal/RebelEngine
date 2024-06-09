@@ -14,6 +14,7 @@
 #include "core/os/main_loop.h"
 #include "core/ustring.h"
 #include "core/vector.h"
+#include "input.h"
 
 #include <stdarg.h>
 #include <stdlib.h>
@@ -533,27 +534,6 @@ public:
 
     virtual void initialize_debugging() {}
 
-    enum CursorType {
-        CURSOR_ARROW,
-        CURSOR_IBEAM,
-        CURSOR_POINTING_HAND,
-        CURSOR_CROSS,
-        CURSOR_WAIT,
-        CURSOR_BUSY,
-        CURSOR_DRAG,
-        CURSOR_CAN_DROP,
-        CURSOR_FORBIDDEN,
-        CURSOR_VSIZE,
-        CURSOR_HSIZE,
-        CURSOR_BDIAGSIZE,
-        CURSOR_FDIAGSIZE,
-        CURSOR_MOVE,
-        CURSOR_VSPLIT,
-        CURSOR_HSPLIT,
-        CURSOR_HELP,
-        CURSOR_MAX
-    };
-
     virtual bool has_virtual_keyboard() const;
     virtual void show_virtual_keyboard(
         const String& p_existing_text,
@@ -569,11 +549,11 @@ public:
     // hidden)
     virtual int get_virtual_keyboard_height() const;
 
-    virtual void set_cursor_type(CursorType p_type);
-    virtual CursorType get_cursor_type() const;
+    virtual void set_cursor_type(Input::CursorType p_type);
+    virtual Input::CursorType get_cursor_type() const;
     virtual void set_custom_mouse_cursor(
         const RES& p_cursor,
-        CursorType p_type,
+        Input::CursorType p_type,
         const Vector2& p_hotspot
     );
 

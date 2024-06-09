@@ -786,7 +786,7 @@ void InputDefault::set_custom_mouse_cursor(
 
     OS::get_singleton()->set_custom_mouse_cursor(
         p_cursor,
-        (OS::CursorType)p_type,
+        (Input::CursorType)p_type,
         p_hotspot
     );
 }
