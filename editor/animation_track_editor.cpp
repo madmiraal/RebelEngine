@@ -2498,9 +2498,9 @@ void AnimationTimelineEdit::_gui_input(const Ref<InputEvent>& p_event) {
         if (hsize_rect.has_point(mm->get_position())) {
             // Change the cursor to indicate that the track name column's width
             // can be adjusted
-            set_default_cursor_shape(Control::CURSOR_HSIZE);
+            set_default_cursor_type(Control::CURSOR_HSIZE);
         } else {
-            set_default_cursor_shape(Control::CURSOR_ARROW);
+            set_default_cursor_type(Control::CURSOR_ARROW);
         }
 
         if (dragging_hsize) {

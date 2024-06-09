@@ -285,8 +285,7 @@ void SplitContainer::_gui_input(const Ref<InputEvent>& p_event) {
     }
 }
 
-Control::CursorShape SplitContainer::get_cursor_shape(const Point2& p_pos
-) const {
+Control::CursorType SplitContainer::get_cursor_type(const Point2& p_pos) const {
     if (dragging) {
         return (vertical ? CURSOR_VSPLIT : CURSOR_HSPLIT);
     }
@@ -306,7 +305,7 @@ Control::CursorShape SplitContainer::get_cursor_shape(const Point2& p_pos
         }
     }
 
-    return Control::get_cursor_shape(p_pos);
+    return Control::get_cursor_type(p_pos);
 }
 
 void SplitContainer::set_split_offset(int p_offset) {

@@ -55,7 +55,7 @@ public:
         MOUSE_FILTER_IGNORE
     };
 
-    enum CursorShape {
+    enum CursorType {
         CURSOR_ARROW,
         CURSOR_IBEAM,
         CURSOR_POINTING_HAND,
@@ -155,7 +155,7 @@ private:
         Ref<Theme> theme;
         Control* theme_owner;
         String tooltip;
-        CursorShape default_cursor;
+        CursorType default_cursor;
 
         List<Control*>::Element* MI; // modal item
         List<Control*>::Element* SI;
@@ -519,9 +519,9 @@ public:
 
     /* CURSOR */
 
-    void set_default_cursor_shape(CursorShape p_shape);
-    CursorShape get_default_cursor_shape() const;
-    virtual CursorShape get_cursor_shape(const Point2& p_pos = Point2i()) const;
+    void set_default_cursor_type(CursorType p_type);
+    CursorType get_default_cursor_type() const;
+    virtual CursorType get_cursor_type(const Point2& p_pos = Point2i()) const;
 
     virtual Transform2D get_transform() const;
 
@@ -560,7 +560,7 @@ public:
 
 VARIANT_ENUM_CAST(Control::FocusMode);
 VARIANT_ENUM_CAST(Control::SizeFlags);
-VARIANT_ENUM_CAST(Control::CursorShape);
+VARIANT_ENUM_CAST(Control::CursorType);
 VARIANT_ENUM_CAST(Control::LayoutPreset);
 VARIANT_ENUM_CAST(Control::LayoutPresetMode);
 VARIANT_ENUM_CAST(Control::MouseFilter);

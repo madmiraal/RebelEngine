@@ -90,7 +90,7 @@ private:
     bool force_quit;
     uint32_t last_button_state;
 
-    CursorShape cursor_shape;
+    CursorType cursor_type;
 
     InputDefault* input;
 
@@ -228,11 +228,11 @@ public:
     virtual void set_clipboard(const String& p_text);
     virtual String get_clipboard() const;
 
-    void set_cursor_shape(CursorShape p_shape);
-    CursorShape get_cursor_shape() const;
+    void set_cursor_type(CursorType p_type);
+    CursorType get_cursor_type() const;
     virtual void set_custom_mouse_cursor(
         const RES& p_cursor,
-        CursorShape p_shape,
+        CursorType p_type,
         const Vector2& p_hotspot
     );
     void set_icon(const Ref<Image>& p_icon);

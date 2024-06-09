@@ -110,7 +110,7 @@ void WindowDialog::_gui_input(const Ref<InputEvent>& p_event) {
     if (mm.is_valid()) {
         if (drag_type == DRAG_NONE) {
             // Update the cursor while moving along the borders.
-            CursorShape cursor = CURSOR_ARROW;
+            CursorType cursor = CURSOR_ARROW;
             if (resizable) {
                 int preview_drag_type = _drag_hit_test(
                     Point2(mm->get_position().x, mm->get_position().y)
@@ -134,8 +134,8 @@ void WindowDialog::_gui_input(const Ref<InputEvent>& p_event) {
                         break;
                 }
             }
-            if (get_cursor_shape() != cursor) {
-                set_default_cursor_shape(cursor);
+            if (get_cursor_type() != cursor) {
+                set_default_cursor_type(cursor);
             }
         } else {
             // Update while in a dragging operation.
@@ -229,8 +229,8 @@ void WindowDialog::_notification(int p_what) {
         case NOTIFICATION_MOUSE_EXIT: {
             // Reset the mouse cursor when leaving the resizable window border.
             if (resizable && !drag_type) {
-                if (get_default_cursor_shape() != CURSOR_ARROW) {
-                    set_default_cursor_shape(CURSOR_ARROW);
+                if (get_default_cursor_type() != CURSOR_ARROW) {
+                    set_default_cursor_type(CURSOR_ARROW);
                 }
             }
         } break;
