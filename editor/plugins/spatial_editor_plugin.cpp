@@ -5724,7 +5724,7 @@ void SpatialEditorViewportContainer::_notification(int p_what) {
                         mid_h - v_grabber->get_height() / 2
                     )
                 );
-                set_default_cursor_type(CURSOR_VSPLIT);
+                set_default_cursor_type(Input::CURSOR_VSPLIT);
 
             } break;
             case VIEW_USE_2_VIEWPORTS_ALT: {
@@ -5735,7 +5735,7 @@ void SpatialEditorViewportContainer::_notification(int p_what) {
                         (size.height - h_grabber->get_height()) / 2
                     )
                 );
-                set_default_cursor_type(CURSOR_HSPLIT);
+                set_default_cursor_type(Input::CURSOR_HSPLIT);
 
             } break;
             case VIEW_USE_3_VIEWPORTS: {
@@ -5748,7 +5748,7 @@ void SpatialEditorViewportContainer::_notification(int p_what) {
                             mid_h - v_grabber->get_height() / 4
                         )
                     );
-                    set_default_cursor_type(CURSOR_DRAG);
+                    set_default_cursor_type(Input::CURSOR_DRAG);
                 } else if ((hovering_v && !dragging_h) || dragging_v) {
                     draw_texture(
                         v_grabber,
@@ -5757,7 +5757,7 @@ void SpatialEditorViewportContainer::_notification(int p_what) {
                             mid_h - v_grabber->get_height() / 2
                         )
                     );
-                    set_default_cursor_type(CURSOR_VSPLIT);
+                    set_default_cursor_type(Input::CURSOR_VSPLIT);
                 } else if (hovering_h || dragging_h) {
                     draw_texture(
                         h_grabber,
@@ -5767,7 +5767,7 @@ void SpatialEditorViewportContainer::_notification(int p_what) {
                                 + (size_bottom - h_grabber->get_height()) / 2
                         )
                     );
-                    set_default_cursor_type(CURSOR_HSPLIT);
+                    set_default_cursor_type(Input::CURSOR_HSPLIT);
                 }
 
             } break;
@@ -5782,7 +5782,7 @@ void SpatialEditorViewportContainer::_notification(int p_what) {
                             mid_h - vdiag_grabber->get_height() / 2
                         )
                     );
-                    set_default_cursor_type(CURSOR_DRAG);
+                    set_default_cursor_type(Input::CURSOR_DRAG);
                 } else if ((hovering_v && !dragging_h) || dragging_v) {
                     draw_texture(
                         v_grabber,
@@ -5791,7 +5791,7 @@ void SpatialEditorViewportContainer::_notification(int p_what) {
                             mid_h - v_grabber->get_height() / 2
                         )
                     );
-                    set_default_cursor_type(CURSOR_VSPLIT);
+                    set_default_cursor_type(Input::CURSOR_VSPLIT);
                 } else if (hovering_h || dragging_h) {
                     draw_texture(
                         h_grabber,
@@ -5800,7 +5800,7 @@ void SpatialEditorViewportContainer::_notification(int p_what) {
                             (size.height - h_grabber->get_height()) / 2
                         )
                     );
-                    set_default_cursor_type(CURSOR_HSPLIT);
+                    set_default_cursor_type(Input::CURSOR_HSPLIT);
                 }
 
             } break;
@@ -5812,13 +5812,13 @@ void SpatialEditorViewportContainer::_notification(int p_what) {
                         vh_grabber,
                         half - vh_grabber->get_size() / 2.0
                     );
-                    set_default_cursor_type(CURSOR_DRAG);
+                    set_default_cursor_type(Input::CURSOR_DRAG);
                 } else if ((hovering_v && !dragging_h) || dragging_v) {
                     draw_texture(v_grabber, half - v_grabber->get_size() / 2.0);
-                    set_default_cursor_type(CURSOR_VSPLIT);
+                    set_default_cursor_type(Input::CURSOR_VSPLIT);
                 } else if (hovering_h || dragging_h) {
                     draw_texture(h_grabber, half - h_grabber->get_size() / 2.0);
-                    set_default_cursor_type(CURSOR_HSPLIT);
+                    set_default_cursor_type(Input::CURSOR_HSPLIT);
                 }
 
             } break;

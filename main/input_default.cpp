@@ -762,8 +762,8 @@ void InputDefault::set_default_cursor_type(CursorType p_type) {
     }
 
     default_type = p_type;
-    // The default type is set in Viewport::_gui_input_event. To instantly
-    // see the type in the viewport we need to trigger a mouse motion event.
+    // The default type is set in Viewport::_gui_input_event.
+    // We trigger a mouse motion event to force the cursor to update.
     Ref<InputEventMouseMotion> mm;
     mm.instance();
     mm->set_position(mouse_pos);
@@ -772,7 +772,7 @@ void InputDefault::set_default_cursor_type(CursorType p_type) {
 }
 
 Input::CursorType InputDefault::get_current_cursor_type() const {
-    return (Input::CursorType)OS::get_singleton()->get_cursor_type();
+    return OS::get_singleton()->get_cursor_type();
 }
 
 void InputDefault::set_custom_cursor(
@@ -783,12 +783,8 @@ void InputDefault::set_custom_cursor(
     if (Engine::get_singleton()->is_editor_hint()) {
         return;
     }
-
-    OS::get_singleton()->set_custom_cursor(
-        (OS::CursorType)cursor_type,
-        cursor_image,
-        cursor_hotspot
-    );
+    OS::get_singleton()
+        ->set_custom_cursor(cursor_type, cursor_image, cursor_hotspot);
 }
 
 void InputDefault::parse_input_event(const Ref<InputEvent>& p_event) {
