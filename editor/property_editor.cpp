@@ -2120,7 +2120,7 @@ CustomPropertyEditor::CustomPropertyEditor() {
     easing_draw->hide();
     easing_draw->connect("draw", this, "_draw_easing");
     easing_draw->connect("gui_input", this, "_drag_easing");
-    easing_draw->set_default_cursor_type(Input::CURSOR_MOVE);
+    easing_draw->set_default_cursor_type(CursorType::MOVE);
 
     type_button = memnew(MenuButton);
     add_child(type_button);

@@ -135,7 +135,7 @@ private:
         Ref<Theme> theme;
         Control* theme_owner;
         String tooltip;
-        Input::CursorType default_cursor;
+        CursorType default_cursor;
 
         List<Control*>::Element* MI; // modal item
         List<Control*>::Element* SI;
@@ -499,9 +499,9 @@ public:
 
     /* CURSOR */
 
-    void set_default_cursor_type(Input::CursorType p_type);
-    Input::CursorType get_default_cursor_type() const;
-    virtual Input::CursorType get_cursor_type(const Point2& p_pos = Point2i())
+    void set_default_cursor_type(const CursorType& cursor_type);
+    const CursorType& get_default_cursor_type() const;
+    virtual const CursorType& get_cursor_type(const Point2& p_pos = Point2i())
         const;
 
     virtual Transform2D get_transform() const;

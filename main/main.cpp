@@ -2058,7 +2058,7 @@ Error Main::setup2(Thread::ID p_main_tid_override) {
                 "display/mouse_cursor/custom_image_hotspot"
             );
             Input::get_singleton()->set_custom_cursor(
-                Input::CURSOR_ARROW,
+                CursorType::ARROW,
                 cursor_image,
                 cursor_hotspot
             );

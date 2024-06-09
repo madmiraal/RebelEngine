@@ -752,7 +752,7 @@ bool InputDefault::is_emulating_mouse_from_touch() const {
     return emulate_mouse_from_touch;
 }
 
-Input::CursorType InputDefault::get_default_cursor_type() const {
+CursorType InputDefault::get_default_cursor_type() const {
     return default_type;
 }
 
@@ -771,12 +771,12 @@ void InputDefault::set_default_cursor_type(CursorType p_type) {
     parse_input_event(mm);
 }
 
-Input::CursorType InputDefault::get_current_cursor_type() const {
+CursorType InputDefault::get_current_cursor_type() const {
     return OS::get_singleton()->get_cursor_type();
 }
 
 void InputDefault::set_custom_cursor(
-    CursorType cursor_type,
+    const CursorType& cursor_type,
     const RES& cursor_image,
     const Vector2& cursor_hotspot
 ) {
@@ -851,7 +851,7 @@ InputDefault::InputDefault() {
     emulate_mouse_from_touch = false;
     mouse_from_touch_index   = -1;
     main_loop                = nullptr;
-    default_type             = CURSOR_ARROW;
+    default_type             = CursorType::ARROW;
 
     fallback_mapping = -1;
 

@@ -7211,7 +7211,7 @@ EditorNode::EditorNode() {
         if (!OS::get_singleton()->has_touchscreen_ui_hint()) {
             id->set_emulate_touch_from_mouse(false);
         }
-        id->set_custom_cursor(Input::CURSOR_ARROW, RES());
+        id->set_custom_cursor(CursorType::ARROW, RES());
     }
 
     singleton            = this;

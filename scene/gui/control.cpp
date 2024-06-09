@@ -2564,17 +2564,15 @@ Control* Control::make_custom_tooltip(const String& p_text) const {
     return nullptr;
 }
 
-void Control::set_default_cursor_type(Input::CursorType p_type) {
-    ERR_FAIL_INDEX(int(p_type), Input::CURSOR_MAX);
-
-    data.default_cursor = p_type;
+void Control::set_default_cursor_type(const CursorType& cursor_type) {
+    data.default_cursor = cursor_type;
 }
 
-Input::CursorType Control::get_default_cursor_type() const {
+const CursorType& Control::get_default_cursor_type() const {
     return data.default_cursor;
 }
 
-Input::CursorType Control::get_cursor_type(const Point2& p_pos) const {
+const CursorType& Control::get_cursor_type(const Point2& p_pos) const {
     return data.default_cursor;
 }
 
@@ -3984,7 +3982,7 @@ Control::Control() {
     data.RI                         = nullptr;
     data.theme_owner                = nullptr;
     data.modal_exclusive            = false;
-    data.default_cursor             = Input::CURSOR_ARROW;
+    data.default_cursor             = CursorType::ARROW;
     data.h_size_flags               = SIZE_FILL;
     data.v_size_flags               = SIZE_FILL;
     data.expand                     = 1;

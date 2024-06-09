@@ -64,6 +64,57 @@
 static const double abs_resolution_mult       = 10000.0;
 static const double abs_resolution_range_mult = 10.0;
 
+namespace {
+XcursorImage* create_xcursor_image(
+    Ref<Texture> cursor_texture,
+    const Rect2& texture_region,
+    const Point2& cursor_hotspot
+) {
+    ERR_FAIL_COND_V_MSG(
+        cursor_hotspot.x > texture_region.size.x
+            || cursor_hotspot.y > texture_region.size.y,
+        nullptr,
+        "Cursor hotspot not inside cursor image texture size."
+    );
+
+    Ref<Image> image;
+    image = cursor_texture->get_data();
+    ERR_FAIL_COND_V_MSG(
+        !image.is_valid(),
+        nullptr,
+        "Invalid cursor texture data."
+    );
+
+    XcursorUInt pixels     = texture_region.size.x * texture_region.size.y;
+    XcursorDim cursor_size = sizeof(XcursorPixel) * pixels;
+    XcursorImage* xcursor_image =
+        XcursorImageCreate(texture_region.size.x, texture_region.size.y);
+
+    xcursor_image->version = 1;
+    xcursor_image->size    = cursor_size;
+    xcursor_image->xhot    = cursor_hotspot.x;
+    xcursor_image->yhot    = cursor_hotspot.y;
+    xcursor_image->pixels  = (XcursorPixel*)memalloc(cursor_size);
+
+    image->lock();
+    XcursorPixel* pixel = xcursor_image->pixels;
+    Point2 texture_region_end(
+        texture_region.position.x + texture_region.size.x,
+        texture_region.position.y + texture_region.size.y
+    );
+    for (int row = texture_region.position.y; row < texture_region_end.y;
+         row++) {
+        for (int col = texture_region.position.x; col < texture_region_end.x;
+             col++) {
+            *pixel = image->get_pixel(col, row).to_argb32();
+            pixel++;
+        }
+    }
+    image->unlock();
+    return xcursor_image;
+}
+} // namespace
+
 void LinuxOS::initialize_core() {
     crash_handler.initialize();
 
@@ -487,44 +538,8 @@ Error LinuxOS::initialize(
         cursor_theme = "default";
     }
 
-    for (int i = 0; i < Input::CURSOR_MAX; i++) {
-        cursors[i] = None;
-        img[i]     = nullptr;
-    }
-
-    current_cursor_type = Input::CURSOR_ARROW;
-
-    for (int i = 0; i < Input::CURSOR_MAX; i++) {
-        static const char* cursor_file[] = {
-            "left_ptr",
-            "xterm",
-            "hand2",
-            "cross",
-            "watch",
-            "left_ptr_watch",
-            "fleur",
-            "hand1",
-            "X_cursor",
-            "sb_v_double_arrow",
-            "sb_h_double_arrow",
-            "size_bdiag",
-            "size_fdiag",
-            "hand1",
-            "sb_v_double_arrow",
-            "sb_h_double_arrow",
-            "question_arrow"
-        };
-
-        img[i] =
-            XcursorLibraryLoadImage(cursor_file[i], cursor_theme, cursor_size);
-        if (img[i]) {
-            cursors[i] = XcursorImageLoadCursor(x11_display, img[i]);
-        } else {
-            print_verbose(
-                "Failed loading custom cursor: " + String(cursor_file[i])
-            );
-        }
-    }
+    create_cursors();
+    current_cursor_type = CursorType::ARROW;
 
     {
         // Creating an empty/transparent cursor
@@ -568,7 +583,7 @@ Error LinuxOS::initialize(
 
         null_cursor = cursor;
     }
-    set_cursor_type(Input::CURSOR_BUSY);
+    set_cursor_type(CursorType::BUSY);
 
     // Set Xdnd (drag & drop) support
     Atom XdndAware = XInternAtom(x11_display, "XdndAware", False);
@@ -625,6 +640,93 @@ Error LinuxOS::initialize(
     update_real_mouse_position();
 
     return OK;
+}
+
+void LinuxOS::create_cursors() {
+    create_cursor(CursorType::ARROW, "left_ptr");
+    create_cursor(CursorType::IBEAM, "xterm");
+    create_cursor(CursorType::POINTING_HAND, "hand2");
+    create_cursor(CursorType::CROSS, "cross");
+    create_cursor(CursorType::WAIT, "watch");
+    create_cursor(CursorType::BUSY, "left_ptr_watch");
+    create_cursor(CursorType::DRAG, "fleur");
+    create_cursor(CursorType::CAN_DROP, "hand1");
+    create_cursor(CursorType::FORBIDDEN, "X_cursor");
+    create_cursor(CursorType::VSIZE, "sb_v_double_arrow");
+    create_cursor(CursorType::HSIZE, "sb_h_double_arrow");
+    create_cursor(CursorType::BDIAGSIZE, "size_bdiag");
+    create_cursor(CursorType::FDIAGSIZE, "size_fdiag");
+    create_cursor(CursorType::MOVE, "hand1");
+    create_cursor(CursorType::VSPLIT, "sb_v_double_arrow");
+    create_cursor(CursorType::HSPLIT, "sb_h_double_arrow");
+    create_cursor(CursorType::HELP, "question_arrow");
+}
+
+void LinuxOS::create_cursor(
+    const CursorType& cursor_type,
+    const char* cursor_name
+) {
+    XcursorImage* xcursor_image =
+        XcursorLibraryLoadImage(cursor_name, cursor_theme, cursor_size);
+    ERR_FAIL_NULL_MSG(
+        xcursor_image,
+        String("Failed to load XcursorImage ") + cursor_name
+    );
+    create_cursor(cursor_type, xcursor_image);
+}
+
+void LinuxOS::create_cursor(
+    const CursorType& cursor_type,
+    XcursorImage* xcursor_image
+) {
+    cursor_images[cursor_type] = xcursor_image;
+    cursors[cursor_type] = XcursorImageLoadCursor(x11_display, xcursor_image);
+}
+
+void LinuxOS::destroy_cursors() {
+    destroy_cursor(CursorType::ARROW);
+    destroy_cursor(CursorType::IBEAM);
+    destroy_cursor(CursorType::POINTING_HAND);
+    destroy_cursor(CursorType::CROSS);
+    destroy_cursor(CursorType::WAIT);
+    destroy_cursor(CursorType::BUSY);
+    destroy_cursor(CursorType::DRAG);
+    destroy_cursor(CursorType::CAN_DROP);
+    destroy_cursor(CursorType::FORBIDDEN);
+    destroy_cursor(CursorType::VSIZE);
+    destroy_cursor(CursorType::HSIZE);
+    destroy_cursor(CursorType::BDIAGSIZE);
+    destroy_cursor(CursorType::FDIAGSIZE);
+    destroy_cursor(CursorType::MOVE);
+    destroy_cursor(CursorType::VSPLIT);
+    destroy_cursor(CursorType::HSPLIT);
+    destroy_cursor(CursorType::HELP);
+}
+
+void LinuxOS::destroy_cursor(const CursorType& cursor_type) {
+    if (cursors.has(cursor_type) && cursors[cursor_type] != None) {
+        XFreeCursor(x11_display, cursors[cursor_type]);
+    }
+    if (cursor_images.has(cursor_type)
+        && cursor_images[cursor_type] != nullptr) {
+        XcursorImageDestroy(cursor_images[cursor_type]);
+    }
+}
+
+void LinuxOS::change_cursor() {
+    if (mouse_mode == MOUSE_MODE_VISIBLE || mouse_mode == MOUSE_MODE_CONFINED) {
+        if (cursors.has(current_cursor_type)) {
+            // Specify the cursor to be displayed.
+            XDefineCursor(
+                x11_display,
+                x11_window,
+                cursors[current_cursor_type]
+            );
+        }
+    } else {
+        // Hide the cursor.
+        XUndefineCursor(x11_display, x11_window);
+    }
 }
 
 bool LinuxOS::refresh_device_info() {
@@ -877,7 +979,6 @@ void LinuxOS::finalize() {
 
     memdelete(input);
 
-    cursors_cache.clear();
     visual_server->finish();
     memdelete(visual_server);
     // memdelete(rasterizer);
@@ -896,14 +997,7 @@ void LinuxOS::finalize() {
 #if defined(OPENGL_ENABLED)
     memdelete(gl_context);
 #endif
-    for (int i = 0; i < Input::CURSOR_MAX; i++) {
-        if (cursors[i] != None) {
-            XFreeCursor(x11_display, cursors[i]);
-        }
-        if (img[i] != nullptr) {
-            XcursorImageDestroy(img[i]);
-        }
-    };
+    destroy_cursors();
 
     if (xic) {
         XDestroyIC(xic);
@@ -930,20 +1024,7 @@ void LinuxOS::set_mouse_mode(MouseMode p_mode) {
         XUngrabPointer(x11_display, CurrentTime);
     }
 
-    // The only modes that show a cursor are VISIBLE and CONFINED
-    bool showCursor =
-        (p_mode == MOUSE_MODE_VISIBLE || p_mode == MOUSE_MODE_CONFINED);
-
-    if (showCursor) {
-        XDefineCursor(
-            x11_display,
-            x11_window,
-            cursors[current_cursor_type]
-        ); // show cursor
-    } else {
-        XDefineCursor(x11_display, x11_window, null_cursor); // hide cursor
-    }
-
+    change_cursor();
     mouse_mode = p_mode;
 
     if (mouse_mode == MOUSE_MODE_CAPTURED
@@ -4017,152 +4098,63 @@ void LinuxOS::move_window_to_foreground() {
     XFlush(x11_display);
 }
 
-void LinuxOS::set_cursor_type(Input::CursorType p_type) {
-    ERR_FAIL_INDEX(p_type, Input::CURSOR_MAX);
-
-    if (p_type == current_cursor_type) {
+void LinuxOS::set_cursor_type(const CursorType& cursor_type) {
+    if (cursor_type == current_cursor_type) {
         return;
     }
 
-    if (mouse_mode == MOUSE_MODE_VISIBLE || mouse_mode == MOUSE_MODE_CONFINED) {
-        if (cursors[p_type] != None) {
-            XDefineCursor(x11_display, x11_window, cursors[p_type]);
-        } else if (cursors[Input::CURSOR_ARROW] != None) {
-            XDefineCursor(
-                x11_display,
-                x11_window,
-                cursors[Input::CURSOR_ARROW]
-            );
-        }
+    if (!cursors.has(cursor_type)) {
+        return;
     }
-
-    current_cursor_type = p_type;
+    current_cursor_type = cursor_type;
+    change_cursor();
 }
 
-Input::CursorType LinuxOS::get_cursor_type() const {
+const CursorType& LinuxOS::get_cursor_type() const {
     return current_cursor_type;
 }
 
-void LinuxOS::set_custom_mouse_cursor(
-    const RES& p_cursor,
-    Input::CursorType p_type,
-    const Vector2& p_hotspot
+void LinuxOS::set_custom_cursor(
+    const CursorType& cursor_type,
+    const RES& cursor_image,
+    const Vector2& cursor_hotspot
 ) {
-    if (p_cursor.is_valid()) {
-        Map<Input::CursorType, Vector<Variant>>::Element* cursor_c =
-            cursors_cache.find(p_type);
+    ERR_FAIL_COND_MSG(
+        !cursor_image.is_valid(),
+        "Invalid cursor image resource."
+    );
+    ERR_FAIL_COND_MSG(
+        cursor_hotspot.x < 0 || cursor_hotspot.y < 0,
+        "Cursor hotspot must be positive."
+    );
 
-        if (cursor_c) {
-            if (cursor_c->get()[0] == p_cursor
-                && cursor_c->get()[1] == p_hotspot) {
-                set_cursor_type(p_type);
-                return;
-            }
+    Ref<AtlasTexture> atlas_texture = cursor_image;
+    Ref<Texture> cursor_texture     = cursor_image;
+    XcursorImage* xcursor_image     = nullptr;
 
-            cursors_cache.erase(p_type);
-        }
-
-        Ref<Texture> texture            = p_cursor;
-        Ref<AtlasTexture> atlas_texture = p_cursor;
-        Ref<Image> image;
-        Size2 texture_size;
-        Rect2 atlas_rect;
-
-        if (texture.is_valid()) {
-            image = texture->get_data();
-        }
-
-        if (!image.is_valid() && atlas_texture.is_valid()) {
-            texture = atlas_texture->get_atlas();
-
-            atlas_rect.size.width  = texture->get_width();
-            atlas_rect.size.height = texture->get_height();
-            atlas_rect.position.x  = atlas_texture->get_region().position.x;
-            atlas_rect.position.y  = atlas_texture->get_region().position.y;
-
-            texture_size.width  = atlas_texture->get_region().size.x;
-            texture_size.height = atlas_texture->get_region().size.y;
-        } else if (image.is_valid()) {
-            texture_size.width  = texture->get_width();
-            texture_size.height = texture->get_height();
-        }
-
-        ERR_FAIL_COND(!texture.is_valid());
-        ERR_FAIL_COND(p_hotspot.x < 0 || p_hotspot.y < 0);
-        ERR_FAIL_COND(texture_size.width > 256 || texture_size.height > 256);
-        ERR_FAIL_COND(
-            p_hotspot.x > texture_size.width
-            || p_hotspot.y > texture_size.height
+    if (atlas_texture.is_valid()) {
+        Rect2 atlas_region = atlas_texture->get_region();
+        Rect2 texture_region(Point2(0, 0), atlas_texture->get_size());
+        ERR_FAIL_COND_MSG(
+            !texture_region.encloses(atlas_region),
+            "Atlas region not inside atlas texture."
         );
-
-        image = texture->get_data();
-
-        ERR_FAIL_COND(!image.is_valid());
-
-        // Create the cursor structure
-        XcursorImage* cursor_image =
-            XcursorImageCreate(texture_size.width, texture_size.height);
-        XcursorUInt image_size = texture_size.width * texture_size.height;
-        XcursorDim size        = sizeof(XcursorPixel) * image_size;
-
-        cursor_image->version = 1;
-        cursor_image->size    = size;
-        cursor_image->xhot    = p_hotspot.x;
-        cursor_image->yhot    = p_hotspot.y;
-
-        // allocate memory to contain the whole file
-        cursor_image->pixels = (XcursorPixel*)memalloc(size);
-
-        image->lock();
-
-        for (XcursorPixel index = 0; index < image_size; index++) {
-            int row_index =
-                floor(index / texture_size.width) + atlas_rect.position.y;
-            int column_index =
-                (index % int(texture_size.width)) + atlas_rect.position.x;
-
-            if (atlas_texture.is_valid()) {
-                column_index = MIN(column_index, atlas_rect.size.width - 1);
-                row_index    = MIN(row_index, atlas_rect.size.height - 1);
-            }
-
-            *(cursor_image->pixels + index) =
-                image->get_pixel(column_index, row_index).to_argb32();
-        }
-
-        image->unlock();
-
-        ERR_FAIL_COND(cursor_image->pixels == nullptr);
-
-        // Save it for a further usage
-        cursors[p_type] = XcursorImageLoadCursor(x11_display, cursor_image);
-
-        Vector<Variant> params;
-        params.push_back(p_cursor);
-        params.push_back(p_hotspot);
-        cursors_cache.insert(p_type, params);
-
-        if (p_type == current_cursor_type) {
-            if (mouse_mode == MOUSE_MODE_VISIBLE
-                || mouse_mode == MOUSE_MODE_CONFINED) {
-                XDefineCursor(x11_display, x11_window, cursors[p_type]);
-            }
-        }
-
-        memfree(cursor_image->pixels);
-        XcursorImageDestroy(cursor_image);
+        xcursor_image =
+            create_xcursor_image(atlas_texture, atlas_region, cursor_hotspot);
+    } else if (cursor_texture.is_valid()) {
+        Rect2 texture_region(Point2(0, 0), cursor_texture->get_size());
+        xcursor_image = create_xcursor_image(
+            cursor_texture,
+            texture_region,
+            cursor_hotspot
+        );
     } else {
-        // Reset to default system cursor
-        if (img[p_type]) {
-            cursors[p_type] = XcursorImageLoadCursor(x11_display, img[p_type]);
-        }
-
-        Input::CursorType cursor_type = current_cursor_type;
-        current_cursor_type           = Input::CURSOR_MAX;
-        set_cursor_type(cursor_type);
-
-        cursors_cache.erase(p_type);
+        ERR_FAIL_MSG("Invalid cursor image texture.");
     }
+    ERR_FAIL_NULL_MSG(xcursor_image, "Failed to create XcursorImage.");
+
+    destroy_cursor(cursor_type);
+    create_cursor(cursor_type, xcursor_image);
 }
 
 void LinuxOS::release_rendering_thread() {

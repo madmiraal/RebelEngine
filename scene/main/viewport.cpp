@@ -2628,8 +2628,7 @@ void Viewport::_gui_input_event(Ref<InputEvent> p_event) {
 
         if (!over) {
             OS::get_singleton()->set_cursor_type(
-                (Input::CursorType)Input::get_singleton()
-                    ->get_default_cursor_type()
+                Input::get_singleton()->get_default_cursor_type()
             );
             return;
         }
@@ -2702,14 +2701,14 @@ void Viewport::_gui_input_event(Ref<InputEvent> p_event) {
 
         mm->set_position(pos);
 
-        Input::CursorType cursor_type = Input::CURSOR_ARROW;
+        CursorType cursor_type = CursorType::ARROW;
         {
             Control* c   = over;
             Vector2 cpos = pos;
             while (c) {
                 cursor_type = c->get_cursor_type(cpos);
                 cpos        = c->get_transform().xform(cpos);
-                if (cursor_type != Input::CURSOR_ARROW) {
+                if (cursor_type != CursorType::ARROW) {
                     break;
                 }
                 if (c->data.mouse_filter == Control::MOUSE_FILTER_STOP) {
@@ -2722,7 +2721,7 @@ void Viewport::_gui_input_event(Ref<InputEvent> p_event) {
             }
         }
 
-        OS::get_singleton()->set_cursor_type((Input::CursorType)cursor_type);
+        OS::get_singleton()->set_cursor_type(cursor_type);
 
         if (over && over->can_process()) {
             _gui_call_input(over, mm);
@@ -2735,9 +2734,9 @@ void Viewport::_gui_input_event(Ref<InputEvent> p_event) {
             bool can_drop = _gui_drop(over, pos, true);
 
             if (!can_drop) {
-                OS::get_singleton()->set_cursor_type(Input::CURSOR_FORBIDDEN);
+                OS::get_singleton()->set_cursor_type(CursorType::FORBIDDEN);
             } else {
-                OS::get_singleton()->set_cursor_type(Input::CURSOR_CAN_DROP);
+                OS::get_singleton()->set_cursor_type(CursorType::CAN_DROP);
             }
             // change mouse accordingly i guess
         }

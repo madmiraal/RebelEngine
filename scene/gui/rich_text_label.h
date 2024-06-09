@@ -517,7 +517,7 @@ public:
         return vscroll;
     }
 
-    virtual Input::CursorType get_cursor_type(const Point2& p_pos) const;
+    virtual const CursorType& get_cursor_type(const Point2& p_pos) const;
 
     void set_selection_enabled(bool p_enabled);
     bool is_selection_enabled() const;

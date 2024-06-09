@@ -110,7 +110,7 @@ void WindowDialog::_gui_input(const Ref<InputEvent>& p_event) {
     if (mm.is_valid()) {
         if (drag_type == DRAG_NONE) {
             // Update the cursor while moving along the borders.
-            Input::CursorType cursor = Input::CURSOR_ARROW;
+            CursorType cursor = CursorType::ARROW;
             if (resizable) {
                 int preview_drag_type = _drag_hit_test(
                     Point2(mm->get_position().x, mm->get_position().y)
@@ -118,19 +118,19 @@ void WindowDialog::_gui_input(const Ref<InputEvent>& p_event) {
                 switch (preview_drag_type) {
                     case DRAG_RESIZE_TOP:
                     case DRAG_RESIZE_BOTTOM:
-                        cursor = Input::CURSOR_VSIZE;
+                        cursor = CursorType::VSIZE;
                         break;
                     case DRAG_RESIZE_LEFT:
                     case DRAG_RESIZE_RIGHT:
-                        cursor = Input::CURSOR_HSIZE;
+                        cursor = CursorType::HSIZE;
                         break;
                     case DRAG_RESIZE_TOP + DRAG_RESIZE_LEFT:
                     case DRAG_RESIZE_BOTTOM + DRAG_RESIZE_RIGHT:
-                        cursor = Input::CURSOR_FDIAGSIZE;
+                        cursor = CursorType::FDIAGSIZE;
                         break;
                     case DRAG_RESIZE_TOP + DRAG_RESIZE_RIGHT:
                     case DRAG_RESIZE_BOTTOM + DRAG_RESIZE_LEFT:
-                        cursor = Input::CURSOR_BDIAGSIZE;
+                        cursor = CursorType::BDIAGSIZE;
                         break;
                 }
             }
@@ -229,8 +229,8 @@ void WindowDialog::_notification(int p_what) {
         case NOTIFICATION_MOUSE_EXIT: {
             // Reset the mouse cursor when leaving the resizable window border.
             if (resizable && !drag_type) {
-                if (get_default_cursor_type() != Input::CURSOR_ARROW) {
-                    set_default_cursor_type(Input::CURSOR_ARROW);
+                if (get_default_cursor_type() != CursorType::ARROW) {
+                    set_default_cursor_type(CursorType::ARROW);
                 }
             }
         } break;
