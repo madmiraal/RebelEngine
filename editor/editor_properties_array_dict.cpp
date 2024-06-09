@@ -355,7 +355,7 @@ void EditorPropertyArray::update_property() {
 
             Button* reorder_button = memnew(Button);
             reorder_button->set_icon(get_icon("TripleBar", "EditorIcons"));
-            reorder_button->set_default_cursor_type(Control::CURSOR_MOVE);
+            reorder_button->set_default_cursor_type(Input::CURSOR_MOVE);
             reorder_button
                 ->connect("gui_input", this, "_reorder_button_gui_input");
             reorder_button->connect(
