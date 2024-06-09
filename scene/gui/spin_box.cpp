@@ -120,7 +120,6 @@ void SpinBox::_gui_input(const Ref<InputEvent>& p_event) {
 
     if (mb.is_valid() && !mb->is_pressed()
         && mb->get_button_index() == BUTTON_LEFT) {
-        // set_default_cursor_shape(CURSOR_ARROW);
         range_click_timer->stop();
         _release_mouse();
         drag.allowed = false;
