@@ -303,10 +303,10 @@ public:
     virtual CursorType get_default_cursor_type() const;
     virtual void set_default_cursor_type(CursorType p_type);
     virtual CursorType get_current_cursor_type() const;
-    virtual void set_custom_mouse_cursor(
-        const RES& p_cursor,
-        CursorType p_type        = Input::CURSOR_ARROW,
-        const Vector2& p_hotspot = Vector2()
+    virtual void set_custom_cursor(
+        CursorType cursor_type,
+        const RES& cursor_image,
+        const Vector2& cursor_hotspot = Vector2()
     );
 
     void parse_mapping(String p_mapping);
