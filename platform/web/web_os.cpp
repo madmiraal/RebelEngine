@@ -330,48 +330,47 @@ void WebOS::mouse_move_callback(
     os->input->parse_input_event(ev);
 }
 
-static const char* rebel2dom_cursor(Input::CursorType p_type) {
+static const char* rebel2dom_cursor(CursorType p_type) {
     switch (p_type) {
-        case Input::CURSOR_ARROW:
+        case CursorType::ARROW:
         default:
             return "auto";
-        case Input::CURSOR_IBEAM:
+        case CursorType::IBEAM:
             return "text";
-        case Input::CURSOR_POINTING_HAND:
+        case CursorType::POINTING_HAND:
             return "pointer";
-        case Input::CURSOR_CROSS:
+        case CursorType::CROSS:
             return "crosshair";
-        case Input::CURSOR_WAIT:
+        case CursorType::WAIT:
             return "progress";
-        case Input::CURSOR_BUSY:
+        case CursorType::BUSY:
             return "wait";
-        case Input::CURSOR_DRAG:
+        case CursorType::DRAG:
             return "grab";
-        case Input::CURSOR_CAN_DROP:
+        case CursorType::CAN_DROP:
             return "grabbing";
-        case Input::CURSOR_FORBIDDEN:
+        case CursorType::FORBIDDEN:
             return "no-drop";
-        case Input::CURSOR_VSIZE:
+        case CursorType::VSIZE:
             return "ns-resize";
-        case Input::CURSOR_HSIZE:
+        case CursorType::HSIZE:
             return "ew-resize";
-        case Input::CURSOR_BDIAGSIZE:
+        case CursorType::BDIAGSIZE:
             return "nesw-resize";
-        case Input::CURSOR_FDIAGSIZE:
+        case CursorType::FDIAGSIZE:
             return "nwse-resize";
-        case Input::CURSOR_MOVE:
+        case CursorType::MOVE:
             return "move";
-        case Input::CURSOR_VSPLIT:
+        case CursorType::VSPLIT:
             return "row-resize";
-        case Input::CURSOR_HSPLIT:
+        case CursorType::HSPLIT:
             return "col-resize";
-        case Input::CURSOR_HELP:
+        case CursorType::HELP:
             return "help";
     }
 }
 
-void WebOS::set_cursor_type(Input::CursorType p_type) {
-    ERR_FAIL_INDEX(p_type, Input::CURSOR_MAX);
+void WebOS::set_cursor_type(CursorType p_type) {
     if (cursor_type == p_type) {
         return;
     }
@@ -381,7 +380,7 @@ void WebOS::set_cursor_type(Input::CursorType p_type) {
 
 void WebOS::set_custom_mouse_cursor(
     const RES& p_cursor,
-    Input::CursorType p_type,
+    CursorType p_type,
     const Vector2& p_hotspot
 ) {
     if (p_cursor.is_valid()) {
@@ -1212,7 +1211,7 @@ WebOS::WebOS() {
     rebel_js_config_canvas_id_get(canvas_id, sizeof(canvas_id));
 
     cursor_inside_canvas = true;
-    cursor_type          = Input::CURSOR_ARROW;
+    cursor_type          = CursorType::ARROW;
 
     last_click_button_index = -1;
     last_click_ms           = 0;

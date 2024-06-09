@@ -549,12 +549,12 @@ public:
     // hidden)
     virtual int get_virtual_keyboard_height() const;
 
-    virtual void set_cursor_type(Input::CursorType cursor_type);
-    virtual Input::CursorType get_cursor_type() const;
+    virtual void set_cursor_type(const CursorType& cursor_type);
+    virtual const CursorType& get_cursor_type() const;
     virtual void set_custom_cursor(
-        Input::CursorType cursor_type,
+        const CursorType& cursor_type,
         const RES& cursor_image,
-        const Vector2& p_hotspot
+        const Vector2& cursor_hotspot
     );
 
     virtual bool get_swap_ok_cancel() {
