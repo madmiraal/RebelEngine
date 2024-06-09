@@ -21,8 +21,6 @@
 #include "servers/visual/rasterizer.h"
 #include "servers/visual_server.h"
 
-#undef CursorShape
-
 class OS_Server : public OS_Unix {
     VisualServer* visual_server;
     VideoMode current_videomode;

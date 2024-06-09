@@ -244,7 +244,7 @@ void OS_Windows::initialize_core() {
 
     IP_Unix::make_default();
 
-    cursor_shape = CURSOR_ARROW;
+    cursor_type = CURSOR_ARROW;
 }
 
 bool OS_Windows::can_draw() const {
@@ -720,9 +720,9 @@ LRESULT OS_Windows::WndProc(
                     );
                 }
 
-                CursorShape c = cursor_shape;
-                cursor_shape  = CURSOR_MAX;
-                set_cursor_shape(c);
+                CursorType c = cursor_type;
+                cursor_type  = CURSOR_MAX;
+                set_cursor_type(c);
                 outside = false;
 
                 // Once-Off notification, must call again....
@@ -835,9 +835,9 @@ LRESULT OS_Windows::WndProc(
                     );
                 }
 
-                CursorShape c = cursor_shape;
-                cursor_shape  = CURSOR_MAX;
-                set_cursor_shape(c);
+                CursorType c = cursor_type;
+                cursor_type  = CURSOR_MAX;
+                set_cursor_type(c);
                 outside = false;
 
                 // Once-Off notification, must call again....
@@ -1285,9 +1285,9 @@ LRESULT OS_Windows::WndProc(
                     }
                 } else {
                     if (hCursor != NULL) {
-                        CursorShape c = cursor_shape;
-                        cursor_shape  = CURSOR_MAX;
-                        set_cursor_shape(c);
+                        CursorType c = cursor_type;
+                        cursor_type  = CURSOR_MAX;
+                        set_cursor_type(c);
                         hCursor = NULL;
                     }
                 }
@@ -2072,9 +2072,9 @@ void OS_Windows::_set_mouse_mode_impl(MouseMode p_mode) {
             SetCursor(NULL);
         }
     } else {
-        CursorShape c = cursor_shape;
-        cursor_shape  = CURSOR_MAX;
-        set_cursor_shape(c);
+        CursorType c = cursor_type;
+        cursor_type  = CURSOR_MAX;
+        set_cursor_type(c);
     }
 }
 
@@ -2960,15 +2960,15 @@ void OS_Windows::process_events() {
     }
 }
 
-void OS_Windows::set_cursor_shape(CursorShape p_shape) {
-    ERR_FAIL_INDEX(p_shape, CURSOR_MAX);
+void OS_Windows::set_cursor_type(CursorType p_type) {
+    ERR_FAIL_INDEX(p_type, CURSOR_MAX);
 
-    if (cursor_shape == p_shape) {
+    if (cursor_type == p_type) {
         return;
     }
 
     if (mouse_mode != MOUSE_MODE_VISIBLE && mouse_mode != MOUSE_MODE_CONFINED) {
-        cursor_shape = p_shape;
+        cursor_type = p_type;
         return;
     }
 
@@ -2992,36 +2992,36 @@ void OS_Windows::set_cursor_shape(CursorShape p_shape) {
         IDC_HELP
     };
 
-    if (cursors[p_shape] != NULL) {
-        SetCursor(cursors[p_shape]);
+    if (cursors[p_type] != NULL) {
+        SetCursor(cursors[p_type]);
     } else {
-        SetCursor(LoadCursor(hInstance, win_cursors[p_shape]));
+        SetCursor(LoadCursor(hInstance, win_cursors[p_type]));
     }
 
-    cursor_shape = p_shape;
+    cursor_type = p_type;
 }
 
-OS::CursorShape OS_Windows::get_cursor_shape() const {
-    return cursor_shape;
+OS::CursorType OS_Windows::get_cursor_type() const {
+    return cursor_type;
 }
 
 void OS_Windows::set_custom_mouse_cursor(
     const RES& p_cursor,
-    CursorShape p_shape,
+    CursorType p_type,
     const Vector2& p_hotspot
 ) {
     if (p_cursor.is_valid()) {
-        Map<CursorShape, Vector<Variant>>::Element* cursor_c =
-            cursors_cache.find(p_shape);
+        Map<CursorType, Vector<Variant>>::Element* cursor_c =
+            cursors_cache.find(p_type);
 
         if (cursor_c) {
             if (cursor_c->get()[0] == p_cursor
                 && cursor_c->get()[1] == p_hotspot) {
-                set_cursor_shape(p_shape);
+                set_cursor_type(p_type);
                 return;
             }
 
-            cursors_cache.erase(p_shape);
+            cursors_cache.erase(p_type);
         }
 
         Ref<Texture> texture            = p_cursor;
@@ -3113,21 +3113,21 @@ void OS_Windows::set_custom_mouse_cursor(
         iconinfo.hbmMask  = hAndMask;
         iconinfo.hbmColor = hXorMask;
 
-        if (cursors[p_shape]) {
-            DestroyIcon(cursors[p_shape]);
+        if (cursors[p_type]) {
+            DestroyIcon(cursors[p_type]);
         }
 
-        cursors[p_shape] = CreateIconIndirect(&iconinfo);
+        cursors[p_type] = CreateIconIndirect(&iconinfo);
 
         Vector<Variant> params;
         params.push_back(p_cursor);
         params.push_back(p_hotspot);
-        cursors_cache.insert(p_shape, params);
+        cursors_cache.insert(p_type, params);
 
-        if (p_shape == cursor_shape) {
+        if (p_type == cursor_type) {
             if (mouse_mode == MOUSE_MODE_VISIBLE
                 || mouse_mode == MOUSE_MODE_CONFINED) {
-                SetCursor(cursors[p_shape]);
+                SetCursor(cursors[p_type]);
             }
         }
 
@@ -3143,16 +3143,16 @@ void OS_Windows::set_custom_mouse_cursor(
         DeleteObject(bitmap);
     } else {
         // Reset to default system cursor
-        if (cursors[p_shape]) {
-            DestroyIcon(cursors[p_shape]);
-            cursors[p_shape] = NULL;
+        if (cursors[p_type]) {
+            DestroyIcon(cursors[p_type]);
+            cursors[p_type] = NULL;
         }
 
-        CursorShape c = cursor_shape;
-        cursor_shape  = CURSOR_MAX;
-        set_cursor_shape(c);
+        CursorType c = cursor_type;
+        cursor_type  = CURSOR_MAX;
+        set_cursor_type(c);
 
-        cursors_cache.erase(p_shape);
+        cursors_cache.erase(p_type);
     }
 }
 
