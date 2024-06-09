@@ -90,10 +90,10 @@ SPDX-License-Identifier: MIT
                 Returns an [Array] containing the device IDs of all currently connected joypads.
             </description>
         </method>
-        <method name="get_current_cursor_shape" qualifiers="const">
-            <return type="int" enum="Input.CursorShape" />
+        <method name="get_current_cursor_type" qualifiers="const">
+            <return type="int" enum="Input.CursorType" />
             <description>
-                Returns the currently assigned cursor shape (see [enum CursorShape]).
+                Returns the currently assigned cursor type (see [enum CursorType]).
             </description>
         </method>
         <method name="get_gravity" qualifiers="const">
@@ -325,22 +325,22 @@ SPDX-License-Identifier: MIT
         <method name="set_custom_mouse_cursor">
             <return type="void" />
             <argument index="0" name="image" type="Resource" />
-            <argument index="1" name="shape" type="int" enum="Input.CursorShape" default="0" />
+            <argument index="1" name="shape" type="int" enum="Input.CursorType" default="0" />
             <argument index="2" name="hotspot" type="Vector2" default="Vector2( 0, 0 )" />
             <description>
-                Sets a custom mouse cursor image, which is only visible inside the game window. The hotspot can also be specified. Passing [code]null[/code] to the image parameter resets to the system cursor. See [enum CursorShape] for the list of shapes.
+                Sets a custom mouse cursor image, which is only visible inside the game window. The hotspot can also be specified. Passing [code]null[/code] to the image parameter resets to the system cursor. See [enum CursorType] for the list of shapes.
                 [code]image[/code]'s size must be lower than 256×256.
                 [code]hotspot[/code] must be within [code]image[/code]'s size.
                 [b]Note:[/b] [AnimatedTexture]s aren't supported as custom mouse cursors. If using an [AnimatedTexture], only the first frame will be displayed.
                 [b]Note:[/b] Only images imported with the [b]Lossless[/b], [b]Lossy[/b] or [b]Uncompressed[/b] compression modes are supported. The [b]Video RAM[/b] compression mode can't be used for custom cursors.
             </description>
         </method>
-        <method name="set_default_cursor_shape">
+        <method name="set_default_cursor_type">
             <return type="void" />
-            <argument index="0" name="shape" type="int" enum="Input.CursorShape" default="0" />
+            <argument index="0" name="type" type="int" enum="Input.CursorType" default="0" />
             <description>
-                Sets the default cursor shape to be used in the viewport instead of [constant CURSOR_ARROW].
-                [b]Note:[/b] If you want to change the default cursor shape for [Control]'s nodes, use [member Control.mouse_default_cursor_shape] instead.
+                Sets the default cursor type to be used in the viewport instead of [constant CURSOR_ARROW].
+                [b]Note:[/b] If you want to change the default cursor type for [Control]'s nodes, use [member Control.mouse_default_cursor_type] instead.
                 [b]Note:[/b] This method generates an [InputEventMouseMotion] to update cursor immediately.
             </description>
         </method>
@@ -442,55 +442,55 @@ SPDX-License-Identifier: MIT
         <constant name="MOUSE_MODE_CONFINED" value="3" enum="MouseMode">
             Makes the mouse cursor visible but confines it to the game window.
         </constant>
-        <constant name="CURSOR_ARROW" value="0" enum="CursorShape">
+        <constant name="CURSOR_ARROW" value="0" enum="CursorType">
             Arrow cursor. Standard, default pointing cursor.
         </constant>
-        <constant name="CURSOR_IBEAM" value="1" enum="CursorShape">
+        <constant name="CURSOR_IBEAM" value="1" enum="CursorType">
             I-beam cursor. Usually used to show where the text cursor will appear when the mouse is clicked.
         </constant>
-        <constant name="CURSOR_POINTING_HAND" value="2" enum="CursorShape">
+        <constant name="CURSOR_POINTING_HAND" value="2" enum="CursorType">
             Pointing hand cursor. Usually used to indicate the pointer is over a link or other interactable item.
         </constant>
-        <constant name="CURSOR_CROSS" value="3" enum="CursorShape">
+        <constant name="CURSOR_CROSS" value="3" enum="CursorType">
             Cross cursor. Typically appears over regions in which a drawing operation can be performed or for selections.
         </constant>
-        <constant name="CURSOR_WAIT" value="4" enum="CursorShape">
-            Wait cursor. Indicates that the application is busy performing an operation. This cursor shape denotes that the application is still usable during the operation.
+        <constant name="CURSOR_WAIT" value="4" enum="CursorType">
+            Wait cursor. Indicates that the application is busy performing an operation. This cursor type denotes that the application is still usable during the operation.
         </constant>
-        <constant name="CURSOR_BUSY" value="5" enum="CursorShape">
-            Busy cursor. Indicates that the application is busy performing an operation. This cursor shape denotes that the application isn't usable during the operation (e.g. something is blocking its main thread).
+        <constant name="CURSOR_BUSY" value="5" enum="CursorType">
+            Busy cursor. Indicates that the application is busy performing an operation. This cursor type denotes that the application isn't usable during the operation (e.g. something is blocking its main thread).
         </constant>
-        <constant name="CURSOR_DRAG" value="6" enum="CursorShape">
+        <constant name="CURSOR_DRAG" value="6" enum="CursorType">
             Drag cursor. Usually displayed when dragging something.
         </constant>
-        <constant name="CURSOR_CAN_DROP" value="7" enum="CursorShape">
+        <constant name="CURSOR_CAN_DROP" value="7" enum="CursorType">
             Can drop cursor. Usually displayed when dragging something to indicate that it can be dropped at the current position.
         </constant>
-        <constant name="CURSOR_FORBIDDEN" value="8" enum="CursorShape">
+        <constant name="CURSOR_FORBIDDEN" value="8" enum="CursorType">
             Forbidden cursor. Indicates that the current action is forbidden (for example, when dragging something) or that the control at a position is disabled.
         </constant>
-        <constant name="CURSOR_VSIZE" value="9" enum="CursorShape">
+        <constant name="CURSOR_VSIZE" value="9" enum="CursorType">
             Vertical resize mouse cursor. A double-headed vertical arrow. It tells the user they can resize the window or the panel vertically.
         </constant>
-        <constant name="CURSOR_HSIZE" value="10" enum="CursorShape">
+        <constant name="CURSOR_HSIZE" value="10" enum="CursorType">
             Horizontal resize mouse cursor. A double-headed horizontal arrow. It tells the user they can resize the window or the panel horizontally.
         </constant>
-        <constant name="CURSOR_BDIAGSIZE" value="11" enum="CursorShape">
+        <constant name="CURSOR_BDIAGSIZE" value="11" enum="CursorType">
             Window resize mouse cursor. The cursor is a double-headed arrow that goes from the bottom left to the top right. It tells the user they can resize the window or the panel both horizontally and vertically.
         </constant>
-        <constant name="CURSOR_FDIAGSIZE" value="12" enum="CursorShape">
+        <constant name="CURSOR_FDIAGSIZE" value="12" enum="CursorType">
             Window resize mouse cursor. The cursor is a double-headed arrow that goes from the top left to the bottom right, the opposite of [constant CURSOR_BDIAGSIZE]. It tells the user they can resize the window or the panel both horizontally and vertically.
         </constant>
-        <constant name="CURSOR_MOVE" value="13" enum="CursorShape">
+        <constant name="CURSOR_MOVE" value="13" enum="CursorType">
             Move cursor. Indicates that something can be moved.
         </constant>
-        <constant name="CURSOR_VSPLIT" value="14" enum="CursorShape">
+        <constant name="CURSOR_VSPLIT" value="14" enum="CursorType">
             Vertical split mouse cursor. On Windows, it's the same as [constant CURSOR_VSIZE].
         </constant>
-        <constant name="CURSOR_HSPLIT" value="15" enum="CursorShape">
+        <constant name="CURSOR_HSPLIT" value="15" enum="CursorType">
             Horizontal split mouse cursor. On Windows, it's the same as [constant CURSOR_HSIZE].
         </constant>
-        <constant name="CURSOR_HELP" value="16" enum="CursorShape">
+        <constant name="CURSOR_HELP" value="16" enum="CursorType">
             Help cursor. Usually a question mark.
         </constant>
     </constants>
