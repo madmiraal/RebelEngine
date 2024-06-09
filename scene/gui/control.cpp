@@ -2564,17 +2564,17 @@ Control* Control::make_custom_tooltip(const String& p_text) const {
     return nullptr;
 }
 
-void Control::set_default_cursor_type(CursorType p_type) {
-    ERR_FAIL_INDEX(int(p_type), CURSOR_MAX);
+void Control::set_default_cursor_type(Input::CursorType p_type) {
+    ERR_FAIL_INDEX(int(p_type), Input::CURSOR_MAX);
 
     data.default_cursor = p_type;
 }
 
-Control::CursorType Control::get_default_cursor_type() const {
+Input::CursorType Control::get_default_cursor_type() const {
     return data.default_cursor;
 }
 
-Control::CursorType Control::get_cursor_type(const Point2& p_pos) const {
+Input::CursorType Control::get_cursor_type(const Point2& p_pos) const {
     return data.default_cursor;
 }
 
@@ -3909,24 +3909,6 @@ void Control::_bind_methods() {
     BIND_CONSTANT(NOTIFICATION_SCROLL_BEGIN);
     BIND_CONSTANT(NOTIFICATION_SCROLL_END);
 
-    BIND_ENUM_CONSTANT(CURSOR_ARROW);
-    BIND_ENUM_CONSTANT(CURSOR_IBEAM);
-    BIND_ENUM_CONSTANT(CURSOR_POINTING_HAND);
-    BIND_ENUM_CONSTANT(CURSOR_CROSS);
-    BIND_ENUM_CONSTANT(CURSOR_WAIT);
-    BIND_ENUM_CONSTANT(CURSOR_BUSY);
-    BIND_ENUM_CONSTANT(CURSOR_DRAG);
-    BIND_ENUM_CONSTANT(CURSOR_CAN_DROP);
-    BIND_ENUM_CONSTANT(CURSOR_FORBIDDEN);
-    BIND_ENUM_CONSTANT(CURSOR_VSIZE);
-    BIND_ENUM_CONSTANT(CURSOR_HSIZE);
-    BIND_ENUM_CONSTANT(CURSOR_BDIAGSIZE);
-    BIND_ENUM_CONSTANT(CURSOR_FDIAGSIZE);
-    BIND_ENUM_CONSTANT(CURSOR_MOVE);
-    BIND_ENUM_CONSTANT(CURSOR_VSPLIT);
-    BIND_ENUM_CONSTANT(CURSOR_HSPLIT);
-    BIND_ENUM_CONSTANT(CURSOR_HELP);
-
     BIND_ENUM_CONSTANT(PRESET_TOP_LEFT);
     BIND_ENUM_CONSTANT(PRESET_TOP_RIGHT);
     BIND_ENUM_CONSTANT(PRESET_BOTTOM_LEFT);
@@ -4002,7 +3984,7 @@ Control::Control() {
     data.RI                         = nullptr;
     data.theme_owner                = nullptr;
     data.modal_exclusive            = false;
-    data.default_cursor             = CURSOR_ARROW;
+    data.default_cursor             = Input::CURSOR_ARROW;
     data.h_size_flags               = SIZE_FILL;
     data.v_size_flags               = SIZE_FILL;
     data.expand                     = 1;

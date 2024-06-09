@@ -737,8 +737,8 @@ static const NSRange kEmptyRange = {NSNotFound, 0};
 }
 
 - (void)cursorUpdate:(NSEvent*)event {
-    OS::CursorType p_type           = MacOSOS::singleton->cursor_type;
-    MacOSOS::singleton->cursor_type = OS::CURSOR_MAX;
+    Input::CursorType p_type        = MacOSOS::singleton->cursor_type;
+    MacOSOS::singleton->cursor_type = Input::CURSOR_MAX;
     MacOSOS::singleton->set_cursor_type(p_type);
 }
 
@@ -939,8 +939,8 @@ static void _mouseDownEvent(NSEvent* event, int index, int mask, bool pressed) {
         );
     }
 
-    OS::CursorType p_type           = MacOSOS::singleton->cursor_type;
-    MacOSOS::singleton->cursor_type = OS::CURSOR_MAX;
+    Input::CursorType p_type        = MacOSOS::singleton->cursor_type;
+    MacOSOS::singleton->cursor_type = Input::CURSOR_MAX;
     MacOSOS::singleton->set_cursor_type(p_type);
 }
 
@@ -2131,7 +2131,7 @@ Error MacOSOS::open_dynamic_library(
     return OK;
 }
 
-void MacOSOS::set_cursor_type(CursorType p_type) {
+void MacOSOS::set_cursor_type(Input::CursorType p_type) {
     if (cursor_type == p_type) {
         return;
     }
@@ -2145,65 +2145,65 @@ void MacOSOS::set_cursor_type(CursorType p_type) {
         [cursors[p_type] set];
     } else {
         switch (p_type) {
-            case CURSOR_ARROW:
+            case Input::CURSOR_ARROW:
                 [[NSCursor arrowCursor] set];
                 break;
-            case CURSOR_IBEAM:
+            case Input::CURSOR_IBEAM:
                 [[NSCursor IBeamCursor] set];
                 break;
-            case CURSOR_POINTING_HAND:
+            case Input::CURSOR_POINTING_HAND:
                 [[NSCursor pointingHandCursor] set];
                 break;
-            case CURSOR_CROSS:
+            case Input::CURSOR_CROSS:
                 [[NSCursor crosshairCursor] set];
                 break;
-            case CURSOR_WAIT:
+            case Input::CURSOR_WAIT:
                 [[NSCursor arrowCursor] set];
                 break;
-            case CURSOR_BUSY:
+            case Input::CURSOR_BUSY:
                 [[NSCursor arrowCursor] set];
                 break;
-            case CURSOR_DRAG:
+            case Input::CURSOR_DRAG:
                 [[NSCursor closedHandCursor] set];
                 break;
-            case CURSOR_CAN_DROP:
+            case Input::CURSOR_CAN_DROP:
                 [[NSCursor openHandCursor] set];
                 break;
-            case CURSOR_FORBIDDEN:
+            case Input::CURSOR_FORBIDDEN:
                 [[NSCursor operationNotAllowedCursor] set];
                 break;
-            case CURSOR_VSIZE:
+            case Input::CURSOR_VSIZE:
                 [cursorFromSelector(
                     @selector(_windowResizeNorthSouthCursor),
                     @selector(resizeUpDownCursor)
                 ) set];
                 break;
-            case CURSOR_HSIZE:
+            case Input::CURSOR_HSIZE:
                 [cursorFromSelector(
                     @selector(_windowResizeEastWestCursor),
                     @selector(resizeLeftRightCursor)
                 ) set];
                 break;
-            case CURSOR_BDIAGSIZE:
+            case Input::CURSOR_BDIAGSIZE:
                 [cursorFromSelector(@selector
                                     (_windowResizeNorthEastSouthWestCursor))
                     set];
                 break;
-            case CURSOR_FDIAGSIZE:
+            case Input::CURSOR_FDIAGSIZE:
                 [cursorFromSelector(@selector
                                     (_windowResizeNorthWestSouthEastCursor))
                     set];
                 break;
-            case CURSOR_MOVE:
+            case Input::CURSOR_MOVE:
                 [[NSCursor arrowCursor] set];
                 break;
-            case CURSOR_VSPLIT:
+            case Input::CURSOR_VSPLIT:
                 [[NSCursor resizeUpDownCursor] set];
                 break;
-            case CURSOR_HSPLIT:
+            case Input::CURSOR_HSPLIT:
                 [[NSCursor resizeLeftRightCursor] set];
                 break;
-            case CURSOR_HELP:
+            case Input::CURSOR_HELP:
                 [cursorFromSelector(@selector(_helpCursor)) set];
                 break;
             default: {
@@ -2214,17 +2214,17 @@ void MacOSOS::set_cursor_type(CursorType p_type) {
     cursor_type = p_type;
 }
 
-OS::CursorType MacOSOS::get_cursor_type() const {
+Input::CursorType MacOSOS::get_cursor_type() const {
     return cursor_type;
 }
 
 void MacOSOS::set_custom_mouse_cursor(
     const RES& p_cursor,
-    CursorType p_type,
+    Input::CursorType p_type,
     const Vector2& p_hotspot
 ) {
     if (p_cursor.is_valid()) {
-        Map<CursorType, Vector<Variant>>::Element* cursor_c =
+        Map<Input::CursorType, Vector<Variant>>::Element* cursor_c =
             cursors_cache.find(p_type);
 
         if (cursor_c) {
@@ -2351,8 +2351,8 @@ void MacOSOS::set_custom_mouse_cursor(
             cursors[p_type] = NULL;
         }
 
-        CursorType c = cursor_type;
-        cursor_type  = CURSOR_MAX;
+        Input::CursorType c = cursor_type;
+        cursor_type         = Input::CURSOR_MAX;
         set_cursor_type(c);
 
         cursors_cache.erase(p_type);
@@ -3816,8 +3816,8 @@ void MacOSOS::set_mouse_mode(MouseMode p_mode) {
     mouse_mode = p_mode;
 
     if (mouse_mode == MOUSE_MODE_VISIBLE || mouse_mode == MOUSE_MODE_CONFINED) {
-        CursorType p_type = cursor_type;
-        cursor_type       = OS::CURSOR_MAX;
+        Input::CursorType p_type = cursor_type;
+        cursor_type              = Input::CURSOR_MAX;
         set_cursor_type(p_type);
     }
 }
@@ -3964,7 +3964,7 @@ MacOSOS::MacOSOS() {
     ERR_FAIL_COND(!delegate);
     [NSApp setDelegate:delegate];
 
-    cursor_type = CURSOR_ARROW;
+    cursor_type = Input::CURSOR_ARROW;
 
     maximized      = false;
     minimized      = false;

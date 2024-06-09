@@ -244,7 +244,7 @@ void WindowsOS::initialize_core() {
 
     DefaultIP::make_default();
 
-    cursor_type = CURSOR_ARROW;
+    cursor_type = Input::CURSOR_ARROW;
 }
 
 bool WindowsOS::can_draw() const {
@@ -715,8 +715,8 @@ LRESULT WindowsOS::WndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam) {
                     );
                 }
 
-                CursorType c = cursor_type;
-                cursor_type  = CURSOR_MAX;
+                Input::CursorType c = cursor_type;
+                cursor_type         = Input::CURSOR_MAX;
                 set_cursor_type(c);
                 outside = false;
 
@@ -830,8 +830,8 @@ LRESULT WindowsOS::WndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam) {
                     );
                 }
 
-                CursorType c = cursor_type;
-                cursor_type  = CURSOR_MAX;
+                Input::CursorType c = cursor_type;
+                cursor_type         = Input::CURSOR_MAX;
                 set_cursor_type(c);
                 outside = false;
 
@@ -1281,8 +1281,8 @@ LRESULT WindowsOS::WndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam) {
                     }
                 } else {
                     if (hCursor != NULL) {
-                        CursorType c = cursor_type;
-                        cursor_type  = CURSOR_MAX;
+                        Input::CursorType c = cursor_type;
+                        cursor_type         = Input::CURSOR_MAX;
                         set_cursor_type(c);
                         hCursor = NULL;
                     }
@@ -2068,8 +2068,8 @@ void WindowsOS::_set_mouse_mode_impl(MouseMode p_mode) {
             SetCursor(NULL);
         }
     } else {
-        CursorType c = cursor_type;
-        cursor_type  = CURSOR_MAX;
+        Input::CursorType c = cursor_type;
+        cursor_type         = Input::CURSOR_MAX;
         set_cursor_type(c);
     }
 }
@@ -2955,8 +2955,8 @@ void WindowsOS::process_events() {
     }
 }
 
-void WindowsOS::set_cursor_type(CursorType p_type) {
-    ERR_FAIL_INDEX(p_type, CURSOR_MAX);
+void WindowsOS::set_cursor_type(Input::CursorType p_type) {
+    ERR_FAIL_INDEX(p_type, Input::CURSOR_MAX);
 
     if (cursor_type == p_type) {
         return;
@@ -2967,7 +2967,7 @@ void WindowsOS::set_cursor_type(CursorType p_type) {
         return;
     }
 
-    static const LPCTSTR win_cursors[CURSOR_MAX] = {
+    static const LPCTSTR win_cursors[Input::CURSOR_MAX] = {
         IDC_ARROW,
         IDC_IBEAM,
         IDC_HAND, // finger
@@ -2996,17 +2996,17 @@ void WindowsOS::set_cursor_type(CursorType p_type) {
     cursor_type = p_type;
 }
 
-OS::CursorType WindowsOS::get_cursor_type() const {
+Input::CursorType WindowsOS::get_cursor_type() const {
     return cursor_type;
 }
 
 void WindowsOS::set_custom_mouse_cursor(
     const RES& p_cursor,
-    CursorType p_type,
+    Input::CursorType p_type,
     const Vector2& p_hotspot
 ) {
     if (p_cursor.is_valid()) {
-        Map<CursorType, Vector<Variant>>::Element* cursor_c =
+        Map<Input::CursorType, Vector<Variant>>::Element* cursor_c =
             cursors_cache.find(p_type);
 
         if (cursor_c) {
@@ -3143,8 +3143,8 @@ void WindowsOS::set_custom_mouse_cursor(
             cursors[p_type] = NULL;
         }
 
-        CursorType c = cursor_type;
-        cursor_type  = CURSOR_MAX;
+        Input::CursorType c = cursor_type;
+        cursor_type         = Input::CURSOR_MAX;
         set_cursor_type(c);
 
         cursors_cache.erase(p_type);

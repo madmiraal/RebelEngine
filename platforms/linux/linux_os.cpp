@@ -487,14 +487,14 @@ Error LinuxOS::initialize(
         cursor_theme = "default";
     }
 
-    for (int i = 0; i < CURSOR_MAX; i++) {
+    for (int i = 0; i < Input::CURSOR_MAX; i++) {
         cursors[i] = None;
         img[i]     = nullptr;
     }
 
-    current_cursor_type = CURSOR_ARROW;
+    current_cursor_type = Input::CURSOR_ARROW;
 
-    for (int i = 0; i < CURSOR_MAX; i++) {
+    for (int i = 0; i < Input::CURSOR_MAX; i++) {
         static const char* cursor_file[] = {
             "left_ptr",
             "xterm",
@@ -568,7 +568,7 @@ Error LinuxOS::initialize(
 
         null_cursor = cursor;
     }
-    set_cursor_type(CURSOR_BUSY);
+    set_cursor_type(Input::CURSOR_BUSY);
 
     // Set Xdnd (drag & drop) support
     Atom XdndAware = XInternAtom(x11_display, "XdndAware", False);
@@ -896,7 +896,7 @@ void LinuxOS::finalize() {
 #if defined(OPENGL_ENABLED)
     memdelete(gl_context);
 #endif
-    for (int i = 0; i < CURSOR_MAX; i++) {
+    for (int i = 0; i < Input::CURSOR_MAX; i++) {
         if (cursors[i] != None) {
             XFreeCursor(x11_display, cursors[i]);
         }
@@ -4017,8 +4017,8 @@ void LinuxOS::move_window_to_foreground() {
     XFlush(x11_display);
 }
 
-void LinuxOS::set_cursor_type(CursorType p_type) {
-    ERR_FAIL_INDEX(p_type, CURSOR_MAX);
+void LinuxOS::set_cursor_type(Input::CursorType p_type) {
+    ERR_FAIL_INDEX(p_type, Input::CURSOR_MAX);
 
     if (p_type == current_cursor_type) {
         return;
@@ -4027,25 +4027,29 @@ void LinuxOS::set_cursor_type(CursorType p_type) {
     if (mouse_mode == MOUSE_MODE_VISIBLE || mouse_mode == MOUSE_MODE_CONFINED) {
         if (cursors[p_type] != None) {
             XDefineCursor(x11_display, x11_window, cursors[p_type]);
-        } else if (cursors[CURSOR_ARROW] != None) {
-            XDefineCursor(x11_display, x11_window, cursors[CURSOR_ARROW]);
+        } else if (cursors[Input::CURSOR_ARROW] != None) {
+            XDefineCursor(
+                x11_display,
+                x11_window,
+                cursors[Input::CURSOR_ARROW]
+            );
         }
     }
 
     current_cursor_type = p_type;
 }
 
-OS::CursorType LinuxOS::get_cursor_type() const {
+Input::CursorType LinuxOS::get_cursor_type() const {
     return current_cursor_type;
 }
 
 void LinuxOS::set_custom_mouse_cursor(
     const RES& p_cursor,
-    CursorType p_type,
+    Input::CursorType p_type,
     const Vector2& p_hotspot
 ) {
     if (p_cursor.is_valid()) {
-        Map<CursorType, Vector<Variant>>::Element* cursor_c =
+        Map<Input::CursorType, Vector<Variant>>::Element* cursor_c =
             cursors_cache.find(p_type);
 
         if (cursor_c) {
@@ -4153,9 +4157,9 @@ void LinuxOS::set_custom_mouse_cursor(
             cursors[p_type] = XcursorImageLoadCursor(x11_display, img[p_type]);
         }
 
-        CursorType c        = current_cursor_type;
-        current_cursor_type = CURSOR_MAX;
-        set_cursor_type(c);
+        Input::CursorType cursor_type = current_cursor_type;
+        current_cursor_type           = Input::CURSOR_MAX;
+        set_cursor_type(cursor_type);
 
         cursors_cache.erase(p_type);
     }

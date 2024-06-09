@@ -6417,14 +6417,14 @@ void TextEdit::insert_text_at_cursor(const String& p_text) {
     update();
 }
 
-Control::CursorType TextEdit::get_cursor_type(const Point2& p_pos) const {
+Input::CursorType TextEdit::get_cursor_type(const Point2& p_pos) const {
     if (highlighted_word != String()) {
-        return CURSOR_POINTING_HAND;
+        return Input::CURSOR_POINTING_HAND;
     }
 
     if ((completion_active && completion_rect.has_point(p_pos))
         || (is_readonly() && (!is_selecting_enabled() || text.size() == 0))) {
-        return CURSOR_ARROW;
+        return Input::CURSOR_ARROW;
     }
 
     int gutter = cache.style_normal->get_margin(MARGIN_LEFT)
@@ -6438,7 +6438,7 @@ Control::CursorType TextEdit::get_cursor_type(const Point2& p_pos) const {
         // Breakpoint icon.
         if (draw_breakpoint_gutter && p_pos.x > left_margin - 6
             && p_pos.x <= left_margin + cache.breakpoint_gutter_width - 3) {
-            return CURSOR_POINTING_HAND;
+            return Input::CURSOR_POINTING_HAND;
         }
 
         // Info icons.
@@ -6448,9 +6448,9 @@ Control::CursorType TextEdit::get_cursor_type(const Point2& p_pos) const {
             && p_pos.x > left_margin + cache.breakpoint_gutter_width - 6
             && p_pos.x <= gutter_left - 3) {
             if (text.has_info_icon(row)) {
-                return CURSOR_POINTING_HAND;
+                return Input::CURSOR_POINTING_HAND;
             }
-            return CURSOR_ARROW;
+            return Input::CURSOR_ARROW;
         }
 
         // Fold icon.
@@ -6458,19 +6458,19 @@ Control::CursorType TextEdit::get_cursor_type(const Point2& p_pos) const {
             && p_pos.x <= gutter_left + cache.line_number_w
                               + cache.fold_gutter_width - 3) {
             if (is_folded(row) || can_fold(row)) {
-                return CURSOR_POINTING_HAND;
+                return Input::CURSOR_POINTING_HAND;
             } else {
-                return CURSOR_ARROW;
+                return Input::CURSOR_ARROW;
             }
         }
 
-        return CURSOR_ARROW;
+        return Input::CURSOR_ARROW;
     } else {
         int xmargin_end =
             get_size().width - cache.style_normal->get_margin(MARGIN_RIGHT);
         if (draw_minimap && p_pos.x > xmargin_end - minimap_width
             && p_pos.x <= xmargin_end) {
-            return CURSOR_ARROW;
+            return Input::CURSOR_ARROW;
         }
 
         int row, col;
@@ -6485,7 +6485,7 @@ Control::CursorType TextEdit::get_cursor_type(const Point2& p_pos) const {
             if (p_pos.x > line_width - 3
                 && p_pos.x
                        <= line_width + cache.folded_eol_icon->get_width() + 3) {
-                return CURSOR_POINTING_HAND;
+                return Input::CURSOR_POINTING_HAND;
             }
         }
     }
@@ -9574,7 +9574,7 @@ TextEdit::TextEdit() {
     fold_gutter_width             = 0;
     info_gutter_width             = 0;
     cache.info_gutter_width       = 0;
-    set_default_cursor_type(CURSOR_IBEAM);
+    set_default_cursor_type(Input::CURSOR_IBEAM);
 
     indent_size = 4;
     text.set_indent_size(indent_size);

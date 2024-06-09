@@ -662,7 +662,8 @@ public:
         SEARCH_RESULT_LINE,
     };
 
-    virtual CursorType get_cursor_type(const Point2& p_pos = Point2i()) const;
+    virtual Input::CursorType get_cursor_type(const Point2& p_pos = Point2i())
+        const;
 
     void _get_mouse_pos(const Point2i& p_mouse, int& r_row, int& r_col) const;
     void _get_minimap_mouse_row(const Point2i& p_mouse, int& r_row) const;

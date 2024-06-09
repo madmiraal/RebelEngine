@@ -212,14 +212,14 @@ int OS::get_virtual_keyboard_height() const {
     return 0;
 }
 
-void OS::set_cursor_type(CursorType p_type) {}
+void OS::set_cursor_type(Input::CursorType p_type) {}
 
-OS::CursorType OS::get_cursor_type() const {
-    return CURSOR_ARROW;
+Input::CursorType OS::get_cursor_type() const {
+    return Input::CURSOR_ARROW;
 }
 
 void OS::set_custom_cursor(
-    CursorType cursor_type,
+    Input::CursorType cursor_type,
     const RES& cursor_image,
     const Vector2& cursor_hotspot
 ) {}

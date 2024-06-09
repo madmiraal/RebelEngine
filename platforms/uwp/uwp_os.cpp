@@ -126,7 +126,7 @@ void UwpOS::initialize_core() {
 
     DefaultIP::make_default();
 
-    cursor_type = CURSOR_ARROW;
+    cursor_type = Input::CURSOR_ARROW;
 }
 
 bool UwpOS::can_draw() const {
@@ -674,14 +674,14 @@ void UwpOS::queue_key_event(KeyEvent& p_event) {
     key_event_buffer[key_event_pos++] = p_event;
 }
 
-void UwpOS::set_cursor_type(CursorType p_type) {
-    ERR_FAIL_INDEX(p_type, CURSOR_MAX);
+void UwpOS::set_cursor_type(Input::CursorType p_type) {
+    ERR_FAIL_INDEX(p_type, Input::CURSOR_MAX);
 
     if (cursor_type == p_type) {
         return;
     }
 
-    static const CoreCursorType uwp_cursors[CURSOR_MAX] = {
+    static const CoreCursorType uwp_cursors[Input::CURSOR_MAX] = {
         CoreCursorType::Arrow,
         CoreCursorType::IBeam,
         CoreCursorType::Hand,
@@ -707,13 +707,13 @@ void UwpOS::set_cursor_type(CursorType p_type) {
     cursor_type = p_type;
 }
 
-OS::CursorType UwpOS::get_cursor_type() const {
+Input::CursorType UwpOS::get_cursor_type() const {
     return cursor_type;
 }
 
 void UwpOS::set_custom_mouse_cursor(
     const RES& p_cursor,
-    CursorType p_type,
+    Input::CursorType p_type,
     const Vector2& p_hotspot
 ) {
     // TODO

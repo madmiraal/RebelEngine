@@ -96,9 +96,9 @@ public:
     Vector<Vector2> mpath;
     bool layered_window;
 
-    CursorType cursor_type;
-    NSCursor* cursors[CURSOR_MAX];
-    Map<CursorType, Vector<Variant>> cursors_cache;
+    Input::CursorType cursor_type;
+    NSCursor* cursors[Input::CURSOR_MAX];
+    Map<Input::CursorType, Vector<Variant>> cursors_cache;
     MouseMode mouse_mode;
 
     String title;
@@ -193,11 +193,11 @@ public:
         bool p_also_set_library_path = false
     );
 
-    virtual void set_cursor_type(CursorType p_type);
-    virtual CursorType get_cursor_type() const;
+    virtual void set_cursor_type(Input::CursorType p_type);
+    virtual Input::CursorType get_cursor_type() const;
     virtual void set_custom_mouse_cursor(
         const RES& p_cursor,
-        CursorType p_type,
+        Input::CursorType p_type,
         const Vector2& p_hotspot
     );
 

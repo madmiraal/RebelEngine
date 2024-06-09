@@ -743,7 +743,7 @@ void ColorPicker::_screen_pick_pressed() {
         r->add_child(screen);
         screen->set_as_toplevel(true);
         screen->set_anchors_and_margins_preset(Control::PRESET_WIDE);
-        screen->set_default_cursor_type(CURSOR_POINTING_HAND);
+        screen->set_default_cursor_type(Input::CURSOR_POINTING_HAND);
         screen->connect("gui_input", this, "_screen_input");
         // It immediately toggles off in the first press otherwise.
         screen->call_deferred(

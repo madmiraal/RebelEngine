@@ -334,9 +334,9 @@ class WindowsOS : public OS {
     bool use_raw_input;
     bool drop_events;
 
-    HCURSOR cursors[CURSOR_MAX] = {NULL};
-    CursorType cursor_type;
-    Map<CursorType, Vector<Variant>> cursors_cache;
+    HCURSOR cursors[Input::CURSOR_MAX] = {NULL};
+    Input::CursorType cursor_type;
+    Map<Input::CursorType, Vector<Variant>> cursors_cache;
 
     InputDefault* input;
     WindowsJoypad* joypad;
@@ -520,11 +520,11 @@ public:
     virtual void set_clipboard(const String& p_text);
     virtual String get_clipboard() const;
 
-    void set_cursor_type(CursorType p_type);
-    CursorType get_cursor_type() const;
+    void set_cursor_type(Input::CursorType p_type);
+    Input::CursorType get_cursor_type() const;
     virtual void set_custom_mouse_cursor(
         const RES& p_cursor,
-        CursorType p_type,
+        Input::CursorType p_type,
         const Vector2& p_hotspot
     );
     void GetMaskBitmaps(

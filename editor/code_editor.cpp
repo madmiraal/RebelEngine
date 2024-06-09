@@ -1667,9 +1667,9 @@ void CodeTextEditor::set_edit_state(const Variant& p_state) {
 void CodeTextEditor::set_error(const String& p_error) {
     error->set_text(p_error);
     if (p_error != "") {
-        error->set_default_cursor_type(CURSOR_POINTING_HAND);
+        error->set_default_cursor_type(Input::CURSOR_POINTING_HAND);
     } else {
-        error->set_default_cursor_type(CURSOR_ARROW);
+        error->set_default_cursor_type(Input::CURSOR_ARROW);
     }
 }
 
@@ -2028,7 +2028,7 @@ CodeTextEditor::CodeTextEditor() {
     warning_button = memnew(ToolButton);
     status_bar->add_child(warning_button);
     warning_button->set_v_size_flags(SIZE_EXPAND | SIZE_SHRINK_CENTER);
-    warning_button->set_default_cursor_type(CURSOR_POINTING_HAND);
+    warning_button->set_default_cursor_type(Input::CURSOR_POINTING_HAND);
     warning_button->connect("pressed", this, "_warning_button_pressed");
     warning_button->set_tooltip(TTR("Warnings"));
 
@@ -2036,7 +2036,7 @@ CodeTextEditor::CodeTextEditor() {
     status_bar->add_child(warning_count_label);
     warning_count_label->set_v_size_flags(SIZE_EXPAND | SIZE_SHRINK_CENTER);
     warning_count_label->set_align(Label::ALIGN_RIGHT);
-    warning_count_label->set_default_cursor_type(CURSOR_POINTING_HAND);
+    warning_count_label->set_default_cursor_type(Input::CURSOR_POINTING_HAND);
     warning_count_label->set_mouse_filter(MOUSE_FILTER_STOP);
     warning_count_label->set_tooltip(TTR("Warnings"));
     warning_count_label->add_color_override(

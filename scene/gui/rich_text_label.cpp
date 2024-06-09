@@ -1512,13 +1512,13 @@ void RichTextLabel::_find_click(
     }
 }
 
-Control::CursorType RichTextLabel::get_cursor_type(const Point2& p_pos) const {
+Input::CursorType RichTextLabel::get_cursor_type(const Point2& p_pos) const {
     if (!underline_meta) {
         return get_default_cursor_type();
     }
 
     if (selection.click) {
-        return CURSOR_IBEAM;
+        return Input::CURSOR_IBEAM;
     }
 
     if (main->first_invalid_line < main->lines.size()) {
@@ -1533,7 +1533,7 @@ Control::CursorType RichTextLabel::get_cursor_type(const Point2& p_pos) const {
 
     if (item && !outside
         && ((RichTextLabel*)(this))->_find_meta(item, nullptr)) {
-        return CURSOR_POINTING_HAND;
+        return Input::CURSOR_POINTING_HAND;
     }
 
     return get_default_cursor_type();
