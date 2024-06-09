@@ -322,11 +322,11 @@ SPDX-License-Identifier: MIT
                 [b]Note:[/b] This value can be immediately overwritten by the hardware sensor value on Android and iOS.
             </description>
         </method>
-        <method name="set_custom_mouse_cursor">
+        <method name="set_custom_cursor">
             <return type="void" />
-            <argument index="0" name="image" type="Resource" />
-            <argument index="1" name="shape" type="int" enum="Input.CursorType" default="0" />
-            <argument index="2" name="hotspot" type="Vector2" default="Vector2( 0, 0 )" />
+            <argument index="0" name="cursor_type" type="int" enum="Input.CursorType" />
+            <argument index="1" name="cursor_image" type="Resource" />
+            <argument index="2" name="cursor_hotspot" type="Vector2" default="Vector2( 0, 0 )" />
             <description>
                 Sets a custom mouse cursor image, which is only visible inside the game window. The hotspot can also be specified. Passing [code]null[/code] to the image parameter resets to the system cursor. See [enum CursorType] for the list of shapes.
                 [code]image[/code]'s size must be lower than 256×256.
