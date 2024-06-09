@@ -684,10 +684,10 @@ void LineEdit::drop_data(const Point2& p_point, const Variant& p_data) {
     }
 }
 
-Control::CursorType LineEdit::get_cursor_type(const Point2& p_pos) const {
+Input::CursorType LineEdit::get_cursor_type(const Point2& p_pos) const {
     if ((!text.empty() && is_editable() && _is_over_clear_button(p_pos))
         || (!is_editable() && (!is_selecting_enabled() || text.empty()))) {
-        return CURSOR_ARROW;
+        return Input::CURSOR_ARROW;
     }
     return Control::get_cursor_type(p_pos);
 }
@@ -2438,7 +2438,7 @@ LineEdit::LineEdit() {
 
     deselect();
     set_focus_mode(FOCUS_ALL);
-    set_default_cursor_type(CURSOR_IBEAM);
+    set_default_cursor_type(Input::CURSOR_IBEAM);
     set_mouse_filter(MOUSE_FILTER_STOP);
 
     draw_caret          = true;
