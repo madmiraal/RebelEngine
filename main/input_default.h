@@ -304,7 +304,7 @@ public:
     virtual void set_default_cursor_type(CursorType p_type);
     virtual CursorType get_current_cursor_type() const;
     virtual void set_custom_cursor(
-        CursorType cursor_type,
+        const CursorType& cursor_type,
         const RES& cursor_image,
         const Vector2& cursor_hotspot = Vector2()
     );
