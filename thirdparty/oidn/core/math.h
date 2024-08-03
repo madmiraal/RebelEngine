@@ -1,78 +1,83 @@
-// ======================================================================== //
-// Copyright 2009-2019 Intel Corporation                                    //
-//                                                                          //
-// Licensed under the Apache License, Version 2.0 (the "License");          //
-// you may not use this file except in compliance with the License.         //
-// You may obtain a copy of the License at                                  //
-//                                                                          //
-//     http://www.apache.org/licenses/LICENSE-2.0                           //
-//                                                                          //
-// Unless required by applicable law or agreed to in writing, software      //
-// distributed under the License is distributed on an "AS IS" BASIS,        //
-// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. //
-// See the License for the specific language governing permissions and      //
-// limitations under the License.                                           //
-// ======================================================================== //
+// Copyright 2018 Intel Corporation
+// SPDX-License-Identifier: Apache-2.0
 
 #pragma once
 
 #include "common/platform.h"
 
-namespace oidn {
+OIDN_NAMESPACE_BEGIN
+namespace math {
 
-  constexpr float minVectorLength    = 1e-10f;
-  constexpr float minVectorLengthSqr = minVectorLength * minVectorLength;
-
+#if defined(OIDN_COMPILE_SYCL_DEVICE)
+  // Use the SYCL math functions
+  using sycl::min;
+  using sycl::max;
+  using sycl::isfinite;
+  using sycl::isnan;
+  using sycl::pow;
+  using sycl::log;
+  using sycl::log2;
+  using sycl::exp;
+  using sycl::exp2;
+#elif defined(OIDN_COMPILE_CUDA_DEVICE) || defined(OIDN_COMPILE_HIP_DEVICE)
+  // Use the CUDA/HIP math functions
+  template<typename T> oidn_host_device_inline T min(T a, T b) { return ::min(a, b); }
+  template<typename T> oidn_host_device_inline T max(T a, T b) { return ::max(a, b); }
+  using ::isfinite;
+  using ::isnan;
+  using ::pow;
+  using ::log;
+  using ::log2;
+  using ::exp;
+  using ::exp2;
+#elif defined(OIDN_COMPILE_METAL_DEVICE)
+  // Use the Metal math functions
+  using metal::min;
+  using metal::max;
+  using metal::isfinite;
+  using metal::isnan;
+  using metal::pow;
+  using metal::log;
+  using metal::log2;
+  using metal::exp;
+  using metal::exp2;
+#else
+  using OIDN_NAMESPACE::min;
+  using OIDN_NAMESPACE::max;
+  using std::isfinite;
+  using std::isnan;
+  using std::pow;
   using std::log;
   using std::log2;
   using std::exp;
   using std::exp2;
-  using std::pow;
-  using std::isfinite;
-  using std::isnan;
+#endif
 
-  __forceinline float sqr(float x)
+  // CUDA and HIP do not provide min/max overloads for half
+#if defined(OIDN_COMPILE_CUDA_DEVICE) && (__CUDA_ARCH__ >= 800)
+  oidn_device_inline half min(half a, half b) { return __hmin(a, b); }
+  oidn_device_inline half max(half a, half b) { return __hmax(a, b); }
+#elif (defined(OIDN_COMPILE_CUDA_DEVICE) && (__CUDA_ARCH__ >= 530)) || defined(OIDN_COMPILE_HIP_DEVICE)
+  oidn_device_inline half min(half a, half b) { return (b < a) ? b : a; }
+  oidn_device_inline half max(half a, half b) { return (a < b) ? b : a; }
+#endif
+
+  template<typename T>
+  oidn_host_device_inline T clamp(T x, T minVal, T maxVal)
   {
-    return x * x;
+    return min(max(x, minVal), maxVal);
   }
 
-  __forceinline float rcp(float x)
+  oidn_host_device_inline float to_float_unorm(uint32_t x)
   {
-    __m128 r = _mm_rcp_ss(_mm_set_ss(x));
-    return _mm_cvtss_f32(_mm_sub_ss(_mm_add_ss(r, r), _mm_mul_ss(_mm_mul_ss(r, r), _mm_set_ss(x))));
+    return float(x) * 2.3283064365386962890625e-10f; // x / 2^32
   }
 
-  __forceinline float rsqrt(float x)
+  // Maps nan to zero
+  oidn_host_device_inline float nan_to_zero(float x)
   {
-    __m128 r = _mm_rsqrt_ss(_mm_set_ss(x));
-    return _mm_cvtss_f32(_mm_add_ss(_mm_mul_ss(_mm_set_ss(1.5f), r),
-             _mm_mul_ss(_mm_mul_ss(_mm_mul_ss(_mm_set_ss(x), _mm_set_ss(-0.5f)), r), _mm_mul_ss(r, r))));
+    return isnan(x) ? 0.f : x;
   }
 
-  __forceinline float maxSafe(float value, float minValue)
-  {
-    return isfinite(value) ? max(value, minValue) : minValue;
-  }
-
-  __forceinline float clampSafe(float value, float minValue, float maxValue)
-  {
-    return isfinite(value) ? clamp(value, minValue, maxValue) : minValue;
-  }
-
-  // Returns ceil(a / b) for non-negative integers
-  template<class Int>
-  __forceinline constexpr Int ceilDiv(Int a, Int b)
-  {
-    //assert(a >= 0);
-    //assert(b > 0);
-    return (a + b - 1) / b;
-  }
-
-  // Returns a rounded up to multiple of b
-  template<class Int>
-  __forceinline constexpr Int roundUp(Int a, Int b)
-  {
-    return ceilDiv(a, b) * b;
-  }
-
-} // namespace oidn
+} // namespace math
+OIDN_NAMESPACE_END

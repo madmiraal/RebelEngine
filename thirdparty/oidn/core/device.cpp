@@ -1,37 +1,96 @@
-// ======================================================================== //
-// Copyright 2009-2019 Intel Corporation                                    //
-//                                                                          //
-// Licensed under the Apache License, Version 2.0 (the "License");          //
-// you may not use this file except in compliance with the License.         //
-// You may obtain a copy of the License at                                  //
-//                                                                          //
-//     http://www.apache.org/licenses/LICENSE-2.0                           //
-//                                                                          //
-// Unless required by applicable law or agreed to in writing, software      //
-// distributed under the License is distributed on an "AS IS" BASIS,        //
-// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. //
-// See the License for the specific language governing permissions and      //
-// limitations under the License.                                           //
-// ======================================================================== //
+// Copyright 2018 Intel Corporation
+// SPDX-License-Identifier: Apache-2.0
 
 #include "device.h"
-#include "autoencoder.h"
+#include "subdevice.h"
+#include "context.h"
+#include "rt_filter.h"
+#include "rtlightmap_filter.h"
 
-namespace oidn {
+OIDN_NAMESPACE_BEGIN
 
   thread_local Device::ErrorState Device::globalError;
 
-  Device::Device()
+  int PhysicalDevice::getInt(const std::string& name) const
   {
-    if (!mayiuse(sse41))
-      throw Exception(Error::UnsupportedHardware, "SSE4.1 support is required at minimum");
+    if (name == "type")
+      return static_cast<int>(type);
+    else if (name == "uuidSupported")
+      return uuidSupported;
+    else if (name == "luidSupported")
+      return luidSupported;
+    else if (name == "nodeMask")
+    {
+      if (!luidSupported)
+        throw Exception(Error::InvalidArgument,
+                        "physical device node mask unavailable, check luidSupported first");
+      return nodeMask;
+    }
+    else if (name == "pciAddressSupported")
+      return pciAddressSupported;
+    else if (name == "pciDomain")
+    {
+      if (!pciAddressSupported)
+        throw Exception(Error::InvalidArgument,
+                        "physical device PCI domain number unavailable, check pciAddressSupported first");
+      return pciDomain;
+    }
+    else if (name == "pciBus")
+    {
+      if (!pciAddressSupported)
+        throw Exception(Error::InvalidArgument,
+                        "physical device PCI bus number unavailable, check pciAddressSupported first");
+      return pciBus;
+    }
+    else if (name == "pciDevice")
+    {
+      if (!pciAddressSupported)
+        throw Exception(Error::InvalidArgument,
+                        "physical device PCI device number unavailable, check pciAddressSupported first");
+      return pciDevice;
+    }
+    else if (name == "pciFunction")
+    {
+      if (!pciAddressSupported)
+        throw Exception(Error::InvalidArgument,
+                        "physical device PCI function number unavailable, check pciAddressSupported first");
+      return pciFunction;
+    }
+    else
+      throw Exception(Error::InvalidArgument, "unknown physical device parameter or type mismatch: '" + name + "'");
   }
 
-  Device::~Device()
+  const char* PhysicalDevice::getString(const std::string& name) const
   {
-    // -- GODOT start --
-    //observer.reset();
-    // -- GODOT end --
+    if (name == "name")
+      return this->name.c_str();
+    else
+      throw Exception(Error::InvalidArgument, "unknown physical device parameter or type mismatch: '" + name + "'");
+  }
+
+  Data PhysicalDevice::getData(const std::string& name) const
+  {
+    if (name == "uuid")
+    {
+      if (!uuidSupported)
+        throw Exception(Error::InvalidArgument, "physical device UUID unavailable, check uuidSupported first");
+      return {uuid.bytes, sizeof(uuid.bytes)};
+    }
+    else if (name == "luid")
+    {
+      if (!luidSupported)
+        throw Exception(Error::InvalidArgument, "physical device LUID unavailable, check luidSupported first");
+      return {luid.bytes, sizeof(luid.bytes)};
+    }
+    else
+      throw Exception(Error::InvalidArgument, "unknown physical device parameter or type mismatch: '" + name + "'");
+  }
+
+  Device::Device()
+  {
+    // Get default values from environment variables
+    if (getEnvVar("OIDN_VERBOSE", verbose))
+      error.setVerbose(verbose);
   }
 
   void Device::setError(Device* device, Error code, const std::string& message)
@@ -48,14 +107,14 @@ namespace oidn {
       }
 
       // Print the error message in verbose mode
-      if (device->isVerbose())
-        std::cerr << "Error: " << message << std::endl;
+      device->printError(message);
 
       // Call the error callback function
-      ErrorFunction errorFunc;
-      void* errorUserPtr;
+      ErrorFunction errorFunc = nullptr;
+      void* errorUserPtr = nullptr;
 
       {
+        // setError is called outside the device lock, so we need to lock it here
         std::lock_guard<std::mutex> lock(device->mutex);
         errorFunc = device->errorFunc;
         errorUserPtr = device->errorUserPtr;
@@ -71,6 +130,9 @@ namespace oidn {
         globalError.code = code;
         globalError.message = message;
       }
+
+      // Print the error message in verbose mode
+      Context::get().printError(message);
     }
   }
 
@@ -103,14 +165,10 @@ namespace oidn {
     errorUserPtr = userPtr;
   }
 
-  int Device::get1i(const std::string& name)
+  int Device::getInt(const std::string& name)
   {
-    if (name == "numThreads")
-      return numThreads;
-    else if (name == "setAffinity")
-      return setAffinity;
-    else if (name == "verbose")
-      return verbose;
+    if (name == "type")
+      return static_cast<int>(getType());
     else if (name == "version")
       return OIDN_VERSION;
     else if (name == "versionMajor")
@@ -119,21 +177,32 @@ namespace oidn {
       return OIDN_VERSION_MINOR;
     else if (name == "versionPatch")
       return OIDN_VERSION_PATCH;
+    else if (name == "verbose")
+      return verbose;
+    else if (name == "systemMemorySupported")
+      return systemMemorySupported;
+    else if (name == "managedMemorySupported")
+      return managedMemorySupported;
+    else if (name == "externalMemoryTypes")
+      return static_cast<int>(externalMemoryTypes);
     else
-      throw Exception(Error::InvalidArgument, "invalid parameter");
+      throw Exception(Error::InvalidArgument, "unknown device parameter or type mismatch: '" + name + "'");
   }
 
-  void Device::set1i(const std::string& name, int value)
+  void Device::setInt(const std::string& name, int value)
   {
-    if (name == "numThreads")
-      numThreads = value;
-    else if (name == "setAffinity")
-      setAffinity = value;
-    else if (name == "verbose")
+    if (name == "verbose")
     {
-      verbose = value;
-      error.verbose = value;
+      if (!isEnvVar("OIDN_VERBOSE"))
+      {
+        verbose = value;
+        error.setVerbose(value);
+      }
+      else if (verbose != value)
+        printWarning("OIDN_VERBOSE environment variable overrides device parameter");
     }
+    else
+      printWarning("unknown device parameter or type mismatch: '" + name + "'");
 
     dirty = true;
   }
@@ -143,33 +212,22 @@ namespace oidn {
     if (isCommitted())
       throw Exception(Error::InvalidOperation, "device can be committed only once");
 
-    // -- GODOT start --
-    #if 0
-    // -- GODOT end --
-    // Get the optimal thread affinities
-    if (setAffinity)
+    if (isVerbose())
     {
-      affinity = std::make_shared<ThreadAffinity>(1, verbose); // one thread per core
-      if (affinity->getNumThreads() == 0)
-        affinity.reset();
+      std::cout << std::endl;
+      std::cout << "Intel(R) Open Image Denoise " << OIDN_VERSION_STRING << std::endl;
+      std::cout << "  Compiler  : " << getCompilerName() << std::endl;
+      std::cout << "  Build     : " << getBuildName() << std::endl;
+      std::cout << "  OS        : " << getOSName() << std::endl;
     }
 
-    // Create the task arena
-    const int maxNumThreads = affinity ? affinity->getNumThreads() : tbb::this_task_arena::max_concurrency();
-    numThreads = (numThreads > 0) ? min(numThreads, maxNumThreads) : maxNumThreads;
-    arena = std::make_shared<tbb::task_arena>(numThreads);
-
-    // Automatically set the thread affinities
-    if (affinity)
-      observer = std::make_shared<PinningObserver>(affinity, *arena);
-    // -- GODOT start --
-    #endif
-    numThreads = 1;
-    // -- GODOT end --
-    dirty = false;
+    init();
 
     if (isVerbose())
-      print();
+      std::cout << std::endl;
+
+    dirty = false;
+    committed = true;
   }
 
   void Device::checkCommitted()
@@ -178,61 +236,59 @@ namespace oidn {
       throw Exception(Error::InvalidOperation, "changes to the device are not committed");
   }
 
-  Ref<Buffer> Device::newBuffer(size_t byteSize)
+  Engine* Device::getEngine(int i) const
   {
-    checkCommitted();
-    return makeRef<Buffer>(Ref<Device>(this), byteSize);
+    return getSubdevice(i)->getEngine();
   }
 
-  Ref<Buffer> Device::newBuffer(void* ptr, size_t byteSize)
+  Ref<Buffer> Device::newUserBuffer(size_t byteSize, Storage storage)
   {
-    checkCommitted();
-    return makeRef<Buffer>(Ref<Device>(this), ptr, byteSize);
+    return getEngine()->newBuffer(byteSize, storage)->toUser();
+  }
+
+  Ref<Buffer> Device::newUserBuffer(void* ptr, size_t byteSize)
+  {
+    return getEngine()->newBuffer(ptr, byteSize)->toUser();
+  }
+
+  Ref<Buffer> Device::newNativeUserBuffer(void* handle)
+  {
+    return getEngine()->newNativeBuffer(handle)->toUser();
+  }
+
+  Ref<Buffer> Device::newExternalUserBuffer(ExternalMemoryTypeFlag fdType,
+                                            int fd, size_t byteSize)
+  {
+    return getEngine()->newExternalBuffer(fdType, fd, byteSize)->toUser();
+  }
+
+  Ref<Buffer> Device::newExternalUserBuffer(ExternalMemoryTypeFlag handleType,
+                                            void* handle, const void* name, size_t byteSize)
+  {
+    return getEngine()->newExternalBuffer(handleType, handle, name, byteSize)->toUser();
   }
 
   Ref<Filter> Device::newFilter(const std::string& type)
   {
-    checkCommitted();
-
-    if (isVerbose())
+    if (isVerbose(2))
       std::cout << "Filter: " << type << std::endl;
 
     Ref<Filter> filter;
 
-// -- GODOT start --
-// Godot doesn't need Raytracing filters. Removing them saves space in the weights files.
-#if 0
-// -- GODOT end --
     if (type == "RT")
-      filter = makeRef<RTFilter>(Ref<Device>(this));
-// -- GODOT start --
-// Godot doesn't need Raytracing filters. Removing them saves space in the weights files.
-#endif
-    if (type == "RTLightmap")
-// -- GODOT end --
-      filter = makeRef<RTLightmapFilter>(Ref<Device>(this));
+      filter = makeRef<RTFilter>(this);
+    else if (type == "RTLightmap")
+      filter = makeRef<RTLightmapFilter>(this);
     else
-      throw Exception(Error::InvalidArgument, "unknown filter type");
+      throw Exception(Error::InvalidArgument, "unknown filter type: '" + type + "'");
 
     return filter;
   }
 
-  void Device::print()
+  void Device::trimScratch()
   {
-    std::cout << std::endl;
-
-    std::cout << "Intel(R) Open Image Denoise " << OIDN_VERSION_STRING << std::endl;
-    std::cout << "  Compiler: " << getCompilerName() << std::endl;
-    std::cout << "  Build   : " << getBuildName() << std::endl;
-    std::cout << "  Platform: " << getPlatformName() << std::endl;
-
-// -- GODOT start --
-//    std::cout << "  Tasking :";
-//    std::cout << " TBB" << TBB_VERSION_MAJOR << "." << TBB_VERSION_MINOR;
-//    std::cout << " TBB_header_interface_" << TBB_INTERFACE_VERSION << " TBB_lib_interface_" << tbb::TBB_runtime_interface_version();
-//    std::cout << std::endl;
-// -- GODOT end --
-    std::cout << std::endl;
+    for (const auto& subdevice : subdevices)
+      subdevice->trimScratch();
   }
 
-} // namespace oidn
+OIDN_NAMESPACE_END

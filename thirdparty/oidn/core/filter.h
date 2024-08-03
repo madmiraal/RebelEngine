@@ -1,52 +1,53 @@
-// ======================================================================== //
-// Copyright 2009-2019 Intel Corporation                                    //
-//                                                                          //
-// Licensed under the Apache License, Version 2.0 (the "License");          //
-// you may not use this file except in compliance with the License.         //
-// You may obtain a copy of the License at                                  //
-//                                                                          //
-//     http://www.apache.org/licenses/LICENSE-2.0                           //
-//                                                                          //
-// Unless required by applicable law or agreed to in writing, software      //
-// distributed under the License is distributed on an "AS IS" BASIS,        //
-// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. //
-// See the License for the specific language governing permissions and      //
-// limitations under the License.                                           //
-// ======================================================================== //
+// Copyright 2018 Intel Corporation
+// SPDX-License-Identifier: Apache-2.0
 
 #pragma once
 
-#include "common.h"
 #include "device.h"
 #include "image.h"
+#include "data.h"
 
-namespace oidn {
+OIDN_NAMESPACE_BEGIN
 
   class Filter : public RefCount
   {
+  public:
+    explicit Filter(const Ref<Device>& device);
+    ~Filter();
+
+    Device* getDevice() const { return device.get(); }
+
+    virtual void setImage(const std::string& name, const Ref<Image>& image) = 0;
+    virtual void unsetImage(const std::string& name) = 0;
+    virtual void setData(const std::string& name, const Data& data) = 0;
+    virtual void updateData(const std::string& name) = 0;
+    virtual void unsetData(const std::string& name) = 0;
+    virtual void setInt(const std::string& name, int value) = 0;
+    virtual int getInt(const std::string& name) = 0;
+    virtual void setFloat(const std::string& name, float value) = 0;
+    virtual float getFloat(const std::string& name) = 0;
+
+    void setProgressMonitorFunction(ProgressMonitorFunction func, void* userPtr);
+
+    virtual void commit() = 0;
+    virtual void execute(SyncMode sync = SyncMode::Sync) = 0;
+
   protected:
+    void setParam(int& dst, int src);
+    void setParam(bool& dst, int src);
+    void setParam(Quality& dst, Quality src);
+    void setParam(Ref<Image>& dst, const Ref<Image>& src);
+    void removeParam(Ref<Image>& dst);
+    void setParam(Data& dst, const Data& src);
+    void removeParam(Data& dst);
+
     Ref<Device> device;
 
     ProgressMonitorFunction progressFunc = nullptr;
     void* progressUserPtr = nullptr;
 
     bool dirty = true;
-
-  public:
-    explicit Filter(const Ref<Device>& device) : device(device) {}
-
-    virtual void setImage(const std::string& name, const Image& data) = 0;
-    virtual void set1i(const std::string& name, int value) = 0;
-    virtual int get1i(const std::string& name) = 0;
-    virtual void set1f(const std::string& name, float value) = 0;
-    virtual float get1f(const std::string& name) = 0;
-
-    void setProgressMonitorFunction(ProgressMonitorFunction func, void* userPtr);
-
-    virtual void commit() = 0;
-    virtual void execute() = 0;
-
-    Device* getDevice() { return device.get(); }
+    bool dirtyParam = true;
   };
 
-} // namespace oidn
+OIDN_NAMESPACE_END
