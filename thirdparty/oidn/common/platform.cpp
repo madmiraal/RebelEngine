@@ -1,26 +1,13 @@
-// ======================================================================== //
-// Copyright 2009-2019 Intel Corporation                                    //
-//                                                                          //
-// Licensed under the Apache License, Version 2.0 (the "License");          //
-// you may not use this file except in compliance with the License.         //
-// You may obtain a copy of the License at                                  //
-//                                                                          //
-//     http://www.apache.org/licenses/LICENSE-2.0                           //
-//                                                                          //
-// Unless required by applicable law or agreed to in writing, software      //
-// distributed under the License is distributed on an "AS IS" BASIS,        //
-// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. //
-// See the License for the specific language governing permissions and      //
-// limitations under the License.                                           //
-// ======================================================================== //
+// Copyright 2009 Intel Corporation
+// SPDX-License-Identifier: Apache-2.0
 
 #include "platform.h"
 
-namespace oidn {
+OIDN_NAMESPACE_BEGIN
 
-  // ----------------------------------------------------------------------------
+  // -----------------------------------------------------------------------------------------------
   // Common functions
-  // ----------------------------------------------------------------------------
+  // -----------------------------------------------------------------------------------------------
 
   void* alignedMalloc(size_t size, size_t alignment)
   {
@@ -28,7 +15,13 @@ namespace oidn {
       return nullptr;
 
     assert((alignment & (alignment-1)) == 0);
+  #if defined(OIDN_ARCH_X64) || defined(_MSC_VER)
     void* ptr = _mm_malloc(size, alignment);
+  #else
+    void* ptr;
+    if (posix_memalign(&ptr, max(alignment, sizeof(void*)), size) != 0)
+      ptr = nullptr;
+  #endif
 
     if (ptr == nullptr)
       throw std::bad_alloc();
@@ -39,14 +32,36 @@ namespace oidn {
   void alignedFree(void* ptr)
   {
     if (ptr)
+    #if defined(OIDN_ARCH_X64) || defined(_MSC_VER)
       _mm_free(ptr);
+    #else
+      free(ptr);
+    #endif
   }
 
-  // ----------------------------------------------------------------------------
-  // System information
-  // ----------------------------------------------------------------------------
+  // -----------------------------------------------------------------------------------------------
+  // Data type
+  // -----------------------------------------------------------------------------------------------
 
-  std::string getPlatformName()
+  std::ostream& operator <<(std::ostream& sm, DataType dataType)
+  {
+    switch (dataType)
+    {
+    case DataType::Void:    sm << "v";   break;
+    case DataType::UInt8:   sm << "u8";  break;
+    case DataType::Float16: sm << "f16"; break;
+    case DataType::Float32: sm << "f32"; break;
+    default:                sm << "?";   break;
+    }
+
+    return sm;
+  }
+
+  // -----------------------------------------------------------------------------------------------
+  // System information
+  // -----------------------------------------------------------------------------------------------
+
+  std::string getOSName()
   {
     std::string name;
 
@@ -66,10 +81,10 @@ namespace oidn {
     return "Unknown";
   #endif
 
-  #if defined(__x86_64__) || defined(_M_X64) || defined(__ia64__) || defined(__aarch64__)
-    name += " (64-bit)";
-  #else
-    name += " (32-bit)";
+  #if defined(OIDN_ARCH_X64)
+    name += " (x86-64)";
+  #elif defined(OIDN_ARCH_ARM64)
+    name += " (ARM64)";
   #endif
 
     return name;
@@ -78,10 +93,10 @@ namespace oidn {
   std::string getCompilerName()
   {
   #if defined(__INTEL_COMPILER)
-    int mayor = __INTEL_COMPILER / 100 % 100;
-    int minor = __INTEL_COMPILER % 100;
+    int major = __INTEL_COMPILER / 100 % 100;
+    int minor = __INTEL_COMPILER % 100 / 10;
     std::string version = "Intel Compiler ";
-    version += toString(mayor);
+    version += toString(major);
     version += "." + toString(minor);
   #if defined(__INTEL_COMPILER_UPDATE)
     version += "." + toString(__INTEL_COMPILER_UPDATE);
@@ -104,11 +119,19 @@ namespace oidn {
 
   std::string getBuildName()
   {
+    std::string name;
+
   #if defined(NDEBUG)
-    return "Release";
+    name = "Release";
   #else
-    return "Debug";
+    name = "Debug";
   #endif
+
+  #if defined(OIDN_SANITIZER)
+    name += "+" OIDN_SANITIZER "Sanitizer";
+  #endif
+
+    return name;
   }
 
-} // namespace oidn
+OIDN_NAMESPACE_END
