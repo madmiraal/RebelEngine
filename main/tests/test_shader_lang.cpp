@@ -335,7 +335,7 @@ MainLoop* test() {
 
     if (cmdlargs.empty()) {
         // try editor!
-        print_line("usage: godot -test shader_lang <shader>");
+        print_line("usage: rebel -test shader_lang <shader>");
         return nullptr;
     }
 
