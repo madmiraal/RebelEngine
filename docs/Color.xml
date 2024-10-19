@@ -12,8 +12,8 @@ SPDX-License-Identifier: MIT
     </brief_description>
     <description>
         A color represented by red, green, blue, and alpha (RGBA) components. The alpha component is often used for opacity. Values are in floating-point and usually range from 0 to 1. Some properties (such as CanvasItem.modulate) may accept values greater than 1 (overbright or HDR colors).
-        You can also create a color from standardized color names by using [method @GDScript.ColorN] or directly using the color constants defined here. The standardized color set is based on the [url=https://en.wikipedia.org/wiki/X11_color_names]X11 color names[/url].
-        If you want to supply values in a range of 0 to 255, you should use [method @GDScript.Color8].
+        You can also create a color from standardized color names by using [method @RebelScript.ColorN] or directly using the color constants defined here. The standardized color set is based on the [url=https://en.wikipedia.org/wiki/X11_color_names]X11 color names[/url].
+        If you want to supply values in a range of 0 to 255, you should use [method @RebelScript.Color8].
         [b]Note:[/b] In a boolean context, a Color will evaluate to [code]false[/code] if it's equal to [code]Color(0, 0, 0, 1)[/code] (opaque black). Otherwise, a Color will always evaluate to [code]true[/code].
         [img caption="Color constants cheatsheet"]/img/color_constants.png[/img]
     </description>
@@ -24,7 +24,7 @@ SPDX-License-Identifier: MIT
             <return type="Color" />
             <argument index="0" name="from" type="String" />
             <description>
-                Constructs a color from an HTML hexadecimal color string in ARGB or RGB format. See also [method @GDScript.ColorN].
+                Constructs a color from an HTML hexadecimal color string in ARGB or RGB format. See also [method @RebelScript.ColorN].
                 [codeblock]
                 # Each of the following creates the same color RGBA(178, 217, 10, 255).
                 var c1 = Color("#ffb2d90a") # ARGB format with "#".
@@ -140,7 +140,7 @@ SPDX-License-Identifier: MIT
             <return type="bool" />
             <argument index="0" name="color" type="Color" />
             <description>
-                Returns [code]true[/code] if this color and [code]color[/code] are approximately equal, by running [method @GDScript.is_equal_approx] on each component.
+                Returns [code]true[/code] if this color and [code]color[/code] are approximately equal, by running [method @RebelScript.is_equal_approx] on each component.
             </description>
         </method>
         <method name="lightened">

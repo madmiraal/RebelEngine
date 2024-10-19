@@ -54,7 +54,7 @@ SPDX-License-Identifier: MIT
             The property will be set on an instanced node with the given type and script.
         </constant>
         <constant name="CALL_MODE_BASIC_TYPE" value="3" enum="CallMode">
-            The property will be set on a GDScript basic type (e.g. [Vector2]).
+            The property will be set on a RebelScript basic type (e.g. [Vector2]).
         </constant>
         <constant name="ASSIGN_OP_NONE" value="0" enum="AssignOp">
             The property will be assigned regularly.

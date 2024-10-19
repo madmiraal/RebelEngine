@@ -29,10 +29,10 @@
     <glob pattern="*.gdshader"/>
   </mime-type>
 
-  <mime-type type="application/x-gdscript">
-    <comment>GDScript script</comment>
+  <mime-type type="application/x-rebel-script">
+    <comment>RebelScript script</comment>
     <sub-class-of type="text/plain"/>
-    <icon name="x-gdscript"/>
+    <icon name="x-rebel-script"/>
     <glob pattern="*.gd"/>
   </mime-type>
 </mime-info>

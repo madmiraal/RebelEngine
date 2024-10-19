@@ -333,10 +333,10 @@ public:
     virtual void center_window();
 
     // Returns internal pointers and handles.
-    // While exposed to GDScript this is mostly to give GDNative plugins access
-    // to this information. Note that whether a valid handle is returned depends
-    // on whether it applies to the given platform and often to the chosen
-    // render driver. NULL will be returned if a handle is not available.
+    // While exposed to RebelScript this is mostly to give GDNative plugins
+    // access to this information. Note that whether a valid handle is returned
+    // depends on whether it applies to the given platform and often to the
+    // chosen render driver. NULL will be returned if a handle is not available.
 
     enum HandleType {
         APPLICATION_HANDLE, // HINSTANCE, NSApplication*, UIApplication*,

@@ -2376,10 +2376,6 @@ Variant VisualScriptInstance::_call_internal(
             }
         }
 
-        // if (!GDScriptLanguage::get_singleton()->debug_break(err_text,false))
-        // {
-        //  debugger break did not happen
-
         if (!VisualScriptLanguage::singleton->debug_break(error_str, false)) {
             _err_print_error(
                 err_func.utf8().get_data(),
@@ -2389,10 +2385,6 @@ Variant VisualScriptInstance::_call_internal(
                 ERR_HANDLER_SCRIPT
             );
         }
-
-        //}
-    } else {
-        // return_value=
     }
 
 #ifdef DEBUG_ENABLED
@@ -3339,7 +3331,7 @@ void VisualScriptLanguage::debug_get_globals(
     int p_max_subitems,
     int p_max_depth
 ) {
-    // no globals are really reachable in gdscript
+    // No globals are really reachable in RebelScript.
 }
 
 String VisualScriptLanguage::debug_parse_stack_level_expression(

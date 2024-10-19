@@ -299,7 +299,7 @@ SPDX-License-Identifier: MIT
             <argument index="0" name="track_idx" type="int" />
             <argument index="1" name="key_idx" type="int" />
             <description>
-                Returns the transition curve (easing) for a specific key (see the built-in math function [method @GDScript.ease]).
+                Returns the transition curve (easing) for a specific key (see the built-in math function [method @RebelScript.ease]).
             </description>
         </method>
         <method name="track_get_key_value" qualifiers="const">
@@ -433,7 +433,7 @@ SPDX-License-Identifier: MIT
             <argument index="1" name="key_idx" type="int" />
             <argument index="2" name="transition" type="float" />
             <description>
-                Sets the transition curve (easing) for a specific key (see the built-in math function [method @GDScript.ease]).
+                Sets the transition curve (easing) for a specific key (see the built-in math function [method @RebelScript.ease]).
             </description>
         </method>
         <method name="track_set_key_value">
