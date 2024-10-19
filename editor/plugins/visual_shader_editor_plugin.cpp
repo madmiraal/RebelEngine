@@ -3155,7 +3155,7 @@ void VisualShaderEditor::drop_data_fw(
                 PoolStringArray arr = d["files"];
                 for (int i = 0; i < arr.size(); i++) {
                     String type = ResourceLoader::get_resource_type(arr[i]);
-                    if (type == "GDScript") {
+                    if (type == "RebelScript") {
                         Ref<Script> script = ResourceLoader::load(arr[i]);
                         if (script->get_instance_base_type()
                             == "VisualShaderNodeCustom") {
