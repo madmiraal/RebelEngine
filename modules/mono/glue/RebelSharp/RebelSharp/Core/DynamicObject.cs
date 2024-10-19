@@ -40,7 +40,7 @@ namespace Rebel
     ///     childNode.print_message(3);
     /// }
     /// </code>
-    /// The <c>ChildNode</c> node has the following GDScript script attached:
+    /// The <c>ChildNode</c> node has the following RebelScript script attached:
     /// <code>
     /// // # ChildNode.gd
     /// // var print_allowed = true

@@ -60,7 +60,7 @@ SPDX-License-Identifier: MIT
             The method will be called on an instanced node with the given type and script.
         </constant>
         <constant name="CALL_MODE_BASIC_TYPE" value="3" enum="CallMode">
-            The method will be called on a GDScript basic type (e.g. [Vector2]).
+            The method will be called on a RebelScript basic type (e.g. [Vector2]).
         </constant>
         <constant name="CALL_MODE_SINGLETON" value="4" enum="CallMode">
             The method will be called on a singleton.

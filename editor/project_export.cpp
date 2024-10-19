@@ -1293,7 +1293,7 @@ ProjectExportDialog::ProjectExportDialog() {
     VBoxContainer* script_vb = memnew(VBoxContainer);
     script_vb->set_name(TTR("Script"));
     script_mode = memnew(OptionButton);
-    script_vb->add_margin_child(TTR("GDScript Export Mode:"), script_mode);
+    script_vb->add_margin_child(TTR("RebelScript Export Mode:"), script_mode);
     script_mode->add_item(
         TTR("Text"),
         (int)EditorExportPreset::MODE_SCRIPT_TEXT
@@ -1322,7 +1322,7 @@ ProjectExportDialog::ProjectExportDialog() {
         )
     );
     script_vb->add_margin_child(
-        TTR("GDScript Encryption Key (256-bits as hexadecimal):"),
+        TTR("RebelScript Encryption Key (256-bits as hexadecimal):"),
         script_key
     );
     script_vb->add_child(script_key_error);

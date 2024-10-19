@@ -87,36 +87,36 @@ public:
     static ARVRServer* get_singleton();
 
     /*
-        World scale allows you to specify a scale factor that is applied to all
+       World scale allows you to specify a scale factor that is applied to all
        positioning vectors in our VR world in essence scaling up, or scaling
        down the world. For stereoscopic rendering specifically this is very
        important to give an accurate sense of scale. Add controllers into the
        mix and an accurate mapping of real world movement to perceived virtual
        movement becomes very important.
 
-        Most VR platforms, and our assumption, is that 1 unit in our virtual
+       Most VR platforms, and our assumption, is that 1 unit in our virtual
        world equates to 1 meter in the real mode. This scale basically effects
        the unit size relationship to real world size.
 
-        I may remove access to this property in GDScript in favour of exposing
-       it on the ARVROrigin node
+       We may remove access to this property in RebelScript in favour of
+       exposing it on the ARVROrigin node.
     */
     real_t get_world_scale() const;
     void set_world_scale(real_t p_world_scale);
 
     /*
-        The world maps the 0,0,0 coordinate of our real world coordinate system
+       The world maps the 0,0,0 coordinate of our real world coordinate system
        for our tracking volume to a location in our virtual world. It is this
        origin point that should be moved when the player is moved through the
        world by controller actions be it straffing, teleporting, etc. Movement
        of the player by moving through the physical space is always tracked in
        relation to this point.
 
-        Note that the ARVROrigin spatial node in your scene automatically
+       Note that the ARVROrigin spatial node in your scene automatically
        updates this property and it should be used instead of direct access to
-       this property and it therefore is not available in GDScript
+       this property and it therefore is not available in RebelScript
 
-        Note: this should not be used in AR and should be ignored by an AR based
+       Note: this should not be used in AR and should be ignored by an AR based
        interface as it would throw what you're looking at in the real world and
        in the virtual world out of sync
     */

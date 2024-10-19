@@ -20,12 +20,12 @@ SPDX-License-Identifier: MIT
         $Sprite.texture = texture
         [/codeblock]
         This way, textures can be created at run-time by loading images both from within the editor and externally.
-        [b]Warning:[/b] Prefer to load imported textures with [method @GDScript.load] over loading them from within the filesystem dynamically with [method Image.load], as it may not work in exported projects:
+        [b]Warning:[/b] Prefer to load imported textures with [method @RebelScript.load] over loading them from within the filesystem dynamically with [method Image.load], as it may not work in exported projects:
         [codeblock]
         var texture = load("res://icon.png")
         $Sprite.texture = texture
         [/codeblock]
-        This is because images have to be imported as [StreamTexture] first to be loaded with [method @GDScript.load]. If you'd still like to load an image file just like any other [Resource], import it as an [Image] resource instead, and then load it normally using the [method @GDScript.load] method.
+        This is because images have to be imported as [StreamTexture] first to be loaded with [method @RebelScript.load]. If you'd still like to load an image file just like any other [Resource], import it as an [Image] resource instead, and then load it normally using the [method @RebelScript.load] method.
         But do note that the image data can still be retrieved from an imported texture as well using the [method Texture.get_data] method, which returns a copy of the data:
         [codeblock]
         var texture = load("res://icon.png")

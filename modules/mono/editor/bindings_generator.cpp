@@ -571,7 +571,7 @@ String BindingsGenerator::bbcode_to_xml(
             } else if (tag == "Nil") {
                 xml_output.append("<see langword=\"null\"/>");
             } else if (tag.begins_with("@")) {
-                // @GlobalScope, @GDScript, etc
+                // @GlobalScope, @RebelScript, etc
                 xml_output.append("<c>");
                 xml_output.append(tag);
                 xml_output.append("</c>");
@@ -2499,9 +2499,9 @@ Error BindingsGenerator::_generate_glue_method(
                 // trust this information is valid. We need a temporary local to
                 // keep the Variant alive until the method returns. Otherwise,
                 // if the returned Variant holds a RefPtr, it could be deleted
-                // too early. This is the case with GDScript.new() which returns
-                // OBJECT. Alternatively, we could just return Variant, but that
-                // would result in a worse API.
+                // too early. This is the case with RebelScript.new() which
+                // returns OBJECT. Alternatively, we could just return Variant,
+                // but that would result in a worse API.
                 p_output.append("\tVariant " C_LOCAL_VARARG_RET ";\n");
             }
 

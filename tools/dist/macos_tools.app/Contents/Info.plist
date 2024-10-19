@@ -108,7 +108,7 @@
 			<key>UTTypeDescription</key>
 			<string>Rebel Script</string>
 			<key>UTTypeIconFile</key>
-			<string>GDScript.icns</string>
+			<string>RebelScript.icns</string>
 			<key>UTTypeConformsTo</key>
 			<array>
 				<string>public.script</string>
@@ -120,7 +120,7 @@
 					<string>gd</string>
 				</array>
 				<key>public.mime-type</key>
-				<string>text/x-gdscript</string>
+				<string>text/x-rebel-script</string>
 			</dict>
 		</dict>
 		<dict>

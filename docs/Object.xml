@@ -12,11 +12,11 @@ SPDX-License-Identifier: MIT
     </brief_description>
     <description>
         Every class which is not a built-in type inherits from this class.
-        You can construct Objects from scripting languages, using [code]Object.new()[/code] in GDScript, [code]new Object[/code] in C#, or the "Construct Object" node in VisualScript.
+        You can construct Objects from scripting languages, using [code]Object.new()[/code] in RebelScript, [code]new Object[/code] in C#, or the "Construct Object" node in VisualScript.
         Objects do not manage memory. If a class inherits from Object, you will have to delete instances of it manually. To do so, call the [method free] method from your script or delete the instance from C++.
         Some classes that extend Object add memory management. This is the case of [Reference], which counts references and deletes itself automatically when no longer referenced. [Node], another fundamental type, deletes all its children when freed from memory.
         Objects export properties, which are mainly useful for storage and editing, but not really so much in programming. Properties are exported in [method _get_property_list] and handled in [method _get] and [method _set]. However, scripting languages and C++ have simpler means to export them.
-        Property membership can be tested directly in GDScript using [code]in[/code]:
+        Property membership can be tested directly in RebelScript using [code]in[/code]:
         [codeblock]
         var n = Node2D.new()
         print("position" in n) # Prints "True".
@@ -29,7 +29,7 @@ SPDX-License-Identifier: MIT
     </description>
     <tutorials>
         <link title="When and how to avoid using nodes for everything">https://docs.rebeltoolbox.com/en/latest/tutorials/best_practices/node_alternatives.html</link>
-        <link title="Advanced exports using _get_property_list()">https://docs.rebeltoolbox.com/en/latest/tutorials/scripting/gdscript/gdscript_exports.html#advanced-exports</link>
+        <link title="Advanced exports using _get_property_list()">https://docs.rebeltoolbox.com/en/latest/tutorials/scripting/rebelscript/rebelscript_exports.html#advanced-exports</link>
     </tutorials>
     <methods>
         <method name="_get" qualifiers="virtual">
@@ -176,7 +176,7 @@ SPDX-License-Identifier: MIT
             <return type="void" />
             <description>
                 Deletes the object from memory immediately. For [Node]s, you may want to use [method Node.queue_free] to queue the node for safe deletion at the end of the current frame.
-                [b]Important:[/b] If you have a variable pointing to an object, it will [i]not[/i] be assigned to [code]null[/code] once the object is freed. Instead, it will point to a [i]previously freed instance[/i] and you should validate it with [method @GDScript.is_instance_valid] before attempting to call its methods or access its properties.
+                [b]Important:[/b] If you have a variable pointing to an object, it will [i]not[/i] be assigned to [code]null[/code] once the object is freed. Instead, it will point to a [i]previously freed instance[/i] and you should validate it with [method @RebelScript.is_instance_valid] before attempting to call its methods or access its properties.
             </description>
         </method>
         <method name="get" qualifiers="const">
@@ -216,7 +216,7 @@ SPDX-License-Identifier: MIT
             <return type="int" />
             <description>
                 Returns the object's unique instance ID.
-                This ID can be saved in [EncodedObjectAsID], and can be used to retrieve the object instance with [method @GDScript.instance_from_id].
+                This ID can be saved in [EncodedObjectAsID], and can be used to retrieve the object instance with [method @RebelScript.instance_from_id].
             </description>
         </method>
         <method name="get_meta" qualifiers="const">
