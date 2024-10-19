@@ -23,7 +23,7 @@ SPDX-License-Identifier: MIT
             The index of the current character (starting from 0) for the [RichTextLabel]'s BBCode text. Setting this property won't affect drawing.
         </member>
         <member name="character" type="int" setter="set_character" getter="get_character" default="0">
-            The Unicode codepoint the character will use. This only affects non-whitespace characters. [method @GDScript.ord] can be useful here. For example, the following will replace all characters with asterisks:
+            The Unicode codepoint the character will use. This only affects non-whitespace characters. [method @RebelScript.ord] can be useful here. For example, the following will replace all characters with asterisks:
             [codeblock]
             # `char_fx` is the CharFXTransform parameter from `_process_custom_fx()`.
             # See the RichTextEffect documentation for details.

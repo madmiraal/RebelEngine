@@ -393,7 +393,7 @@ void EditorAutoloadSettings::_autoload_open(const String& fpath) {
 
 void EditorAutoloadSettings::_autoload_file_callback(const String& p_path) {
     // Convert the file name to PascalCase, which is the convention for classes
-    // in GDScript.
+    // in RebelScript.
     const String class_name =
         p_path.get_file().get_basename().capitalize().replace(" ", "");
 

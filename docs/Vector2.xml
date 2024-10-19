@@ -41,7 +41,7 @@ SPDX-License-Identifier: MIT
                 Returns this vector's angle with respect to the positive X axis, or [code](1, 0)[/code] vector, in radians.
                 For example, [code]Vector2.RIGHT.angle()[/code] will return zero, [code]Vector2.DOWN.angle()[/code] will return [code]PI / 2[/code] (a quarter turn, or 90 degrees), and [code]Vector2(1, -1).angle()[/code] will return [code]-PI / 4[/code] (a negative eighth turn, or -45 degrees).
                 [img caption="Illustration of the returned angle"]/img/vector2_angle.png[/img]
-                Equivalent to the result of [method @GDScript.atan2] when called with the vector's [member y] and [member x] as parameters: [code]atan2(y, x)[/code].
+                Equivalent to the result of [method @RebelScript.atan2] when called with the vector's [member y] and [member x] as parameters: [code]atan2(y, x)[/code].
             </description>
         </method>
         <method name="angle_to">
@@ -145,7 +145,7 @@ SPDX-License-Identifier: MIT
             <return type="bool" />
             <argument index="0" name="v" type="Vector2" />
             <description>
-                Returns [code]true[/code] if this vector and [code]v[/code] are approximately equal, by running [method @GDScript.is_equal_approx] on each component.
+                Returns [code]true[/code] if this vector and [code]v[/code] are approximately equal, by running [method @RebelScript.is_equal_approx] on each component.
             </description>
         </method>
         <method name="is_normalized">
@@ -193,14 +193,14 @@ SPDX-License-Identifier: MIT
             <return type="Vector2" />
             <argument index="0" name="mod" type="float" />
             <description>
-                Returns a vector composed of the [method @GDScript.fposmod] of this vector's components and [code]mod[/code].
+                Returns a vector composed of the [method @RebelScript.fposmod] of this vector's components and [code]mod[/code].
             </description>
         </method>
         <method name="posmodv">
             <return type="Vector2" />
             <argument index="0" name="modv" type="Vector2" />
             <description>
-                Returns a vector composed of the [method @GDScript.fposmod] of this vector's components and [code]modv[/code]'s components.
+                Returns a vector composed of the [method @RebelScript.fposmod] of this vector's components and [code]modv[/code]'s components.
             </description>
         </method>
         <method name="project">
@@ -221,7 +221,7 @@ SPDX-License-Identifier: MIT
             <return type="Vector2" />
             <argument index="0" name="phi" type="float" />
             <description>
-                Returns the vector rotated by [code]phi[/code] radians. See also [method @GDScript.deg2rad].
+                Returns the vector rotated by [code]phi[/code] radians. See also [method @RebelScript.deg2rad].
             </description>
         </method>
         <method name="round">
@@ -288,7 +288,7 @@ SPDX-License-Identifier: MIT
             One vector, a vector with all components set to [code]1[/code].
         </constant>
         <constant name="INF" value="Vector2( inf, inf )">
-            Infinity vector, a vector with all components set to [constant @GDScript.INF].
+            Infinity vector, a vector with all components set to [constant @RebelScript.INF].
         </constant>
         <constant name="LEFT" value="Vector2( -1, 0 )">
             Left unit vector. Represents the direction of left.

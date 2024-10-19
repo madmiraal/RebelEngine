@@ -8076,7 +8076,7 @@ EditorNode::EditorNode() {
             "executable attempt to connect to this computer's IP so the "
             "running project can be debugged.\nThis option is intended to be "
             "used for remote debugging (typically with a mobile device).\nYou "
-            "don't need to enable it to use the GDScript debugger locally.")
+            "don't need to enable it to use the RebelScript debugger locally.")
     );
     p->add_check_shortcut(
         ED_SHORTCUT(

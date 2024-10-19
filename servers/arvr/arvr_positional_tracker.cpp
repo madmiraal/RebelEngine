@@ -13,7 +13,7 @@ void ARVRPositionalTracker::_bind_methods() {
     BIND_ENUM_CONSTANT(TRACKER_LEFT_HAND);
     BIND_ENUM_CONSTANT(TRACKER_RIGHT_HAND);
 
-    // this class is read only from GDScript, so we only have access to
+    // This class is read only from RebelScript; so we only have access to
     // getters..
     ClassDB::bind_method(
         D_METHOD("get_type"),

@@ -689,7 +689,7 @@ void ScriptTextEditor::_validate_script() {
     warnings_panel->clear();
 
     // Add missing connections.
-    if (GLOBAL_GET("debug/gdscript/warnings/enable").booleanize()) {
+    if (GLOBAL_GET("debug/rebelscript/warnings/enable").booleanize()) {
         Node* base = get_tree()->get_edited_scene_root();
         if (base && missing_connections.size() > 0) {
             warnings_panel->push_table(1);

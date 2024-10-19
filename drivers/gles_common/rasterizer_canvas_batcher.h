@@ -1786,9 +1786,9 @@ bool C_PREAMBLE::_prefill_ninepatch(
         return false;
     }
 
-    // cope with ninepatch of zero area. These cannot be created by the user
-    // interface or gdscript, but can be created programmatically from c++, e.g.
-    // by the Rebel UI for sliders. We will just not draw these.
+    // Don't draw a ninepatch with zero area.
+    // Although, these cannot be created in Rebel Editor or using RebelScript,
+    // they can be created programmatically using C++: e.g. UI for sliders.
     if ((p_np->rect.size.x * p_np->rect.size.y) <= 0.0f) {
         return false;
     }

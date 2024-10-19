@@ -1108,8 +1108,7 @@ String String::hex_encode_buffer(const uint8_t* p_buffer, int p_len) {
         'c',
         'd',
         'e',
-        'f'
-    };
+        'f'};
 
     String ret;
     char v[2] = {0, 0};
@@ -3607,8 +3606,7 @@ String String::http_escape() const {
                 'C',
                 'D',
                 'E',
-                'F'
-            };
+                'F'};
 
             p[1]  = hex[ord >> 4];
             p[2]  = hex[ord & 0xF];
@@ -4270,8 +4268,7 @@ String String::percent_encode() const {
                 'c',
                 'd',
                 'e',
-                'f'
-            };
+                'f'};
 
             p[1]     = hex[c >> 4];
             p[2]     = hex[c & 0xF];
@@ -4395,7 +4392,7 @@ String String::lpad(int min_length, const String& character) const {
     return s;
 }
 
-// sprintf is implemented in GDScript via:
+// sprintf is implemented in RebelScript via:
 //   "fish %s pie" % "frog"
 //   "fish %s %d pie" % ["frog", 12]
 // In case of an error, the string returned is the error description and "error"

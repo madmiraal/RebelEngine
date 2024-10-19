@@ -437,7 +437,7 @@ if selected_platform in platform_list:
             print(
                 "WARNING: For `production` Windows builds, you should use MinGW with GCC "
                 "or Clang instead of Visual Studio, as they can better optimize the "
-                "GDScript VM in a very significant way. MSVC LTO also doesn't work "
+                "RebelScript VM in a very significant way. MSVC LTO also doesn't work "
                 "reliably for our use case."
                 "If you want to use MSVC nevertheless for production builds, set "
                 "`debug_symbols=no use_lto=no` instead of the `production=yes` option."

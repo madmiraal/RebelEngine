@@ -28,7 +28,7 @@ void Transform::invert() {
 Transform Transform::inverse() const {
     // FIXME: this function assumes the basis is a rotation matrix, with no
     // scaling. Transform::affine_inverse can handle matrices with scaling, so
-    // GDScript should eventually use that.
+    // RebelScript should eventually use that.
     Transform ret = *this;
     ret.invert();
     return ret;

@@ -66,7 +66,7 @@ SPDX-License-Identifier: MIT
                 An optional [code]type_hint[/code] can be used to further specify the [Resource] type that should be handled by the [ResourceFormatLoader]. Anything that inherits from [Resource] can be used as a type hint, for example [Image].
                 If [code]no_cache[/code] is [code]true[/code], the resource cache will be bypassed and the resource will be loaded anew. Otherwise, the cached resource will be returned if it exists.
                 Returns an empty resource if no [ResourceFormatLoader] could handle the file.
-                GDScript has a simplified [method @GDScript.load] built-in method which can be used in most situations, leaving the use of [ResourceLoader] for more advanced scenarios.
+                RebelScript has a simplified [method @RebelScript.load] built-in method which can be used in most situations, leaving the use of [ResourceLoader] for more advanced scenarios.
             </description>
         </method>
         <method name="load_interactive">

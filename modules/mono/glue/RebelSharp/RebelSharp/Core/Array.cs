@@ -166,7 +166,7 @@ namespace Rebel.Collections
 
         /// <summary>
         /// Adds an object to the end of this <see cref="Array"/>.
-        /// This is the same as <c>append</c> or <c>push_back</c> in GDScript.
+        /// This is the same as <c>append</c> or <c>push_back</c> in RebelScript.
         /// </summary>
         /// <param name="value">The object to add.</param>
         /// <returns>The new size after adding the object.</returns>
@@ -522,7 +522,7 @@ namespace Rebel.Collections
 
         /// <summary>
         /// Adds an item to the end of this <see cref="Array{T}"/>.
-        /// This is the same as <c>append</c> or <c>push_back</c> in GDScript.
+        /// This is the same as <c>append</c> or <c>push_back</c> in RebelScript.
         /// </summary>
         /// <param name="item">The item to add.</param>
         /// <returns>The new size after adding the item.</returns>

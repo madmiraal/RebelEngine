@@ -276,8 +276,7 @@ void CSharpLanguage::get_reserved_words(List<String>* p_words) const {
         "when",
         "where",
         "yield",
-        0
-    };
+        0};
 
     const char** w = _reserved_words;
 
@@ -483,8 +482,7 @@ static String variant_type_to_managed_name(const String& p_var_type_name) {
         Variant::TRANSFORM,
         Variant::COLOR,
         Variant::NODE_PATH,
-        Variant::_RID
-    };
+        Variant::_RID};
 
     for (unsigned int i = 0; i < sizeof(var_types) / sizeof(Variant::Type);
          i++) {
@@ -2353,8 +2351,9 @@ void CSharpInstance::notification(int p_notification) {
             // refcount wouldn't have reached 0 otherwise, since the managed
             // side references it and Dispose() needs to be called to release
             // it. However, this means C# Reference scripts can't receive
-            // NOTIFICATION_PREDELETE, but this is likely the case with GDScript
-            // as well: https://github.com/godotengine/godot/issues/6784
+            // NOTIFICATION_PREDELETE, but this is likely the case with
+            // RebelScript as well:
+            // https://github.com/godotengine/godot/issues/6784
             return;
         }
 

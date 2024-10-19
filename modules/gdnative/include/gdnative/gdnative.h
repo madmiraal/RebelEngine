@@ -315,7 +315,7 @@ rebel_object GDAPI* rebel_object_cast_to(
     void* p_class_tag
 );
 
-// equivalent of GDScript's instance_from_id
+// Equivalent of RebelScript's instance_from_id
 rebel_object GDAPI* rebel_instance_from_id(rebel_int p_instance_id);
 
 #ifdef __cplusplus

@@ -11,10 +11,10 @@ SPDX-License-Identifier: MIT
         Built-in string class.
     </brief_description>
     <description>
-        This is the built-in string class (and the one used by GDScript). It supports Unicode and provides all necessary means for string handling. Strings are reference-counted and use a copy-on-write approach, so passing them around is cheap in resources.
+        This is the built-in string class (and the one used by RebelScript). It supports Unicode and provides all necessary means for string handling. Strings are reference-counted and use a copy-on-write approach, so passing them around is cheap in resources.
     </description>
     <tutorials>
-        <link>https://docs.rebeltoolbox.com/en/latest/tutorials/scripting/gdscript/gdscript_format_string.html</link>
+        <link>https://docs.rebeltoolbox.com/en/latest/tutorials/scripting/rebelscript/rebelscript_format_string.html</link>
     </tutorials>
     <methods>
         <method name="String">
@@ -211,7 +211,7 @@ SPDX-License-Identifier: MIT
             <return type="String" />
             <description>
                 Returns a copy of the string with escaped characters replaced by their meanings. Supported escape sequences are [code]\'[/code], [code]\"[/code], [code]\?[/code], [code]\\[/code], [code]\a[/code], [code]\b[/code], [code]\f[/code], [code]\n[/code], [code]\r[/code], [code]\t[/code], [code]\v[/code].
-                [b]Note:[/b] Unlike the GDScript parser, this method doesn't support the [code]\uXXXX[/code] escape sequence.
+                [b]Note:[/b] Unlike the RebelScript parser, this method doesn't support the [code]\uXXXX[/code] escape sequence.
             </description>
         </method>
         <method name="capitalize">

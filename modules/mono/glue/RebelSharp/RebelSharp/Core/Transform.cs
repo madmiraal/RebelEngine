@@ -292,7 +292,7 @@ namespace Rebel
 
         /// <summary>
         /// The identity transform, with no translation, rotation, or scaling applied.
-        /// This is used as a replacement for <c>Transform()</c> in GDScript.
+        /// This is used as a replacement for <c>Transform()</c> in RebelScript.
         /// Do not use <c>new Transform()</c> with no arguments in C#, because it sets all values to zero.
         /// </summary>
         /// <value>Equivalent to <c>new Transform(Vector3.Right, Vector3.Up, Vector3.Back, Vector3.Zero)</c>.</value>

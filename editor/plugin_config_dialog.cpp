@@ -12,10 +12,10 @@
 #include "editor/editor_plugin.h"
 #include "editor/editor_scale.h"
 #include "editor/project_settings_editor.h"
-#include "modules/modules_enabled.gen.h" // For gdscript.
+#include "modules/modules_enabled.gen.h"
 #include "scene/gui/grid_container.h"
-#ifdef MODULE_GDSCRIPT_ENABLED
-#include "modules/gdscript/gdscript.h"
+#ifdef MODULE_REBELSCRIPT_ENABLED
+#include "modules/rebelscript/rebelscript.h"
 #endif
 
 void PluginConfigDialog::_clear_fields() {
@@ -57,15 +57,15 @@ void PluginConfigDialog::_on_confirmed() {
         // TODO Better support script languages with named classes
         // (has_named_classes).
 
-        // FIXME: It's hacky to have hardcoded access to the GDScript module
+        // FIXME: It's hacky to have hardcoded access to the RebelScript module
         // here. The editor code should not have to know what languages are
         // enabled.
-#ifdef MODULE_GDSCRIPT_ENABLED
-        if (lang_name == GDScriptLanguage::get_singleton()->get_name()) {
-            // Hard-coded GDScript template to keep usability until we use
+#ifdef MODULE_REBELSCRIPT_ENABLED
+        if (lang_name == RebelScriptLanguage::get_singleton()->get_name()) {
+            // Hard-coded RebelScript template to keep usability until we use
             // script templates.
-            Ref<Script> gdscript = memnew(GDScript);
-            gdscript->set_source_code(
+            Ref<Script> rebelscript = memnew(RebelScript);
+            rebelscript->set_source_code(
                 "tool\n"
                 "extends EditorPlugin\n"
                 "\n"
@@ -77,11 +77,12 @@ void PluginConfigDialog::_on_confirmed() {
                 "func _exit_tree()%VOID_RETURN%:\n"
                 "%TS%pass\n"
             );
-            GDScriptLanguage::get_singleton()->make_template("", "", gdscript);
+            RebelScriptLanguage::get_singleton()
+                ->make_template("", "", rebelscript);
             String script_path = path.plus_file(script_edit->get_text());
-            gdscript->set_path(script_path);
-            ResourceSaver::save(script_path, gdscript);
-            script = gdscript;
+            rebelscript->set_path(script_path);
+            ResourceSaver::save(script_path, rebelscript);
+            script = rebelscript;
         } else {
 #endif
             String script_path = path.plus_file(script_edit->get_text());
@@ -92,7 +93,7 @@ void PluginConfigDialog::_on_confirmed() {
             );
             script->set_path(script_path);
             ResourceSaver::save(script_path, script);
-#ifdef MODULE_GDSCRIPT_ENABLED
+#ifdef MODULE_REBELSCRIPT_ENABLED
         }
 #endif
 
@@ -256,8 +257,8 @@ PluginConfigDialog::PluginConfigDialog() {
     for (int i = 0; i < ScriptServer::get_language_count(); i++) {
         ScriptLanguage* lang = ScriptServer::get_language(i);
         script_option_edit->add_item(lang->get_name());
-#ifdef MODULE_GDSCRIPT_ENABLED
-        if (lang == GDScriptLanguage::get_singleton()) {
+#ifdef MODULE_REBELSCRIPT_ENABLED
+        if (lang == RebelScriptLanguage::get_singleton()) {
             default_lang = i;
         }
 #endif

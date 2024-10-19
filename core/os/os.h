@@ -185,8 +185,8 @@ public:
     virtual Point2 get_mouse_position() const            = 0;
     virtual int get_mouse_button_state() const           = 0;
     virtual void set_window_title(const String& p_title) = 0;
-    virtual void set_window_mouse_passthrough(const PoolVector2Array& p_region){
-    };
+    virtual void set_window_mouse_passthrough(const PoolVector2Array& p_region
+    ){};
 
     virtual void set_clipboard(const String& p_text);
     virtual String get_clipboard() const;
@@ -333,10 +333,10 @@ public:
     virtual void center_window();
 
     // Returns internal pointers and handles.
-    // While exposed to GDScript this is mostly to give GDNative plugins access
-    // to this information. Note that whether a valid handle is returned depends
-    // on whether it applies to the given platform and often to the chosen
-    // render driver. NULL will be returned if a handle is not available.
+    // While exposed to RebelScript this is mostly to give GDNative plugins
+    // access to this information. Note that whether a valid handle is returned
+    // depends on whether it applies to the given platform and often to the
+    // chosen render driver. NULL will be returned if a handle is not available.
 
     enum HandleType {
         APPLICATION_HANDLE, // HINSTANCE, NSApplication*, UIApplication*,

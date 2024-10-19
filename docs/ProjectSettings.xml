@@ -222,7 +222,7 @@ SPDX-License-Identifier: MIT
             [b]Experimental.[/b] Shifts the measurement of delta time for each frame to just after the drawing has taken place. This may lead to more consistent deltas and a reduction in frame stutters.
         </member>
         <member name="application/run/disable_stderr" type="bool" setter="" getter="" default="false">
-            If [code]true[/code], disables printing to standard error. If [code]true[/code], this also hides error and warning messages printed by [method @GDScript.push_error] and [method @GDScript.push_warning]. See also [member application/run/disable_stdout].
+            If [code]true[/code], disables printing to standard error. If [code]true[/code], this also hides error and warning messages printed by [method @RebelScript.push_error] and [method @RebelScript.push_warning]. See also [member application/run/disable_stdout].
             Changes to this setting will only be applied upon restarting the application.
         </member>
         <member name="application/run/disable_stdout" type="bool" setter="" getter="" default="false">
@@ -298,97 +298,97 @@ SPDX-License-Identifier: MIT
         <member name="compression/formats/zstd/window_log_size" type="int" setter="" getter="" default="27">
             Largest size limit (in power of 2) allowed when compressing using long-distance matching with Zstandard. Higher values can result in better compression, but will require more memory when compressing and decompressing.
         </member>
-        <member name="debug/gdscript/completion/autocomplete_setters_and_getters" type="bool" setter="" getter="" default="false">
+        <member name="debug/rebelscript/completion/autocomplete_setters_and_getters" type="bool" setter="" getter="" default="false">
             If [code]true[/code], displays getters and setters in autocompletion results in the script editor.
         </member>
-        <member name="debug/gdscript/warnings/constant_used_as_function" type="bool" setter="" getter="" default="true">
+        <member name="debug/rebelscript/warnings/constant_used_as_function" type="bool" setter="" getter="" default="true">
             If [code]true[/code], enables warnings when a constant is used as a function.
         </member>
-        <member name="debug/gdscript/warnings/deprecated_keyword" type="bool" setter="" getter="" default="true">
+        <member name="debug/rebelscript/warnings/deprecated_keyword" type="bool" setter="" getter="" default="true">
             If [code]true[/code], enables warnings when deprecated keywords such as [code]slave[/code] are used.
         </member>
-        <member name="debug/gdscript/warnings/enable" type="bool" setter="" getter="" default="true">
-            If [code]true[/code], enables specific GDScript warnings (see [code]debug/gdscript/warnings/*[/code] settings). If [code]false[/code], disables all GDScript warnings.
+        <member name="debug/rebelscript/warnings/enable" type="bool" setter="" getter="" default="true">
+            If [code]true[/code], enables specific RebelScript warnings (see [code]debug/rebelscript/warnings/*[/code] settings). If [code]false[/code], disables all RebelScript warnings.
         </member>
-        <member name="debug/gdscript/warnings/exclude_addons" type="bool" setter="" getter="" default="true">
+        <member name="debug/rebelscript/warnings/exclude_addons" type="bool" setter="" getter="" default="true">
             If [code]true[/code], scripts in the [code]res://addons[/code] folder will not generate warnings.
         </member>
-        <member name="debug/gdscript/warnings/function_conflicts_constant" type="bool" setter="" getter="" default="true">
+        <member name="debug/rebelscript/warnings/function_conflicts_constant" type="bool" setter="" getter="" default="true">
             If [code]true[/code], enables warnings when a function is declared with the same name as a constant.
         </member>
-        <member name="debug/gdscript/warnings/function_conflicts_variable" type="bool" setter="" getter="" default="true">
-            If [code]true[/code], enables warnings when a function is declared with the same name as a variable. This will turn into an error in a future version when first-class functions become supported in GDScript.
+        <member name="debug/rebelscript/warnings/function_conflicts_variable" type="bool" setter="" getter="" default="true">
+            If [code]true[/code], enables warnings when a function is declared with the same name as a variable. This will turn into an error in a future version when first-class functions become supported in RebelScript.
         </member>
-        <member name="debug/gdscript/warnings/function_may_yield" type="bool" setter="" getter="" default="true">
+        <member name="debug/rebelscript/warnings/function_may_yield" type="bool" setter="" getter="" default="true">
             If [code]true[/code], enables warnings when a function assigned to a variable may yield and return a function state instead of a value.
         </member>
-        <member name="debug/gdscript/warnings/function_used_as_property" type="bool" setter="" getter="" default="true">
+        <member name="debug/rebelscript/warnings/function_used_as_property" type="bool" setter="" getter="" default="true">
             If [code]true[/code], enables warnings when using a function as if it was a property.
         </member>
-        <member name="debug/gdscript/warnings/incompatible_ternary" type="bool" setter="" getter="" default="true">
+        <member name="debug/rebelscript/warnings/incompatible_ternary" type="bool" setter="" getter="" default="true">
             If [code]true[/code], enables warnings when a ternary operator may emit values with incompatible types.
         </member>
-        <member name="debug/gdscript/warnings/integer_division" type="bool" setter="" getter="" default="true">
+        <member name="debug/rebelscript/warnings/integer_division" type="bool" setter="" getter="" default="true">
             If [code]true[/code], enables warnings when dividing an integer by another integer (the decimal part will be discarded).
         </member>
-        <member name="debug/gdscript/warnings/narrowing_conversion" type="bool" setter="" getter="" default="true">
+        <member name="debug/rebelscript/warnings/narrowing_conversion" type="bool" setter="" getter="" default="true">
             If [code]true[/code], enables warnings when passing a floating-point value to a function that expects an integer (it will be converted and lose precision).
         </member>
-        <member name="debug/gdscript/warnings/property_used_as_function" type="bool" setter="" getter="" default="true">
+        <member name="debug/rebelscript/warnings/property_used_as_function" type="bool" setter="" getter="" default="true">
             If [code]true[/code], enables warnings when using a property as if it was a function.
         </member>
-        <member name="debug/gdscript/warnings/return_value_discarded" type="bool" setter="" getter="" default="true">
+        <member name="debug/rebelscript/warnings/return_value_discarded" type="bool" setter="" getter="" default="true">
             If [code]true[/code], enables warnings when calling a function without using its return value (by assigning it to a variable or using it as a function argument). Such return values are sometimes used to denote possible errors using the [enum Error] enum.
         </member>
-        <member name="debug/gdscript/warnings/shadowed_variable" type="bool" setter="" getter="" default="true">
+        <member name="debug/rebelscript/warnings/shadowed_variable" type="bool" setter="" getter="" default="true">
             If [code]true[/code], enables warnings when defining a local or subclass member variable that would shadow a variable at an upper level (such as a member variable).
         </member>
-        <member name="debug/gdscript/warnings/standalone_expression" type="bool" setter="" getter="" default="true">
+        <member name="debug/rebelscript/warnings/standalone_expression" type="bool" setter="" getter="" default="true">
             If [code]true[/code], enables warnings when calling an expression that has no effect on the surrounding code, such as writing [code]2 + 2[/code] as a statement.
         </member>
-        <member name="debug/gdscript/warnings/standalone_ternary" type="bool" setter="" getter="" default="true">
+        <member name="debug/rebelscript/warnings/standalone_ternary" type="bool" setter="" getter="" default="true">
             If [code]true[/code], enables warnings when calling a ternary expression that has no effect on the surrounding code, such as writing [code]42 if active else 0[/code] as a statement.
         </member>
-        <member name="debug/gdscript/warnings/treat_warnings_as_errors" type="bool" setter="" getter="" default="false">
+        <member name="debug/rebelscript/warnings/treat_warnings_as_errors" type="bool" setter="" getter="" default="false">
             If [code]true[/code], all warnings will be reported as if they were errors.
         </member>
-        <member name="debug/gdscript/warnings/unassigned_variable" type="bool" setter="" getter="" default="true">
+        <member name="debug/rebelscript/warnings/unassigned_variable" type="bool" setter="" getter="" default="true">
             If [code]true[/code], enables warnings when using a variable that wasn't previously assigned.
         </member>
-        <member name="debug/gdscript/warnings/unassigned_variable_op_assign" type="bool" setter="" getter="" default="true">
+        <member name="debug/rebelscript/warnings/unassigned_variable_op_assign" type="bool" setter="" getter="" default="true">
             If [code]true[/code], enables warnings when assigning a variable using an assignment operator like [code]+=[/code] if the variable wasn't previously assigned.
         </member>
-        <member name="debug/gdscript/warnings/unreachable_code" type="bool" setter="" getter="" default="true">
+        <member name="debug/rebelscript/warnings/unreachable_code" type="bool" setter="" getter="" default="true">
             If [code]true[/code], enables warnings when unreachable code is detected (such as after a [code]return[/code] statement that will always be executed).
         </member>
-        <member name="debug/gdscript/warnings/unsafe_call_argument" type="bool" setter="" getter="" default="false">
+        <member name="debug/rebelscript/warnings/unsafe_call_argument" type="bool" setter="" getter="" default="false">
             If [code]true[/code], enables warnings when using an expression whose type may not be compatible with the function parameter expected.
         </member>
-        <member name="debug/gdscript/warnings/unsafe_cast" type="bool" setter="" getter="" default="false">
+        <member name="debug/rebelscript/warnings/unsafe_cast" type="bool" setter="" getter="" default="false">
             If [code]true[/code], enables warnings when performing an unsafe cast.
         </member>
-        <member name="debug/gdscript/warnings/unsafe_method_access" type="bool" setter="" getter="" default="false">
+        <member name="debug/rebelscript/warnings/unsafe_method_access" type="bool" setter="" getter="" default="false">
             If [code]true[/code], enables warnings when calling a method whose presence is not guaranteed at compile-time in the class.
         </member>
-        <member name="debug/gdscript/warnings/unsafe_property_access" type="bool" setter="" getter="" default="false">
+        <member name="debug/rebelscript/warnings/unsafe_property_access" type="bool" setter="" getter="" default="false">
             If [code]true[/code], enables warnings when accessing a property whose presence is not guaranteed at compile-time in the class.
         </member>
-        <member name="debug/gdscript/warnings/unused_argument" type="bool" setter="" getter="" default="true">
+        <member name="debug/rebelscript/warnings/unused_argument" type="bool" setter="" getter="" default="true">
             If [code]true[/code], enables warnings when a function parameter is unused.
         </member>
-        <member name="debug/gdscript/warnings/unused_class_variable" type="bool" setter="" getter="" default="false">
+        <member name="debug/rebelscript/warnings/unused_class_variable" type="bool" setter="" getter="" default="false">
             If [code]true[/code], enables warnings when a member variable is unused.
         </member>
-        <member name="debug/gdscript/warnings/unused_signal" type="bool" setter="" getter="" default="true">
+        <member name="debug/rebelscript/warnings/unused_signal" type="bool" setter="" getter="" default="true">
             If [code]true[/code], enables warnings when a signal is unused.
         </member>
-        <member name="debug/gdscript/warnings/unused_variable" type="bool" setter="" getter="" default="true">
+        <member name="debug/rebelscript/warnings/unused_variable" type="bool" setter="" getter="" default="true">
             If [code]true[/code], enables warnings when a local variable is unused.
         </member>
-        <member name="debug/gdscript/warnings/variable_conflicts_function" type="bool" setter="" getter="" default="true">
-            If [code]true[/code], enables warnings when a variable is declared with the same name as a function. This will turn into an error in a future version when first-class functions become supported in GDScript.
+        <member name="debug/rebelscript/warnings/variable_conflicts_function" type="bool" setter="" getter="" default="true">
+            If [code]true[/code], enables warnings when a variable is declared with the same name as a function. This will turn into an error in a future version when first-class functions become supported in RebelScript.
         </member>
-        <member name="debug/gdscript/warnings/void_assignment" type="bool" setter="" getter="" default="true">
+        <member name="debug/rebelscript/warnings/void_assignment" type="bool" setter="" getter="" default="true">
             If [code]true[/code], enables warnings when assigning the result of a function that returns [code]void[/code] to a variable.
         </member>
         <member name="debug/settings/crash_handler/message" type="String" setter="" getter="" default="&quot;Please include this when reporting the bug on https://github.com/RebelToolbox/RebelEngine/issues&quot;">
@@ -400,11 +400,11 @@ SPDX-License-Identifier: MIT
             This setting is therefore mostly relevant for lowering the maximum FPS below VSync, e.g. to perform non-real-time rendering of static frames, or test the project under lag conditions.
             [b]Note:[/b] This property is only read when the project starts. To change the rendering FPS cap at runtime, set [member Engine.target_fps] instead.
         </member>
-        <member name="debug/settings/gdscript/max_call_stack" type="int" setter="" getter="" default="1024">
-            Maximum call stack allowed for debugging GDScript.
-        </member>
         <member name="debug/settings/profiler/max_functions" type="int" setter="" getter="" default="16384">
             Maximum amount of functions per frame allowed when profiling.
+        </member>
+        <member name="debug/settings/rebelscript/max_call_stack" type="int" setter="" getter="" default="1024">
+            Maximum call stack allowed for debugging RebelScript.
         </member>
         <member name="debug/settings/stdout/print_fps" type="bool" setter="" getter="" default="false">
             Print frames per second to standard output every second.

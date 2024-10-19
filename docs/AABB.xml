@@ -171,7 +171,7 @@ SPDX-License-Identifier: MIT
             <return type="bool" />
             <argument index="0" name="aabb" type="AABB" />
             <description>
-                Returns [code]true[/code] if this [AABB] and [code]aabb[/code] are approximately equal, by calling [method @GDScript.is_equal_approx] on each component.
+                Returns [code]true[/code] if this [AABB] and [code]aabb[/code] are approximately equal, by calling [method @RebelScript.is_equal_approx] on each component.
             </description>
         </method>
         <method name="merge">

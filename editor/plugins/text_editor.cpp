@@ -29,7 +29,7 @@ void TextEditor::set_syntax_highlighter(SyntaxHighlighter* p_highlighter) {
         );
     }
 
-    // little work around. GDScript highlighter goes through text_edit for
+    // little work around. RebelScript highlighter goes through text_edit for
     // colours, so to remove all colours we need to set and unset them here.
     if (p_highlighter == nullptr) { // standard
         TextEdit* text_edit = code_editor->get_text_edit();
