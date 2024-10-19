@@ -13,13 +13,13 @@
 #include "test_astar.h"
 #include "test_basis.h"
 #include "test_crypto.h"
-#include "test_gdscript.h"
 #include "test_gui.h"
 #include "test_math.h"
 #include "test_oa_hash_map.h"
 #include "test_ordered_hash_map.h"
 #include "test_physics.h"
 #include "test_physics_2d.h"
+#include "test_rebelscript.h"
 #include "test_render.h"
 #include "test_shader_lang.h"
 #include "test_string.h"
@@ -99,19 +99,19 @@ MainLoop* test_main(String p_test, const List<String>& p_args) {
     }
 
     if (p_test == "gd_tokenizer") {
-        return TestGDScript::test(TestGDScript::TEST_TOKENIZER);
+        return TestRebelScript::test(TestRebelScript::TEST_TOKENIZER);
     }
 
     if (p_test == "gd_parser") {
-        return TestGDScript::test(TestGDScript::TEST_PARSER);
+        return TestRebelScript::test(TestRebelScript::TEST_PARSER);
     }
 
     if (p_test == "gd_compiler") {
-        return TestGDScript::test(TestGDScript::TEST_COMPILER);
+        return TestRebelScript::test(TestRebelScript::TEST_COMPILER);
     }
 
     if (p_test == "gd_bytecode") {
-        return TestGDScript::test(TestGDScript::TEST_BYTECODE);
+        return TestRebelScript::test(TestRebelScript::TEST_BYTECODE);
     }
 
     if (p_test == "ordered_hash_map") {
