@@ -60,8 +60,6 @@ private:
     ConfirmationDialog* multi_scan_ask;
     ConfirmationDialog* open_templates;
 
-    Control* gui_base;
-
     EditorAbout* about;
     EditorAssetLibrary* asset_library;
 

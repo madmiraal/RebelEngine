@@ -95,16 +95,12 @@ ProjectManager::ProjectManager() {
     set_anchors_and_margins_preset(Control::PRESET_WIDE);
     set_theme(create_custom_theme());
 
-    gui_base = memnew(Control);
-    add_child(gui_base);
-    gui_base->set_anchors_and_margins_preset(Control::PRESET_WIDE);
-
     Panel* panel = memnew(Panel);
-    gui_base->add_child(panel);
+    add_child(panel);
     panel->set_anchors_and_margins_preset(Control::PRESET_WIDE);
     panel->add_style_override(
         "panel",
-        gui_base->get_stylebox("Background", "EditorStyles")
+        get_stylebox("Background", "EditorStyles")
     );
 
     VBoxContainer* vb = memnew(VBoxContainer);
@@ -184,7 +180,7 @@ ProjectManager::ProjectManager() {
     search_tree_vb->add_child(sort_filters);
 
     PanelContainer* pc = memnew(PanelContainer);
-    pc->add_style_override("panel", gui_base->get_stylebox("bg", "Tree"));
+    pc->add_style_override("panel", get_stylebox("bg", "Tree"));
     search_tree_vb->add_child(pc);
     pc->set_v_size_flags(SIZE_EXPAND_FILL);
 
@@ -250,7 +246,7 @@ ProjectManager::ProjectManager() {
     scan_dir->set_current_dir(EditorSettings::get_singleton()->get(
         "filesystem/directories/default_project_path"
     ));
-    gui_base->add_child(scan_dir);
+    add_child(scan_dir);
     scan_dir->connect("dir_selected", this, "_scan_begin");
 
     Button* create = memnew(Button);
@@ -392,18 +388,18 @@ ProjectManager::ProjectManager() {
     language_restart_ask->get_ok()
         ->connect("pressed", this, "_restart_confirm");
     language_restart_ask->get_cancel()->set_text(TTR("Continue"));
-    gui_base->add_child(language_restart_ask);
+    add_child(language_restart_ask);
 
     erase_missing_ask = memnew(ConfirmationDialog);
     erase_missing_ask->get_ok()->set_text(TTR("Remove All"));
     erase_missing_ask->get_ok()
         ->connect("pressed", this, "_erase_missing_projects_confirm");
-    gui_base->add_child(erase_missing_ask);
+    add_child(erase_missing_ask);
 
     erase_ask = memnew(ConfirmationDialog);
     erase_ask->get_ok()->set_text(TTR("Remove"));
     erase_ask->get_ok()->connect("pressed", this, "_erase_project_confirm");
-    gui_base->add_child(erase_ask);
+    add_child(erase_ask);
 
     VBoxContainer* erase_ask_vb = memnew(VBoxContainer);
     erase_ask->add_child(erase_ask_vb);
@@ -421,26 +417,26 @@ ProjectManager::ProjectManager() {
     multi_open_ask->get_ok()->set_text(TTR("Edit"));
     multi_open_ask->get_ok()
         ->connect("pressed", this, "_open_selected_projects");
-    gui_base->add_child(multi_open_ask);
+    add_child(multi_open_ask);
 
     multi_run_ask = memnew(ConfirmationDialog);
     multi_run_ask->get_ok()->set_text(TTR("Run"));
     multi_run_ask->get_ok()->connect("pressed", this, "_run_project_confirm");
-    gui_base->add_child(multi_run_ask);
+    add_child(multi_run_ask);
 
     multi_scan_ask = memnew(ConfirmationDialog);
     multi_scan_ask->get_ok()->set_text(TTR("Scan"));
-    gui_base->add_child(multi_scan_ask);
+    add_child(multi_scan_ask);
 
     ask_update_settings = memnew(ConfirmationDialog);
     ask_update_settings->get_ok()
         ->connect("pressed", this, "_confirm_update_settings");
-    gui_base->add_child(ask_update_settings);
+    add_child(ask_update_settings);
 
     OS::get_singleton()->set_low_processor_usage_mode(true);
 
     npdialog = memnew(ProjectDialog);
-    gui_base->add_child(npdialog);
+    add_child(npdialog);
 
     npdialog->connect("projects_updated", this, "_on_projects_updated");
     npdialog->connect("project_created", this, "_on_project_created");
@@ -486,11 +482,11 @@ ProjectManager::ProjectManager() {
         ->connect("global_menu_action", this, "_global_menu_action");
 
     run_error_diag = memnew(AcceptDialog);
-    gui_base->add_child(run_error_diag);
+    add_child(run_error_diag);
     run_error_diag->set_title(TTR("Can't run project"));
 
     dialog_error = memnew(AcceptDialog);
-    gui_base->add_child(dialog_error);
+    add_child(dialog_error);
 
     open_templates = memnew(ConfirmationDialog);
     open_templates->set_text(
@@ -643,7 +639,7 @@ void ProjectManager::_dim_window() {
     // visible immediately
     float c         = 0.5f;
     Color dim_color = Color(c, c, c);
-    gui_base->set_modulate(dim_color);
+    set_modulate(dim_color);
 }
 
 void ProjectManager::_erase_missing_projects() {
