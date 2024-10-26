@@ -150,7 +150,7 @@ ProjectManager::ProjectManager() {
 
     project_list_filter = memnew(ProjectListFilter);
     project_list_filter->add_filter_option();
-    project_list_filter->_setup_filters(sort_order_names);
+    project_list_filter->set_sort_order_names(sort_order_names);
     project_list_filter->set_filter_size(150);
     projects_list_tools_container->add_child(project_list_filter);
     project_list_filter
@@ -602,7 +602,7 @@ void ProjectManager::_notification(int p_what) {
             if (project_list->get_project_count() >= 1) {
                 // Focus on the search box immediately to allow the user
                 // to search without having to reach for their mouse
-                project_filter->search_box->grab_focus();
+                project_filter->get_search_box()->grab_focus();
             }
         } break;
         case NOTIFICATION_VISIBILITY_CHANGED: {
@@ -1206,7 +1206,7 @@ void ProjectManager::_unhandled_input(const Ref<InputEvent>& p_ev) {
             } break;
             case KEY_F: {
                 if (k->get_command()) {
-                    this->project_filter->search_box->grab_focus();
+                    this->project_filter->get_search_box()->grab_focus();
                 } else {
                     scancode_handled = false;
                 }

@@ -33,14 +33,13 @@ public:
     String get_search_term();
     void set_filter_option(FilterOption);
     void set_filter_size(int h_size);
+    void set_sort_order_names(const Vector<String>& sort_order_names);
 
 protected:
     static void _bind_methods();
     void _notification(int p_what);
 
 private:
-    friend class ProjectManager;
-
     FilterOption _current_filter;
 
     LineEdit* search_box;
@@ -51,7 +50,6 @@ private:
 
     void _filter_option_selected(int p_idx);
     void _search_text_changed(const String& p_newtext);
-    void _setup_filters(const Vector<String>& options);
 };
 
 #endif // PROJECT_LIST_FILTER_H

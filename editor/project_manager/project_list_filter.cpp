@@ -64,6 +64,15 @@ void ProjectListFilter::set_filter_size(int h_size) {
     );
 }
 
+void ProjectListFilter::set_sort_order_names(
+    const Vector<String>& sort_order_names
+) {
+    filter_option->clear();
+    for (int i = 0; i < sort_order_names.size(); i++) {
+        filter_option->add_item(sort_order_names[i]);
+    }
+}
+
 void ProjectListFilter::_bind_methods() {
     ClassDB::bind_method(
         D_METHOD("_search_text_changed"),
@@ -94,11 +103,4 @@ void ProjectListFilter::_filter_option_selected(int p_idx) {
 
 void ProjectListFilter::_search_text_changed(const String& p_newtext) {
     emit_signal("filter_changed");
-}
-
-void ProjectListFilter::_setup_filters(const Vector<String>& options) {
-    filter_option->clear();
-    for (int i = 0; i < options.size(); i++) {
-        filter_option->add_item(options[i]);
-    }
 }
