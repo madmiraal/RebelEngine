@@ -103,71 +103,64 @@ ProjectManager::ProjectManager() {
         get_stylebox("Background", "EditorStyles")
     );
 
-    VBoxContainer* vb = memnew(VBoxContainer);
-    panel->add_child(vb);
-    vb->set_anchors_and_margins_preset(
+    VBoxContainer* panel_container = memnew(VBoxContainer);
+    panel->add_child(panel_container);
+    panel_container->set_anchors_and_margins_preset(
         Control::PRESET_WIDE,
         Control::PRESET_MODE_MINSIZE,
         8 * EDSCALE
     );
 
-    String cp;
-    cp += 0xA9;
-    // TRANSLATORS: Project Manager is the application used to manage projects.
-    OS::get_singleton()->set_window_title(
-        VERSION_NAME + String(" - ") + TTR("Project Manager")
-    );
-
     Control* center_box = memnew(Control);
     center_box->set_v_size_flags(SIZE_EXPAND_FILL);
-    vb->add_child(center_box);
+    panel_container->add_child(center_box);
 
     tabs = memnew(TabContainer);
-    center_box->add_child(tabs);
     tabs->set_anchors_and_margins_preset(Control::PRESET_WIDE);
     tabs->set_tab_align(TabContainer::ALIGN_LEFT);
     tabs->connect("tab_changed", this, "_on_tab_changed");
+    center_box->add_child(tabs);
 
-    HBoxContainer* tree_hb = memnew(HBoxContainer);
-    projects_hb            = tree_hb;
+    HBoxContainer* projects_tab_container = memnew(HBoxContainer);
+    projects_tab_container->set_name(TTR("Local Projects"));
+    tabs->add_child(projects_tab_container);
 
-    projects_hb->set_name(TTR("Local Projects"));
+    VBoxContainer* projects_list_container = memnew(VBoxContainer);
+    projects_list_container->set_h_size_flags(SIZE_EXPAND_FILL);
+    projects_tab_container->add_child(projects_list_container);
 
-    tabs->add_child(tree_hb);
+    HBoxContainer* projects_list_tools_container = memnew(HBoxContainer);
+    projects_list_container->add_child(projects_list_tools_container);
 
-    VBoxContainer* search_tree_vb = memnew(VBoxContainer);
-    tree_hb->add_child(search_tree_vb);
-    search_tree_vb->set_h_size_flags(SIZE_EXPAND_FILL);
-
-    HBoxContainer* sort_filters = memnew(HBoxContainer);
-    loading_label               = memnew(Label(TTR("Loading, please wait...")));
+    loading_label = memnew(Label(TTR("Loading, please wait...")));
     loading_label->add_font_override("font", get_font("bold", "EditorFonts"));
     loading_label->set_h_size_flags(Control::SIZE_EXPAND_FILL);
-    sort_filters->add_child(loading_label);
-    // Hide the label but make it still take up space. This prevents reflows
-    // when showing the label.
+    // Hide the label until it's needed.
     loading_label->set_modulate(Color(0, 0, 0, 0));
+    projects_list_tools_container->add_child(loading_label);
 
     Label* sort_label = memnew(Label);
     sort_label->set_text(TTR("Sort:"));
-    sort_filters->add_child(sort_label);
-    Vector<String> sort_filter_titles;
-    sort_filter_titles.push_back(TTR("Name"));
-    sort_filter_titles.push_back(TTR("Path"));
-    sort_filter_titles.push_back(TTR("Last Modified"));
-    project_order_filter = memnew(ProjectListFilter);
-    project_order_filter->add_filter_option();
-    project_order_filter->_setup_filters(sort_filter_titles);
-    project_order_filter->set_filter_size(150);
-    sort_filters->add_child(project_order_filter);
-    project_order_filter
+    projects_list_tools_container->add_child(sort_label);
+
+    Vector<String> sort_order_names;
+    sort_order_names.push_back(TTR("Name"));
+    sort_order_names.push_back(TTR("Path"));
+    sort_order_names.push_back(TTR("Last Modified"));
+
+    project_list_filter = memnew(ProjectListFilter);
+    project_list_filter->add_filter_option();
+    project_list_filter->_setup_filters(sort_order_names);
+    project_list_filter->set_filter_size(150);
+    projects_list_tools_container->add_child(project_list_filter);
+    project_list_filter
         ->connect("filter_changed", this, "_on_order_option_changed");
-    project_order_filter->set_custom_minimum_size(Size2(180, 10) * EDSCALE);
+    project_list_filter->set_custom_minimum_size(Size2(180, 10) * EDSCALE);
 
     int projects_sorting_order = (int)EditorSettings::get_singleton()->get(
         "project_manager/sorting_order"
     );
-    project_order_filter->set_filter_option((ProjectListFilter::FilterOption
+    project_list_filter->set_filter_option((ProjectListFilter::FilterOption
     )projects_sorting_order);
 
     project_filter = memnew(ProjectListFilter);
@@ -175,13 +168,11 @@ ProjectManager::ProjectManager() {
     project_filter
         ->connect("filter_changed", this, "_on_filter_option_changed");
     project_filter->set_custom_minimum_size(Size2(280, 10) * EDSCALE);
-    sort_filters->add_child(project_filter);
-
-    search_tree_vb->add_child(sort_filters);
+    projects_list_tools_container->add_child(project_filter);
 
     PanelContainer* pc = memnew(PanelContainer);
     pc->add_style_override("panel", get_stylebox("bg", "Tree"));
-    search_tree_vb->add_child(pc);
+    projects_list_container->add_child(pc);
     pc->set_v_size_flags(SIZE_EXPAND_FILL);
 
     project_list = memnew(ProjectList);
@@ -200,7 +191,7 @@ ProjectManager::ProjectManager() {
 
     VBoxContainer* tree_vb = memnew(VBoxContainer);
     tree_vb->set_custom_minimum_size(Size2(120, 120));
-    tree_hb->add_child(tree_vb);
+    projects_tab_container->add_child(tree_vb);
 
     Button* open = memnew(Button);
     open->set_text(TTR("Edit"));
@@ -806,7 +797,7 @@ void ProjectManager::_language_selected(int p_id) {
 }
 
 void ProjectManager::_load_recent_projects() {
-    project_list->set_order_option(project_order_filter->get_filter_option());
+    project_list->set_order_option(project_list_filter->get_filter_option());
     project_list->set_search_term(project_filter->get_search_term());
     project_list->load_projects();
 
@@ -826,7 +817,7 @@ void ProjectManager::_on_filter_option_changed() {
 }
 
 void ProjectManager::_on_order_option_changed() {
-    project_list->set_order_option(project_order_filter->get_filter_option());
+    project_list->set_order_option(project_list_filter->get_filter_option());
     project_list->sort_projects();
 }
 

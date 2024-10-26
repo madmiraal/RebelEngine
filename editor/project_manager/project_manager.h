@@ -65,8 +65,6 @@ private:
 
     FileDialog* scan_dir;
 
-    HBoxContainer* projects_hb;
-
     Label* erase_ask_label;
     Label* loading_label;
 
@@ -77,7 +75,7 @@ private:
     ProjectDialog* npdialog;
     ProjectList* project_list;
     ProjectListFilter* project_filter;
-    ProjectListFilter* project_order_filter;
+    ProjectListFilter* project_list_filter;
 
     TabContainer* tabs;
 
