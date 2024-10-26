@@ -34,67 +34,62 @@
 #include "drivers/gles3/rasterizer_gles3.h"
 #endif
 
-ProjectManager::ProjectManager() {
-    // Load settings
+namespace {
+void apply_editor_settings() {
     if (!EditorSettings::get_singleton()) {
         EditorSettings::create();
     }
+    EditorSettings* editor_settings = EditorSettings::get_singleton();
 
-    EditorSettings::get_singleton()->set_optimize_save(false);
-
-    {
-        int display_scale = EditorSettings::get_singleton()->get(
-            "interface/editor/display_scale"
-        );
-        float custom_display_scale = EditorSettings::get_singleton()->get(
-            "interface/editor/custom_display_scale"
-        );
-
-        switch (display_scale) {
-            case 0:
-                // Try applying a suitable display scale automatically.
-                editor_set_scale(
-                    EditorSettings::get_singleton()->get_auto_display_scale()
-                );
-                break;
-            case 1:
-                editor_set_scale(0.75);
-                break;
-            case 2:
-                editor_set_scale(1.0);
-                break;
-            case 3:
-                editor_set_scale(1.25);
-                break;
-            case 4:
-                editor_set_scale(1.5);
-                break;
-            case 5:
-                editor_set_scale(1.75);
-                break;
-            case 6:
-                editor_set_scale(2.0);
-                break;
-            default:
-                editor_set_scale(custom_display_scale);
-                break;
-        }
-
-        // Define a minimum window size to prevent UI elements from overlapping
-        // or being cut off
-        OS::get_singleton()->set_min_window_size(Size2(750, 420) * EDSCALE);
-
-        // TODO: Resize windows on hiDPI displays on Windows and Linux and
-        // remove the line below
-        OS::get_singleton()->set_window_size(
-            OS::get_singleton()->get_window_size() * MAX(1, EDSCALE)
-        );
+    editor_settings->set_optimize_save(false);
+    int display_scale = editor_settings->get("interface/editor/display_scale");
+    float custom_display_scale =
+        editor_settings->get("interface/editor/custom_display_scale");
+    switch (display_scale) {
+        case 0:
+            // Try applying a suitable display scale automatically.
+            editor_set_scale(editor_settings->get_auto_display_scale());
+            break;
+        case 1:
+            editor_set_scale(0.75);
+            break;
+        case 2:
+            editor_set_scale(1.0);
+            break;
+        case 3:
+            editor_set_scale(1.25);
+            break;
+        case 4:
+            editor_set_scale(1.5);
+            break;
+        case 5:
+            editor_set_scale(1.75);
+            break;
+        case 6:
+            editor_set_scale(2.0);
+            break;
+        default:
+            editor_set_scale(custom_display_scale);
+            break;
     }
 
     FileDialog::set_default_show_hidden_files(
-        EditorSettings::get_singleton()->get(
-            "filesystem/file_dialog/show_hidden_files"
-        )
+        editor_settings->get("filesystem/file_dialog/show_hidden_files")
+    );
+}
+} // namespace
+
+ProjectManager::ProjectManager() {
+    apply_editor_settings();
+
+    // Define a minimum window size to prevent UI elements from overlapping
+    // or being cut off.
+    OS::get_singleton()->set_min_window_size(Size2(750, 420) * EDSCALE);
+
+    // TODO: Resize windows on hiDPI displays on Windows and Linux and
+    // remove the line below.
+    OS::get_singleton()->set_window_size(
+        OS::get_singleton()->get_window_size() * MAX(1, EDSCALE)
     );
 
     set_anchors_and_margins_preset(Control::PRESET_WIDE);
