@@ -267,15 +267,15 @@ ProjectManager::ProjectManager() {
     tree_vb->add_child(create);
     create->connect("pressed", this, "_new_project");
 
-    Button* import = memnew(Button);
-    import->set_text(TTR("Add"));
-    import->set_shortcut(ED_SHORTCUT(
-        "project_manager/import_project",
-        TTR("Import exsiting project"),
-        KEY_MASK_CMD | KEY_I
+    Button* add = memnew(Button);
+    add->set_text(TTR("Add"));
+    add->set_shortcut(ED_SHORTCUT(
+        "project_manager/add_project",
+        TTR("Add exsiting project"),
+        KEY_MASK_CMD | KEY_A
     ));
-    tree_vb->add_child(import);
-    import->connect("pressed", this, "_import_project");
+    tree_vb->add_child(add);
+    add->connect("pressed", this, "_add_project");
 
     Button* rename = memnew(Button);
     rename->set_text(TTR("Rename"));
@@ -536,7 +536,7 @@ void ProjectManager::_bind_methods() {
     );
     ClassDB::bind_method("_scan_projects", &ProjectManager::_scan_projects);
     ClassDB::bind_method("_scan_begin", &ProjectManager::_scan_begin);
-    ClassDB::bind_method("_import_project", &ProjectManager::_import_project);
+    ClassDB::bind_method("_add_project", &ProjectManager::_add_project);
     ClassDB::bind_method("_new_project", &ProjectManager::_new_project);
     ClassDB::bind_method("_rename_project", &ProjectManager::_rename_project);
     ClassDB::bind_method("_erase_project", &ProjectManager::_erase_project);
@@ -632,6 +632,11 @@ void ProjectManager::_notification(int p_what) {
             _show_about();
         } break;
     }
+}
+
+void ProjectManager::_add_project() {
+    npdialog->set_mode(ProjectDialog::MODE_ADD);
+    npdialog->show_dialog();
 }
 
 void ProjectManager::_confirm_update_settings() {
@@ -777,11 +782,6 @@ void ProjectManager::_global_menu_action(
             OS::get_singleton()->execute(exec, args, false, &pid);
         }
     }
-}
-
-void ProjectManager::_import_project() {
-    npdialog->set_mode(ProjectDialog::MODE_IMPORT);
-    npdialog->show_dialog();
 }
 
 void ProjectManager::_install_project(

@@ -83,6 +83,7 @@ private:
 
     TabContainer* tabs;
 
+    void _add_project();
     void _confirm_update_settings();
     void _dim_window();
     void _erase_missing_projects();
@@ -91,7 +92,6 @@ private:
     void _erase_project_confirm();
     void _files_dropped(PoolStringArray p_files, int p_screen);
     void _global_menu_action(const Variant& p_id, const Variant& p_meta);
-    void _import_project();
     void _install_project(const String& p_zip_path, const String& p_title);
     void _language_selected(int p_id);
     void _load_recent_projects();

@@ -104,9 +104,9 @@ void ProjectDialog::show_dialog() {
         install_status_rect->show();
         msg->show();
 
-        if (mode == MODE_IMPORT) {
-            set_title(TTR("Import Existing Project"));
-            get_ok()->set_text(TTR("Import & Edit"));
+        if (mode == MODE_ADD) {
+            set_title(TTR("Add Existing Project"));
+            get_ok()->set_text(TTR("Add & Edit"));
             name_container->hide();
             install_path_container->hide();
             rasterizer_container->hide();
@@ -343,7 +343,7 @@ void ProjectDialog::_browse_install_path() {
 void ProjectDialog::_browse_path() {
     fdialog->set_current_dir(project_path->get_text());
 
-    if (mode == MODE_IMPORT) {
+    if (mode == MODE_ADD) {
         fdialog->set_mode(FileDialog::MODE_OPEN_FILE);
         fdialog->clear_filters();
         fdialog->add_filter(
@@ -410,7 +410,7 @@ void ProjectDialog::_create_folder() {
 
 void ProjectDialog::_file_selected(const String& p_path) {
     String p = p_path;
-    if (mode == MODE_IMPORT) {
+    if (mode == MODE_ADD) {
         if (p.ends_with("project.rebel")) {
             p = p.get_base_dir();
             install_path_container->hide();
@@ -493,7 +493,7 @@ void ProjectDialog::_ok_pressed() {
         emit_signal("projects_updated");
 
     } else {
-        if (mode == MODE_IMPORT) {
+        if (mode == MODE_ADD) {
             if (project_path->get_text().ends_with(".zip")) {
                 mode = MODE_INSTALL;
                 _ok_pressed();
@@ -731,8 +731,8 @@ void ProjectDialog::_path_text_changed(const String& p_path) {
             if (lidx != -1) {
                 sp = sp.substr(lidx + 1, sp.length()).capitalize();
             }
-            if (sp == "" && mode == MODE_IMPORT) {
-                sp = TTR("Imported Project");
+            if (sp == "" && mode == MODE_ADD) {
+                sp = TTR("Added Project");
             }
 
             project_name->set_text(sp);
@@ -840,7 +840,7 @@ String ProjectDialog::_test_path() {
         return "";
     }
 
-    if (mode == MODE_IMPORT && valid_path.ends_with(".zip")) {
+    if (mode == MODE_ADD && valid_path.ends_with(".zip")) {
         if (d->change_dir(install_path->get_text()) == OK) {
             valid_install_path = install_path->get_text();
         } else if (d->change_dir(install_path->get_text().strip_edges()) == OK) {
@@ -859,7 +859,7 @@ String ProjectDialog::_test_path() {
         }
     }
 
-    if (mode == MODE_IMPORT || mode == MODE_RENAME) {
+    if (mode == MODE_ADD || mode == MODE_RENAME) {
         if (valid_path != "" && !d->file_exists("project.rebel")) {
             if (valid_path.ends_with(".zip")) {
                 FileAccess* src_f    = nullptr;

@@ -22,7 +22,7 @@ class ProjectDialog : public ConfirmationDialog {
 public:
     enum Mode {
         MODE_NEW,
-        MODE_IMPORT,
+        MODE_ADD,
         MODE_INSTALL,
         MODE_RENAME
     };
