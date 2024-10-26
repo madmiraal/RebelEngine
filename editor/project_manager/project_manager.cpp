@@ -77,20 +77,20 @@ void apply_editor_settings() {
         editor_settings->get("filesystem/file_dialog/show_hidden_files")
     );
 }
+
+void apply_window_settings() {
+    OS* os = OS::get_singleton();
+    os->set_min_window_size(Size2(750, 420) * EDSCALE);
+    // TODO: Automatically resize hiDPI display windows on Windows and Linux.
+    os->set_window_size(os->get_window_size() * MAX(1, EDSCALE));
+    // TRANSLATORS: Project Manager is the application used to manage projects.
+    os->set_window_title(VERSION_NAME + String(" - ") + TTR("Project Manager"));
+}
 } // namespace
 
 ProjectManager::ProjectManager() {
     apply_editor_settings();
-
-    // Define a minimum window size to prevent UI elements from overlapping
-    // or being cut off.
-    OS::get_singleton()->set_min_window_size(Size2(750, 420) * EDSCALE);
-
-    // TODO: Resize windows on hiDPI displays on Windows and Linux and
-    // remove the line below.
-    OS::get_singleton()->set_window_size(
-        OS::get_singleton()->get_window_size() * MAX(1, EDSCALE)
-    );
+    apply_window_settings();
 
     set_anchors_and_margins_preset(Control::PRESET_WIDE);
     set_theme(create_custom_theme());
