@@ -327,7 +327,7 @@ ProjectManager::ProjectManager() {
 
     version_btn = memnew(LinkButton);
     String hash = String(VERSION_HASH);
-    if (hash.length() != 0) {
+    if (!hash.empty()) {
         hash = " " + vformat("[%s]", hash.left(9));
     }
     version_btn->set_text("v" VERSION_FULL_BUILD + hash);
@@ -462,7 +462,7 @@ ProjectManager::ProjectManager() {
     String autoscan_path = EditorSettings::get_singleton()->get(
         "filesystem/directories/autoscan_project_path"
     );
-    if (autoscan_path != "") {
+    if (!autoscan_path.empty()) {
         if (dir_access->dir_exists(autoscan_path)) {
             _scan_begin(autoscan_path);
         } else {
@@ -659,7 +659,7 @@ void ProjectManager::_erase_project() {
     const Set<String>& selected_list =
         project_list->get_selected_project_keys();
 
-    if (selected_list.size() == 0) {
+    if (selected_list.empty()) {
         return;
     }
 
@@ -700,7 +700,7 @@ void ProjectManager::_files_dropped(PoolStringArray p_files, int p_screen) {
         folders_set.insert(da->dir_exists(file) ? file : file.get_base_dir());
     }
     memdelete(da);
-    if (folders_set.size() > 0) {
+    if (!folders_set.empty()) {
         PoolStringArray folders;
         for (Set<String>::Element* E = folders_set.front(); E; E = E->next()) {
             folders.append(E->get());
@@ -712,7 +712,7 @@ void ProjectManager::_files_dropped(PoolStringArray p_files, int p_screen) {
             if (dir->change_dir(folders[0]) == OK) {
                 dir->list_dir_begin();
                 String file = dir->get_next();
-                while (confirm && file != String()) {
+                while (confirm && !file.empty()) {
                     if (!dir->current_is_dir()
                         && file.ends_with("project.rebel")) {
                         confirm = false;
@@ -760,7 +760,7 @@ void ProjectManager::_global_menu_action(
     } else if (id == ProjectList::GLOBAL_OPEN_PROJECT) {
         String conf = (String)p_meta;
 
-        if (conf != String()) {
+        if (!conf.empty()) {
             List<String> args;
             args.push_back(conf);
             String exec = OS::get_singleton()->get_executable_path();
@@ -999,7 +999,7 @@ void ProjectManager::_rename_project() {
     const Set<String>& selected_list =
         project_list->get_selected_project_keys();
 
-    if (selected_list.size() == 0) {
+    if (selected_list.empty()) {
         return;
     }
 
@@ -1030,7 +1030,7 @@ void ProjectManager::_run_project_confirm() {
 
     for (int i = 0; i < selected_list.size(); ++i) {
         const String& selected_main = selected_list[i].main_scene;
-        if (selected_main == "") {
+        if (selected_main.empty()) {
             run_error_diag->set_text(
                 TTR("Can't run project: no main scene defined.\nPlease edit "
                     "the project and set the main scene in the Project "
@@ -1114,7 +1114,7 @@ void ProjectManager::_scan_dir(const String& path, List<String>* r_projects) {
     ERR_FAIL_COND_MSG(error != OK, "Could not scan directory at: " + path);
     da->list_dir_begin();
     String n = da->get_next();
-    while (n != String()) {
+    while (!n.empty()) {
         if (da->current_is_dir() && !n.begins_with(".")) {
             _scan_dir(da->get_current_dir().plus_file(n), r_projects);
         } else if (n == "project.rebel") {

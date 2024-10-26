@@ -60,7 +60,7 @@ void ProjectList::erase_missing_projects() {
 }
 
 void ProjectList::erase_selected_projects(bool p_delete_project_contents) {
-    if (_selected_project_keys.size() == 0) {
+    if (_selected_project_keys.empty()) {
         return;
     }
 
@@ -104,7 +104,7 @@ const Set<String>& ProjectList::get_selected_project_keys() const {
 
 Vector<ProjectListItem> ProjectList::get_selected_projects() const {
     Vector<ProjectListItem> items;
-    if (_selected_project_keys.size() == 0) {
+    if (_selected_project_keys.empty()) {
         return items;
     }
     items.resize(_selected_project_keys.size());
@@ -120,7 +120,7 @@ Vector<ProjectListItem> ProjectList::get_selected_projects() const {
 }
 
 int ProjectList::get_single_selected_index() const {
-    if (_selected_project_keys.size() == 0) {
+    if (_selected_project_keys.empty()) {
         // Default selection
         return 0;
     }
@@ -320,7 +320,7 @@ void ProjectList::sort_projects() {
         ProjectListItem& item = _projects.write[i];
 
         bool visible = true;
-        if (_search_term != "") {
+        if (!_search_term.empty()) {
             String search_path;
             if (_search_term.find("/") != -1) {
                 // Search path will match the whole path
@@ -415,7 +415,7 @@ void ProjectList::_load_project_data(
         String cf_project_name =
             static_cast<String>(cf->get_value("application", "config/name", "")
             );
-        if (cf_project_name != "") {
+        if (!cf_project_name.empty()) {
             project_name = cf_project_name.xml_unescape();
         }
         config_version = (int)cf->get_value("", "config_version", 0);
@@ -603,7 +603,7 @@ void ProjectList::_load_project_icon(int p_index) {
 
     Ref<Texture> default_icon = get_icon("DefaultProjectIcon", "EditorIcons");
     Ref<Texture> icon;
-    if (item.icon != "") {
+    if (!item.icon.empty()) {
         Ref<Image> img;
         img.instance();
         Error err =
@@ -672,8 +672,8 @@ void ProjectList::_panel_input(const Ref<InputEvent>& p_ev, Node* p_hb) {
 
     if (mb.is_valid() && mb->is_pressed()
         && mb->get_button_index() == BUTTON_LEFT) {
-        if (mb->get_shift() && _selected_project_keys.size() > 0
-            && _last_clicked != ""
+        if (mb->get_shift() && !_selected_project_keys.empty()
+            && !_last_clicked.empty()
             && clicked_project.project_key != _last_clicked) {
             int anchor_index = -1;
             for (int i = 0; i < _projects.size(); ++i) {

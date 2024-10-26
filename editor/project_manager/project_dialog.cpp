@@ -230,7 +230,7 @@ void ProjectDialog::show_dialog() {
         fav_dir = EditorSettings::get_singleton()->get(
             "filesystem/directories/default_project_path"
         );
-        if (fav_dir != "") {
+        if (!fav_dir.empty()) {
             project_path->set_text(fav_dir);
             fdialog->set_current_dir(fav_dir);
         } else {
@@ -376,7 +376,7 @@ void ProjectDialog::_cancel_pressed() {
 
 void ProjectDialog::_create_folder() {
     const String project_name_no_edges = project_name->get_text().strip_edges();
-    if (project_name_no_edges == "" || created_folder_path != ""
+    if (project_name_no_edges.empty() || !created_folder_path.empty()
         || project_name_no_edges.ends_with(".")) {
         _set_message(TTR("Invalid project name."), MESSAGE_WARNING);
         return;
@@ -450,7 +450,7 @@ void ProjectDialog::_ok_pressed() {
 
     if (mode == MODE_RENAME) {
         String dir2 = _test_path();
-        if (dir2 == "") {
+        if (dir2.empty()) {
             _set_message(
                 TTR("Invalid project path (changed anything?)."),
                 MESSAGE_ERROR
@@ -633,7 +633,7 @@ void ProjectDialog::_ok_pressed() {
 
                     String path = String::utf8(fname);
 
-                    if (path == String() || path == zip_root
+                    if (path.empty() || path == zip_root
                         || !zip_root.is_subsequence_of(path)) {
                         //
                     } else if (path.ends_with("/")) { // a dir
@@ -673,7 +673,7 @@ void ProjectDialog::_ok_pressed() {
 
                 unzClose(pkg);
 
-                if (failed_files.size()) {
+                if (!failed_files.empty()) {
                     String msg = TTR("The following files failed "
                                      "extraction from package:")
                                + "\n\n";
@@ -719,10 +719,10 @@ void ProjectDialog::_path_selected(const String& p_path) {
 
 void ProjectDialog::_path_text_changed(const String& p_path) {
     String sp = _test_path();
-    if (sp != "") {
+    if (!sp.empty()) {
         // If the project name is empty or default, infer the project name
         // from the selected folder name
-        if (project_name->get_text().strip_edges() == ""
+        if (project_name->get_text().strip_edges().empty()
             || project_name->get_text().strip_edges()
                    == TTR("New Game Project")) {
             sp       = sp.replace("\\", "/");
@@ -731,7 +731,7 @@ void ProjectDialog::_path_text_changed(const String& p_path) {
             if (lidx != -1) {
                 sp = sp.substr(lidx + 1, sp.length()).capitalize();
             }
-            if (sp == "" && mode == MODE_IMPORT) {
+            if (sp.empty() && mode == MODE_IMPORT) {
                 sp = TTR("Imported Project");
             }
 
@@ -740,13 +740,13 @@ void ProjectDialog::_path_text_changed(const String& p_path) {
         }
     }
 
-    if (created_folder_path != "" && created_folder_path != p_path) {
+    if (!created_folder_path.empty() && created_folder_path != p_path) {
         _remove_created_folder();
     }
 }
 
 void ProjectDialog::_remove_created_folder() {
-    if (created_folder_path != "") {
+    if (!created_folder_path.empty()) {
         DirAccess* d = DirAccess::create(DirAccess::ACCESS_FILESYSTEM);
         d->remove(created_folder_path);
         memdelete(d);
@@ -818,7 +818,7 @@ String ProjectDialog::_test_path() {
         }
     }
 
-    if (valid_path == "") {
+    if (valid_path.empty()) {
         _set_message(TTR("The path specified doesn't exist."), MESSAGE_ERROR);
         memdelete(d);
         get_ok()->set_disabled(true);
@@ -832,7 +832,7 @@ String ProjectDialog::_test_path() {
             valid_install_path = install_path->get_text().strip_edges();
         }
 
-        if (valid_install_path == "") {
+        if (valid_install_path.empty()) {
             _set_message(
                 TTR("The path specified doesn't exist."),
                 MESSAGE_ERROR,
@@ -845,7 +845,7 @@ String ProjectDialog::_test_path() {
     }
 
     if (mode == MODE_IMPORT || mode == MODE_RENAME) {
-        if (valid_path != "" && !d->file_exists("project.rebel")) {
+        if (!valid_path.empty() && !d->file_exists("project.rebel")) {
             if (valid_path.ends_with(".zip")) {
                 FileAccess* src_f    = nullptr;
                 zlib_filefunc_def io = zipio_create_io_from_file(&src_f);
@@ -904,7 +904,7 @@ String ProjectDialog::_test_path() {
                 d->list_dir_begin();
                 bool is_empty = true;
                 String n      = d->get_next();
-                while (n != String()) {
+                while (!n.empty()) {
                     if (!n.begins_with(".")) {
                         // Allow `.`, `..` (reserved current/parent folder
                         // names) and hidden files/folders to be present.
@@ -958,7 +958,7 @@ String ProjectDialog::_test_path() {
         d->list_dir_begin();
         bool is_empty = true;
         String n      = d->get_next();
-        while (n != String()) {
+        while (!n.empty()) {
             if (!n.begins_with(".")) {
                 // Allow `.`, `..` (reserved current/parent folder names)
                 // and hidden files/folders to be present.
@@ -994,7 +994,7 @@ void ProjectDialog::_text_changed(const String& p_text) {
 
     _test_path();
 
-    if (p_text.strip_edges() == "") {
+    if (p_text.strip_edges().empty()) {
         _set_message(
             TTR("It would be a good idea to name your project."),
             MESSAGE_ERROR
