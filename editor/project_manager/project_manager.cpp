@@ -363,7 +363,7 @@ ProjectManager::ProjectManager() {
         EditorSettings::get_singleton()->get("interface/editor/editor_language"
         );
     for (int i = 0; i < editor_languages.size(); i++) {
-        String lang = editor_languages[i];
+        const String& lang = editor_languages[i];
         String lang_name =
             TranslationServer::get_singleton()->get_locale_name(lang);
         language_btn->add_item(lang_name + " [" + lang + "]", i);
@@ -684,7 +684,10 @@ void ProjectManager::_erase_project_confirm() {
     _update_project_buttons();
 }
 
-void ProjectManager::_files_dropped(PoolStringArray p_files, int p_screen) {
+void ProjectManager::_files_dropped(
+    const PoolStringArray& p_files,
+    int p_screen
+) {
     if (p_files.size() == 1 && p_files[0].ends_with(".zip")) {
         const String file = p_files[0].get_file();
         _install_project(
@@ -1125,7 +1128,7 @@ void ProjectManager::_scan_dir(const String& path, List<String>* r_projects) {
     da->list_dir_end();
 }
 
-void ProjectManager::_scan_multiple_folders(PoolStringArray p_files) {
+void ProjectManager::_scan_multiple_folders(const PoolStringArray& p_files) {
     for (int i = 0; i < p_files.size(); i++) {
         _scan_begin(p_files.get(i));
     }

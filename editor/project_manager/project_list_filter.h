@@ -51,7 +51,7 @@ private:
 
     void _filter_option_selected(int p_idx);
     void _search_text_changed(const String& p_newtext);
-    void _setup_filters(Vector<String> options);
+    void _setup_filters(const Vector<String>& options);
 };
 
 #endif // PROJECT_LIST_FILTER_H

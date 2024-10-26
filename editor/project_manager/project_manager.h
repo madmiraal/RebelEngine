@@ -87,7 +87,7 @@ private:
     void _erase_missing_projects_confirm();
     void _erase_project();
     void _erase_project_confirm();
-    void _files_dropped(PoolStringArray p_files, int p_screen);
+    void _files_dropped(const PoolStringArray& p_files, int p_screen);
     void _global_menu_action(const Variant& p_id, const Variant& p_meta);
     void _import_project();
     void _install_project(const String& p_zip_path, const String& p_title);
@@ -108,7 +108,7 @@ private:
     void _run_project();
     void _scan_begin(const String& p_base);
     void _scan_dir(const String& path, List<String>* r_projects);
-    void _scan_multiple_folders(PoolStringArray p_files);
+    void _scan_multiple_folders(const PoolStringArray& p_files);
     void _scan_projects();
     void _show_about();
     void _unhandled_input(const Ref<InputEvent>& p_ev);

@@ -96,7 +96,7 @@ void ProjectListFilter::_search_text_changed(const String& p_newtext) {
     emit_signal("filter_changed");
 }
 
-void ProjectListFilter::_setup_filters(Vector<String> options) {
+void ProjectListFilter::_setup_filters(const Vector<String>& options) {
     filter_option->clear();
     for (int i = 0; i < options.size(); i++) {
         filter_option->add_item(options[i]);
