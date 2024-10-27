@@ -10,24 +10,72 @@
 #include "core/os/os.h"
 #include "editor/editor_scale.h"
 #include "editor/editor_settings.h"
+#include "editor/editor_themes.h"
 #include "scene/gui/label.h"
+#include "scene/gui/panel_container.h"
 
 const char* ProjectsList::SIGNAL_SELECTION_CHANGED = "selection_changed";
 const char* ProjectsList::SIGNAL_PROJECT_ASK_OPEN  = "project_ask_open";
 
 ProjectsList::ProjectsList() {
     sort_order = ProjectsListFilter::SortOrder::LAST_MODIFIED;
+    set_h_size_flags(SIZE_EXPAND_FILL);
 
-    _scroll_children = memnew(VBoxContainer);
-    _scroll_children->set_h_size_flags(SIZE_EXPAND_FILL);
-    add_child(_scroll_children);
+    set_theme(create_custom_theme());
+
+    // Projects List Tools
+    HBoxContainer* projects_list_tools_container = memnew(HBoxContainer);
+    add_child(projects_list_tools_container);
+
+    loading_label = memnew(Label(TTR("Loading, please wait...")));
+    loading_label->add_font_override("font", get_font("bold", "EditorFonts"));
+    loading_label->set_h_size_flags(Control::SIZE_EXPAND_FILL);
+    // Hide the label until it's needed.
+    loading_label->set_modulate(Color(0, 0, 0, 0));
+    projects_list_tools_container->add_child(loading_label);
+
+    Label* sort_label = memnew(Label);
+    sort_label->set_text(TTR("Sort:"));
+    projects_list_tools_container->add_child(sort_label);
+
+    Vector<String> sort_order_names;
+    sort_order_names.push_back(TTR("Name"));
+    sort_order_names.push_back(TTR("Path"));
+    sort_order_names.push_back(TTR("Last Modified"));
+
+    projects_list_filter = memnew(ProjectsListFilter);
+    projects_list_filter->set_sort_order_names(sort_order_names);
+    int previous_sort_order =
+        EditorSettings::get_singleton()->get("project_manager/sorting_order");
+    projects_list_filter->set_sort_order((ProjectsListFilter::SortOrder
+    )previous_sort_order);
+    projects_list_filter
+        ->connect("sort_order_changed", this, "_on_sort_order_changed");
+    projects_list_filter
+        ->connect("search_text_changed", this, "_on_search_text_changed");
+    projects_list_tools_container->add_child(projects_list_filter);
+
+    // Projects
+    PanelContainer* panel_container = memnew(PanelContainer);
+    panel_container->add_style_override("panel", get_stylebox("bg", "Tree"));
+    panel_container->set_v_size_flags(SIZE_EXPAND_FILL);
+    add_child(panel_container);
+
+    scroll_container = memnew(ScrollContainer);
+    scroll_container->set_enable_h_scroll(false);
+    panel_container->add_child(scroll_container);
+
+    projects_container = memnew(VBoxContainer);
+    projects_container->set_h_size_flags(SIZE_EXPAND_FILL);
+    scroll_container->add_child(projects_container);
 
     _icon_load_index = 0;
+    load_recent_projects();
 }
 
 void ProjectsList::ensure_project_visible(int p_index) {
     const ProjectsListItem& item = _projects[p_index];
-    ensure_control_visible(item.control);
+    scroll_container->ensure_control_visible(item.control);
 }
 
 void ProjectsList::erase_missing_projects() {
@@ -207,10 +255,24 @@ void ProjectsList::load_projects() {
 
     sort_projects();
 
-    set_v_scroll(0);
+    scroll_container->set_v_scroll(0);
 
     _update_icons_async();
 
+    update_dock_menu();
+}
+
+void ProjectsList::load_recent_projects() {
+    set_sort_order(projects_list_filter->get_sort_order());
+    set_search_text(projects_list_filter->get_search_text());
+    load_projects();
+}
+
+void ProjectsList::project_created(const String& dir) {
+    projects_list_filter->clear_search_text();
+    int i = refresh_project(dir);
+    select_project(i);
+    ensure_project_visible(i);
     update_dock_menu();
 }
 
@@ -294,6 +356,14 @@ void ProjectsList::select_project(int p_index) {
     }
 
     _toggle_select(p_index);
+}
+
+void ProjectsList::set_search_focus() {
+    projects_list_filter->get_search_box()->grab_focus();
+}
+
+void ProjectsList::set_loading() {
+    loading_label->set_modulate(Color(1, 1, 1));
 }
 
 void ProjectsList::set_search_text(String p_search_text) {
@@ -388,6 +458,14 @@ void ProjectsList::update_dock_menu() {
 }
 
 void ProjectsList::_bind_methods() {
+    ClassDB::bind_method(
+        "_on_sort_order_changed",
+        &ProjectsList::_on_sort_order_changed
+    );
+    ClassDB::bind_method(
+        "_on_search_text_changed",
+        &ProjectsList::_on_search_text_changed
+    );
     ClassDB::bind_method("_panel_draw", &ProjectsList::_panel_draw);
     ClassDB::bind_method("_panel_input", &ProjectsList::_panel_input);
     ClassDB::bind_method("_favorite_pressed", &ProjectsList::_favorite_pressed);
@@ -395,6 +473,33 @@ void ProjectsList::_bind_methods() {
 
     ADD_SIGNAL(MethodInfo(SIGNAL_SELECTION_CHANGED));
     ADD_SIGNAL(MethodInfo(SIGNAL_PROJECT_ASK_OPEN));
+}
+
+void ProjectsList::_notification(int p_what) {
+    switch (p_what) {
+        case NOTIFICATION_PROCESS: {
+            // Load icons as a co-routine to speed up launch
+            // when there are many projects.
+            if (_icon_load_index < _projects.size()) {
+                ProjectsListItem& item = _projects.write[_icon_load_index];
+                if (item.control->icon_needs_reload) {
+                    _load_project_icon(_icon_load_index);
+                }
+                _icon_load_index++;
+
+            } else {
+                set_process(false);
+            }
+        } break;
+
+        case NOTIFICATION_READY: {
+            if (get_project_count() >= 1) {
+                // Focus on the search box immediately to allow the user
+                // to search without having to reach for their mouse
+                projects_list_filter->get_search_box()->grab_focus();
+            }
+        } break;
+    }
 }
 
 void ProjectsList::_load_project_data(
@@ -467,7 +572,7 @@ void ProjectsList::_load_project_data(
 
 void ProjectsList::_create_project_item_control(int p_index) {
     // Will be added last in the list, so make sure indexes match
-    ERR_FAIL_COND(p_index != _scroll_children->get_child_count());
+    ERR_FAIL_COND(p_index != projects_container->get_child_count());
 
     ProjectsListItem& item = _projects.write[p_index];
     ERR_FAIL_COND(item.control != nullptr); // Already created
@@ -556,7 +661,7 @@ void ProjectsList::_create_project_item_control(int p_index) {
     fpath->add_color_override("font_color", font_color);
     fpath->set_clip_text(true);
 
-    _scroll_children->add_child(hb);
+    projects_container->add_child(hb);
     item.control = hb;
 }
 
@@ -628,21 +733,14 @@ void ProjectsList::_load_project_icon(int p_index) {
     item.control->icon_needs_reload = false;
 }
 
-void ProjectsList::_notification(int p_what) {
-    if (p_what == NOTIFICATION_PROCESS) {
-        // Load icons as a coroutine to speed up launch when you have hundreds
-        // of projects
-        if (_icon_load_index < _projects.size()) {
-            ProjectsListItem& item = _projects.write[_icon_load_index];
-            if (item.control->icon_needs_reload) {
-                _load_project_icon(_icon_load_index);
-            }
-            _icon_load_index++;
+void ProjectsList::_on_search_text_changed() {
+    set_search_text(projects_list_filter->get_search_text());
+    sort_projects();
+}
 
-        } else {
-            set_process(false);
-        }
-    }
+void ProjectsList::_on_sort_order_changed() {
+    set_sort_order(projects_list_filter->get_sort_order());
+    sort_projects();
 }
 
 // Draws selected project highlight

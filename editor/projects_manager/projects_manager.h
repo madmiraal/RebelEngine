@@ -66,15 +66,13 @@ private:
     FileDialog* scan_dir;
 
     Label* erase_ask_label;
-    Label* loading_label;
 
     LinkButton* version_btn;
 
     OptionButton* language_btn;
 
     ProjectsDialog* npdialog;
-    ProjectsList* project_list;
-    ProjectsListFilter* project_list_filter;
+    ProjectsList* projects_list;
 
     TabContainer* tabs;
 
@@ -89,12 +87,9 @@ private:
     void _import_project();
     void _install_project(const String& p_zip_path, const String& p_title);
     void _language_selected(int p_id);
-    void _load_recent_projects();
     void _new_project();
     void _on_project_created(const String& dir);
     void _on_projects_updated();
-    void _on_search_text_changed();
-    void _on_sort_order_changed();
     void _on_tab_changed(int p_tab);
     void _open_asset_library();
     void _open_selected_projects_ask();

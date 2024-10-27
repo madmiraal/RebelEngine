@@ -24,7 +24,6 @@
 #include "scene/gui/center_container.h"
 #include "scene/gui/line_edit.h"
 #include "scene/gui/margin_container.h"
-#include "scene/gui/panel_container.h"
 #include "scene/gui/separator.h"
 #include "scene/gui/texture_rect.h"
 #include "scene/gui/tool_button.h"
@@ -127,62 +126,18 @@ ProjectsManager::ProjectsManager() {
     projects_tab_container->set_name(TTR("Local Projects"));
     tabs->add_child(projects_tab_container);
 
-    VBoxContainer* projects_list_container = memnew(VBoxContainer);
-    projects_list_container->set_h_size_flags(SIZE_EXPAND_FILL);
-    projects_tab_container->add_child(projects_list_container);
-
-    HBoxContainer* projects_list_tools_container = memnew(HBoxContainer);
-    projects_list_container->add_child(projects_list_tools_container);
-
-    loading_label = memnew(Label(TTR("Loading, please wait...")));
-    loading_label->add_font_override("font", get_font("bold", "EditorFonts"));
-    loading_label->set_h_size_flags(Control::SIZE_EXPAND_FILL);
-    // Hide the label until it's needed.
-    loading_label->set_modulate(Color(0, 0, 0, 0));
-    projects_list_tools_container->add_child(loading_label);
-
-    Label* sort_label = memnew(Label);
-    sort_label->set_text(TTR("Sort:"));
-    projects_list_tools_container->add_child(sort_label);
-
-    Vector<String> sort_order_names;
-    sort_order_names.push_back(TTR("Name"));
-    sort_order_names.push_back(TTR("Path"));
-    sort_order_names.push_back(TTR("Last Modified"));
-
-    project_list_filter = memnew(ProjectsListFilter);
-    project_list_filter->set_sort_order_names(sort_order_names);
-    project_list_filter
-        ->connect("sort_order_changed", this, "_on_sort_order_changed");
-
-    int projects_sorting_order = (int)EditorSettings::get_singleton()->get(
-        "project_manager/sorting_order"
-    );
-    project_list_filter->set_sort_order((ProjectsListFilter::SortOrder
-    )projects_sorting_order);
-
-    project_list_filter
-        ->connect("search_text_changed", this, "_on_search_text_changed");
-    projects_list_tools_container->add_child(project_list_filter);
-
-    PanelContainer* pc = memnew(PanelContainer);
-    pc->add_style_override("panel", get_stylebox("bg", "Tree"));
-    projects_list_container->add_child(pc);
-    pc->set_v_size_flags(SIZE_EXPAND_FILL);
-
-    project_list = memnew(ProjectsList);
-    project_list->connect(
+    projects_list = memnew(ProjectsList);
+    projects_list->connect(
         ProjectsList::SIGNAL_SELECTION_CHANGED,
         this,
         "_update_project_buttons"
     );
-    project_list->connect(
+    projects_list->connect(
         ProjectsList::SIGNAL_PROJECT_ASK_OPEN,
         this,
         "_open_selected_projects_ask"
     );
-    pc->add_child(project_list);
-    project_list->set_enable_h_scroll(false);
+    projects_tab_container->add_child(projects_list);
 
     VBoxContainer* tree_vb = memnew(VBoxContainer);
     tree_vb->set_custom_minimum_size(Size2(120, 120));
@@ -427,7 +382,8 @@ ProjectsManager::ProjectsManager() {
     npdialog->connect("projects_updated", this, "_on_projects_updated");
     npdialog->connect("project_created", this, "_on_project_created");
 
-    _load_recent_projects();
+    _update_project_buttons();
+    tabs->set_current_tab(0);
 
     DirAccessRef dir_access =
         DirAccess::create(DirAccess::AccessType::ACCESS_FILESYSTEM);
@@ -543,14 +499,6 @@ void ProjectsManager::_bind_methods() {
         "_restart_confirm",
         &ProjectsManager::_restart_confirm
     );
-    ClassDB::bind_method(
-        "_on_sort_order_changed",
-        &ProjectsManager::_on_sort_order_changed
-    );
-    ClassDB::bind_method(
-        "_on_search_text_changed",
-        &ProjectsManager::_on_search_text_changed
-    );
     ClassDB::bind_method("_on_tab_changed", &ProjectsManager::_on_tab_changed);
     ClassDB::bind_method(
         "_on_projects_updated",
@@ -598,15 +546,9 @@ void ProjectsManager::_notification(int p_what) {
             }
         } break;
         case NOTIFICATION_READY: {
-            if (project_list->get_project_count() == 0
+            if (projects_list->get_project_count() == 0
                 && StreamPeerSSL::is_available()) {
                 open_templates->popup_centered_minsize();
-            }
-
-            if (project_list->get_project_count() >= 1) {
-                // Focus on the search box immediately to allow the user
-                // to search without having to reach for their mouse
-                project_list_filter->get_search_box()->grab_focus();
             }
         } break;
         case NOTIFICATION_VISIBILITY_CHANGED: {
@@ -646,13 +588,13 @@ void ProjectsManager::_erase_missing_projects() {
 }
 
 void ProjectsManager::_erase_missing_projects_confirm() {
-    project_list->erase_missing_projects();
+    projects_list->erase_missing_projects();
     _update_project_buttons();
 }
 
 void ProjectsManager::_erase_project() {
     const Set<String>& selected_list =
-        project_list->get_selected_project_keys();
+        projects_list->get_selected_project_keys();
 
     if (selected_list.empty()) {
         return;
@@ -674,7 +616,7 @@ void ProjectsManager::_erase_project() {
 }
 
 void ProjectsManager::_erase_project_confirm() {
-    project_list->erase_selected_projects(delete_project_contents->is_pressed()
+    projects_list->erase_selected_projects(delete_project_contents->is_pressed()
     );
     _update_project_buttons();
 }
@@ -801,63 +743,33 @@ void ProjectsManager::_language_selected(int p_id) {
     language_restart_ask->popup_centered();
 }
 
-void ProjectsManager::_load_recent_projects() {
-    project_list->set_sort_order(project_list_filter->get_sort_order());
-    project_list->set_search_text(project_list_filter->get_search_text());
-    project_list->load_projects();
-
-    _update_project_buttons();
-
-    tabs->set_current_tab(0);
-}
-
 void ProjectsManager::_new_project() {
     npdialog->set_mode(ProjectsDialog::MODE_NEW);
     npdialog->show_dialog();
 }
 
 void ProjectsManager::_on_project_created(const String& dir) {
-    project_list_filter->clear_search_text();
-    int i = project_list->refresh_project(dir);
-    project_list->select_project(i);
-    project_list->ensure_project_visible(i);
+    projects_list->project_created(dir);
     _open_selected_projects_ask();
-
-    project_list->update_dock_menu();
 }
 
 void ProjectsManager::_on_projects_updated() {
     Vector<ProjectsListItem> selected_projects =
-        project_list->get_selected_projects();
+        projects_list->get_selected_projects();
     int index = 0;
     for (int i = 0; i < selected_projects.size(); ++i) {
-        index = project_list->refresh_project(selected_projects[i].path);
+        index = projects_list->refresh_project(selected_projects[i].path);
     }
     if (index != -1) {
-        project_list->ensure_project_visible(index);
+        projects_list->ensure_project_visible(index);
     }
 
-    project_list->update_dock_menu();
-}
-
-void ProjectsManager::_on_search_text_changed() {
-    project_list->set_search_text(project_list_filter->get_search_text());
-    project_list->sort_projects();
-}
-
-void ProjectsManager::_on_sort_order_changed() {
-    project_list->set_sort_order(project_list_filter->get_sort_order());
-    project_list->sort_projects();
+    projects_list->update_dock_menu();
 }
 
 void ProjectsManager::_on_tab_changed(int p_tab) {
     if (p_tab == 0) { // Projects
-        // Automatically grab focus when the user moves from the Templates tab
-        // back to the Projects tab.
-        LineEdit* search_box = project_list_filter->get_search_box();
-        if (search_box) {
-            search_box->grab_focus();
-        }
+        projects_list->set_search_focus();
     }
 
     // The Templates tab's search field is focused on display in the asset
@@ -871,7 +783,7 @@ void ProjectsManager::_open_asset_library() {
 
 void ProjectsManager::_open_selected_projects_ask() {
     const Set<String>& selected_list =
-        project_list->get_selected_project_keys();
+        projects_list->get_selected_project_keys();
 
     if (selected_list.size() < 1) {
         return;
@@ -885,7 +797,7 @@ void ProjectsManager::_open_selected_projects_ask() {
         return;
     }
 
-    ProjectsListItem project = project_list->get_selected_projects()[0];
+    ProjectsListItem project = projects_list->get_selected_projects()[0];
     if (project.missing) {
         return;
     }
@@ -942,10 +854,10 @@ void ProjectsManager::_open_selected_projects_ask() {
 void ProjectsManager::_open_selected_projects() {
     // Show loading text to tell the user that the Projects Manager is busy
     // loading. This is especially important for the Web Projects Manager.
-    loading_label->set_modulate(Color(1, 1, 1));
+    projects_list->set_loading();
 
     const Set<String>& selected_list =
-        project_list->get_selected_project_keys();
+        projects_list->get_selected_project_keys();
 
     for (const Set<String>::Element* E = selected_list.front(); E;
          E                             = E->next()) {
@@ -996,7 +908,7 @@ void ProjectsManager::_open_selected_projects() {
 
 void ProjectsManager::_rename_project() {
     const Set<String>& selected_list =
-        project_list->get_selected_project_keys();
+        projects_list->get_selected_project_keys();
 
     if (selected_list.empty()) {
         return;
@@ -1025,7 +937,7 @@ void ProjectsManager::_restart_confirm() {
 
 void ProjectsManager::_run_project_confirm() {
     Vector<ProjectsListItem> selected_list =
-        project_list->get_selected_projects();
+        projects_list->get_selected_projects();
 
     for (int i = 0; i < selected_list.size(); ++i) {
         const String& selected_main = selected_list[i].main_scene;
@@ -1076,7 +988,7 @@ void ProjectsManager::_run_project_confirm() {
 // When you press the "Run" button
 void ProjectsManager::_run_project() {
     const Set<String>& selected_list =
-        project_list->get_selected_project_keys();
+        projects_list->get_selected_project_keys();
 
     if (selected_list.size() < 1) {
         return;
@@ -1104,7 +1016,7 @@ void ProjectsManager::_scan_begin(const String& p_base) {
         EditorSettings::get_singleton()->set("projects/" + proj, E->get());
     }
     EditorSettings::get_singleton()->save();
-    _load_recent_projects();
+    projects_list->load_recent_projects();
 }
 
 void ProjectsManager::_scan_dir(const String& path, List<String>* r_projects) {
@@ -1167,16 +1079,16 @@ void ProjectsManager::_unhandled_input(const Ref<InputEvent>& p_ev) {
                 _open_selected_projects_ask();
             } break;
             case KEY_HOME: {
-                if (project_list->get_project_count() > 0) {
-                    project_list->select_project(0);
+                if (projects_list->get_project_count() > 0) {
+                    projects_list->select_project(0);
                     _update_project_buttons();
                 }
 
             } break;
             case KEY_END: {
-                if (project_list->get_project_count() > 0) {
-                    project_list->select_project(
-                        project_list->get_project_count() - 1
+                if (projects_list->get_project_count() > 0) {
+                    projects_list->select_project(
+                        projects_list->get_project_count() - 1
                     );
                     _update_project_buttons();
                 }
@@ -1187,10 +1099,10 @@ void ProjectsManager::_unhandled_input(const Ref<InputEvent>& p_ev) {
                     break;
                 }
 
-                int index = project_list->get_single_selected_index();
+                int index = projects_list->get_single_selected_index();
                 if (index > 0) {
-                    project_list->select_project(index - 1);
-                    project_list->ensure_project_visible(index - 1);
+                    projects_list->select_project(index - 1);
+                    projects_list->ensure_project_visible(index - 1);
                     _update_project_buttons();
                 }
 
@@ -1201,17 +1113,17 @@ void ProjectsManager::_unhandled_input(const Ref<InputEvent>& p_ev) {
                     break;
                 }
 
-                int index = project_list->get_single_selected_index();
-                if (index + 1 < project_list->get_project_count()) {
-                    project_list->select_project(index + 1);
-                    project_list->ensure_project_visible(index + 1);
+                int index = projects_list->get_single_selected_index();
+                if (index + 1 < projects_list->get_project_count()) {
+                    projects_list->select_project(index + 1);
+                    projects_list->ensure_project_visible(index + 1);
                     _update_project_buttons();
                 }
 
             } break;
             case KEY_F: {
                 if (k->get_command()) {
-                    this->project_list_filter->get_search_box()->grab_focus();
+                    projects_list->set_search_focus();
                 } else {
                     scancode_handled = false;
                 }
@@ -1229,7 +1141,7 @@ void ProjectsManager::_unhandled_input(const Ref<InputEvent>& p_ev) {
 
 void ProjectsManager::_update_project_buttons() {
     Vector<ProjectsListItem> selected_projects =
-        project_list->get_selected_projects();
+        projects_list->get_selected_projects();
     bool empty_selection = selected_projects.empty();
 
     bool is_missing_project_selected = false;
@@ -1245,7 +1157,7 @@ void ProjectsManager::_update_project_buttons() {
     rename_btn->set_disabled(empty_selection || is_missing_project_selected);
     run_btn->set_disabled(empty_selection || is_missing_project_selected);
 
-    erase_missing_btn->set_disabled(!project_list->is_any_project_missing());
+    erase_missing_btn->set_disabled(!projects_list->is_any_project_missing());
 }
 
 void ProjectsManager::_version_button_pressed() {
