@@ -334,118 +334,7 @@ void ProjectDialog::_notification(int p_what) {
     }
 }
 
-void ProjectDialog::_browse_path() {
-    fdialog->set_current_dir(project_path->get_text());
-
-    if (mode == MODE_IMPORT) {
-        fdialog->set_mode(FileDialog::MODE_OPEN_FILE);
-        fdialog->clear_filters();
-        fdialog->add_filter(
-            vformat("project.rebel ; %s %s", VERSION_NAME, TTR("Project"))
-        );
-        fdialog->add_filter("*.zip ; " + TTR("ZIP File"));
-    } else {
-        fdialog->set_mode(FileDialog::MODE_OPEN_DIR);
-    }
-    fdialog->popup_centered_ratio();
-}
-
-void ProjectDialog::_browse_install_path() {
-    fdialog_install->set_current_dir(install_path->get_text());
-    fdialog_install->set_mode(FileDialog::MODE_OPEN_DIR);
-    fdialog_install->popup_centered_ratio();
-}
-
-void ProjectDialog::_cancel_pressed() {
-    _remove_created_folder();
-
-    project_path->clear();
-    _path_text_changed("");
-    project_name->clear();
-    _text_changed("");
-
-    if (status_rect->get_texture() == get_icon("StatusError", "EditorIcons")) {
-        msg->show();
-    }
-
-    if (install_status_rect->get_texture()
-        == get_icon("StatusError", "EditorIcons")) {
-        msg->show();
-    }
-}
-
-void ProjectDialog::_create_folder() {
-    const String project_name_no_edges = project_name->get_text().strip_edges();
-    if (project_name_no_edges.empty() || !created_folder_path.empty()
-        || project_name_no_edges.ends_with(".")) {
-        _set_message(TTR("Invalid project name."), MESSAGE_WARNING);
-        return;
-    }
-
-    DirAccess* d = DirAccess::create(DirAccess::ACCESS_FILESYSTEM);
-    if (d->change_dir(project_path->get_text()) == OK) {
-        if (!d->dir_exists(project_name_no_edges)) {
-            if (d->make_dir(project_name_no_edges) == OK) {
-                d->change_dir(project_name_no_edges);
-                String dir_str = d->get_current_dir();
-                project_path->set_text(dir_str);
-                _path_text_changed(dir_str);
-                created_folder_path = d->get_current_dir();
-                create_dir->set_disabled(true);
-            } else {
-                dialog_error->set_text(TTR("Couldn't create folder."));
-                dialog_error->popup_centered_minsize();
-            }
-        } else {
-            dialog_error->set_text(
-                TTR("There is already a folder in this path with the "
-                    "specified name.")
-            );
-            dialog_error->popup_centered_minsize();
-        }
-    }
-
-    memdelete(d);
-}
-
-void ProjectDialog::_file_selected(const String& p_path) {
-    String p = p_path;
-    if (mode == MODE_IMPORT) {
-        if (p.ends_with("project.rebel")) {
-            p = p.get_base_dir();
-            install_path_container->hide();
-            get_ok()->set_disabled(false);
-        } else if (p.ends_with(".zip")) {
-            install_path->set_text(p.get_base_dir());
-            install_path_container->show();
-            get_ok()->set_disabled(false);
-        } else {
-            _set_message(
-                TTR("Please choose a \"project.rebel\" or \".zip\" file."),
-                MESSAGE_ERROR
-            );
-            get_ok()->set_disabled(true);
-            return;
-        }
-    }
-    String sp = p.simplify_path();
-    project_path->set_text(sp);
-    _path_text_changed(sp);
-    if (p.ends_with(".zip")) {
-        install_path->call_deferred("grab_focus");
-    } else {
-        get_ok()->call_deferred("grab_focus");
-    }
-}
-
-void ProjectDialog::_install_path_selected(const String& p_path) {
-    String sp = p_path.simplify_path();
-    install_path->set_text(sp);
-    _path_text_changed(sp);
-    get_ok()->call_deferred("grab_focus");
-}
-
-void ProjectDialog::_ok_pressed() {
+void ProjectDialog::ok_pressed() {
     String dir = project_path->get_text();
 
     if (mode == MODE_RENAME) {
@@ -496,8 +385,7 @@ void ProjectDialog::_ok_pressed() {
         if (mode == MODE_IMPORT) {
             if (project_path->get_text().ends_with(".zip")) {
                 mode = MODE_INSTALL;
-                _ok_pressed();
-
+                ok_pressed();
                 return;
             }
 
@@ -708,6 +596,117 @@ void ProjectDialog::_ok_pressed() {
         hide();
         emit_signal("project_created", dir);
     }
+}
+
+void ProjectDialog::_browse_path() {
+    fdialog->set_current_dir(project_path->get_text());
+
+    if (mode == MODE_IMPORT) {
+        fdialog->set_mode(FileDialog::MODE_OPEN_FILE);
+        fdialog->clear_filters();
+        fdialog->add_filter(
+            vformat("project.rebel ; %s %s", VERSION_NAME, TTR("Project"))
+        );
+        fdialog->add_filter("*.zip ; " + TTR("ZIP File"));
+    } else {
+        fdialog->set_mode(FileDialog::MODE_OPEN_DIR);
+    }
+    fdialog->popup_centered_ratio();
+}
+
+void ProjectDialog::_browse_install_path() {
+    fdialog_install->set_current_dir(install_path->get_text());
+    fdialog_install->set_mode(FileDialog::MODE_OPEN_DIR);
+    fdialog_install->popup_centered_ratio();
+}
+
+void ProjectDialog::_cancel_pressed() {
+    _remove_created_folder();
+
+    project_path->clear();
+    _path_text_changed("");
+    project_name->clear();
+    _text_changed("");
+
+    if (status_rect->get_texture() == get_icon("StatusError", "EditorIcons")) {
+        msg->show();
+    }
+
+    if (install_status_rect->get_texture()
+        == get_icon("StatusError", "EditorIcons")) {
+        msg->show();
+    }
+}
+
+void ProjectDialog::_create_folder() {
+    const String project_name_no_edges = project_name->get_text().strip_edges();
+    if (project_name_no_edges.empty() || !created_folder_path.empty()
+        || project_name_no_edges.ends_with(".")) {
+        _set_message(TTR("Invalid project name."), MESSAGE_WARNING);
+        return;
+    }
+
+    DirAccess* d = DirAccess::create(DirAccess::ACCESS_FILESYSTEM);
+    if (d->change_dir(project_path->get_text()) == OK) {
+        if (!d->dir_exists(project_name_no_edges)) {
+            if (d->make_dir(project_name_no_edges) == OK) {
+                d->change_dir(project_name_no_edges);
+                String dir_str = d->get_current_dir();
+                project_path->set_text(dir_str);
+                _path_text_changed(dir_str);
+                created_folder_path = d->get_current_dir();
+                create_dir->set_disabled(true);
+            } else {
+                dialog_error->set_text(TTR("Couldn't create folder."));
+                dialog_error->popup_centered_minsize();
+            }
+        } else {
+            dialog_error->set_text(
+                TTR("There is already a folder in this path with the "
+                    "specified name.")
+            );
+            dialog_error->popup_centered_minsize();
+        }
+    }
+
+    memdelete(d);
+}
+
+void ProjectDialog::_file_selected(const String& p_path) {
+    String p = p_path;
+    if (mode == MODE_IMPORT) {
+        if (p.ends_with("project.rebel")) {
+            p = p.get_base_dir();
+            install_path_container->hide();
+            get_ok()->set_disabled(false);
+        } else if (p.ends_with(".zip")) {
+            install_path->set_text(p.get_base_dir());
+            install_path_container->show();
+            get_ok()->set_disabled(false);
+        } else {
+            _set_message(
+                TTR("Please choose a \"project.rebel\" or \".zip\" file."),
+                MESSAGE_ERROR
+            );
+            get_ok()->set_disabled(true);
+            return;
+        }
+    }
+    String sp = p.simplify_path();
+    project_path->set_text(sp);
+    _path_text_changed(sp);
+    if (p.ends_with(".zip")) {
+        install_path->call_deferred("grab_focus");
+    } else {
+        get_ok()->call_deferred("grab_focus");
+    }
+}
+
+void ProjectDialog::_install_path_selected(const String& p_path) {
+    String sp = p_path.simplify_path();
+    install_path->set_text(sp);
+    _path_text_changed(sp);
+    get_ok()->call_deferred("grab_focus");
 }
 
 void ProjectDialog::_path_selected(const String& p_path) {

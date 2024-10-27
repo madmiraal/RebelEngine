@@ -38,6 +38,7 @@ public:
 protected:
     static void _bind_methods();
     void _notification(int p_what);
+    virtual void ok_pressed();
 
 private:
     enum MessageType {
@@ -88,7 +89,6 @@ private:
     void _create_folder();
     void _file_selected(const String& p_path);
     void _install_path_selected(const String& p_path);
-    void _ok_pressed();
     void _path_selected(const String& p_path);
     void _path_text_changed(const String& p_path);
     void _remove_created_folder();
