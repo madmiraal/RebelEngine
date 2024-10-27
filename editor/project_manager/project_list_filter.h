@@ -24,10 +24,10 @@ public:
     ProjectListFilter();
 
     void clear();
-    SortOrder get_filter_option();
     LineEdit* get_search_box() const;
-    String get_search_term();
-    void set_filter_option(SortOrder);
+    SortOrder get_sort_order() const;
+    String get_search_term() const;
+    void set_sort_order(SortOrder sort_order);
     void set_sort_order_names(const Vector<String>& sort_order_names);
 
 protected:
@@ -35,13 +35,13 @@ protected:
     void _notification(int p_what);
 
 private:
-    SortOrder _current_filter = SortOrder::NAME;
+    SortOrder current_sort_order = SortOrder::NAME;
 
     LineEdit* search_box;
 
-    OptionButton* filter_option;
+    OptionButton* sort_order_options;
 
-    void _filter_option_selected(int p_idx);
+    void _sort_order_selected(int p_idx);
     void _search_text_changed(const String& p_newtext);
 };
 

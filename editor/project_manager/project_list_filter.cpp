@@ -10,11 +10,11 @@
 #include "project_list.h"
 
 ProjectListFilter::ProjectListFilter() {
-    filter_option = memnew(OptionButton);
-    filter_option->set_clip_text(true);
-    filter_option->connect("item_selected", this, "_filter_option_selected");
-    filter_option->set_custom_minimum_size(Size2(180, 10) * EDSCALE);
-    add_child(filter_option);
+    sort_order_options = memnew(OptionButton);
+    sort_order_options->set_clip_text(true);
+    sort_order_options->connect("item_selected", this, "_sort_order_selected");
+    sort_order_options->set_custom_minimum_size(Size2(180, 10) * EDSCALE);
+    add_child(sort_order_options);
 
     search_box = memnew(LineEdit);
     search_box->set_placeholder(TTR("Filter projects"));
@@ -33,29 +33,29 @@ void ProjectListFilter::clear() {
     search_box->clear();
 }
 
-ProjectListFilter::SortOrder ProjectListFilter::get_filter_option() {
-    return _current_filter;
-}
-
 LineEdit* ProjectListFilter::get_search_box() const {
     return search_box;
 }
 
-String ProjectListFilter::get_search_term() {
+ProjectListFilter::SortOrder ProjectListFilter::get_sort_order() const {
+    return current_sort_order;
+}
+
+String ProjectListFilter::get_search_term() const {
     return search_box->get_text().strip_edges();
 }
 
-void ProjectListFilter::set_filter_option(SortOrder option) {
-    filter_option->select((int)option);
-    _filter_option_selected(0);
+void ProjectListFilter::set_sort_order(SortOrder new_sort_order) {
+    sort_order_options->select((int)new_sort_order);
+    _sort_order_selected(0);
 }
 
 void ProjectListFilter::set_sort_order_names(
     const Vector<String>& sort_order_names
 ) {
-    filter_option->clear();
+    sort_order_options->clear();
     for (int i = 0; i < sort_order_names.size(); i++) {
-        filter_option->add_item(sort_order_names[i]);
+        sort_order_options->add_item(sort_order_names[i]);
     }
 }
 
@@ -65,11 +65,11 @@ void ProjectListFilter::_bind_methods() {
         &ProjectListFilter::_search_text_changed
     );
     ClassDB::bind_method(
-        D_METHOD("_filter_option_selected"),
-        &ProjectListFilter::_filter_option_selected
+        D_METHOD("_sort_order_selected"),
+        &ProjectListFilter::_sort_order_selected
     );
 
-    ADD_SIGNAL(MethodInfo("filter_option_changed"));
+    ADD_SIGNAL(MethodInfo("sort_order_changed"));
     ADD_SIGNAL(MethodInfo("filter_search_changed"));
 }
 
@@ -80,11 +80,11 @@ void ProjectListFilter::_notification(int p_what) {
     }
 }
 
-void ProjectListFilter::_filter_option_selected(int p_idx) {
-    SortOrder selected = (SortOrder)(filter_option->get_selected());
-    if (_current_filter != selected) {
-        _current_filter = selected;
-        emit_signal("filter_option_changed");
+void ProjectListFilter::_sort_order_selected(int p_idx) {
+    SortOrder selected = (SortOrder)(sort_order_options->get_selected());
+    if (current_sort_order != selected) {
+        current_sort_order = selected;
+        emit_signal("sort_order_changed");
     }
 }
 

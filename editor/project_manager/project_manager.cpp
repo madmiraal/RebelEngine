@@ -151,12 +151,12 @@ ProjectManager::ProjectManager() {
     project_list_filter = memnew(ProjectListFilter);
     project_list_filter->set_sort_order_names(sort_order_names);
     project_list_filter
-        ->connect("filter_option_changed", this, "_on_order_option_changed");
+        ->connect("sort_order_changed", this, "_on_order_option_changed");
 
     int projects_sorting_order = (int)EditorSettings::get_singleton()->get(
         "project_manager/sorting_order"
     );
-    project_list_filter->set_filter_option((ProjectListFilter::SortOrder
+    project_list_filter->set_sort_order((ProjectListFilter::SortOrder
     )projects_sorting_order);
 
     project_list_filter
@@ -790,7 +790,7 @@ void ProjectManager::_language_selected(int p_id) {
 }
 
 void ProjectManager::_load_recent_projects() {
-    project_list->set_order_option(project_list_filter->get_filter_option());
+    project_list->set_order_option(project_list_filter->get_sort_order());
     project_list->set_search_term(project_list_filter->get_search_term());
     project_list->load_projects();
 
@@ -810,7 +810,7 @@ void ProjectManager::_on_filter_option_changed() {
 }
 
 void ProjectManager::_on_order_option_changed() {
-    project_list->set_order_option(project_list_filter->get_filter_option());
+    project_list->set_order_option(project_list_filter->get_sort_order());
     project_list->sort_projects();
 }
 
