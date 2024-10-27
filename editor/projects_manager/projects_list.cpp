@@ -4,7 +4,7 @@
 //
 // SPDX-License-Identifier: MIT
 
-#include "project_list.h"
+#include "projects_list.h"
 
 #include "core/io/config_file.h"
 #include "core/os/os.h"
@@ -12,11 +12,11 @@
 #include "editor/editor_settings.h"
 #include "scene/gui/label.h"
 
-const char* ProjectList::SIGNAL_SELECTION_CHANGED = "selection_changed";
-const char* ProjectList::SIGNAL_PROJECT_ASK_OPEN  = "project_ask_open";
+const char* ProjectsList::SIGNAL_SELECTION_CHANGED = "selection_changed";
+const char* ProjectsList::SIGNAL_PROJECT_ASK_OPEN  = "project_ask_open";
 
-ProjectList::ProjectList() {
-    sort_order = ProjectListFilter::SortOrder::LAST_MODIFIED;
+ProjectsList::ProjectsList() {
+    sort_order = ProjectsListFilter::SortOrder::LAST_MODIFIED;
 
     _scroll_children = memnew(VBoxContainer);
     _scroll_children->set_h_size_flags(SIZE_EXPAND_FILL);
@@ -25,12 +25,12 @@ ProjectList::ProjectList() {
     _icon_load_index = 0;
 }
 
-void ProjectList::ensure_project_visible(int p_index) {
-    const ProjectListItem& item = _projects[p_index];
+void ProjectsList::ensure_project_visible(int p_index) {
+    const ProjectsListItem& item = _projects[p_index];
     ensure_control_visible(item.control);
 }
 
-void ProjectList::erase_missing_projects() {
+void ProjectsList::erase_missing_projects() {
     if (_projects.empty()) {
         return;
     }
@@ -39,7 +39,7 @@ void ProjectList::erase_missing_projects() {
     int remaining_count = 0;
 
     for (int i = 0; i < _projects.size(); ++i) {
-        const ProjectListItem& item = _projects[i];
+        const ProjectsListItem& item = _projects[i];
 
         if (item.missing) {
             _remove_project(i, true);
@@ -59,13 +59,13 @@ void ProjectList::erase_missing_projects() {
     EditorSettings::get_singleton()->save();
 }
 
-void ProjectList::erase_selected_projects(bool p_delete_project_contents) {
+void ProjectsList::erase_selected_projects(bool p_delete_project_contents) {
     if (_selected_project_keys.empty()) {
         return;
     }
 
     for (int i = 0; i < _projects.size(); ++i) {
-        ProjectListItem& item = _projects.write[i];
+        ProjectsListItem& item = _projects.write[i];
         if (_selected_project_keys.has(item.project_key)
             && item.control->is_visible()) {
             EditorSettings::get_singleton()->erase(
@@ -93,24 +93,24 @@ void ProjectList::erase_selected_projects(bool p_delete_project_contents) {
     update_dock_menu();
 }
 
-int ProjectList::get_project_count() const {
+int ProjectsList::get_project_count() const {
     return _projects.size();
 }
 
-const Set<String>& ProjectList::get_selected_project_keys() const {
+const Set<String>& ProjectsList::get_selected_project_keys() const {
     // Faster if that's all you need
     return _selected_project_keys;
 }
 
-Vector<ProjectListItem> ProjectList::get_selected_projects() const {
-    Vector<ProjectListItem> items;
+Vector<ProjectsListItem> ProjectsList::get_selected_projects() const {
+    Vector<ProjectsListItem> items;
     if (_selected_project_keys.empty()) {
         return items;
     }
     items.resize(_selected_project_keys.size());
     int j = 0;
     for (int i = 0; i < _projects.size(); ++i) {
-        const ProjectListItem& item = _projects[i];
+        const ProjectsListItem& item = _projects[i];
         if (_selected_project_keys.has(item.project_key)) {
             items.write[j++] = item;
         }
@@ -119,7 +119,7 @@ Vector<ProjectListItem> ProjectList::get_selected_projects() const {
     return items;
 }
 
-int ProjectList::get_single_selected_index() const {
+int ProjectsList::get_single_selected_index() const {
     if (_selected_project_keys.empty()) {
         // Default selection
         return 0;
@@ -140,7 +140,7 @@ int ProjectList::get_single_selected_index() const {
     return 0;
 }
 
-bool ProjectList::is_any_project_missing() const {
+bool ProjectsList::is_any_project_missing() const {
     for (int i = 0; i < _projects.size(); ++i) {
         if (_projects[i].missing) {
             return true;
@@ -149,14 +149,14 @@ bool ProjectList::is_any_project_missing() const {
     return false;
 }
 
-void ProjectList::load_projects() {
+void ProjectsList::load_projects() {
     // This is a full, hard reload of the list. Don't call this unless really
     // required, it's expensive. If you have 150 projects, it may read through
     // 150 files on your disk at once + load 150 icons.
 
     // Clear whole list
     for (int i = 0; i < _projects.size(); ++i) {
-        ProjectListItem& project = _projects.write[i];
+        ProjectsListItem& project = _projects.write[i];
         CRASH_COND(project.control == nullptr);
         memdelete(project.control); // Why not queue_free()?
     }
@@ -194,7 +194,7 @@ void ProjectList::load_projects() {
         String project_key = property_key.get_slice("/", 1);
         bool favorite      = favorites.has("favorite_projects/" + project_key);
 
-        ProjectListItem item;
+        ProjectsListItem item;
         _load_project_data(property_key, item, favorite);
 
         _projects.push_back(item);
@@ -214,7 +214,7 @@ void ProjectList::load_projects() {
     update_dock_menu();
 }
 
-int ProjectList::refresh_project(const String& dir_path) {
+int ProjectsList::refresh_project(const String& dir_path) {
     // Reads editor settings and reloads information about a specific project.
     // If it wasn't loaded and should be in the list, it is added (i.e new
     // project). If it isn't in the list anymore, it is removed. If it is in the
@@ -249,7 +249,7 @@ int ProjectList::refresh_project(const String& dir_path) {
 
     // Remove item in any case
     for (int i = 0; i < _projects.size(); ++i) {
-        const ProjectListItem& existing_item = _projects[i];
+        const ProjectsListItem& existing_item = _projects[i];
         if (existing_item.path == dir_path) {
             _remove_project(i, false);
             break;
@@ -260,7 +260,7 @@ int ProjectList::refresh_project(const String& dir_path) {
     if (should_be_in_list) {
         // Recreate it with updated info
 
-        ProjectListItem item;
+        ProjectsListItem item;
         _load_project_data(property_key, item, is_favourite);
 
         _projects.push_back(item);
@@ -285,8 +285,8 @@ int ProjectList::refresh_project(const String& dir_path) {
     return index;
 }
 
-void ProjectList::select_project(int p_index) {
-    Vector<ProjectListItem> previous_selected_items = get_selected_projects();
+void ProjectsList::select_project(int p_index) {
+    Vector<ProjectsListItem> previous_selected_items = get_selected_projects();
     _selected_project_keys.clear();
 
     for (int i = 0; i < previous_selected_items.size(); ++i) {
@@ -296,11 +296,12 @@ void ProjectList::select_project(int p_index) {
     _toggle_select(p_index);
 }
 
-void ProjectList::set_search_text(String p_search_text) {
+void ProjectsList::set_search_text(String p_search_text) {
     search_text = p_search_text;
 }
 
-void ProjectList::set_sort_order(ProjectListFilter::SortOrder new_sort_order) {
+void ProjectsList::set_sort_order(ProjectsListFilter::SortOrder new_sort_order
+) {
     if (sort_order != new_sort_order) {
         sort_order = new_sort_order;
         EditorSettings::get_singleton()->set(
@@ -311,13 +312,13 @@ void ProjectList::set_sort_order(ProjectListFilter::SortOrder new_sort_order) {
     }
 }
 
-void ProjectList::sort_projects() {
-    SortArray<ProjectListItem, ProjectListItemComparator> sorter;
+void ProjectsList::sort_projects() {
+    SortArray<ProjectsListItem, ProjectsListItemComparator> sorter;
     sorter.compare.sort_order = sort_order;
     sorter.sort(_projects.ptrw(), _projects.size());
 
     for (int i = 0; i < _projects.size(); ++i) {
-        ProjectListItem& item = _projects.write[i];
+        ProjectsListItem& item = _projects.write[i];
 
         bool visible = true;
         if (!search_text.empty()) {
@@ -341,7 +342,7 @@ void ProjectList::sort_projects() {
     }
 
     for (int i = 0; i < _projects.size(); ++i) {
-        ProjectListItem& item = _projects.write[i];
+        ProjectsListItem& item = _projects.write[i];
         item.control->get_parent()->move_child(item.control, i);
     }
 
@@ -351,7 +352,7 @@ void ProjectList::sort_projects() {
     update_dock_menu();
 }
 
-void ProjectList::update_dock_menu() {
+void ProjectsList::update_dock_menu() {
     OS::get_singleton()->global_menu_clear("_dock");
 
     int favs_added  = 0;
@@ -386,19 +387,19 @@ void ProjectList::update_dock_menu() {
     );
 }
 
-void ProjectList::_bind_methods() {
-    ClassDB::bind_method("_panel_draw", &ProjectList::_panel_draw);
-    ClassDB::bind_method("_panel_input", &ProjectList::_panel_input);
-    ClassDB::bind_method("_favorite_pressed", &ProjectList::_favorite_pressed);
-    ClassDB::bind_method("_show_project", &ProjectList::_show_project);
+void ProjectsList::_bind_methods() {
+    ClassDB::bind_method("_panel_draw", &ProjectsList::_panel_draw);
+    ClassDB::bind_method("_panel_input", &ProjectsList::_panel_input);
+    ClassDB::bind_method("_favorite_pressed", &ProjectsList::_favorite_pressed);
+    ClassDB::bind_method("_show_project", &ProjectsList::_show_project);
 
     ADD_SIGNAL(MethodInfo(SIGNAL_SELECTION_CHANGED));
     ADD_SIGNAL(MethodInfo(SIGNAL_PROJECT_ASK_OPEN));
 }
 
-void ProjectList::_load_project_data(
+void ProjectsList::_load_project_data(
     const String& p_property_key,
-    ProjectListItem& p_item,
+    ProjectsListItem& p_item,
     bool p_favorite
 ) {
     String path  = EditorSettings::get_singleton()->get(p_property_key);
@@ -449,7 +450,7 @@ void ProjectList::_load_project_data(
 
     String project_key = p_property_key.get_slice("/", 1);
 
-    p_item = ProjectListItem(
+    p_item = ProjectsListItem(
         project_key,
         project_name,
         description,
@@ -464,17 +465,17 @@ void ProjectList::_load_project_data(
     );
 }
 
-void ProjectList::_create_project_item_control(int p_index) {
+void ProjectsList::_create_project_item_control(int p_index) {
     // Will be added last in the list, so make sure indexes match
     ERR_FAIL_COND(p_index != _scroll_children->get_child_count());
 
-    ProjectListItem& item = _projects.write[p_index];
+    ProjectsListItem& item = _projects.write[p_index];
     ERR_FAIL_COND(item.control != nullptr); // Already created
 
     Ref<Texture> favorite_icon = get_icon("Favorites", "EditorIcons");
     Color font_color           = get_color("font_color", "Tree");
 
-    ProjectListItemControl* hb = memnew(ProjectListItemControl);
+    ProjectsListItemControl* hb = memnew(ProjectsListItemControl);
     hb->connect("draw", this, "_panel_draw", varray(hb));
     hb->connect("gui_input", this, "_panel_input", varray(hb));
     hb->add_constant_override("separation", 10 * EDSCALE);
@@ -559,12 +560,12 @@ void ProjectList::_create_project_item_control(int p_index) {
     item.control = hb;
 }
 
-void ProjectList::_favorite_pressed(Node* p_hb) {
-    ProjectListItemControl* control =
-        Object::cast_to<ProjectListItemControl>(p_hb);
+void ProjectsList::_favorite_pressed(Node* p_hb) {
+    ProjectsListItemControl* control =
+        Object::cast_to<ProjectsListItemControl>(p_hb);
 
-    int index            = control->get_index();
-    ProjectListItem item = _projects.write[index]; // Take copy
+    int index             = control->get_index();
+    ProjectsListItem item = _projects.write[index]; // Take copy
 
     item.favorite = !item.favorite;
 
@@ -598,8 +599,8 @@ void ProjectList::_favorite_pressed(Node* p_hb) {
     update_dock_menu();
 }
 
-void ProjectList::_load_project_icon(int p_index) {
-    ProjectListItem& item = _projects.write[p_index];
+void ProjectsList::_load_project_icon(int p_index) {
+    ProjectsListItem& item = _projects.write[p_index];
 
     Ref<Texture> default_icon = get_icon("DefaultProjectIcon", "EditorIcons");
     Ref<Texture> icon;
@@ -627,12 +628,12 @@ void ProjectList::_load_project_icon(int p_index) {
     item.control->icon_needs_reload = false;
 }
 
-void ProjectList::_notification(int p_what) {
+void ProjectsList::_notification(int p_what) {
     if (p_what == NOTIFICATION_PROCESS) {
         // Load icons as a coroutine to speed up launch when you have hundreds
         // of projects
         if (_icon_load_index < _projects.size()) {
-            ProjectListItem& item = _projects.write[_icon_load_index];
+            ProjectsListItem& item = _projects.write[_icon_load_index];
             if (item.control->icon_needs_reload) {
                 _load_project_icon(_icon_load_index);
             }
@@ -645,7 +646,7 @@ void ProjectList::_notification(int p_what) {
 }
 
 // Draws selected project highlight
-void ProjectList::_panel_draw(Node* p_hb) {
+void ProjectsList::_panel_draw(Node* p_hb) {
     Control* hb = Object::cast_to<Control>(p_hb);
 
     hb->draw_line(
@@ -665,10 +666,10 @@ void ProjectList::_panel_draw(Node* p_hb) {
 }
 
 // Input for each item in the list
-void ProjectList::_panel_input(const Ref<InputEvent>& p_ev, Node* p_hb) {
-    Ref<InputEventMouseButton> mb          = p_ev;
-    int clicked_index                      = p_hb->get_index();
-    const ProjectListItem& clicked_project = _projects[clicked_index];
+void ProjectsList::_panel_input(const Ref<InputEvent>& p_ev, Node* p_hb) {
+    Ref<InputEventMouseButton> mb           = p_ev;
+    int clicked_index                       = p_hb->get_index();
+    const ProjectsListItem& clicked_project = _projects[clicked_index];
 
     if (mb.is_valid() && mb->is_pressed()
         && mb->get_button_index() == BUTTON_LEFT) {
@@ -677,7 +678,7 @@ void ProjectList::_panel_input(const Ref<InputEvent>& p_ev, Node* p_hb) {
             && clicked_project.project_key != _last_clicked) {
             int anchor_index = -1;
             for (int i = 0; i < _projects.size(); ++i) {
-                const ProjectListItem& p = _projects[i];
+                const ProjectsListItem& p = _projects[i];
                 if (p.project_key == _last_clicked) {
                     anchor_index = p.control->get_index();
                     break;
@@ -702,8 +703,8 @@ void ProjectList::_panel_input(const Ref<InputEvent>& p_ev, Node* p_hb) {
     }
 }
 
-void ProjectList::_remove_project(int p_index, bool p_update_settings) {
-    const ProjectListItem item = _projects[p_index]; // Take a copy
+void ProjectsList::_remove_project(int p_index, bool p_update_settings) {
+    const ProjectsListItem item = _projects[p_index]; // Take a copy
 
     _selected_project_keys.erase(item.project_key);
 
@@ -726,7 +727,7 @@ void ProjectList::_remove_project(int p_index, bool p_update_settings) {
     update_dock_menu();
 }
 
-void ProjectList::_select_range(int p_begin, int p_end) {
+void ProjectsList::_select_range(int p_begin, int p_end) {
     int first = p_begin > p_end ? p_begin : p_end;
     int last  = p_begin > p_end ? p_end : p_begin;
     select_project(first);
@@ -735,12 +736,12 @@ void ProjectList::_select_range(int p_begin, int p_end) {
     }
 }
 
-void ProjectList::_show_project(const String& p_path) {
+void ProjectsList::_show_project(const String& p_path) {
     OS::get_singleton()->shell_open(String("file://") + p_path);
 }
 
-void ProjectList::_toggle_select(int p_index) {
-    ProjectListItem& item = _projects.write[p_index];
+void ProjectsList::_toggle_select(int p_index) {
+    ProjectsListItem& item = _projects.write[p_index];
     if (_selected_project_keys.has(item.project_key)) {
         _selected_project_keys.erase(item.project_key);
     } else {
@@ -749,7 +750,7 @@ void ProjectList::_toggle_select(int p_index) {
     item.control->update();
 }
 
-void ProjectList::_update_icons_async() {
+void ProjectsList::_update_icons_async() {
     _icon_load_index = 0;
     set_process(true);
 }

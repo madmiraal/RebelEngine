@@ -4,19 +4,19 @@
 //
 // SPDX-License-Identifier: MIT
 
-#ifndef PROJECT_LIST_H
-#define PROJECT_LIST_H
+#ifndef PROJECTS_LIST_H
+#define PROJECTS_LIST_H
 
 #include "core/set.h"
 #include "core/ustring.h"
 #include "core/vector.h"
-#include "project_list_filter.h"
-#include "project_list_item.h"
+#include "projects_list_filter.h"
+#include "projects_list_item.h"
 #include "scene/gui/box_container.h"
 #include "scene/gui/scroll_container.h"
 
-class ProjectList : public ScrollContainer {
-    GDCLASS(ProjectList, ScrollContainer)
+class ProjectsList : public ScrollContainer {
+    GDCLASS(ProjectsList, ScrollContainer)
 
 public:
     static const char* SIGNAL_SELECTION_CHANGED;
@@ -27,26 +27,26 @@ public:
         GLOBAL_OPEN_PROJECT
     };
 
-    ProjectList();
+    ProjectsList();
 
     void ensure_project_visible(int p_index);
     void erase_missing_projects();
     void erase_selected_projects(bool p_delete_project_contents);
     int get_project_count() const;
     const Set<String>& get_selected_project_keys() const;
-    Vector<ProjectListItem> get_selected_projects() const;
+    Vector<ProjectsListItem> get_selected_projects() const;
     int get_single_selected_index() const;
     bool is_any_project_missing() const;
     void load_projects();
     int refresh_project(const String& dir_path);
     void select_project(int p_index);
     void set_search_text(String p_search_text);
-    void set_sort_order(ProjectListFilter::SortOrder p_new_sort_order);
+    void set_sort_order(ProjectsListFilter::SortOrder p_new_sort_order);
     void sort_projects();
     void update_dock_menu();
 
 private:
-    ProjectListFilter::SortOrder sort_order;
+    ProjectsListFilter::SortOrder sort_order;
 
     String search_text;
     String _last_clicked; // Project key
@@ -55,14 +55,14 @@ private:
 
     VBoxContainer* _scroll_children;
 
-    Vector<ProjectListItem> _projects;
+    Vector<ProjectsListItem> _projects;
 
     int _icon_load_index;
 
     static void _bind_methods();
     static void _load_project_data(
         const String& p_property_key,
-        ProjectListItem& p_item,
+        ProjectsListItem& p_item,
         bool p_favorite
     );
 
@@ -79,4 +79,4 @@ private:
     void _update_icons_async();
 };
 
-#endif // PROJECT_LIST_H
+#endif // PROJECTS_LIST_H

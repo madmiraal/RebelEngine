@@ -4,11 +4,11 @@
 //
 // SPDX-License-Identifier: MIT
 
-#include "project_list_item.h"
+#include "projects_list_item.h"
 
 #include "editor/editor_scale.h"
 
-ProjectListItemControl::ProjectListItemControl() {
+ProjectsListItemControl::ProjectsListItemControl() {
     favorite_button   = nullptr;
     icon              = nullptr;
     icon_needs_reload = true;
@@ -17,13 +17,13 @@ ProjectListItemControl::ProjectListItemControl() {
     set_focus_mode(FocusMode::FOCUS_ALL);
 }
 
-void ProjectListItemControl::set_is_favorite(bool fav) {
+void ProjectsListItemControl::set_is_favorite(bool fav) {
     favorite_button->set_modulate(
         fav ? Color(1, 1, 1, 1) : Color(1, 1, 1, 0.2)
     );
 }
 
-void ProjectListItemControl::_notification(int p_what) {
+void ProjectsListItemControl::_notification(int p_what) {
     switch (p_what) {
         case NOTIFICATION_MOUSE_ENTER: {
             hover = true;
@@ -44,9 +44,9 @@ void ProjectListItemControl::_notification(int p_what) {
     }
 }
 
-bool ProjectListItemComparator::operator()(
-    const ProjectListItem& a,
-    const ProjectListItem& b
+bool ProjectsListItemComparator::operator()(
+    const ProjectsListItem& a,
+    const ProjectsListItem& b
 ) const {
     if (a.favorite && !b.favorite) {
         return true;
@@ -55,11 +55,11 @@ bool ProjectListItemComparator::operator()(
         return false;
     }
     switch (sort_order) {
-        case ProjectListFilter::SortOrder::NAME:
+        case ProjectsListFilter::SortOrder::NAME:
             return a.project_name < b.project_name;
-        case ProjectListFilter::SortOrder::PATH:
+        case ProjectsListFilter::SortOrder::PATH:
             return a.project_key < b.project_key;
-        case ProjectListFilter::SortOrder::LAST_MODIFIED:
+        case ProjectsListFilter::SortOrder::LAST_MODIFIED:
             return a.last_modified > b.last_modified;
         default:
             ERR_FAIL_V_MSG(false, "Unrecognised sort order");

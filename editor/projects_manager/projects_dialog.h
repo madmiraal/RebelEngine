@@ -4,8 +4,8 @@
 //
 // SPDX-License-Identifier: MIT
 
-#ifndef PROJECT_DIALOG_H
-#define PROJECT_DIALOG_H
+#ifndef PROJECTS_DIALOG_H
+#define PROJECTS_DIALOG_H
 
 #include "core/ustring.h"
 #include "scene/gui/button.h"
@@ -16,8 +16,8 @@
 #include "scene/gui/line_edit.h"
 #include "scene/gui/texture_rect.h"
 
-class ProjectDialog : public ConfirmationDialog {
-    GDCLASS(ProjectDialog, ConfirmationDialog);
+class ProjectsDialog : public ConfirmationDialog {
+    GDCLASS(ProjectsDialog, ConfirmationDialog);
 
 public:
     enum Mode {
@@ -27,7 +27,7 @@ public:
         MODE_RENAME
     };
 
-    ProjectDialog();
+    ProjectsDialog();
 
     void show_dialog();
     void set_mode(Mode p_mode);
@@ -101,4 +101,4 @@ private:
     void _text_changed(const String& p_text);
 };
 
-#endif // PROJECT_DIALOG_H
+#endif // PROJECTS_DIALOG_H

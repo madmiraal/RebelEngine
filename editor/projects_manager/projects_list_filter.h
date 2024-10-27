@@ -4,15 +4,15 @@
 //
 // SPDX-License-Identifier: MIT
 
-#ifndef PROJECT_LIST_FILTER_H
-#define PROJECT_LIST_FILTER_H
+#ifndef PROJECTS_LIST_FILTER_H
+#define PROJECTS_LIST_FILTER_H
 
 #include "scene/gui/box_container.h"
 #include "scene/gui/line_edit.h"
 #include "scene/gui/option_button.h"
 
-class ProjectListFilter : public HBoxContainer {
-    GDCLASS(ProjectListFilter, HBoxContainer);
+class ProjectsListFilter : public HBoxContainer {
+    GDCLASS(ProjectsListFilter, HBoxContainer);
 
 public:
     enum class SortOrder {
@@ -21,7 +21,7 @@ public:
         LAST_MODIFIED,
     };
 
-    ProjectListFilter();
+    ProjectsListFilter();
 
     void clear_search_text();
     LineEdit* get_search_box() const;
@@ -45,4 +45,4 @@ private:
     void _search_text_changed(const String& p_newtext);
 };
 
-#endif // PROJECT_LIST_FILTER_H
+#endif // PROJECTS_LIST_FILTER_H

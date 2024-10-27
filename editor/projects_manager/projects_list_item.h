@@ -4,17 +4,17 @@
 //
 // SPDX-License-Identifier: MIT
 
-#ifndef PROJECT_LIST_ITEM_H
-#define PROJECT_LIST_ITEM_H
+#ifndef PROJECTS_LIST_ITEM_H
+#define PROJECTS_LIST_ITEM_H
 
 #include "core/ustring.h"
-#include "project_list_filter.h"
+#include "projects_list_filter.h"
 #include "scene/gui/box_container.h"
 #include "scene/gui/texture_button.h"
 #include "scene/gui/texture_rect.h"
 
-class ProjectListItemControl : public HBoxContainer {
-    GDCLASS(ProjectListItemControl, HBoxContainer)
+class ProjectsListItemControl : public HBoxContainer {
+    GDCLASS(ProjectsListItemControl, HBoxContainer)
 
 public:
     TextureRect* icon;
@@ -23,13 +23,13 @@ public:
     bool icon_needs_reload;
     bool hover;
 
-    ProjectListItemControl();
+    ProjectsListItemControl();
 
     void set_is_favorite(bool fav);
     void _notification(int p_what);
 };
 
-struct ProjectListItem {
+struct ProjectsListItem {
     String project_key;
     String project_name;
     String description;
@@ -42,11 +42,11 @@ struct ProjectListItem {
     bool missing;
     int version;
 
-    ProjectListItemControl* control;
+    ProjectsListItemControl* control;
 
-    ProjectListItem() {}
+    ProjectsListItem() {}
 
-    ProjectListItem(
+    ProjectsListItem(
         const String& p_project,
         const String& p_name,
         const String& p_description,
@@ -73,17 +73,17 @@ struct ProjectListItem {
         control       = nullptr;
     }
 
-    _FORCE_INLINE_ bool operator==(const ProjectListItem& l) const {
+    _FORCE_INLINE_ bool operator==(const ProjectsListItem& l) const {
         return project_key == l.project_key;
     }
 };
 
-class ProjectListItemComparator {
+class ProjectsListItemComparator {
 public:
-    ProjectListFilter::SortOrder sort_order;
+    ProjectsListFilter::SortOrder sort_order;
 
     // operator<
-    bool operator()(const ProjectListItem& a, const ProjectListItem& b) const;
+    bool operator()(const ProjectsListItem& a, const ProjectsListItem& b) const;
 };
 
-#endif // PROJECT_LIST_ITEM_H
+#endif // PROJECTS_LIST_ITEM_H

@@ -53,7 +53,7 @@
 #include "editor/editor_settings.h"
 #include "editor/editor_translation.h"
 #include "editor/progress_dialog.h"
-#include "editor/project_manager/project_manager.h"
+#include "editor/projects_manager/projects_manager.h"
 #ifndef NO_EDITOR_SPLASH
 #include "main/splash_editor.gen.h"
 #endif
@@ -2802,7 +2802,7 @@ bool Main::start() {
         if (project_manager
             || (script == "" && test == "" && game_path == "" && !editor)) {
             Engine::get_singleton()->set_editor_hint(true);
-            ProjectManager* pmanager        = memnew(ProjectManager);
+            ProjectsManager* pmanager       = memnew(ProjectsManager);
             ProgressDialog* progress_dialog = memnew(ProgressDialog);
             pmanager->add_child(progress_dialog);
             sml->get_root()->add_child(pmanager);

@@ -4,8 +4,8 @@
 //
 // SPDX-License-Identifier: MIT
 
-#ifndef PROJECT_MANAGER_H
-#define PROJECT_MANAGER_H
+#ifndef PROJECTS_MANAGER_H
+#define PROJECTS_MANAGER_H
 
 #include "core/list.h"
 #include "core/os/input_event.h"
@@ -13,9 +13,9 @@
 #include "core/variant.h"
 #include "editor/editor_about.h"
 #include "editor/plugins/asset_library_editor_plugin.h"
-#include "project_dialog.h"
-#include "project_list.h"
-#include "project_list_filter.h"
+#include "projects_dialog.h"
+#include "projects_list.h"
+#include "projects_list_filter.h"
 #include "scene/gui/box_container.h"
 #include "scene/gui/button.h"
 #include "scene/gui/check_box.h"
@@ -27,12 +27,12 @@
 #include "scene/gui/option_button.h"
 #include "scene/gui/tab_container.h"
 
-class ProjectManager : public Control {
-    GDCLASS(ProjectManager, Control);
+class ProjectsManager : public Control {
+    GDCLASS(ProjectsManager, Control);
 
 public:
-    ProjectManager();
-    ~ProjectManager();
+    ProjectsManager();
+    ~ProjectsManager();
 
 protected:
     static void _bind_methods();
@@ -72,9 +72,9 @@ private:
 
     OptionButton* language_btn;
 
-    ProjectDialog* npdialog;
-    ProjectList* project_list;
-    ProjectListFilter* project_list_filter;
+    ProjectsDialog* npdialog;
+    ProjectsList* project_list;
+    ProjectsListFilter* project_list_filter;
 
     TabContainer* tabs;
 
@@ -113,4 +113,4 @@ private:
     void _version_button_pressed();
 };
 
-#endif // PROJECT_MANAGER_H
+#endif // PROJECTS_MANAGER_H

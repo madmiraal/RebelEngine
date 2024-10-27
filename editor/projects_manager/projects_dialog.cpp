@@ -4,7 +4,7 @@
 //
 // SPDX-License-Identifier: MIT
 
-#include "project_dialog.h"
+#include "projects_dialog.h"
 
 #include "core/io/zip_io.h"
 #include "core/os/file_access.h"
@@ -12,7 +12,7 @@
 #include "editor/editor_scale.h"
 #include "editor/editor_settings.h"
 #include "editor/editor_themes.h"
-#include "project_list.h"
+#include "projects_list.h"
 #include "scene/gui/check_box.h"
 #include "scene/gui/separator.h"
 
@@ -20,7 +20,7 @@
 #include "drivers/gles3/rasterizer_gles3.h"
 #endif // SERVER_ENABLED
 
-ProjectDialog::ProjectDialog() {
+ProjectsDialog::ProjectsDialog() {
     VBoxContainer* vb = memnew(VBoxContainer);
     add_child(vb);
 
@@ -185,7 +185,7 @@ ProjectDialog::ProjectDialog() {
     add_child(dialog_error);
 }
 
-void ProjectDialog::show_dialog() {
+void ProjectsDialog::show_dialog() {
     if (mode == MODE_RENAME) {
         project_path->set_editable(false);
         browse->hide();
@@ -290,51 +290,51 @@ void ProjectDialog::show_dialog() {
     popup_centered_minsize(Size2(500, 0) * EDSCALE);
 }
 
-void ProjectDialog::set_mode(Mode p_mode) {
+void ProjectsDialog::set_mode(Mode p_mode) {
     mode = p_mode;
 }
 
-void ProjectDialog::set_project_path(const String& p_path) {
+void ProjectsDialog::set_project_path(const String& p_path) {
     project_path->set_text(p_path);
 }
 
-void ProjectDialog::set_zip_path(const String& p_path) {
+void ProjectsDialog::set_zip_path(const String& p_path) {
     zip_path = p_path;
 }
 
-void ProjectDialog::set_zip_title(const String& p_title) {
+void ProjectsDialog::set_zip_title(const String& p_title) {
     zip_title = p_title;
 }
 
-void ProjectDialog::_bind_methods() {
-    ClassDB::bind_method("_browse_path", &ProjectDialog::_browse_path);
-    ClassDB::bind_method("_create_folder", &ProjectDialog::_create_folder);
-    ClassDB::bind_method("_text_changed", &ProjectDialog::_text_changed);
+void ProjectsDialog::_bind_methods() {
+    ClassDB::bind_method("_browse_path", &ProjectsDialog::_browse_path);
+    ClassDB::bind_method("_create_folder", &ProjectsDialog::_create_folder);
+    ClassDB::bind_method("_text_changed", &ProjectsDialog::_text_changed);
     ClassDB::bind_method(
         "_path_text_changed",
-        &ProjectDialog::_path_text_changed
+        &ProjectsDialog::_path_text_changed
     );
-    ClassDB::bind_method("_path_selected", &ProjectDialog::_path_selected);
-    ClassDB::bind_method("_file_selected", &ProjectDialog::_file_selected);
+    ClassDB::bind_method("_path_selected", &ProjectsDialog::_path_selected);
+    ClassDB::bind_method("_file_selected", &ProjectsDialog::_file_selected);
     ClassDB::bind_method(
         "_install_path_selected",
-        &ProjectDialog::_install_path_selected
+        &ProjectsDialog::_install_path_selected
     );
     ClassDB::bind_method(
         "_browse_install_path",
-        &ProjectDialog::_browse_install_path
+        &ProjectsDialog::_browse_install_path
     );
     ADD_SIGNAL(MethodInfo("project_created"));
     ADD_SIGNAL(MethodInfo("projects_updated"));
 }
 
-void ProjectDialog::_notification(int p_what) {
+void ProjectsDialog::_notification(int p_what) {
     if (p_what == MainLoop::NOTIFICATION_WM_QUIT_REQUEST) {
         _remove_created_folder();
     }
 }
 
-void ProjectDialog::ok_pressed() {
+void ProjectsDialog::ok_pressed() {
     String dir = project_path->get_text();
 
     if (mode == MODE_RENAME) {
@@ -598,7 +598,7 @@ void ProjectDialog::ok_pressed() {
     }
 }
 
-void ProjectDialog::_browse_path() {
+void ProjectsDialog::_browse_path() {
     fdialog->set_current_dir(project_path->get_text());
 
     if (mode == MODE_IMPORT) {
@@ -614,13 +614,13 @@ void ProjectDialog::_browse_path() {
     fdialog->popup_centered_ratio();
 }
 
-void ProjectDialog::_browse_install_path() {
+void ProjectsDialog::_browse_install_path() {
     fdialog_install->set_current_dir(install_path->get_text());
     fdialog_install->set_mode(FileDialog::MODE_OPEN_DIR);
     fdialog_install->popup_centered_ratio();
 }
 
-void ProjectDialog::_cancel_pressed() {
+void ProjectsDialog::_cancel_pressed() {
     _remove_created_folder();
 
     project_path->clear();
@@ -638,7 +638,7 @@ void ProjectDialog::_cancel_pressed() {
     }
 }
 
-void ProjectDialog::_create_folder() {
+void ProjectsDialog::_create_folder() {
     const String project_name_no_edges = project_name->get_text().strip_edges();
     if (project_name_no_edges.empty() || !created_folder_path.empty()
         || project_name_no_edges.ends_with(".")) {
@@ -672,7 +672,7 @@ void ProjectDialog::_create_folder() {
     memdelete(d);
 }
 
-void ProjectDialog::_file_selected(const String& p_path) {
+void ProjectsDialog::_file_selected(const String& p_path) {
     String p = p_path;
     if (mode == MODE_IMPORT) {
         if (p.ends_with("project.rebel")) {
@@ -702,21 +702,21 @@ void ProjectDialog::_file_selected(const String& p_path) {
     }
 }
 
-void ProjectDialog::_install_path_selected(const String& p_path) {
+void ProjectsDialog::_install_path_selected(const String& p_path) {
     String sp = p_path.simplify_path();
     install_path->set_text(sp);
     _path_text_changed(sp);
     get_ok()->call_deferred("grab_focus");
 }
 
-void ProjectDialog::_path_selected(const String& p_path) {
+void ProjectsDialog::_path_selected(const String& p_path) {
     String sp = p_path.simplify_path();
     project_path->set_text(sp);
     _path_text_changed(sp);
     get_ok()->call_deferred("grab_focus");
 }
 
-void ProjectDialog::_path_text_changed(const String& p_path) {
+void ProjectsDialog::_path_text_changed(const String& p_path) {
     String sp = _test_path();
     if (!sp.empty()) {
         // If the project name is empty or default, infer the project name
@@ -744,7 +744,7 @@ void ProjectDialog::_path_text_changed(const String& p_path) {
     }
 }
 
-void ProjectDialog::_remove_created_folder() {
+void ProjectsDialog::_remove_created_folder() {
     if (!created_folder_path.empty()) {
         DirAccess* d = DirAccess::create(DirAccess::ACCESS_FILESYSTEM);
         d->remove(created_folder_path);
@@ -755,7 +755,7 @@ void ProjectDialog::_remove_created_folder() {
     }
 }
 
-void ProjectDialog::_set_message(
+void ProjectsDialog::_set_message(
     const String& p_msg,
     MessageType p_type,
     InputType input_type
@@ -800,7 +800,7 @@ void ProjectDialog::_set_message(
     set_size(Size2(500, 0) * EDSCALE);
 }
 
-String ProjectDialog::_test_path() {
+String ProjectsDialog::_test_path() {
     DirAccess* d = DirAccess::create(DirAccess::ACCESS_FILESYSTEM);
     String valid_path, valid_install_path;
     if (d->change_dir(project_path->get_text()) == OK) {
@@ -986,7 +986,7 @@ String ProjectDialog::_test_path() {
     return valid_path;
 }
 
-void ProjectDialog::_text_changed(const String& p_text) {
+void ProjectsDialog::_text_changed(const String& p_text) {
     if (mode != MODE_NEW) {
         return;
     }

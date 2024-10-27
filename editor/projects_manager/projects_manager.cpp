@@ -4,7 +4,7 @@
 //
 // SPDX-License-Identifier: MIT
 
-#include "project_manager.h"
+#include "projects_manager.h"
 
 #include "core/io/config_file.h"
 #include "core/io/resource_saver.h"
@@ -20,7 +20,7 @@
 #include "editor/editor_scale.h"
 #include "editor/editor_settings.h"
 #include "editor/editor_themes.h"
-#include "project_list_item.h"
+#include "projects_list_item.h"
 #include "scene/gui/center_container.h"
 #include "scene/gui/line_edit.h"
 #include "scene/gui/margin_container.h"
@@ -83,12 +83,14 @@ void apply_window_settings() {
     os->set_min_window_size(Size2(750, 420) * EDSCALE);
     // TODO: Automatically resize hiDPI display windows on Windows and Linux.
     os->set_window_size(os->get_window_size() * MAX(1, EDSCALE));
-    // TRANSLATORS: Project Manager is the application used to manage projects.
-    os->set_window_title(VERSION_NAME + String(" - ") + TTR("Project Manager"));
+    // TRANSLATORS: Projects Manager is the application used to manage projects.
+    os->set_window_title(
+        VERSION_NAME + String(" - ") + TTR("Projects Manager")
+    );
 }
 } // namespace
 
-ProjectManager::ProjectManager() {
+ProjectsManager::ProjectsManager() {
     apply_editor_settings();
     apply_window_settings();
 
@@ -148,7 +150,7 @@ ProjectManager::ProjectManager() {
     sort_order_names.push_back(TTR("Path"));
     sort_order_names.push_back(TTR("Last Modified"));
 
-    project_list_filter = memnew(ProjectListFilter);
+    project_list_filter = memnew(ProjectsListFilter);
     project_list_filter->set_sort_order_names(sort_order_names);
     project_list_filter
         ->connect("sort_order_changed", this, "_on_sort_order_changed");
@@ -156,7 +158,7 @@ ProjectManager::ProjectManager() {
     int projects_sorting_order = (int)EditorSettings::get_singleton()->get(
         "project_manager/sorting_order"
     );
-    project_list_filter->set_sort_order((ProjectListFilter::SortOrder
+    project_list_filter->set_sort_order((ProjectsListFilter::SortOrder
     )projects_sorting_order);
 
     project_list_filter
@@ -168,14 +170,14 @@ ProjectManager::ProjectManager() {
     projects_list_container->add_child(pc);
     pc->set_v_size_flags(SIZE_EXPAND_FILL);
 
-    project_list = memnew(ProjectList);
+    project_list = memnew(ProjectsList);
     project_list->connect(
-        ProjectList::SIGNAL_SELECTION_CHANGED,
+        ProjectsList::SIGNAL_SELECTION_CHANGED,
         this,
         "_update_project_buttons"
     );
     project_list->connect(
-        ProjectList::SIGNAL_PROJECT_ASK_OPEN,
+        ProjectsList::SIGNAL_PROJECT_ASK_OPEN,
         this,
         "_open_selected_projects_ask"
     );
@@ -419,7 +421,7 @@ ProjectManager::ProjectManager() {
 
     OS::get_singleton()->set_low_processor_usage_mode(true);
 
-    npdialog = memnew(ProjectDialog);
+    npdialog = memnew(ProjectsDialog);
     add_child(npdialog);
 
     npdialog->connect("projects_updated", this, "_on_projects_updated");
@@ -485,98 +487,107 @@ ProjectManager::ProjectManager() {
     add_child(about);
 }
 
-ProjectManager::~ProjectManager() {
+ProjectsManager::~ProjectsManager() {
     if (EditorSettings::get_singleton()) {
         EditorSettings::destroy();
     }
 }
 
-void ProjectManager::_bind_methods() {
+void ProjectsManager::_bind_methods() {
     ClassDB::bind_method(
         "_open_selected_projects_ask",
-        &ProjectManager::_open_selected_projects_ask
+        &ProjectsManager::_open_selected_projects_ask
     );
     ClassDB::bind_method(
         "_open_selected_projects",
-        &ProjectManager::_open_selected_projects
+        &ProjectsManager::_open_selected_projects
     );
     ClassDB::bind_method(
         D_METHOD("_global_menu_action"),
-        &ProjectManager::_global_menu_action,
+        &ProjectsManager::_global_menu_action,
         DEFVAL(Variant())
     );
-    ClassDB::bind_method("_run_project", &ProjectManager::_run_project);
+    ClassDB::bind_method("_run_project", &ProjectsManager::_run_project);
     ClassDB::bind_method(
         "_run_project_confirm",
-        &ProjectManager::_run_project_confirm
+        &ProjectsManager::_run_project_confirm
     );
-    ClassDB::bind_method("_scan_projects", &ProjectManager::_scan_projects);
-    ClassDB::bind_method("_scan_begin", &ProjectManager::_scan_begin);
-    ClassDB::bind_method("_import_project", &ProjectManager::_import_project);
-    ClassDB::bind_method("_new_project", &ProjectManager::_new_project);
-    ClassDB::bind_method("_rename_project", &ProjectManager::_rename_project);
-    ClassDB::bind_method("_erase_project", &ProjectManager::_erase_project);
+    ClassDB::bind_method("_scan_projects", &ProjectsManager::_scan_projects);
+    ClassDB::bind_method("_scan_begin", &ProjectsManager::_scan_begin);
+    ClassDB::bind_method("_import_project", &ProjectsManager::_import_project);
+    ClassDB::bind_method("_new_project", &ProjectsManager::_new_project);
+    ClassDB::bind_method("_rename_project", &ProjectsManager::_rename_project);
+    ClassDB::bind_method("_erase_project", &ProjectsManager::_erase_project);
     ClassDB::bind_method(
         "_erase_missing_projects",
-        &ProjectManager::_erase_missing_projects
+        &ProjectsManager::_erase_missing_projects
     );
     ClassDB::bind_method(
         "_erase_project_confirm",
-        &ProjectManager::_erase_project_confirm
+        &ProjectsManager::_erase_project_confirm
     );
     ClassDB::bind_method(
         "_erase_missing_projects_confirm",
-        &ProjectManager::_erase_missing_projects_confirm
+        &ProjectsManager::_erase_missing_projects_confirm
     );
-    ClassDB::bind_method("_show_about", &ProjectManager::_show_about);
+    ClassDB::bind_method("_show_about", &ProjectsManager::_show_about);
     ClassDB::bind_method(
         "_version_button_pressed",
-        &ProjectManager::_version_button_pressed
+        &ProjectsManager::_version_button_pressed
     );
     ClassDB::bind_method(
         "_language_selected",
-        &ProjectManager::_language_selected
+        &ProjectsManager::_language_selected
     );
-    ClassDB::bind_method("_restart_confirm", &ProjectManager::_restart_confirm);
+    ClassDB::bind_method(
+        "_restart_confirm",
+        &ProjectsManager::_restart_confirm
+    );
     ClassDB::bind_method(
         "_on_sort_order_changed",
-        &ProjectManager::_on_sort_order_changed
+        &ProjectsManager::_on_sort_order_changed
     );
     ClassDB::bind_method(
         "_on_search_text_changed",
-        &ProjectManager::_on_search_text_changed
+        &ProjectsManager::_on_search_text_changed
     );
-    ClassDB::bind_method("_on_tab_changed", &ProjectManager::_on_tab_changed);
+    ClassDB::bind_method("_on_tab_changed", &ProjectsManager::_on_tab_changed);
     ClassDB::bind_method(
         "_on_projects_updated",
-        &ProjectManager::_on_projects_updated
+        &ProjectsManager::_on_projects_updated
     );
     ClassDB::bind_method(
         "_on_project_created",
-        &ProjectManager::_on_project_created
+        &ProjectsManager::_on_project_created
     );
-    ClassDB::bind_method("_unhandled_input", &ProjectManager::_unhandled_input);
-    ClassDB::bind_method("_install_project", &ProjectManager::_install_project);
-    ClassDB::bind_method("_files_dropped", &ProjectManager::_files_dropped);
+    ClassDB::bind_method(
+        "_unhandled_input",
+        &ProjectsManager::_unhandled_input
+    );
+    ClassDB::bind_method(
+        "_install_project",
+        &ProjectsManager::_install_project
+    );
+    ClassDB::bind_method("_files_dropped", &ProjectsManager::_files_dropped);
     ClassDB::bind_method(
         "_open_asset_library",
-        &ProjectManager::_open_asset_library
+        &ProjectsManager::_open_asset_library
     );
     ClassDB::bind_method(
         "_confirm_update_settings",
-        &ProjectManager::_confirm_update_settings
+        &ProjectsManager::_confirm_update_settings
     );
     ClassDB::bind_method(
         "_update_project_buttons",
-        &ProjectManager::_update_project_buttons
+        &ProjectsManager::_update_project_buttons
     );
     ClassDB::bind_method(
         D_METHOD("_scan_multiple_folders", "files"),
-        &ProjectManager::_scan_multiple_folders
+        &ProjectsManager::_scan_multiple_folders
     );
 }
 
-void ProjectManager::_notification(int p_what) {
+void ProjectsManager::_notification(int p_what) {
     switch (p_what) {
         case NOTIFICATION_ENTER_TREE: {
             Engine::get_singleton()->set_editor_hint(false);
@@ -610,15 +621,15 @@ void ProjectManager::_notification(int p_what) {
     }
 }
 
-void ProjectManager::_confirm_update_settings() {
+void ProjectsManager::_confirm_update_settings() {
     _open_selected_projects();
 }
 
-void ProjectManager::_dim_window() {
+void ProjectsManager::_dim_window() {
     // This method must be called before calling `get_tree()->quit()`.
     // Otherwise, its effect won't be visible
 
-    // Dim the project manager window while it's quitting to make it clearer
+    // Dim the Projects Manager window while it's quitting to make it clearer
     // that it's busy. No transition is applied, as the effect needs to be
     // visible immediately
     float c         = 0.5f;
@@ -626,7 +637,7 @@ void ProjectManager::_dim_window() {
     set_modulate(dim_color);
 }
 
-void ProjectManager::_erase_missing_projects() {
+void ProjectsManager::_erase_missing_projects() {
     erase_missing_ask->set_text(
         TTR("Remove all missing projects from the list?\n"
             "The project folders' contents won't be modified.")
@@ -634,12 +645,12 @@ void ProjectManager::_erase_missing_projects() {
     erase_missing_ask->popup_centered_minsize();
 }
 
-void ProjectManager::_erase_missing_projects_confirm() {
+void ProjectsManager::_erase_missing_projects_confirm() {
     project_list->erase_missing_projects();
     _update_project_buttons();
 }
 
-void ProjectManager::_erase_project() {
+void ProjectsManager::_erase_project() {
     const Set<String>& selected_list =
         project_list->get_selected_project_keys();
 
@@ -662,13 +673,13 @@ void ProjectManager::_erase_project() {
     erase_ask->popup_centered_minsize();
 }
 
-void ProjectManager::_erase_project_confirm() {
+void ProjectsManager::_erase_project_confirm() {
     project_list->erase_selected_projects(delete_project_contents->is_pressed()
     );
     _update_project_buttons();
 }
 
-void ProjectManager::_files_dropped(
+void ProjectsManager::_files_dropped(
     const PoolStringArray& p_files,
     int p_screen
 ) {
@@ -732,19 +743,19 @@ void ProjectManager::_files_dropped(
     }
 }
 
-void ProjectManager::_global_menu_action(
+void ProjectsManager::_global_menu_action(
     const Variant& p_id,
     const Variant& p_meta
 ) {
     int id = (int)p_id;
-    if (id == ProjectList::GLOBAL_NEW_WINDOW) {
+    if (id == ProjectsList::GLOBAL_NEW_WINDOW) {
         List<String> args;
         args.push_back("-p");
         String exec = OS::get_singleton()->get_executable_path();
 
         OS::ProcessID pid = 0;
         OS::get_singleton()->execute(exec, args, false, &pid);
-    } else if (id == ProjectList::GLOBAL_OPEN_PROJECT) {
+    } else if (id == ProjectsList::GLOBAL_OPEN_PROJECT) {
         String conf = (String)p_meta;
 
         if (!conf.empty()) {
@@ -758,22 +769,22 @@ void ProjectManager::_global_menu_action(
     }
 }
 
-void ProjectManager::_import_project() {
-    npdialog->set_mode(ProjectDialog::MODE_IMPORT);
+void ProjectsManager::_import_project() {
+    npdialog->set_mode(ProjectsDialog::MODE_IMPORT);
     npdialog->show_dialog();
 }
 
-void ProjectManager::_install_project(
+void ProjectsManager::_install_project(
     const String& p_zip_path,
     const String& p_title
 ) {
-    npdialog->set_mode(ProjectDialog::MODE_INSTALL);
+    npdialog->set_mode(ProjectsDialog::MODE_INSTALL);
     npdialog->set_zip_path(p_zip_path);
     npdialog->set_zip_title(p_title);
     npdialog->show_dialog();
 }
 
-void ProjectManager::_language_selected(int p_id) {
+void ProjectsManager::_language_selected(int p_id) {
     String lang = language_btn->get_item_metadata(p_id);
     EditorSettings::get_singleton()->set(
         "interface/editor/editor_language",
@@ -783,13 +794,14 @@ void ProjectManager::_language_selected(int p_id) {
     language_btn->set_icon(get_icon("Environment", "EditorIcons"));
 
     language_restart_ask->set_text(
-        TTR("Language changed.\nThe interface will update after restarting the "
-            "editor or project manager.")
+        TTR("Language changed.\n"
+            "The interface will update after restarting Rebel Editor or "
+            "Projects Manager")
     );
     language_restart_ask->popup_centered();
 }
 
-void ProjectManager::_load_recent_projects() {
+void ProjectsManager::_load_recent_projects() {
     project_list->set_sort_order(project_list_filter->get_sort_order());
     project_list->set_search_text(project_list_filter->get_search_text());
     project_list->load_projects();
@@ -799,12 +811,12 @@ void ProjectManager::_load_recent_projects() {
     tabs->set_current_tab(0);
 }
 
-void ProjectManager::_new_project() {
-    npdialog->set_mode(ProjectDialog::MODE_NEW);
+void ProjectsManager::_new_project() {
+    npdialog->set_mode(ProjectsDialog::MODE_NEW);
     npdialog->show_dialog();
 }
 
-void ProjectManager::_on_project_created(const String& dir) {
+void ProjectsManager::_on_project_created(const String& dir) {
     project_list_filter->clear_search_text();
     int i = project_list->refresh_project(dir);
     project_list->select_project(i);
@@ -814,8 +826,8 @@ void ProjectManager::_on_project_created(const String& dir) {
     project_list->update_dock_menu();
 }
 
-void ProjectManager::_on_projects_updated() {
-    Vector<ProjectListItem> selected_projects =
+void ProjectsManager::_on_projects_updated() {
+    Vector<ProjectsListItem> selected_projects =
         project_list->get_selected_projects();
     int index = 0;
     for (int i = 0; i < selected_projects.size(); ++i) {
@@ -828,17 +840,17 @@ void ProjectManager::_on_projects_updated() {
     project_list->update_dock_menu();
 }
 
-void ProjectManager::_on_search_text_changed() {
+void ProjectsManager::_on_search_text_changed() {
     project_list->set_search_text(project_list_filter->get_search_text());
     project_list->sort_projects();
 }
 
-void ProjectManager::_on_sort_order_changed() {
+void ProjectsManager::_on_sort_order_changed() {
     project_list->set_sort_order(project_list_filter->get_sort_order());
     project_list->sort_projects();
 }
 
-void ProjectManager::_on_tab_changed(int p_tab) {
+void ProjectsManager::_on_tab_changed(int p_tab) {
     if (p_tab == 0) { // Projects
         // Automatically grab focus when the user moves from the Templates tab
         // back to the Projects tab.
@@ -852,12 +864,12 @@ void ProjectManager::_on_tab_changed(int p_tab) {
     // library editor plugin code.
 }
 
-void ProjectManager::_open_asset_library() {
+void ProjectsManager::_open_asset_library() {
     asset_library->disable_community_support();
     tabs->set_current_tab(1);
 }
 
-void ProjectManager::_open_selected_projects_ask() {
+void ProjectsManager::_open_selected_projects_ask() {
     const Set<String>& selected_list =
         project_list->get_selected_project_keys();
 
@@ -873,7 +885,7 @@ void ProjectManager::_open_selected_projects_ask() {
         return;
     }
 
-    ProjectListItem project = project_list->get_selected_projects()[0];
+    ProjectsListItem project = project_list->get_selected_projects()[0];
     if (project.missing) {
         return;
     }
@@ -927,9 +939,9 @@ void ProjectManager::_open_selected_projects_ask() {
     _open_selected_projects();
 }
 
-void ProjectManager::_open_selected_projects() {
-    // Show loading text to tell the user that the project manager is busy
-    // loading. This is especially important for the Web project manager.
+void ProjectsManager::_open_selected_projects() {
+    // Show loading text to tell the user that the Projects Manager is busy
+    // loading. This is especially important for the Web Projects Manager.
     loading_label->set_modulate(Color(1, 1, 1));
 
     const Set<String>& selected_list =
@@ -982,7 +994,7 @@ void ProjectManager::_open_selected_projects() {
     get_tree()->quit();
 }
 
-void ProjectManager::_rename_project() {
+void ProjectsManager::_rename_project() {
     const Set<String>& selected_list =
         project_list->get_selected_project_keys();
 
@@ -995,12 +1007,12 @@ void ProjectManager::_rename_project() {
         String path =
             EditorSettings::get_singleton()->get("projects/" + selected);
         npdialog->set_project_path(path);
-        npdialog->set_mode(ProjectDialog::MODE_RENAME);
+        npdialog->set_mode(ProjectsDialog::MODE_RENAME);
         npdialog->show_dialog();
     }
 }
 
-void ProjectManager::_restart_confirm() {
+void ProjectsManager::_restart_confirm() {
     List<String> args = OS::get_singleton()->get_cmdline_args();
     String exec       = OS::get_singleton()->get_executable_path();
     OS::ProcessID pid = 0;
@@ -1011,8 +1023,8 @@ void ProjectManager::_restart_confirm() {
     get_tree()->quit();
 }
 
-void ProjectManager::_run_project_confirm() {
-    Vector<ProjectListItem> selected_list =
+void ProjectsManager::_run_project_confirm() {
+    Vector<ProjectsListItem> selected_list =
         project_list->get_selected_projects();
 
     for (int i = 0; i < selected_list.size(); ++i) {
@@ -1062,7 +1074,7 @@ void ProjectManager::_run_project_confirm() {
 }
 
 // When you press the "Run" button
-void ProjectManager::_run_project() {
+void ProjectsManager::_run_project() {
     const Set<String>& selected_list =
         project_list->get_selected_project_keys();
 
@@ -1081,7 +1093,7 @@ void ProjectManager::_run_project() {
     }
 }
 
-void ProjectManager::_scan_begin(const String& p_base) {
+void ProjectsManager::_scan_begin(const String& p_base) {
     print_line("Scanning projects at: " + p_base);
     List<String> projects;
     _scan_dir(p_base, &projects);
@@ -1095,7 +1107,7 @@ void ProjectManager::_scan_begin(const String& p_base) {
     _load_recent_projects();
 }
 
-void ProjectManager::_scan_dir(const String& path, List<String>* r_projects) {
+void ProjectsManager::_scan_dir(const String& path, List<String>* r_projects) {
     DirAccessRef da = DirAccess::create(DirAccess::ACCESS_FILESYSTEM);
     Error error     = da->change_dir(path);
     ERR_FAIL_COND_MSG(error != OK, "Could not scan directory at: " + path);
@@ -1112,21 +1124,21 @@ void ProjectManager::_scan_dir(const String& path, List<String>* r_projects) {
     da->list_dir_end();
 }
 
-void ProjectManager::_scan_multiple_folders(const PoolStringArray& p_files) {
+void ProjectsManager::_scan_multiple_folders(const PoolStringArray& p_files) {
     for (int i = 0; i < p_files.size(); i++) {
         _scan_begin(p_files.get(i));
     }
 }
 
-void ProjectManager::_scan_projects() {
+void ProjectsManager::_scan_projects() {
     scan_dir->popup_centered_ratio();
 }
 
-void ProjectManager::_show_about() {
+void ProjectsManager::_show_about() {
     about->popup_centered(Size2(780, 500) * EDSCALE);
 }
 
-void ProjectManager::_unhandled_input(const Ref<InputEvent>& p_ev) {
+void ProjectsManager::_unhandled_input(const Ref<InputEvent>& p_ev) {
     Ref<InputEventKey> k = p_ev;
 
     if (k.is_valid()) {
@@ -1134,7 +1146,7 @@ void ProjectManager::_unhandled_input(const Ref<InputEvent>& p_ev) {
             return;
         }
 
-        // Pressing Command + Q quits the Project Manager
+        // Pressing Command + Q quits the Projects Manager
         // This is handled by the platform implementation on macOS,
         // so only define the shortcut on other platforms
 #ifndef MACOS_ENABLED
@@ -1215,8 +1227,8 @@ void ProjectManager::_unhandled_input(const Ref<InputEvent>& p_ev) {
     }
 }
 
-void ProjectManager::_update_project_buttons() {
-    Vector<ProjectListItem> selected_projects =
+void ProjectsManager::_update_project_buttons() {
+    Vector<ProjectsListItem> selected_projects =
         project_list->get_selected_projects();
     bool empty_selection = selected_projects.empty();
 
@@ -1236,6 +1248,6 @@ void ProjectManager::_update_project_buttons() {
     erase_missing_btn->set_disabled(!project_list->is_any_project_missing());
 }
 
-void ProjectManager::_version_button_pressed() {
+void ProjectsManager::_version_button_pressed() {
     OS::get_singleton()->set_clipboard(version_btn->get_text());
 }

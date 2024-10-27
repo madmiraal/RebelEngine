@@ -4,12 +4,12 @@
 //
 // SPDX-License-Identifier: MIT
 
-#include "project_list_filter.h"
+#include "projects_list_filter.h"
 
 #include "editor/editor_scale.h"
-#include "project_list.h"
+#include "projects_list.h"
 
-ProjectListFilter::ProjectListFilter() {
+ProjectsListFilter::ProjectsListFilter() {
     sort_order_options = memnew(OptionButton);
     sort_order_options->set_clip_text(true);
     sort_order_options->connect("item_selected", this, "_sort_order_selected");
@@ -29,28 +29,28 @@ ProjectListFilter::ProjectListFilter() {
     add_child(search_box);
 }
 
-void ProjectListFilter::clear_search_text() {
+void ProjectsListFilter::clear_search_text() {
     search_box->clear();
 }
 
-LineEdit* ProjectListFilter::get_search_box() const {
+LineEdit* ProjectsListFilter::get_search_box() const {
     return search_box;
 }
 
-ProjectListFilter::SortOrder ProjectListFilter::get_sort_order() const {
+ProjectsListFilter::SortOrder ProjectsListFilter::get_sort_order() const {
     return current_sort_order;
 }
 
-String ProjectListFilter::get_search_text() const {
+String ProjectsListFilter::get_search_text() const {
     return search_box->get_text().strip_edges();
 }
 
-void ProjectListFilter::set_sort_order(SortOrder new_sort_order) {
+void ProjectsListFilter::set_sort_order(SortOrder new_sort_order) {
     sort_order_options->select((int)new_sort_order);
     _sort_order_selected(0);
 }
 
-void ProjectListFilter::set_sort_order_names(
+void ProjectsListFilter::set_sort_order_names(
     const Vector<String>& sort_order_names
 ) {
     sort_order_options->clear();
@@ -59,28 +59,28 @@ void ProjectListFilter::set_sort_order_names(
     }
 }
 
-void ProjectListFilter::_bind_methods() {
+void ProjectsListFilter::_bind_methods() {
     ClassDB::bind_method(
         D_METHOD("_search_text_changed"),
-        &ProjectListFilter::_search_text_changed
+        &ProjectsListFilter::_search_text_changed
     );
     ClassDB::bind_method(
         D_METHOD("_sort_order_selected"),
-        &ProjectListFilter::_sort_order_selected
+        &ProjectsListFilter::_sort_order_selected
     );
 
     ADD_SIGNAL(MethodInfo("sort_order_changed"));
     ADD_SIGNAL(MethodInfo("search_text_changed"));
 }
 
-void ProjectListFilter::_notification(int p_what) {
+void ProjectsListFilter::_notification(int p_what) {
     if (p_what == NOTIFICATION_ENTER_TREE) {
         search_box->set_right_icon(get_icon("Search", "EditorIcons"));
         search_box->set_clear_button_enabled(true);
     }
 }
 
-void ProjectListFilter::_sort_order_selected(int p_idx) {
+void ProjectsListFilter::_sort_order_selected(int p_idx) {
     SortOrder selected = (SortOrder)(sort_order_options->get_selected());
     if (current_sort_order != selected) {
         current_sort_order = selected;
@@ -88,6 +88,6 @@ void ProjectListFilter::_sort_order_selected(int p_idx) {
     }
 }
 
-void ProjectListFilter::_search_text_changed(const String& p_newtext) {
+void ProjectsListFilter::_search_text_changed(const String& p_newtext) {
     emit_signal("search_text_changed");
 }
