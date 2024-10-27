@@ -151,7 +151,7 @@ ProjectManager::ProjectManager() {
     project_list_filter = memnew(ProjectListFilter);
     project_list_filter->set_sort_order_names(sort_order_names);
     project_list_filter
-        ->connect("sort_order_changed", this, "_on_order_option_changed");
+        ->connect("sort_order_changed", this, "_on_sort_order_changed");
 
     int projects_sorting_order = (int)EditorSettings::get_singleton()->get(
         "project_manager/sorting_order"
@@ -539,8 +539,8 @@ void ProjectManager::_bind_methods() {
     );
     ClassDB::bind_method("_restart_confirm", &ProjectManager::_restart_confirm);
     ClassDB::bind_method(
-        "_on_order_option_changed",
-        &ProjectManager::_on_order_option_changed
+        "_on_sort_order_changed",
+        &ProjectManager::_on_sort_order_changed
     );
     ClassDB::bind_method(
         "_on_search_text_changed",
@@ -790,7 +790,7 @@ void ProjectManager::_language_selected(int p_id) {
 }
 
 void ProjectManager::_load_recent_projects() {
-    project_list->set_order_option(project_list_filter->get_sort_order());
+    project_list->set_sort_order(project_list_filter->get_sort_order());
     project_list->set_search_text(project_list_filter->get_search_text());
     project_list->load_projects();
 
@@ -802,11 +802,6 @@ void ProjectManager::_load_recent_projects() {
 void ProjectManager::_new_project() {
     npdialog->set_mode(ProjectDialog::MODE_NEW);
     npdialog->show_dialog();
-}
-
-void ProjectManager::_on_order_option_changed() {
-    project_list->set_order_option(project_list_filter->get_sort_order());
-    project_list->sort_projects();
 }
 
 void ProjectManager::_on_project_created(const String& dir) {
@@ -835,6 +830,11 @@ void ProjectManager::_on_projects_updated() {
 
 void ProjectManager::_on_search_text_changed() {
     project_list->set_search_text(project_list_filter->get_search_text());
+    project_list->sort_projects();
+}
+
+void ProjectManager::_on_sort_order_changed() {
+    project_list->set_sort_order(project_list_filter->get_sort_order());
     project_list->sort_projects();
 }
 

@@ -80,28 +80,10 @@ struct ProjectListItem {
 
 class ProjectListItemComparator {
 public:
-    ProjectListFilter::SortOrder order_option;
+    ProjectListFilter::SortOrder sort_order;
 
     // operator<
-    _FORCE_INLINE_ bool operator()(
-        const ProjectListItem& a,
-        const ProjectListItem& b
-    ) const {
-        if (a.favorite && !b.favorite) {
-            return true;
-        }
-        if (b.favorite && !a.favorite) {
-            return false;
-        }
-        switch (order_option) {
-            case ProjectListFilter::SortOrder::NAME:
-                return a.project_name < b.project_name;
-            case ProjectListFilter::SortOrder::PATH:
-                return a.project_key < b.project_key;
-            case ProjectListFilter::SortOrder::LAST_MODIFIED:
-                return a.last_modified > b.last_modified;
-        }
-    }
+    bool operator()(const ProjectListItem& a, const ProjectListItem& b) const;
 };
 
 #endif // PROJECT_LIST_ITEM_H

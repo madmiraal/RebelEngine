@@ -43,3 +43,25 @@ void ProjectListItemControl::_notification(int p_what) {
         } break;
     }
 }
+
+bool ProjectListItemComparator::operator()(
+    const ProjectListItem& a,
+    const ProjectListItem& b
+) const {
+    if (a.favorite && !b.favorite) {
+        return true;
+    }
+    if (b.favorite && !a.favorite) {
+        return false;
+    }
+    switch (sort_order) {
+        case ProjectListFilter::SortOrder::NAME:
+            return a.project_name < b.project_name;
+        case ProjectListFilter::SortOrder::PATH:
+            return a.project_key < b.project_key;
+        case ProjectListFilter::SortOrder::LAST_MODIFIED:
+            return a.last_modified > b.last_modified;
+        default:
+            ERR_FAIL_V_MSG(false, "Unrecognised sort order");
+    }
+}

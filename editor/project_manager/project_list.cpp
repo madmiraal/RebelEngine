@@ -16,7 +16,7 @@ const char* ProjectList::SIGNAL_SELECTION_CHANGED = "selection_changed";
 const char* ProjectList::SIGNAL_PROJECT_ASK_OPEN  = "project_ask_open";
 
 ProjectList::ProjectList() {
-    _order_option = ProjectListFilter::SortOrder::LAST_MODIFIED;
+    sort_order = ProjectListFilter::SortOrder::LAST_MODIFIED;
 
     _scroll_children = memnew(VBoxContainer);
     _scroll_children->set_h_size_flags(SIZE_EXPAND_FILL);
@@ -296,24 +296,24 @@ void ProjectList::select_project(int p_index) {
     _toggle_select(p_index);
 }
 
-void ProjectList::set_order_option(ProjectListFilter::SortOrder p_option) {
-    if (_order_option != p_option) {
-        _order_option = p_option;
+void ProjectList::set_search_text(String p_search_text) {
+    search_text = p_search_text;
+}
+
+void ProjectList::set_sort_order(ProjectListFilter::SortOrder new_sort_order) {
+    if (sort_order != new_sort_order) {
+        sort_order = new_sort_order;
         EditorSettings::get_singleton()->set(
             "project_manager/sorting_order",
-            (int)_order_option
+            (int)sort_order
         );
         EditorSettings::get_singleton()->save();
     }
 }
 
-void ProjectList::set_search_text(String p_search_text) {
-    search_text = p_search_text;
-}
-
 void ProjectList::sort_projects() {
     SortArray<ProjectListItem, ProjectListItemComparator> sorter;
-    sorter.compare.order_option = _order_option;
+    sorter.compare.sort_order = sort_order;
     sorter.sort(_projects.ptrw(), _projects.size());
 
     for (int i = 0; i < _projects.size(); ++i) {
