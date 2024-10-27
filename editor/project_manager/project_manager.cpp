@@ -160,7 +160,7 @@ ProjectManager::ProjectManager() {
     )projects_sorting_order);
 
     project_list_filter
-        ->connect("filter_search_changed", this, "_on_filter_option_changed");
+        ->connect("search_text_changed", this, "_on_search_text_changed");
     projects_list_tools_container->add_child(project_list_filter);
 
     PanelContainer* pc = memnew(PanelContainer);
@@ -543,8 +543,8 @@ void ProjectManager::_bind_methods() {
         &ProjectManager::_on_order_option_changed
     );
     ClassDB::bind_method(
-        "_on_filter_option_changed",
-        &ProjectManager::_on_filter_option_changed
+        "_on_search_text_changed",
+        &ProjectManager::_on_search_text_changed
     );
     ClassDB::bind_method("_on_tab_changed", &ProjectManager::_on_tab_changed);
     ClassDB::bind_method(
@@ -804,11 +804,6 @@ void ProjectManager::_new_project() {
     npdialog->show_dialog();
 }
 
-void ProjectManager::_on_filter_option_changed() {
-    project_list->set_search_text(project_list_filter->get_search_text());
-    project_list->sort_projects();
-}
-
 void ProjectManager::_on_order_option_changed() {
     project_list->set_order_option(project_list_filter->get_sort_order());
     project_list->sort_projects();
@@ -836,6 +831,11 @@ void ProjectManager::_on_projects_updated() {
     }
 
     project_list->update_dock_menu();
+}
+
+void ProjectManager::_on_search_text_changed() {
+    project_list->set_search_text(project_list_filter->get_search_text());
+    project_list->sort_projects();
 }
 
 void ProjectManager::_on_tab_changed(int p_tab) {

@@ -70,7 +70,7 @@ void ProjectListFilter::_bind_methods() {
     );
 
     ADD_SIGNAL(MethodInfo("sort_order_changed"));
-    ADD_SIGNAL(MethodInfo("filter_search_changed"));
+    ADD_SIGNAL(MethodInfo("search_text_changed"));
 }
 
 void ProjectListFilter::_notification(int p_what) {
@@ -89,5 +89,5 @@ void ProjectListFilter::_sort_order_selected(int p_idx) {
 }
 
 void ProjectListFilter::_search_text_changed(const String& p_newtext) {
-    emit_signal("filter_search_changed");
+    emit_signal("search_text_changed");
 }

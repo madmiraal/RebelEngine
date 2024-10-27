@@ -91,10 +91,10 @@ private:
     void _language_selected(int p_id);
     void _load_recent_projects();
     void _new_project();
-    void _on_filter_option_changed();
     void _on_order_option_changed();
     void _on_project_created(const String& dir);
     void _on_projects_updated();
+    void _on_search_text_changed();
     void _on_tab_changed(int p_tab);
     void _open_asset_library();
     void _open_selected_projects_ask();
