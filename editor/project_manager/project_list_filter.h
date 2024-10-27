@@ -15,19 +15,19 @@ class ProjectListFilter : public HBoxContainer {
     GDCLASS(ProjectListFilter, HBoxContainer);
 
 public:
-    enum FilterOption {
-        FILTER_NAME,
-        FILTER_PATH,
-        FILTER_MODIFIED,
+    enum class SortOrder {
+        NAME,
+        PATH,
+        LAST_MODIFIED,
     };
 
     ProjectListFilter();
 
     void clear();
-    FilterOption get_filter_option();
+    SortOrder get_filter_option();
     LineEdit* get_search_box() const;
     String get_search_term();
-    void set_filter_option(FilterOption);
+    void set_filter_option(SortOrder);
     void set_sort_order_names(const Vector<String>& sort_order_names);
 
 protected:
@@ -35,7 +35,7 @@ protected:
     void _notification(int p_what);
 
 private:
-    FilterOption _current_filter;
+    SortOrder _current_filter = SortOrder::NAME;
 
     LineEdit* search_box;
 

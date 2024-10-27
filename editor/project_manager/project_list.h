@@ -40,13 +40,13 @@ public:
     void load_projects();
     int refresh_project(const String& dir_path);
     void select_project(int p_index);
-    void set_order_option(ProjectListFilter::FilterOption p_option);
+    void set_order_option(ProjectListFilter::SortOrder p_option);
     void set_search_term(String p_search_term);
     void sort_projects();
     void update_dock_menu();
 
 private:
-    ProjectListFilter::FilterOption _order_option;
+    ProjectListFilter::SortOrder _order_option;
 
     String _search_term;
     String _last_clicked; // Project key

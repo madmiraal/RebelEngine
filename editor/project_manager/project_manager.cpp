@@ -156,7 +156,7 @@ ProjectManager::ProjectManager() {
     int projects_sorting_order = (int)EditorSettings::get_singleton()->get(
         "project_manager/sorting_order"
     );
-    project_list_filter->set_filter_option((ProjectListFilter::FilterOption
+    project_list_filter->set_filter_option((ProjectListFilter::SortOrder
     )projects_sorting_order);
 
     project_list_filter

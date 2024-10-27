@@ -80,7 +80,7 @@ struct ProjectListItem {
 
 class ProjectListItemComparator {
 public:
-    ProjectListFilter::FilterOption order_option;
+    ProjectListFilter::SortOrder order_option;
 
     // operator<
     _FORCE_INLINE_ bool operator()(
@@ -94,12 +94,12 @@ public:
             return false;
         }
         switch (order_option) {
-            case ProjectListFilter::FILTER_PATH:
-                return a.project_key < b.project_key;
-            case ProjectListFilter::FILTER_MODIFIED:
-                return a.last_modified > b.last_modified;
-            default:
+            case ProjectListFilter::SortOrder::NAME:
                 return a.project_name < b.project_name;
+            case ProjectListFilter::SortOrder::PATH:
+                return a.project_key < b.project_key;
+            case ProjectListFilter::SortOrder::LAST_MODIFIED:
+                return a.last_modified > b.last_modified;
         }
     }
 };

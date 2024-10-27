@@ -16,7 +16,7 @@ const char* ProjectList::SIGNAL_SELECTION_CHANGED = "selection_changed";
 const char* ProjectList::SIGNAL_PROJECT_ASK_OPEN  = "project_ask_open";
 
 ProjectList::ProjectList() {
-    _order_option = ProjectListFilter::FILTER_MODIFIED;
+    _order_option = ProjectListFilter::SortOrder::LAST_MODIFIED;
 
     _scroll_children = memnew(VBoxContainer);
     _scroll_children->set_h_size_flags(SIZE_EXPAND_FILL);
@@ -296,7 +296,7 @@ void ProjectList::select_project(int p_index) {
     _toggle_select(p_index);
 }
 
-void ProjectList::set_order_option(ProjectListFilter::FilterOption p_option) {
+void ProjectList::set_order_option(ProjectListFilter::SortOrder p_option) {
     if (_order_option != p_option) {
         _order_option = p_option;
         EditorSettings::get_singleton()->set(

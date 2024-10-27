@@ -10,8 +10,6 @@
 #include "project_list.h"
 
 ProjectListFilter::ProjectListFilter() {
-    _current_filter = FILTER_NAME;
-
     filter_option = memnew(OptionButton);
     filter_option->set_clip_text(true);
     filter_option->connect("item_selected", this, "_filter_option_selected");
@@ -35,7 +33,7 @@ void ProjectListFilter::clear() {
     search_box->clear();
 }
 
-ProjectListFilter::FilterOption ProjectListFilter::get_filter_option() {
+ProjectListFilter::SortOrder ProjectListFilter::get_filter_option() {
     return _current_filter;
 }
 
@@ -47,7 +45,7 @@ String ProjectListFilter::get_search_term() {
     return search_box->get_text().strip_edges();
 }
 
-void ProjectListFilter::set_filter_option(FilterOption option) {
+void ProjectListFilter::set_filter_option(SortOrder option) {
     filter_option->select((int)option);
     _filter_option_selected(0);
 }
@@ -83,7 +81,7 @@ void ProjectListFilter::_notification(int p_what) {
 }
 
 void ProjectListFilter::_filter_option_selected(int p_idx) {
-    FilterOption selected = (FilterOption)(filter_option->get_selected());
+    SortOrder selected = (SortOrder)(filter_option->get_selected());
     if (_current_filter != selected) {
         _current_filter = selected;
         emit_signal("filter_option_changed");
