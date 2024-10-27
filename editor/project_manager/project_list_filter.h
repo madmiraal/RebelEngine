@@ -23,16 +23,11 @@ public:
 
     ProjectListFilter();
 
-    void add_filter_option();
-    void add_search_box();
     void clear();
     FilterOption get_filter_option();
-    // May return `nullptr` if the search box wasn't created yet
-    // Check for validity before using the returned value.
     LineEdit* get_search_box() const;
     String get_search_term();
     void set_filter_option(FilterOption);
-    void set_filter_size(int h_size);
     void set_sort_order_names(const Vector<String>& sort_order_names);
 
 protected:
@@ -45,8 +40,6 @@ private:
     LineEdit* search_box;
 
     OptionButton* filter_option;
-
-    bool has_search_box;
 
     void _filter_option_selected(int p_idx);
     void _search_text_changed(const String& p_newtext);

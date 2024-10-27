@@ -149,13 +149,9 @@ ProjectManager::ProjectManager() {
     sort_order_names.push_back(TTR("Last Modified"));
 
     project_list_filter = memnew(ProjectListFilter);
-    project_list_filter->add_filter_option();
     project_list_filter->set_sort_order_names(sort_order_names);
-    project_list_filter->set_filter_size(150);
-    projects_list_tools_container->add_child(project_list_filter);
     project_list_filter
-        ->connect("filter_changed", this, "_on_order_option_changed");
-    project_list_filter->set_custom_minimum_size(Size2(180, 10) * EDSCALE);
+        ->connect("filter_option_changed", this, "_on_order_option_changed");
 
     int projects_sorting_order = (int)EditorSettings::get_singleton()->get(
         "project_manager/sorting_order"
@@ -163,12 +159,9 @@ ProjectManager::ProjectManager() {
     project_list_filter->set_filter_option((ProjectListFilter::FilterOption
     )projects_sorting_order);
 
-    project_filter = memnew(ProjectListFilter);
-    project_filter->add_search_box();
-    project_filter
-        ->connect("filter_changed", this, "_on_filter_option_changed");
-    project_filter->set_custom_minimum_size(Size2(280, 10) * EDSCALE);
-    projects_list_tools_container->add_child(project_filter);
+    project_list_filter
+        ->connect("filter_search_changed", this, "_on_filter_option_changed");
+    projects_list_tools_container->add_child(project_list_filter);
 
     PanelContainer* pc = memnew(PanelContainer);
     pc->add_style_override("panel", get_stylebox("bg", "Tree"));
@@ -602,7 +595,7 @@ void ProjectManager::_notification(int p_what) {
             if (project_list->get_project_count() >= 1) {
                 // Focus on the search box immediately to allow the user
                 // to search without having to reach for their mouse
-                project_filter->get_search_box()->grab_focus();
+                project_list_filter->get_search_box()->grab_focus();
             }
         } break;
         case NOTIFICATION_VISIBILITY_CHANGED: {
@@ -798,7 +791,7 @@ void ProjectManager::_language_selected(int p_id) {
 
 void ProjectManager::_load_recent_projects() {
     project_list->set_order_option(project_list_filter->get_filter_option());
-    project_list->set_search_term(project_filter->get_search_term());
+    project_list->set_search_term(project_list_filter->get_search_term());
     project_list->load_projects();
 
     _update_project_buttons();
@@ -812,7 +805,7 @@ void ProjectManager::_new_project() {
 }
 
 void ProjectManager::_on_filter_option_changed() {
-    project_list->set_search_term(project_filter->get_search_term());
+    project_list->set_search_term(project_list_filter->get_search_term());
     project_list->sort_projects();
 }
 
@@ -822,7 +815,7 @@ void ProjectManager::_on_order_option_changed() {
 }
 
 void ProjectManager::_on_project_created(const String& dir) {
-    project_filter->clear();
+    project_list_filter->clear();
     int i = project_list->refresh_project(dir);
     project_list->select_project(i);
     project_list->ensure_project_visible(i);
@@ -849,7 +842,7 @@ void ProjectManager::_on_tab_changed(int p_tab) {
     if (p_tab == 0) { // Projects
         // Automatically grab focus when the user moves from the Templates tab
         // back to the Projects tab.
-        LineEdit* search_box = project_filter->get_search_box();
+        LineEdit* search_box = project_list_filter->get_search_box();
         if (search_box) {
             search_box->grab_focus();
         }
@@ -1206,7 +1199,7 @@ void ProjectManager::_unhandled_input(const Ref<InputEvent>& p_ev) {
             } break;
             case KEY_F: {
                 if (k->get_command()) {
-                    this->project_filter->get_search_box()->grab_focus();
+                    this->project_list_filter->get_search_box()->grab_focus();
                 } else {
                     scancode_handled = false;
                 }

@@ -74,7 +74,6 @@ private:
 
     ProjectDialog* npdialog;
     ProjectList* project_list;
-    ProjectListFilter* project_filter;
     ProjectListFilter* project_list_filter;
 
     TabContainer* tabs;

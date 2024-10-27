@@ -11,17 +11,13 @@
 
 ProjectListFilter::ProjectListFilter() {
     _current_filter = FILTER_NAME;
-    has_search_box  = false;
-}
 
-void ProjectListFilter::add_filter_option() {
     filter_option = memnew(OptionButton);
     filter_option->set_clip_text(true);
     filter_option->connect("item_selected", this, "_filter_option_selected");
+    filter_option->set_custom_minimum_size(Size2(180, 10) * EDSCALE);
     add_child(filter_option);
-}
 
-void ProjectListFilter::add_search_box() {
     search_box = memnew(LineEdit);
     search_box->set_placeholder(TTR("Filter projects"));
     search_box->set_tooltip(
@@ -31,15 +27,12 @@ void ProjectListFilter::add_search_box() {
     );
     search_box->connect("text_changed", this, "_search_text_changed");
     search_box->set_h_size_flags(SIZE_EXPAND_FILL);
+    search_box->set_custom_minimum_size(Size2(280, 10) * EDSCALE);
     add_child(search_box);
-
-    has_search_box = true;
 }
 
 void ProjectListFilter::clear() {
-    if (has_search_box) {
-        search_box->clear();
-    }
+    search_box->clear();
 }
 
 ProjectListFilter::FilterOption ProjectListFilter::get_filter_option() {
@@ -57,11 +50,6 @@ String ProjectListFilter::get_search_term() {
 void ProjectListFilter::set_filter_option(FilterOption option) {
     filter_option->select((int)option);
     _filter_option_selected(0);
-}
-
-void ProjectListFilter::set_filter_size(int h_size) {
-    filter_option->set_custom_minimum_size(Size2(h_size * EDSCALE, 10 * EDSCALE)
-    );
 }
 
 void ProjectListFilter::set_sort_order_names(
@@ -83,11 +71,12 @@ void ProjectListFilter::_bind_methods() {
         &ProjectListFilter::_filter_option_selected
     );
 
-    ADD_SIGNAL(MethodInfo("filter_changed"));
+    ADD_SIGNAL(MethodInfo("filter_option_changed"));
+    ADD_SIGNAL(MethodInfo("filter_search_changed"));
 }
 
 void ProjectListFilter::_notification(int p_what) {
-    if (p_what == NOTIFICATION_ENTER_TREE && has_search_box) {
+    if (p_what == NOTIFICATION_ENTER_TREE) {
         search_box->set_right_icon(get_icon("Search", "EditorIcons"));
         search_box->set_clear_button_enabled(true);
     }
@@ -97,10 +86,10 @@ void ProjectListFilter::_filter_option_selected(int p_idx) {
     FilterOption selected = (FilterOption)(filter_option->get_selected());
     if (_current_filter != selected) {
         _current_filter = selected;
-        emit_signal("filter_changed");
+        emit_signal("filter_option_changed");
     }
 }
 
 void ProjectListFilter::_search_text_changed(const String& p_newtext) {
-    emit_signal("filter_changed");
+    emit_signal("filter_search_changed");
 }
