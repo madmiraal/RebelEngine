@@ -29,7 +29,7 @@ ProjectListFilter::ProjectListFilter() {
     add_child(search_box);
 }
 
-void ProjectListFilter::clear() {
+void ProjectListFilter::clear_search_text() {
     search_box->clear();
 }
 
@@ -41,7 +41,7 @@ ProjectListFilter::SortOrder ProjectListFilter::get_sort_order() const {
     return current_sort_order;
 }
 
-String ProjectListFilter::get_search_term() const {
+String ProjectListFilter::get_search_text() const {
     return search_box->get_text().strip_edges();
 }
 

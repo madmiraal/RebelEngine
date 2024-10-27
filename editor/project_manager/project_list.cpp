@@ -307,8 +307,8 @@ void ProjectList::set_order_option(ProjectListFilter::SortOrder p_option) {
     }
 }
 
-void ProjectList::set_search_term(String p_search_term) {
-    _search_term = p_search_term;
+void ProjectList::set_search_text(String p_search_text) {
+    search_text = p_search_text;
 }
 
 void ProjectList::sort_projects() {
@@ -320,9 +320,9 @@ void ProjectList::sort_projects() {
         ProjectListItem& item = _projects.write[i];
 
         bool visible = true;
-        if (!_search_term.empty()) {
+        if (!search_text.empty()) {
             String search_path;
-            if (_search_term.find("/") != -1) {
+            if (search_text.find("/") != -1) {
                 // Search path will match the whole path
                 search_path = item.path;
             } else {
@@ -333,8 +333,8 @@ void ProjectList::sort_projects() {
 
             // When searching, display projects whose name or path contain the
             // search term
-            visible = item.project_name.findn(_search_term) != -1
-                   || search_path.findn(_search_term) != -1;
+            visible = item.project_name.findn(search_text) != -1
+                   || search_path.findn(search_text) != -1;
         }
 
         item.control->set_visible(visible);

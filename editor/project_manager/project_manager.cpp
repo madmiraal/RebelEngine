@@ -791,7 +791,7 @@ void ProjectManager::_language_selected(int p_id) {
 
 void ProjectManager::_load_recent_projects() {
     project_list->set_order_option(project_list_filter->get_sort_order());
-    project_list->set_search_term(project_list_filter->get_search_term());
+    project_list->set_search_text(project_list_filter->get_search_text());
     project_list->load_projects();
 
     _update_project_buttons();
@@ -805,7 +805,7 @@ void ProjectManager::_new_project() {
 }
 
 void ProjectManager::_on_filter_option_changed() {
-    project_list->set_search_term(project_list_filter->get_search_term());
+    project_list->set_search_text(project_list_filter->get_search_text());
     project_list->sort_projects();
 }
 
@@ -815,7 +815,7 @@ void ProjectManager::_on_order_option_changed() {
 }
 
 void ProjectManager::_on_project_created(const String& dir) {
-    project_list_filter->clear();
+    project_list_filter->clear_search_text();
     int i = project_list->refresh_project(dir);
     project_list->select_project(i);
     project_list->ensure_project_visible(i);

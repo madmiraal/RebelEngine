@@ -23,10 +23,10 @@ public:
 
     ProjectListFilter();
 
-    void clear();
+    void clear_search_text();
     LineEdit* get_search_box() const;
     SortOrder get_sort_order() const;
-    String get_search_term() const;
+    String get_search_text() const;
     void set_sort_order(SortOrder sort_order);
     void set_sort_order_names(const Vector<String>& sort_order_names);
 
