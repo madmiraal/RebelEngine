@@ -54,23 +54,22 @@ protected:
     void _notification(int p_what);
 
 private:
-    ProjectsListFilter::SortOrder sort_order;
-
     String search_text;
-    String _last_clicked; // Project key
 
-    Set<String> _selected_project_keys;
+    String last_selected_project_key;
+    Set<String> selected_project_keys;
 
     Label* loading_label;
 
     ProjectsListFilter* projects_list_filter;
+    ProjectsListFilter::SortOrder sort_order;
 
     ScrollContainer* scroll_container;
     VBoxContainer* projects_container;
 
-    Vector<ProjectsListItem> _projects;
+    Vector<ProjectsListItem> projects;
 
-    int _icon_load_index;
+    int icon_load_index = 0;
 
     static void _load_project_data(
         const String& p_property_key,
