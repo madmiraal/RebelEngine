@@ -8,7 +8,6 @@
 #define PROJECTS_LIST_ITEM_H
 
 #include "core/ustring.h"
-#include "projects_list_filter.h"
 #include "scene/gui/box_container.h"
 #include "scene/gui/texture_button.h"
 #include "scene/gui/texture_rect.h"
@@ -30,6 +29,12 @@ public:
 };
 
 struct ProjectsListItem {
+    enum class SortOrder {
+        NAME,
+        PATH,
+        LAST_MODIFIED,
+    };
+
     String project_key;
     String project_name;
     String description;
@@ -80,7 +85,7 @@ struct ProjectsListItem {
 
 class ProjectsListItemComparator {
 public:
-    ProjectsListFilter::SortOrder sort_order;
+    ProjectsListItem::SortOrder sort_order;
 
     // operator<
     bool operator()(const ProjectsListItem& a, const ProjectsListItem& b) const;

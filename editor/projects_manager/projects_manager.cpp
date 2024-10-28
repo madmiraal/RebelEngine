@@ -1016,7 +1016,7 @@ void ProjectsManager::_scan_begin(const String& p_base) {
         EditorSettings::get_singleton()->set("projects/" + proj, E->get());
     }
     EditorSettings::get_singleton()->save();
-    projects_list->load_recent_projects();
+    projects_list->load_projects();
 }
 
 void ProjectsManager::_scan_dir(const String& path, List<String>* r_projects) {

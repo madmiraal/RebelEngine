@@ -10,9 +10,10 @@
 #include "core/set.h"
 #include "core/ustring.h"
 #include "core/vector.h"
-#include "projects_list_filter.h"
 #include "projects_list_item.h"
 #include "scene/gui/box_container.h"
+#include "scene/gui/line_edit.h"
+#include "scene/gui/option_button.h"
 #include "scene/gui/scroll_container.h"
 
 class ProjectsList : public VBoxContainer {
@@ -38,14 +39,11 @@ public:
     int get_single_selected_index() const;
     bool is_any_project_missing() const;
     void load_projects();
-    void load_recent_projects();
     void project_created(const String& dir);
     int refresh_project(const String& dir_path);
     void select_project(int p_index);
     void set_search_focus();
     void set_loading();
-    void set_search_text(String p_search_text);
-    void set_sort_order(ProjectsListFilter::SortOrder p_new_sort_order);
     void sort_projects();
     void update_dock_menu();
 
@@ -54,15 +52,16 @@ protected:
     void _notification(int p_what);
 
 private:
-    String search_text;
-
     String last_selected_project_key;
     Set<String> selected_project_keys;
 
     Label* loading_label;
 
-    ProjectsListFilter* projects_list_filter;
-    ProjectsListFilter::SortOrder sort_order;
+    LineEdit* search_box;
+    OptionButton* sort_order_options;
+
+    ProjectsListItem::SortOrder current_sort_order =
+        ProjectsListItem::SortOrder::NAME;
 
     ScrollContainer* scroll_container;
     VBoxContainer* projects_container;
@@ -80,8 +79,8 @@ private:
     void _create_project_item_control(int p_index);
     void _favorite_pressed(Node* p_hb);
     void _load_project_icon(int p_index);
-    void _on_search_text_changed();
-    void _on_sort_order_changed();
+    void _on_search_text_changed(const String& p_newtext);
+    void _on_sort_order_selected(int p_index);
     void _panel_draw(Node* p_hb);
     void _panel_input(const Ref<InputEvent>& p_ev, Node* p_hb);
     void _remove_project(int p_index, bool p_update_settings);

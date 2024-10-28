@@ -55,11 +55,11 @@ bool ProjectsListItemComparator::operator()(
         return false;
     }
     switch (sort_order) {
-        case ProjectsListFilter::SortOrder::NAME:
+        case ProjectsListItem::SortOrder::NAME:
             return a.project_name < b.project_name;
-        case ProjectsListFilter::SortOrder::PATH:
+        case ProjectsListItem::SortOrder::PATH:
             return a.project_key < b.project_key;
-        case ProjectsListFilter::SortOrder::LAST_MODIFIED:
+        case ProjectsListItem::SortOrder::LAST_MODIFIED:
             return a.last_modified > b.last_modified;
         default:
             ERR_FAIL_V_MSG(false, "Unrecognised sort order");

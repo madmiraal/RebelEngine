@@ -15,7 +15,6 @@
 #include "editor/plugins/asset_library_editor_plugin.h"
 #include "projects_dialog.h"
 #include "projects_list.h"
-#include "projects_list_filter.h"
 #include "scene/gui/box_container.h"
 #include "scene/gui/button.h"
 #include "scene/gui/check_box.h"

@@ -18,10 +18,8 @@ const char* ProjectsList::SIGNAL_SELECTION_CHANGED = "selection_changed";
 const char* ProjectsList::SIGNAL_PROJECT_ASK_OPEN  = "project_ask_open";
 
 ProjectsList::ProjectsList() {
-    sort_order = ProjectsListFilter::SortOrder::LAST_MODIFIED;
-    set_h_size_flags(SIZE_EXPAND_FILL);
-
     set_theme(create_custom_theme());
+    set_h_size_flags(SIZE_EXPAND_FILL);
 
     // Projects List Tools
     HBoxContainer* projects_list_tools_container = memnew(HBoxContainer);
@@ -38,22 +36,31 @@ ProjectsList::ProjectsList() {
     sort_label->set_text(TTR("Sort:"));
     projects_list_tools_container->add_child(sort_label);
 
-    Vector<String> sort_order_names;
-    sort_order_names.push_back(TTR("Name"));
-    sort_order_names.push_back(TTR("Path"));
-    sort_order_names.push_back(TTR("Last Modified"));
-
-    projects_list_filter = memnew(ProjectsListFilter);
-    projects_list_filter->set_sort_order_names(sort_order_names);
+    sort_order_options = memnew(OptionButton);
+    sort_order_options->set_clip_text(true);
+    sort_order_options
+        ->connect("item_selected", this, "_on_sort_order_selected");
+    sort_order_options->set_custom_minimum_size(Size2(180, 10) * EDSCALE);
+    sort_order_options->add_item(TTR("Name"));
+    sort_order_options->add_item(TTR("Path"));
+    sort_order_options->add_item(TTR("Last Modified"));
     int previous_sort_order =
         EditorSettings::get_singleton()->get("project_manager/sorting_order");
-    projects_list_filter->set_sort_order((ProjectsListFilter::SortOrder
-    )previous_sort_order);
-    projects_list_filter
-        ->connect("sort_order_changed", this, "_on_sort_order_changed");
-    projects_list_filter
-        ->connect("search_text_changed", this, "_on_search_text_changed");
-    projects_list_tools_container->add_child(projects_list_filter);
+    current_sort_order = (ProjectsListItem::SortOrder)previous_sort_order;
+    sort_order_options->select(previous_sort_order);
+    projects_list_tools_container->add_child(sort_order_options);
+
+    search_box = memnew(LineEdit);
+    search_box->set_placeholder(TTR("Filter projects"));
+    search_box->set_tooltip(
+        TTR("This field filters projects by name and last path component.\n"
+            "To filter projects by name and full path, the query must contain "
+            "at least one `/` character.")
+    );
+    search_box->connect("text_changed", this, "_on_search_text_changed");
+    search_box->set_h_size_flags(SIZE_EXPAND_FILL);
+    search_box->set_custom_minimum_size(Size2(280, 10) * EDSCALE);
+    projects_list_tools_container->add_child(search_box);
 
     // Projects
     PanelContainer* panel_container = memnew(PanelContainer);
@@ -69,7 +76,7 @@ ProjectsList::ProjectsList() {
     projects_container->set_h_size_flags(SIZE_EXPAND_FILL);
     scroll_container->add_child(projects_container);
 
-    load_recent_projects();
+    load_projects();
 }
 
 void ProjectsList::ensure_project_visible(int p_index) {
@@ -261,14 +268,8 @@ void ProjectsList::load_projects() {
     update_dock_menu();
 }
 
-void ProjectsList::load_recent_projects() {
-    set_sort_order(projects_list_filter->get_sort_order());
-    set_search_text(projects_list_filter->get_search_text());
-    load_projects();
-}
-
 void ProjectsList::project_created(const String& dir) {
-    projects_list_filter->clear_search_text();
+    search_box->clear();
     int i = refresh_project(dir);
     select_project(i);
     ensure_project_visible(i);
@@ -358,33 +359,19 @@ void ProjectsList::select_project(int p_index) {
 }
 
 void ProjectsList::set_search_focus() {
-    projects_list_filter->get_search_box()->grab_focus();
+    search_box->grab_focus();
 }
 
 void ProjectsList::set_loading() {
     loading_label->set_modulate(Color(1, 1, 1));
 }
 
-void ProjectsList::set_search_text(String p_search_text) {
-    search_text = p_search_text;
-}
-
-void ProjectsList::set_sort_order(ProjectsListFilter::SortOrder new_sort_order
-) {
-    if (sort_order != new_sort_order) {
-        sort_order = new_sort_order;
-        EditorSettings::get_singleton()->set(
-            "project_manager/sorting_order",
-            (int)sort_order
-        );
-        EditorSettings::get_singleton()->save();
-    }
-}
-
 void ProjectsList::sort_projects() {
     SortArray<ProjectsListItem, ProjectsListItemComparator> sorter;
-    sorter.compare.sort_order = sort_order;
+    sorter.compare.sort_order = current_sort_order;
     sorter.sort(projects.ptrw(), projects.size());
+
+    String search_text = search_box->get_text().strip_edges();
 
     for (int i = 0; i < projects.size(); ++i) {
         ProjectsListItem& item = projects.write[i];
@@ -458,8 +445,8 @@ void ProjectsList::update_dock_menu() {
 
 void ProjectsList::_bind_methods() {
     ClassDB::bind_method(
-        "_on_sort_order_changed",
-        &ProjectsList::_on_sort_order_changed
+        "_on_sort_order_selected",
+        &ProjectsList::_on_sort_order_selected
     );
     ClassDB::bind_method(
         "_on_search_text_changed",
@@ -495,7 +482,7 @@ void ProjectsList::_notification(int p_what) {
             if (get_project_count() >= 1) {
                 // Focus on the search box immediately to allow the user
                 // to search without having to reach for their mouse
-                projects_list_filter->get_search_box()->grab_focus();
+                search_box->grab_focus();
             }
         } break;
     }
@@ -732,13 +719,20 @@ void ProjectsList::_load_project_icon(int p_index) {
     item.control->icon_needs_reload = false;
 }
 
-void ProjectsList::_on_search_text_changed() {
-    set_search_text(projects_list_filter->get_search_text());
+void ProjectsList::_on_search_text_changed(const String& p_newtext) {
     sort_projects();
 }
 
-void ProjectsList::_on_sort_order_changed() {
-    set_sort_order(projects_list_filter->get_sort_order());
+void ProjectsList::_on_sort_order_selected(int p_index) {
+    ProjectsListItem::SortOrder selected_sort_order =
+        (ProjectsListItem::SortOrder)(p_index);
+    if (current_sort_order == selected_sort_order) {
+        return;
+    }
+    EditorSettings* editor_settings = EditorSettings::get_singleton();
+    editor_settings->set("project_manager/sorting_order", p_index);
+    editor_settings->save();
+    current_sort_order = selected_sort_order;
     sort_projects();
 }
 
