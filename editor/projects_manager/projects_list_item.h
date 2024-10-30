@@ -47,7 +47,7 @@ struct ProjectsListItem {
     bool missing;
     int version;
 
-    ProjectsListItemControl* control;
+    ProjectsListItemControl* control = nullptr;
 
     ProjectsListItem() {}
 
@@ -63,20 +63,18 @@ struct ProjectsListItem {
         bool p_grayed,
         bool p_missing,
         int p_version
-    ) {
-        project_key   = p_project;
-        project_name  = p_name;
-        description   = p_description;
-        path          = p_path;
-        icon          = p_icon;
-        main_scene    = p_main_scene;
-        last_modified = p_last_modified;
-        favorite      = p_favorite;
-        grayed        = p_grayed;
-        missing       = p_missing;
-        version       = p_version;
-        control       = nullptr;
-    }
+    ) :
+        project_key(p_project),
+        project_name(p_name),
+        description(p_description),
+        path(p_path),
+        icon(p_icon),
+        main_scene(p_main_scene),
+        last_modified(p_last_modified),
+        favorite(p_favorite),
+        grayed(p_grayed),
+        missing(p_missing),
+        version(p_version) {}
 
     _FORCE_INLINE_ bool operator==(const ProjectsListItem& l) const {
         return project_key == l.project_key;
