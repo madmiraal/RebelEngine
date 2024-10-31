@@ -248,9 +248,7 @@ void ProjectsList::load_projects() {
         String project_key = property_key.get_slice("/", 1);
         bool favorite      = favorites.has("favorite_projects/" + project_key);
 
-        ProjectsListItem item;
-        _load_project_data(property_key, item, favorite);
-
+        ProjectsListItem item(property_key, favorite);
         projects.push_back(item);
     }
 
@@ -322,9 +320,7 @@ int ProjectsList::refresh_project(const String& dir_path) {
     if (should_be_in_list) {
         // Recreate it with updated info
 
-        ProjectsListItem item;
-        _load_project_data(property_key, item, is_favourite);
-
+        ProjectsListItem item(property_key, is_favourite);
         projects.push_back(item);
         _create_project_item_control(projects.size() - 1);
 
@@ -486,74 +482,6 @@ void ProjectsList::_notification(int p_what) {
             }
         } break;
     }
-}
-
-void ProjectsList::_load_project_data(
-    const String& p_property_key,
-    ProjectsListItem& p_item,
-    bool p_favorite
-) {
-    String path  = EditorSettings::get_singleton()->get(p_property_key);
-    String conf  = path.plus_file("project.rebel");
-    bool grayed  = false;
-    bool missing = false;
-
-    Ref<ConfigFile> cf = memnew(ConfigFile);
-    Error cf_err       = cf->load(conf);
-
-    int config_version  = 0;
-    String project_name = TTR("Unnamed Project");
-    if (cf_err == OK) {
-        String cf_project_name =
-            static_cast<String>(cf->get_value("application", "config/name", "")
-            );
-        if (!cf_project_name.empty()) {
-            project_name = cf_project_name.xml_unescape();
-        }
-        config_version = (int)cf->get_value("", "config_version", 0);
-    }
-
-    if (config_version > ProjectSettings::CONFIG_VERSION) {
-        // It comes from an more recent, non-backward compatible version.
-        grayed = true;
-    }
-
-    String description = cf->get_value("application", "config/description", "");
-    String icon        = cf->get_value("application", "config/icon", "");
-    String main_scene  = cf->get_value("application", "run/main_scene", "");
-
-    uint64_t last_modified = 0;
-    if (FileAccess::exists(conf)) {
-        last_modified = FileAccess::get_modified_time(conf);
-
-        String fscache = path.plus_file(".fscache");
-        if (FileAccess::exists(fscache)) {
-            uint64_t cache_modified = FileAccess::get_modified_time(fscache);
-            if (cache_modified > last_modified) {
-                last_modified = cache_modified;
-            }
-        }
-    } else {
-        grayed  = true;
-        missing = true;
-        print_line("Project is missing: " + conf);
-    }
-
-    String project_key = p_property_key.get_slice("/", 1);
-
-    p_item = ProjectsListItem(
-        project_key,
-        project_name,
-        description,
-        path,
-        icon,
-        main_scene,
-        last_modified,
-        p_favorite,
-        grayed,
-        missing,
-        config_version
-    );
 }
 
 void ProjectsList::_create_project_item_control(int p_index) {

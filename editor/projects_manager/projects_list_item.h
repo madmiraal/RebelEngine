@@ -36,45 +36,22 @@ struct ProjectsListItem {
     };
 
     String project_key;
-    String project_name;
+    String project_name = TTR("Unnamed Project");
     String description;
     String path;
     String icon;
     String main_scene;
-    uint64_t last_modified;
-    bool favorite;
-    bool grayed;
-    bool missing;
-    int version;
+    uint64_t last_modified = 0;
+    bool favorite          = false;
+    bool grayed            = false;
+    bool missing           = false;
+    int version            = 0;
 
     ProjectsListItemControl* control = nullptr;
 
     ProjectsListItem() {}
 
-    ProjectsListItem(
-        const String& p_project,
-        const String& p_name,
-        const String& p_description,
-        const String& p_path,
-        const String& p_icon,
-        const String& p_main_scene,
-        uint64_t p_last_modified,
-        bool p_favorite,
-        bool p_grayed,
-        bool p_missing,
-        int p_version
-    ) :
-        project_key(p_project),
-        project_name(p_name),
-        description(p_description),
-        path(p_path),
-        icon(p_icon),
-        main_scene(p_main_scene),
-        last_modified(p_last_modified),
-        favorite(p_favorite),
-        grayed(p_grayed),
-        missing(p_missing),
-        version(p_version) {}
+    ProjectsListItem(const String& p_property_key, bool p_favorite);
 
     _FORCE_INLINE_ bool operator==(const ProjectsListItem& l) const {
         return project_key == l.project_key;

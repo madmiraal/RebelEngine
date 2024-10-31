@@ -70,12 +70,6 @@ private:
 
     int icon_load_index = 0;
 
-    static void _load_project_data(
-        const String& p_property_key,
-        ProjectsListItem& p_item,
-        bool p_favorite
-    );
-
     void _create_project_item_control(int p_index);
     void _favorite_pressed(Node* p_hb);
     void _load_project_icon(int p_index);
