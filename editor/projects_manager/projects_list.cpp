@@ -487,93 +487,19 @@ void ProjectsList::_create_project_item_control(int p_index) {
 
     ProjectsListItem* item = projects[p_index];
 
-    Ref<Texture> favorite_icon = get_icon("Favorites", "EditorIcons");
-    Color font_color           = get_color("font_color", "Tree");
-
     item->connect("draw", this, "_panel_draw", varray(item));
     item->connect("gui_input", this, "_panel_input", varray(item));
-    item->add_constant_override("separation", 10 * EDSCALE);
-    item->set_tooltip(item->description);
-
-    VBoxContainer* favorite_box = memnew(VBoxContainer);
-    favorite_box->set_name("FavoriteBox");
-    TextureButton* favorite = memnew(TextureButton);
-    favorite->set_name("FavoriteButton");
-    favorite->set_normal_texture(favorite_icon);
-    // This makes the project's "hover" style display correctly when hovering
-    // the favorite icon
-    favorite->set_mouse_filter(MOUSE_FILTER_PASS);
-    favorite->connect("pressed", this, "_favorite_pressed", varray(item));
-    favorite_box->add_child(favorite);
-    favorite_box->set_alignment(BoxContainer::ALIGN_CENTER);
-    item->add_child(favorite_box);
-    item->favorite_button = favorite;
-    item->set_is_favorite(item->favorite);
-
-    TextureRect* tf = memnew(TextureRect);
-    // The project icon may not be loaded by the time the control is displayed,
-    // so use a loading placeholder.
-    tf->set_texture(get_icon("ProjectIconLoading", "EditorIcons"));
-    tf->set_v_size_flags(SIZE_SHRINK_CENTER);
-    if (item->missing) {
-        tf->set_modulate(Color(1, 1, 1, 0.5));
-    }
-    item->add_child(tf);
-    item->icon_texture = tf;
-
-    VBoxContainer* vb = memnew(VBoxContainer);
-    if (item->grayed) {
-        vb->set_modulate(Color(1, 1, 1, 0.5));
-    }
-    vb->set_h_size_flags(SIZE_EXPAND_FILL);
-    item->add_child(vb);
-    Control* ec = memnew(Control);
-    ec->set_custom_minimum_size(Size2(0, 1));
-    ec->set_mouse_filter(MOUSE_FILTER_PASS);
-    vb->add_child(ec);
-    Label* title = memnew(
-        Label(!item->missing ? item->project_name : TTR("Missing Project"))
-    );
-    title->add_font_override("font", get_font("title", "EditorFonts"));
-    title->add_color_override("font_color", font_color);
-    title->set_clip_text(true);
-    vb->add_child(title);
-
-    HBoxContainer* path_item = memnew(HBoxContainer);
-    path_item->set_h_size_flags(SIZE_EXPAND_FILL);
-    vb->add_child(path_item);
-
-    Button* show = memnew(Button);
-    // Display a folder icon if the project directory can be opened, or a
-    // "broken file" icon if it can't.
-    show->set_icon(
-        get_icon(!item->missing ? "Load" : "FileBroken", "EditorIcons")
-    );
-    if (!item->grayed) {
-        // Don't make the icon less prominent if the parent is already grayed
-        // out.
-        show->set_modulate(Color(1, 1, 1, 0.5));
-    }
-    path_item->add_child(show);
+    item->favorite_button
+        ->connect("pressed", this, "_favorite_pressed", varray(item));
 
     if (!item->missing) {
-        show->connect(
+        item->show_folder_button->connect(
             "pressed",
             this,
             "_show_project",
             varray(item->project_folder)
         );
-        show->set_tooltip(TTR("Show in File Manager"));
-    } else {
-        show->set_tooltip(TTR("Error: Project is missing on the filesystem."));
     }
-
-    Label* fpath = memnew(Label(item->project_folder));
-    path_item->add_child(fpath);
-    fpath->set_h_size_flags(SIZE_EXPAND_FILL);
-    fpath->set_modulate(Color(1, 1, 1, 0.5));
-    fpath->add_color_override("font_color", font_color);
-    fpath->set_clip_text(true);
 
     projects_container->add_child(item);
 }

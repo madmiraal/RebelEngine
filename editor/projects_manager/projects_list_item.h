@@ -9,6 +9,7 @@
 
 #include "core/ustring.h"
 #include "scene/gui/box_container.h"
+#include "scene/gui/button.h"
 #include "scene/gui/texture_button.h"
 #include "scene/gui/texture_rect.h"
 
@@ -23,7 +24,7 @@ public:
     };
 
     String project_key;
-    String project_name = TTR("Unnamed Project");
+    String project_name;
     String description;
     String project_folder;
     String icon_path;
@@ -36,8 +37,9 @@ public:
     bool icon_needs_reload = true;
     bool hover             = false;
 
-    TextureRect* icon_texture;
+    Button* show_folder_button;
     TextureButton* favorite_button;
+    TextureRect* icon_texture;
 
     ProjectsListItem(const String& p_property_key, bool p_favorite);
 

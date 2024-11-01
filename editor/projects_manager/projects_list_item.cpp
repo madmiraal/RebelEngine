@@ -8,14 +8,92 @@
 
 #include "editor/editor_scale.h"
 #include "editor/editor_settings.h"
+#include "editor/editor_themes.h"
+#include "scene/gui/label.h"
 
 ProjectsListItem::ProjectsListItem(
     const String& p_property_key,
     bool p_favorite
 ) :
     favorite(p_favorite) {
-    set_focus_mode(FocusMode::FOCUS_ALL);
     _extract_project_values(p_property_key);
+
+    set_theme(create_custom_theme());
+    set_focus_mode(FocusMode::FOCUS_ALL);
+    set_tooltip(description);
+    add_constant_override("separation", 10 * EDSCALE);
+
+    Ref<Texture> favorite_icon = get_icon("Favorites", "EditorIcons");
+    Color font_color           = get_color("font_color", "Tree");
+
+    // Used to vertically center the favorite icon.
+    VBoxContainer* favorite_button_container = memnew(VBoxContainer);
+    favorite_button_container->set_alignment(BoxContainer::ALIGN_CENTER);
+    add_child(favorite_button_container);
+
+    favorite_button = memnew(TextureButton);
+    favorite_button->set_normal_texture(favorite_icon);
+    // Disables hover focus; so the whole item remains highlighted.
+    favorite_button->set_mouse_filter(MOUSE_FILTER_PASS);
+    if (!favorite) {
+        favorite_button->set_modulate(Color(1, 1, 1, 0.2));
+    }
+    favorite_button_container->add_child(favorite_button);
+
+    icon_texture = memnew(TextureRect);
+    // Project icons are loaded asynchronously; so use the project loading icon.
+    icon_texture->set_texture(get_icon("ProjectIconLoading", "EditorIcons"));
+    icon_texture->set_v_size_flags(SIZE_SHRINK_CENTER);
+    if (missing) {
+        icon_texture->set_modulate(Color(1, 1, 1, 0.5));
+    }
+    add_child(icon_texture);
+
+    VBoxContainer* project_details_container = memnew(VBoxContainer);
+    if (grayed) {
+        project_details_container->set_modulate(Color(1, 1, 1, 0.5));
+    }
+    project_details_container->set_h_size_flags(SIZE_EXPAND_FILL);
+    add_child(project_details_container);
+
+    Label* project_name_label =
+        memnew(Label(missing ? TTR("Missing project") : project_name));
+    project_name_label->add_font_override(
+        "font",
+        get_font("title", "EditorFonts")
+    );
+    project_name_label->add_color_override("font_color", font_color);
+    project_name_label->set_clip_text(true);
+    project_details_container->add_child(project_name_label);
+
+    HBoxContainer* project_folder_container = memnew(HBoxContainer);
+    project_folder_container->set_h_size_flags(SIZE_EXPAND_FILL);
+    project_details_container->add_child(project_folder_container);
+
+    show_folder_button = memnew(Button);
+    show_folder_button->set_icon(
+        get_icon(!missing ? "Load" : "FileBroken", "EditorIcons")
+    );
+    if (missing) {
+        show_folder_button->set_icon(get_icon("FileBroken", "EditorIcons"));
+        show_folder_button->set_tooltip(TTR("Error: Project settings not found")
+        );
+    } else {
+        show_folder_button->set_icon(get_icon("Load", "EditorIcons"));
+        show_folder_button->set_tooltip(TTR("Show in File Manager"));
+    }
+    if (!grayed) {
+        // Only make the icon less prominent if the item is not already grayed.
+        show_folder_button->set_modulate(Color(1, 1, 1, 0.5));
+    }
+    project_folder_container->add_child(show_folder_button);
+
+    Label* project_folder_label = memnew(Label(project_folder));
+    project_folder_label->set_h_size_flags(SIZE_EXPAND_FILL);
+    project_folder_label->set_modulate(Color(1, 1, 1, 0.5));
+    project_folder_label->add_color_override("font_color", font_color);
+    project_folder_label->set_clip_text(true);
+    project_folder_container->add_child(project_folder_label);
 }
 
 void ProjectsListItem::_extract_project_values(const String& p_property_key) {
@@ -26,8 +104,11 @@ void ProjectsListItem::_extract_project_values(const String& p_property_key) {
     String settings_file_name     = project_folder.plus_file("project.rebel");
     Error settings_file_error     = settings_file->load(settings_file_name);
     if (settings_file_error == OK) {
-        project_name =
-            settings_file->get_value("application", "config/name", "");
+        project_name = settings_file->get_value(
+            "application",
+            "config/name",
+            TTR("Unnamed project")
+        );
         description =
             settings_file->get_value("application", "config/description", "");
         icon_path = settings_file->get_value("application", "config/icon", "");
