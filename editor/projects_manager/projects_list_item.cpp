@@ -16,11 +16,11 @@ ProjectsListItem::ProjectsListItem(
     favorite(p_favorite) {
     set_focus_mode(FocusMode::FOCUS_ALL);
 
-    project_key = p_property_key.get_slice("/", 1);
-    path        = EditorSettings::get_singleton()->get(p_property_key);
+    project_key    = p_property_key.get_slice("/", 1);
+    project_folder = EditorSettings::get_singleton()->get(p_property_key);
 
     Ref<ConfigFile> settings_file = memnew(ConfigFile);
-    String settings_file_name     = path.plus_file("project.rebel");
+    String settings_file_name     = project_folder.plus_file("project.rebel");
     Error settings_file_error     = settings_file->load(settings_file_name);
     if (settings_file_error == OK) {
         project_name =
@@ -40,7 +40,7 @@ ProjectsListItem::ProjectsListItem(
 
     if (FileAccess::exists(settings_file_name)) {
         last_modified  = FileAccess::get_modified_time(settings_file_name);
-        String fscache = path.plus_file(".fscache");
+        String fscache = project_folder.plus_file(".fscache");
         if (FileAccess::exists(fscache)) {
             uint64_t cache_modified = FileAccess::get_modified_time(fscache);
             if (cache_modified > last_modified) {

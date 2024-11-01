@@ -25,7 +25,7 @@ public:
     String project_key;
     String project_name = TTR("Unnamed Project");
     String description;
-    String path;
+    String project_folder;
     String icon_path;
     String main_scene;
     int version            = 0;

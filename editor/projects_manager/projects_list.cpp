@@ -127,7 +127,7 @@ void ProjectsList::erase_selected_projects(bool p_delete_project_contents) {
             );
 
             if (p_delete_project_contents) {
-                OS::get_singleton()->move_to_trash(item->path);
+                OS::get_singleton()->move_to_trash(item->project_folder);
             }
 
             projects.remove(i);
@@ -305,7 +305,7 @@ int ProjectsList::refresh_project(const String& dir_path) {
     // Remove item in any case
     for (int i = 0; i < projects.size(); ++i) {
         ProjectsListItem* existing_item = projects[i];
-        if (existing_item->path == dir_path) {
+        if (existing_item->project_folder == dir_path) {
             _remove_project(i, false);
             break;
         }
@@ -373,11 +373,11 @@ void ProjectsList::sort_projects() {
             String search_path;
             if (search_text.find("/") != -1) {
                 // Search path will match the whole path
-                search_path = item->path;
+                search_path = item->project_folder;
             } else {
                 // Search path will only match the last path component to make
                 // searching more strict
-                search_path = item->path.get_file();
+                search_path = item->project_folder.get_file();
             }
 
             // When searching, display projects whose name or path contain the
@@ -417,9 +417,10 @@ void ProjectsList::update_dock_menu() {
             }
             OS::get_singleton()->global_menu_add_item(
                 "_dock",
-                projects[i]->project_name + " ( " + projects[i]->path + " )",
+                projects[i]->project_name + " ( " + projects[i]->project_folder
+                    + " )",
                 GLOBAL_OPEN_PROJECT,
-                Variant(projects[i]->path.plus_file("project.rebel"))
+                Variant(projects[i]->project_folder.plus_file("project.rebel"))
             );
             total_added++;
         }
@@ -556,13 +557,18 @@ void ProjectsList::_create_project_item_control(int p_index) {
     path_item->add_child(show);
 
     if (!item->missing) {
-        show->connect("pressed", this, "_show_project", varray(item->path));
+        show->connect(
+            "pressed",
+            this,
+            "_show_project",
+            varray(item->project_folder)
+        );
         show->set_tooltip(TTR("Show in File Manager"));
     } else {
         show->set_tooltip(TTR("Error: Project is missing on the filesystem."));
     }
 
-    Label* fpath = memnew(Label(item->path));
+    Label* fpath = memnew(Label(item->project_folder));
     path_item->add_child(fpath);
     fpath->set_h_size_flags(SIZE_EXPAND_FILL);
     fpath->set_modulate(Color(1, 1, 1, 0.5));
@@ -580,7 +586,7 @@ void ProjectsList::_favorite_pressed(Node* p_hb) {
     if (item->favorite) {
         EditorSettings::get_singleton()->set(
             "favorite_projects/" + item->project_key,
-            item->path
+            item->project_folder
         );
     } else {
         EditorSettings::get_singleton()->erase(
@@ -613,9 +619,9 @@ void ProjectsList::_load_project_icon(int p_index) {
     if (!item->icon_path.empty()) {
         Ref<Image> img;
         img.instance();
-        Error err =
-            img->load(item->icon_path.replace_first("res://", item->path + "/")
-            );
+        Error err = img->load(
+            item->icon_path.replace_first("res://", item->project_folder + "/")
+        );
         if (err == OK) {
             img->resize(
                 default_icon->get_width(),

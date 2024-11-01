@@ -758,7 +758,9 @@ void ProjectsManager::_on_projects_updated() {
         projects_list->get_selected_projects();
     int index = 0;
     for (int i = 0; i < selected_projects.size(); ++i) {
-        index = projects_list->refresh_project(selected_projects[i]->path);
+        index =
+            projects_list->refresh_project(selected_projects[i]->project_folder
+            );
     }
     if (index != -1) {
         projects_list->ensure_project_visible(index);
@@ -803,7 +805,7 @@ void ProjectsManager::_open_selected_projects_ask() {
     }
 
     // Update the project settings or don't open
-    String conf        = project->path.plus_file("project.rebel");
+    String conf        = project->project_folder.plus_file("project.rebel");
     int config_version = project->version;
 
     // Check if the config_version property was empty or 0
@@ -841,7 +843,7 @@ void ProjectsManager::_open_selected_projects_ask() {
                 + TTR("The project settings were created by a newer engine "
                       "version, whose settings are not compatible with this "
                       "version."),
-            project->path
+            project->project_folder
         ));
         dialog_error->popup_centered_minsize();
         return;
