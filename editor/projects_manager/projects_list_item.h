@@ -49,11 +49,9 @@ struct ProjectsListItem {
 
     ProjectsListItemControl* control = nullptr;
 
-    ProjectsListItem() {}
-
     ProjectsListItem(const String& p_property_key, bool p_favorite);
 
-    _FORCE_INLINE_ bool operator==(const ProjectsListItem& l) const {
+    _FORCE_INLINE_ bool operator==(const ProjectsListItem l) const {
         return project_key == l.project_key;
     }
 };
@@ -63,7 +61,7 @@ public:
     ProjectsListItem::SortOrder sort_order;
 
     // operator<
-    bool operator()(const ProjectsListItem& a, const ProjectsListItem& b) const;
+    bool operator()(const ProjectsListItem* a, const ProjectsListItem* b) const;
 };
 
 #endif // PROJECTS_LIST_ITEM_H

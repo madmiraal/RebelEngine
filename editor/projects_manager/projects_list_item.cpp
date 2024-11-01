@@ -89,22 +89,22 @@ ProjectsListItem::ProjectsListItem(
 }
 
 bool ProjectsListItemComparator::operator()(
-    const ProjectsListItem& a,
-    const ProjectsListItem& b
+    const ProjectsListItem* a,
+    const ProjectsListItem* b
 ) const {
-    if (a.favorite && !b.favorite) {
+    if (a->favorite && !b->favorite) {
         return true;
     }
-    if (b.favorite && !a.favorite) {
+    if (b->favorite && !a->favorite) {
         return false;
     }
     switch (sort_order) {
         case ProjectsListItem::SortOrder::NAME:
-            return a.project_name < b.project_name;
+            return a->project_name < b->project_name;
         case ProjectsListItem::SortOrder::PATH:
-            return a.project_key < b.project_key;
+            return a->project_key < b->project_key;
         case ProjectsListItem::SortOrder::LAST_MODIFIED:
-            return a.last_modified > b.last_modified;
+            return a->last_modified > b->last_modified;
         default:
             ERR_FAIL_V_MSG(false, "Unrecognised sort order");
     }

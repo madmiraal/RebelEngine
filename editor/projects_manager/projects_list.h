@@ -35,7 +35,7 @@ public:
     void erase_selected_projects(bool p_delete_project_contents);
     int get_project_count() const;
     const Set<String>& get_selected_project_keys() const;
-    Vector<ProjectsListItem> get_selected_projects() const;
+    Vector<ProjectsListItem*> get_selected_projects() const;
     int get_single_selected_index() const;
     bool is_any_project_missing() const;
     void load_projects();
@@ -66,7 +66,7 @@ private:
     ScrollContainer* scroll_container;
     VBoxContainer* projects_container;
 
-    Vector<ProjectsListItem> projects;
+    Vector<ProjectsListItem*> projects;
 
     int icon_load_index = 0;
 
