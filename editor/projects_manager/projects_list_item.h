@@ -47,6 +47,9 @@ public:
     _FORCE_INLINE_ bool operator==(const ProjectsListItem l) const {
         return project_key == l.project_key;
     }
+
+private:
+    void _extract_project_values(const String& p_property_key);
 };
 
 class ProjectsListItemComparator {

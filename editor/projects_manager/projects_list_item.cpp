@@ -15,7 +15,10 @@ ProjectsListItem::ProjectsListItem(
 ) :
     favorite(p_favorite) {
     set_focus_mode(FocusMode::FOCUS_ALL);
+    _extract_project_values(p_property_key);
+}
 
+void ProjectsListItem::_extract_project_values(const String& p_property_key) {
     project_key    = p_property_key.get_slice("/", 1);
     project_folder = EditorSettings::get_singleton()->get(p_property_key);
 
