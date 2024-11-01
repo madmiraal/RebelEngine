@@ -12,23 +12,10 @@
 #include "scene/gui/texture_button.h"
 #include "scene/gui/texture_rect.h"
 
-class ProjectsListItemControl : public HBoxContainer {
-    GDCLASS(ProjectsListItemControl, HBoxContainer)
+class ProjectsListItem : public HBoxContainer {
+    GDCLASS(ProjectsListItem, HBoxContainer)
 
 public:
-    TextureRect* icon;
-    TextureButton* favorite_button;
-
-    bool icon_needs_reload;
-    bool hover;
-
-    ProjectsListItemControl();
-
-    void set_is_favorite(bool fav);
-    void _notification(int p_what);
-};
-
-struct ProjectsListItem {
     enum class SortOrder {
         NAME,
         PATH,
@@ -39,17 +26,23 @@ struct ProjectsListItem {
     String project_name = TTR("Unnamed Project");
     String description;
     String path;
-    String icon;
+    String icon_path;
     String main_scene;
+    int version            = 0;
     uint64_t last_modified = 0;
     bool favorite          = false;
     bool grayed            = false;
     bool missing           = false;
-    int version            = 0;
+    bool icon_needs_reload = true;
+    bool hover             = false;
 
-    ProjectsListItemControl* control = nullptr;
+    TextureRect* icon_texture;
+    TextureButton* favorite_button;
 
     ProjectsListItem(const String& p_property_key, bool p_favorite);
+
+    void _notification(int p_what);
+    void set_is_favorite(bool fav);
 
     _FORCE_INLINE_ bool operator==(const ProjectsListItem l) const {
         return project_key == l.project_key;

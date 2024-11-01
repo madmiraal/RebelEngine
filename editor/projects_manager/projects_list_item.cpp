@@ -9,47 +9,13 @@
 #include "editor/editor_scale.h"
 #include "editor/editor_settings.h"
 
-ProjectsListItemControl::ProjectsListItemControl() {
-    favorite_button   = nullptr;
-    icon              = nullptr;
-    icon_needs_reload = true;
-    hover             = false;
-
-    set_focus_mode(FocusMode::FOCUS_ALL);
-}
-
-void ProjectsListItemControl::set_is_favorite(bool fav) {
-    favorite_button->set_modulate(
-        fav ? Color(1, 1, 1, 1) : Color(1, 1, 1, 0.2)
-    );
-}
-
-void ProjectsListItemControl::_notification(int p_what) {
-    switch (p_what) {
-        case NOTIFICATION_MOUSE_ENTER: {
-            hover = true;
-            update();
-        } break;
-        case NOTIFICATION_MOUSE_EXIT: {
-            hover = false;
-            update();
-        } break;
-        case NOTIFICATION_DRAW: {
-            if (hover) {
-                draw_style_box(
-                    get_stylebox("hover", "Tree"),
-                    Rect2(Point2(), get_size() - Size2(10, 0) * EDSCALE)
-                );
-            }
-        } break;
-    }
-}
-
 ProjectsListItem::ProjectsListItem(
     const String& p_property_key,
     bool p_favorite
 ) :
     favorite(p_favorite) {
+    set_focus_mode(FocusMode::FOCUS_ALL);
+
     project_key = p_property_key.get_slice("/", 1);
     path        = EditorSettings::get_singleton()->get(p_property_key);
 
@@ -61,7 +27,7 @@ ProjectsListItem::ProjectsListItem(
             settings_file->get_value("application", "config/name", "");
         description =
             settings_file->get_value("application", "config/description", "");
-        icon = settings_file->get_value("application", "config/icon", "");
+        icon_path = settings_file->get_value("application", "config/icon", "");
         main_scene =
             settings_file->get_value("application", "run/main_scene", "");
         version = (int)settings_file->get_value("", "config_version", 0);
@@ -86,6 +52,33 @@ ProjectsListItem::ProjectsListItem(
         missing = true;
         print_line("Project settings file is missing: " + settings_file_name);
     }
+}
+
+void ProjectsListItem::_notification(int p_what) {
+    switch (p_what) {
+        case NOTIFICATION_MOUSE_ENTER: {
+            hover = true;
+            update();
+        } break;
+        case NOTIFICATION_MOUSE_EXIT: {
+            hover = false;
+            update();
+        } break;
+        case NOTIFICATION_DRAW: {
+            if (hover) {
+                draw_style_box(
+                    get_stylebox("hover", "Tree"),
+                    Rect2(Point2(), get_size() - Size2(10, 0) * EDSCALE)
+                );
+            }
+        } break;
+    }
+}
+
+void ProjectsListItem::set_is_favorite(bool fav) {
+    favorite_button->set_modulate(
+        fav ? Color(1, 1, 1, 1) : Color(1, 1, 1, 0.2)
+    );
 }
 
 bool ProjectsListItemComparator::operator()(

@@ -80,7 +80,7 @@ ProjectsList::ProjectsList() {
 }
 
 void ProjectsList::ensure_project_visible(int p_index) {
-    scroll_container->ensure_control_visible(projects[p_index]->control);
+    scroll_container->ensure_control_visible(projects[p_index]);
 }
 
 void ProjectsList::erase_missing_projects() {
@@ -118,7 +118,7 @@ void ProjectsList::erase_selected_projects(bool p_delete_project_contents) {
     for (int i = 0; i < projects.size(); ++i) {
         ProjectsListItem* item = projects.write[i];
         if (selected_project_keys.has(item->project_key)
-            && item->control->is_visible()) {
+            && item->is_visible()) {
             EditorSettings::get_singleton()->erase(
                 "projects/" + item->project_key
             );
@@ -131,8 +131,7 @@ void ProjectsList::erase_selected_projects(bool p_delete_project_contents) {
             }
 
             projects.remove(i);
-            memdelete(item->control);
-            delete (item);
+            memdelete(item);
             --i;
         }
     }
@@ -207,8 +206,7 @@ void ProjectsList::load_projects() {
     // Clear whole list
     for (int i = 0; i < projects.size(); ++i) {
         ProjectsListItem* project = projects[i];
-        memdelete(project->control);
-        delete (project);
+        memdelete(project);
     }
     projects.clear();
     last_selected_project_key = "";
@@ -346,7 +344,7 @@ void ProjectsList::select_project(int p_index) {
     selected_project_keys.clear();
 
     for (int i = 0; i < previous_selected_items.size(); ++i) {
-        previous_selected_items[i]->control->update();
+        previous_selected_items[i]->update();
     }
 
     _toggle_select(p_index);
@@ -388,12 +386,12 @@ void ProjectsList::sort_projects() {
                    || search_path.findn(search_text) != -1;
         }
 
-        item->control->set_visible(visible);
+        item->set_visible(visible);
     }
 
     for (int i = 0; i < projects.size(); ++i) {
-        const ProjectsListItem* item = projects[i];
-        item->control->get_parent()->move_child(item->control, i);
+        ProjectsListItem* item = projects[i];
+        item->get_parent()->move_child(item, i);
     }
 
     // Rewind the coroutine because order of projects changed
@@ -462,7 +460,7 @@ void ProjectsList::_notification(int p_what) {
             // when there are many projects.
             if (icon_load_index < projects.size()) {
                 const ProjectsListItem* item = projects[icon_load_index];
-                if (item->control->icon_needs_reload) {
+                if (item->icon_needs_reload) {
                     _load_project_icon(icon_load_index);
                 }
                 icon_load_index++;
@@ -487,16 +485,14 @@ void ProjectsList::_create_project_item_control(int p_index) {
     ERR_FAIL_COND(p_index != projects_container->get_child_count());
 
     ProjectsListItem* item = projects[p_index];
-    ERR_FAIL_COND(item->control != nullptr); // Already created
 
     Ref<Texture> favorite_icon = get_icon("Favorites", "EditorIcons");
     Color font_color           = get_color("font_color", "Tree");
 
-    ProjectsListItemControl* hb = memnew(ProjectsListItemControl);
-    hb->connect("draw", this, "_panel_draw", varray(hb));
-    hb->connect("gui_input", this, "_panel_input", varray(hb));
-    hb->add_constant_override("separation", 10 * EDSCALE);
-    hb->set_tooltip(item->description);
+    item->connect("draw", this, "_panel_draw", varray(item));
+    item->connect("gui_input", this, "_panel_input", varray(item));
+    item->add_constant_override("separation", 10 * EDSCALE);
+    item->set_tooltip(item->description);
 
     VBoxContainer* favorite_box = memnew(VBoxContainer);
     favorite_box->set_name("FavoriteBox");
@@ -506,12 +502,12 @@ void ProjectsList::_create_project_item_control(int p_index) {
     // This makes the project's "hover" style display correctly when hovering
     // the favorite icon
     favorite->set_mouse_filter(MOUSE_FILTER_PASS);
-    favorite->connect("pressed", this, "_favorite_pressed", varray(hb));
+    favorite->connect("pressed", this, "_favorite_pressed", varray(item));
     favorite_box->add_child(favorite);
     favorite_box->set_alignment(BoxContainer::ALIGN_CENTER);
-    hb->add_child(favorite_box);
-    hb->favorite_button = favorite;
-    hb->set_is_favorite(item->favorite);
+    item->add_child(favorite_box);
+    item->favorite_button = favorite;
+    item->set_is_favorite(item->favorite);
 
     TextureRect* tf = memnew(TextureRect);
     // The project icon may not be loaded by the time the control is displayed,
@@ -521,15 +517,15 @@ void ProjectsList::_create_project_item_control(int p_index) {
     if (item->missing) {
         tf->set_modulate(Color(1, 1, 1, 0.5));
     }
-    hb->add_child(tf);
-    hb->icon = tf;
+    item->add_child(tf);
+    item->icon_texture = tf;
 
     VBoxContainer* vb = memnew(VBoxContainer);
     if (item->grayed) {
         vb->set_modulate(Color(1, 1, 1, 0.5));
     }
     vb->set_h_size_flags(SIZE_EXPAND_FILL);
-    hb->add_child(vb);
+    item->add_child(vb);
     Control* ec = memnew(Control);
     ec->set_custom_minimum_size(Size2(0, 1));
     ec->set_mouse_filter(MOUSE_FILTER_PASS);
@@ -542,9 +538,9 @@ void ProjectsList::_create_project_item_control(int p_index) {
     title->set_clip_text(true);
     vb->add_child(title);
 
-    HBoxContainer* path_hb = memnew(HBoxContainer);
-    path_hb->set_h_size_flags(SIZE_EXPAND_FILL);
-    vb->add_child(path_hb);
+    HBoxContainer* path_item = memnew(HBoxContainer);
+    path_item->set_h_size_flags(SIZE_EXPAND_FILL);
+    vb->add_child(path_item);
 
     Button* show = memnew(Button);
     // Display a folder icon if the project directory can be opened, or a
@@ -557,7 +553,7 @@ void ProjectsList::_create_project_item_control(int p_index) {
         // out.
         show->set_modulate(Color(1, 1, 1, 0.5));
     }
-    path_hb->add_child(show);
+    path_item->add_child(show);
 
     if (!item->missing) {
         show->connect("pressed", this, "_show_project", varray(item->path));
@@ -567,22 +563,17 @@ void ProjectsList::_create_project_item_control(int p_index) {
     }
 
     Label* fpath = memnew(Label(item->path));
-    path_hb->add_child(fpath);
+    path_item->add_child(fpath);
     fpath->set_h_size_flags(SIZE_EXPAND_FILL);
     fpath->set_modulate(Color(1, 1, 1, 0.5));
     fpath->add_color_override("font_color", font_color);
     fpath->set_clip_text(true);
 
-    projects_container->add_child(hb);
-    item->control = hb;
+    projects_container->add_child(item);
 }
 
 void ProjectsList::_favorite_pressed(Node* p_hb) {
-    ProjectsListItemControl* control =
-        Object::cast_to<ProjectsListItemControl>(p_hb);
-
-    int index              = control->get_index();
-    ProjectsListItem* item = projects[index];
+    ProjectsListItem* item = Object::cast_to<ProjectsListItem>(p_hb);
 
     item->favorite = !item->favorite;
 
@@ -598,7 +589,7 @@ void ProjectsList::_favorite_pressed(Node* p_hb) {
     }
     EditorSettings::get_singleton()->save();
 
-    item->control->set_is_favorite(item->favorite);
+    item->set_is_favorite(item->favorite);
 
     sort_projects();
 
@@ -615,15 +606,16 @@ void ProjectsList::_favorite_pressed(Node* p_hb) {
 }
 
 void ProjectsList::_load_project_icon(int p_index) {
-    const ProjectsListItem* item = projects[p_index];
+    ProjectsListItem* item = projects[p_index];
 
     Ref<Texture> default_icon = get_icon("DefaultProjectIcon", "EditorIcons");
     Ref<Texture> icon;
-    if (!item->icon.empty()) {
+    if (!item->icon_path.empty()) {
         Ref<Image> img;
         img.instance();
         Error err =
-            img->load(item->icon.replace_first("res://", item->path + "/"));
+            img->load(item->icon_path.replace_first("res://", item->path + "/")
+            );
         if (err == OK) {
             img->resize(
                 default_icon->get_width(),
@@ -639,8 +631,8 @@ void ProjectsList::_load_project_icon(int p_index) {
         icon = default_icon;
     }
 
-    item->control->icon->set_texture(icon);
-    item->control->icon_needs_reload = false;
+    item->icon_texture->set_texture(icon);
+    item->icon_needs_reload = false;
 }
 
 void ProjectsList::_on_search_text_changed(const String& p_newtext) {
@@ -695,7 +687,7 @@ void ProjectsList::_panel_input(const Ref<InputEvent>& p_ev, Node* p_hb) {
             for (int i = 0; i < projects.size(); ++i) {
                 const ProjectsListItem* p = projects[i];
                 if (p->project_key == last_selected_project_key) {
-                    anchor_index = p->control->get_index();
+                    anchor_index = p->get_index();
                     break;
                 }
             }
@@ -719,7 +711,7 @@ void ProjectsList::_panel_input(const Ref<InputEvent>& p_ev, Node* p_hb) {
 }
 
 void ProjectsList::_remove_project(int p_index, bool p_update_settings) {
-    const ProjectsListItem* item = projects[p_index];
+    ProjectsListItem* item = projects[p_index];
 
     selected_project_keys.erase(item->project_key);
 
@@ -736,8 +728,7 @@ void ProjectsList::_remove_project(int p_index, bool p_update_settings) {
     }
 
     projects.remove(p_index);
-    memdelete(item->control);
-    delete (item);
+    memdelete(item);
 
     update_dock_menu();
 }
@@ -756,13 +747,13 @@ void ProjectsList::_show_project(const String& p_path) {
 }
 
 void ProjectsList::_toggle_select(int p_index) {
-    const ProjectsListItem* item = projects[p_index];
+    ProjectsListItem* item = projects[p_index];
     if (selected_project_keys.has(item->project_key)) {
         selected_project_keys.erase(item->project_key);
     } else {
         selected_project_keys.insert(item->project_key);
     }
-    item->control->update();
+    item->update();
 }
 
 void ProjectsList::_update_icons_async() {
