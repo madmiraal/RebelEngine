@@ -255,11 +255,7 @@ void ProjectsList::load_projects() {
         );
         item->connect("gui_input", item, "_on_gui_input");
         item->connect("draw", item, "_on_draw");
-    }
-
-    // Create controls
-    for (int i = 0; i < projects.size(); ++i) {
-        _create_project_item_control(i);
+        projects_container->add_child(item);
     }
 
     sort_projects();
@@ -328,7 +324,7 @@ int ProjectsList::refresh_project(const String& dir_path) {
         ProjectsListItem* item =
             memnew(ProjectsListItem(property_key, is_favourite));
         projects.push_back(item);
-        _create_project_item_control(projects.size() - 1);
+        projects_container->add_child(item);
 
         sort_projects();
 
@@ -502,15 +498,6 @@ void ProjectsList::_clear_selection() {
         projects[index]->selected = false;
         projects[index]->update();
     }
-}
-
-void ProjectsList::_create_project_item_control(int p_index) {
-    // Will be added last in the list, so make sure indexes match
-    ERR_FAIL_COND(p_index != projects_container->get_child_count());
-
-    ProjectsListItem* item = projects[p_index];
-
-    projects_container->add_child(item);
 }
 
 void ProjectsList::_load_project_icon(int p_index) {

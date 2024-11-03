@@ -71,7 +71,6 @@ private:
     int icon_load_index = 0;
 
     void _clear_selection();
-    void _create_project_item_control(int p_index);
     void _load_project_icon(int p_index);
     void _on_item_double_clicked();
     void _on_search_text_changed(const String& p_newtext);
