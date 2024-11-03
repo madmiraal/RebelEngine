@@ -50,6 +50,7 @@ public:
     void update_dock_menu();
 
 protected:
+    static void _bind_methods();
     void _notification(int p_what);
 
 private:
@@ -71,7 +72,6 @@ private:
 
     int _icon_load_index;
 
-    static void _bind_methods();
     static void _load_project_data(
         const String& p_property_key,
         ProjectsListItem& p_item,
