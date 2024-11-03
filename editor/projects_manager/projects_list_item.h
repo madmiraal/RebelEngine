@@ -36,6 +36,7 @@ public:
     bool missing           = false;
     bool icon_needs_reload = true;
     bool hover             = false;
+    bool selected          = false;
 
     Button* show_folder_button;
     TextureButton* favorite_button;
@@ -53,6 +54,7 @@ protected:
 
 private:
     void _extract_project_values(const String& p_property_key);
+    void _on_gui_input(const Ref<InputEvent>& p_input_event);
     void _on_favorite_pressed();
     void _on_show_folder_pressed(const String& p_folder);
 };

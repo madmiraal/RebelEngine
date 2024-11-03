@@ -52,7 +52,7 @@ protected:
     void _notification(int p_what);
 
 private:
-    String last_selected_project_key;
+    String first_selected_project_key;
     Set<String> selected_project_keys;
 
     Label* loading_label;
@@ -70,15 +70,22 @@ private:
 
     int icon_load_index = 0;
 
+    void _clear_selection();
     void _create_project_item_control(int p_index);
     void _load_project_icon(int p_index);
+    void _on_item_double_clicked();
     void _on_search_text_changed(const String& p_newtext);
+    void _on_selection_changed(
+        bool p_shift_pressed,
+        bool p_control_pressed,
+        Node* p_node
+    );
     void _on_sort_order_selected(int p_index);
-    void _on_item_updated(Node* p_node);
+    void _on_item_updated(const Node* p_node);
     void _panel_draw(Node* p_hb);
-    void _panel_input(const Ref<InputEvent>& p_ev, Node* p_hb);
     void _remove_project(int p_index, bool p_update_settings);
-    void _select_range(int p_begin, int p_end);
+    void _select_item(ProjectsListItem* p_item);
+    void _select_range(ProjectsListItem* p_to_item);
     void _toggle_select(int p_index);
     void _update_icons_async();
 };

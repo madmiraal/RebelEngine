@@ -105,6 +105,7 @@ ProjectsListItem::ProjectsListItem(
 }
 
 void ProjectsListItem::_bind_methods() {
+    ClassDB::bind_method("_on_gui_input", &ProjectsListItem::_on_gui_input);
     ClassDB::bind_method(
         "_on_favorite_pressed",
         &ProjectsListItem::_on_favorite_pressed
@@ -114,7 +115,13 @@ void ProjectsListItem::_bind_methods() {
         &ProjectsListItem::_on_show_folder_pressed
     );
 
+    ADD_SIGNAL(MethodInfo("item_double_clicked"));
     ADD_SIGNAL(MethodInfo("item_updated"));
+    ADD_SIGNAL(MethodInfo(
+        "selection_changed",
+        PropertyInfo(Variant::BOOL, "shift_pressed"),
+        PropertyInfo(Variant::BOOL, "control_pressed")
+    ));
 }
 
 void ProjectsListItem::_notification(int p_what) {
@@ -177,6 +184,24 @@ void ProjectsListItem::_extract_project_values(const String& p_property_key) {
         grayed  = true;
         missing = true;
         print_line("Project settings file is missing: " + settings_file_name);
+    }
+}
+
+void ProjectsListItem::_on_gui_input(const Ref<InputEvent>& p_input_event) {
+    Ref<InputEventMouseButton> mouse_button_event = p_input_event;
+    if (!mouse_button_event.is_valid() || !mouse_button_event->is_pressed()
+        || mouse_button_event->get_button_index() != BUTTON_LEFT) {
+        return;
+    }
+
+    bool control_pressed = mouse_button_event->get_control();
+    bool shift_pressed   = mouse_button_event->get_shift();
+    bool double_clicked  = mouse_button_event->is_doubleclick();
+
+    emit_signal("selection_changed", shift_pressed, control_pressed);
+
+    if (!control_pressed && double_clicked) {
+        emit_signal("item_double_clicked");
     }
 }
 

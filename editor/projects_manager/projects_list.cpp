@@ -139,7 +139,7 @@ void ProjectsList::erase_selected_projects(bool p_delete_project_contents) {
     EditorSettings::get_singleton()->save();
 
     selected_project_keys.clear();
-    last_selected_project_key = "";
+    first_selected_project_key = "";
 
     update_dock_menu();
 }
@@ -179,7 +179,7 @@ int ProjectsList::get_single_selected_index() const {
         key = selected_project_keys.front()->get();
     } else {
         // Multiple selected, consider the last clicked one as "main"
-        key = last_selected_project_key;
+        key = first_selected_project_key;
     }
     for (int i = 0; i < projects.size(); ++i) {
         if (projects[i]->project_key == key) {
@@ -209,7 +209,7 @@ void ProjectsList::load_projects() {
         memdelete(project);
     }
     projects.clear();
-    last_selected_project_key = "";
+    first_selected_project_key = "";
     selected_project_keys.clear();
 
     // Load data
@@ -245,7 +245,15 @@ void ProjectsList::load_projects() {
         ProjectsListItem* item =
             memnew(ProjectsListItem(property_key, favorite));
         projects.push_back(item);
-        item->connect("item_updated", this, "item_updated", varray(item));
+        item->connect("item_double_clicked", this, "_on_item_double_clicked");
+        item->connect("item_updated", this, "_on_item_updated", varray(item));
+        item->connect(
+            "selection_changed",
+            this,
+            "_on_selection_changed",
+            varray(item)
+        );
+        item->connect("gui_input", item, "_on_gui_input");
     }
 
     // Create controls
@@ -438,17 +446,24 @@ void ProjectsList::update_dock_menu() {
 }
 
 void ProjectsList::_bind_methods() {
-    ClassDB::bind_method("item_updated", &ProjectsList::_on_item_updated);
     ClassDB::bind_method(
-        "_on_sort_order_selected",
-        &ProjectsList::_on_sort_order_selected
+        "_on_item_double_clicked",
+        &ProjectsList::_on_item_double_clicked
     );
+    ClassDB::bind_method("_on_item_updated", &ProjectsList::_on_item_updated);
     ClassDB::bind_method(
         "_on_search_text_changed",
         &ProjectsList::_on_search_text_changed
     );
+    ClassDB::bind_method(
+        "_on_selection_changed",
+        &ProjectsList::_on_selection_changed
+    );
+    ClassDB::bind_method(
+        "_on_sort_order_selected",
+        &ProjectsList::_on_sort_order_selected
+    );
     ClassDB::bind_method("_panel_draw", &ProjectsList::_panel_draw);
-    ClassDB::bind_method("_panel_input", &ProjectsList::_panel_input);
 
     ADD_SIGNAL(MethodInfo(SIGNAL_SELECTION_CHANGED));
     ADD_SIGNAL(MethodInfo(SIGNAL_PROJECT_ASK_OPEN));
@@ -481,6 +496,14 @@ void ProjectsList::_notification(int p_what) {
     }
 }
 
+void ProjectsList::_clear_selection() {
+    selected_project_keys.clear();
+    for (int index = 0; index < projects.size(); index++) {
+        projects[index]->selected = false;
+        projects[index]->update();
+    }
+}
+
 void ProjectsList::_create_project_item_control(int p_index) {
     // Will be added last in the list, so make sure indexes match
     ERR_FAIL_COND(p_index != projects_container->get_child_count());
@@ -488,7 +511,6 @@ void ProjectsList::_create_project_item_control(int p_index) {
     ProjectsListItem* item = projects[p_index];
 
     item->connect("draw", this, "_panel_draw", varray(item));
-    item->connect("gui_input", this, "_panel_input", varray(item));
 
     projects_container->add_child(item);
 }
@@ -523,8 +545,45 @@ void ProjectsList::_load_project_icon(int p_index) {
     item->icon_needs_reload = false;
 }
 
+void ProjectsList::_on_item_double_clicked() {
+    emit_signal(SIGNAL_PROJECT_ASK_OPEN);
+}
+
 void ProjectsList::_on_search_text_changed(const String& p_newtext) {
     sort_projects();
+}
+
+void ProjectsList::_on_selection_changed(
+    bool p_shift_pressed,
+    bool p_control_pressed,
+    Node* p_node
+) {
+    ProjectsListItem* item    = Object::cast_to<ProjectsListItem>(p_node);
+    const String& project_key = item->project_key;
+
+    if (p_shift_pressed) {
+        _clear_selection();
+        _select_range(item);
+    } else if (p_control_pressed) {
+        // Toggle item selection.
+        item->selected = !item->selected;
+        if (item->selected) {
+            item->selected = true;
+            selected_project_keys.insert(project_key);
+        } else {
+            item->selected = false;
+            selected_project_keys.erase(project_key);
+        }
+        // We need to update the item, because we're not clearing the selection,
+        // which calls update on all the items.
+        item->update();
+    } else {
+        _clear_selection();
+        _select_item(item);
+        first_selected_project_key = project_key;
+    }
+
+    emit_signal(SIGNAL_SELECTION_CHANGED);
 }
 
 void ProjectsList::_on_sort_order_selected(int p_index) {
@@ -540,10 +599,10 @@ void ProjectsList::_on_sort_order_selected(int p_index) {
     sort_projects();
 }
 
-void ProjectsList::_on_item_updated(Node* p_node) {
+void ProjectsList::_on_item_updated(const Node* p_node) {
     sort_projects();
 
-    ProjectsListItem* item = Object::cast_to<ProjectsListItem>(p_node);
+    const ProjectsListItem* item = Object::cast_to<ProjectsListItem>(p_node);
     if (item->favorite) {
         for (int i = 0; i < projects.size(); ++i) {
             if (projects[i]->project_key == item->project_key) {
@@ -576,51 +635,13 @@ void ProjectsList::_panel_draw(Node* p_hb) {
     }
 }
 
-// Input for each item in the list
-void ProjectsList::_panel_input(const Ref<InputEvent>& p_ev, Node* p_hb) {
-    Ref<InputEventMouseButton> mb           = p_ev;
-    int clicked_index                       = p_hb->get_index();
-    const ProjectsListItem* clicked_project = projects[clicked_index];
-
-    if (mb.is_valid() && mb->is_pressed()
-        && mb->get_button_index() == BUTTON_LEFT) {
-        if (mb->get_shift() && !selected_project_keys.empty()
-            && !last_selected_project_key.empty()
-            && clicked_project->project_key != last_selected_project_key) {
-            int anchor_index = -1;
-            for (int i = 0; i < projects.size(); ++i) {
-                const ProjectsListItem* p = projects[i];
-                if (p->project_key == last_selected_project_key) {
-                    anchor_index = p->get_index();
-                    break;
-                }
-            }
-            CRASH_COND(anchor_index == -1);
-            _select_range(anchor_index, clicked_index);
-
-        } else if (mb->get_control()) {
-            _toggle_select(clicked_index);
-
-        } else {
-            last_selected_project_key = clicked_project->project_key;
-            select_project(clicked_index);
-        }
-
-        emit_signal(SIGNAL_SELECTION_CHANGED);
-
-        if (!mb->get_control() && mb->is_doubleclick()) {
-            emit_signal(SIGNAL_PROJECT_ASK_OPEN);
-        }
-    }
-}
-
 void ProjectsList::_remove_project(int p_index, bool p_update_settings) {
     ProjectsListItem* item = projects[p_index];
 
     selected_project_keys.erase(item->project_key);
 
-    if (last_selected_project_key == item->project_key) {
-        last_selected_project_key = "";
+    if (first_selected_project_key == item->project_key) {
+        first_selected_project_key = "";
     }
 
     if (p_update_settings) {
@@ -637,12 +658,28 @@ void ProjectsList::_remove_project(int p_index, bool p_update_settings) {
     update_dock_menu();
 }
 
-void ProjectsList::_select_range(int p_begin, int p_end) {
-    int first = p_begin > p_end ? p_begin : p_end;
-    int last  = p_begin > p_end ? p_end : p_begin;
-    select_project(first);
-    for (int i = first + 1; i <= last; ++i) {
-        _toggle_select(i);
+void ProjectsList::_select_item(ProjectsListItem* p_item) {
+    p_item->selected = true;
+    selected_project_keys.insert(p_item->project_key);
+}
+
+void ProjectsList::_select_range(ProjectsListItem* p_to_item) {
+    const String& last_selected_project_key = p_to_item->project_key;
+
+    bool select = false;
+    for (int index = 0; index < projects.size(); index++) {
+        ProjectsListItem* item = projects[index];
+        if (item->project_key == first_selected_project_key) {
+            _select_item(item);
+            select = !select;
+        }
+        if (item->project_key == last_selected_project_key) {
+            _select_item(item);
+            select = !select;
+        }
+        if (select) {
+            _select_item(item);
+        }
     }
 }
 
