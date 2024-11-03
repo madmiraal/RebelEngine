@@ -38,6 +38,7 @@ ProjectsListItem::ProjectsListItem(
     if (!favorite) {
         favorite_button->set_modulate(Color(1, 1, 1, 0.2));
     }
+    favorite_button->connect("pressed", this, "_on_favorite_pressed");
     favorite_button_container->add_child(favorite_button);
 
     icon_texture = memnew(TextureRect);
@@ -96,6 +97,36 @@ ProjectsListItem::ProjectsListItem(
     project_folder_container->add_child(project_folder_label);
 }
 
+void ProjectsListItem::_bind_methods() {
+    ClassDB::bind_method(
+        "_on_favorite_pressed",
+        &ProjectsListItem::_on_favorite_pressed
+    );
+
+    ADD_SIGNAL(MethodInfo("item_updated"));
+}
+
+void ProjectsListItem::_notification(int p_what) {
+    switch (p_what) {
+        case NOTIFICATION_MOUSE_ENTER: {
+            hover = true;
+            update();
+        } break;
+        case NOTIFICATION_MOUSE_EXIT: {
+            hover = false;
+            update();
+        } break;
+        case NOTIFICATION_DRAW: {
+            if (hover) {
+                draw_style_box(
+                    get_stylebox("hover", "Tree"),
+                    Rect2(Point2(), get_size() - Size2(10, 0) * EDSCALE)
+                );
+            }
+        } break;
+    }
+}
+
 void ProjectsListItem::_extract_project_values(const String& p_property_key) {
     project_key    = p_property_key.get_slice("/", 1);
     project_folder = EditorSettings::get_singleton()->get(p_property_key);
@@ -138,31 +169,24 @@ void ProjectsListItem::_extract_project_values(const String& p_property_key) {
     }
 }
 
-void ProjectsListItem::_notification(int p_what) {
-    switch (p_what) {
-        case NOTIFICATION_MOUSE_ENTER: {
-            hover = true;
-            update();
-        } break;
-        case NOTIFICATION_MOUSE_EXIT: {
-            hover = false;
-            update();
-        } break;
-        case NOTIFICATION_DRAW: {
-            if (hover) {
-                draw_style_box(
-                    get_stylebox("hover", "Tree"),
-                    Rect2(Point2(), get_size() - Size2(10, 0) * EDSCALE)
-                );
-            }
-        } break;
-    }
-}
+void ProjectsListItem::_on_favorite_pressed() {
+    favorite = !favorite;
 
-void ProjectsListItem::set_is_favorite(bool fav) {
-    favorite_button->set_modulate(
-        fav ? Color(1, 1, 1, 1) : Color(1, 1, 1, 0.2)
-    );
+    if (favorite) {
+        favorite_button->set_modulate(Color(1, 1, 1, 1));
+        EditorSettings::get_singleton()->set(
+            "favorite_projects/" + project_key,
+            project_folder
+        );
+    } else {
+        favorite_button->set_modulate(Color(1, 1, 1, 0.2));
+        EditorSettings::get_singleton()->erase(
+            "favorite_projects/" + project_key
+        );
+    }
+    EditorSettings::get_singleton()->save();
+
+    emit_signal("item_updated");
 }
 
 bool ProjectsListItemComparator::operator()(

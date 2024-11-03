@@ -245,6 +245,7 @@ void ProjectsList::load_projects() {
         ProjectsListItem* item =
             memnew(ProjectsListItem(property_key, favorite));
         projects.push_back(item);
+        item->connect("item_updated", this, "item_updated", varray(item));
     }
 
     // Create controls
@@ -437,6 +438,7 @@ void ProjectsList::update_dock_menu() {
 }
 
 void ProjectsList::_bind_methods() {
+    ClassDB::bind_method("item_updated", &ProjectsList::_on_item_updated);
     ClassDB::bind_method(
         "_on_sort_order_selected",
         &ProjectsList::_on_sort_order_selected
@@ -447,7 +449,6 @@ void ProjectsList::_bind_methods() {
     );
     ClassDB::bind_method("_panel_draw", &ProjectsList::_panel_draw);
     ClassDB::bind_method("_panel_input", &ProjectsList::_panel_input);
-    ClassDB::bind_method("_favorite_pressed", &ProjectsList::_favorite_pressed);
     ClassDB::bind_method("_show_project", &ProjectsList::_show_project);
 
     ADD_SIGNAL(MethodInfo(SIGNAL_SELECTION_CHANGED));
@@ -489,8 +490,6 @@ void ProjectsList::_create_project_item_control(int p_index) {
 
     item->connect("draw", this, "_panel_draw", varray(item));
     item->connect("gui_input", this, "_panel_input", varray(item));
-    item->favorite_button
-        ->connect("pressed", this, "_favorite_pressed", varray(item));
 
     if (!item->missing) {
         item->show_folder_button->connect(
@@ -502,39 +501,6 @@ void ProjectsList::_create_project_item_control(int p_index) {
     }
 
     projects_container->add_child(item);
-}
-
-void ProjectsList::_favorite_pressed(Node* p_hb) {
-    ProjectsListItem* item = Object::cast_to<ProjectsListItem>(p_hb);
-
-    item->favorite = !item->favorite;
-
-    if (item->favorite) {
-        EditorSettings::get_singleton()->set(
-            "favorite_projects/" + item->project_key,
-            item->project_folder
-        );
-    } else {
-        EditorSettings::get_singleton()->erase(
-            "favorite_projects/" + item->project_key
-        );
-    }
-    EditorSettings::get_singleton()->save();
-
-    item->set_is_favorite(item->favorite);
-
-    sort_projects();
-
-    if (item->favorite) {
-        for (int i = 0; i < projects.size(); ++i) {
-            if (projects[i]->project_key == item->project_key) {
-                ensure_project_visible(i);
-                break;
-            }
-        }
-    }
-
-    update_dock_menu();
 }
 
 void ProjectsList::_load_project_icon(int p_index) {
@@ -582,6 +548,22 @@ void ProjectsList::_on_sort_order_selected(int p_index) {
     editor_settings->save();
     current_sort_order = selected_sort_order;
     sort_projects();
+}
+
+void ProjectsList::_on_item_updated(Node* p_node) {
+    sort_projects();
+
+    ProjectsListItem* item = Object::cast_to<ProjectsListItem>(p_node);
+    if (item->favorite) {
+        for (int i = 0; i < projects.size(); ++i) {
+            if (projects[i]->project_key == item->project_key) {
+                ensure_project_visible(i);
+                break;
+            }
+        }
+    }
+
+    update_dock_menu();
 }
 
 // Draws selected project highlight

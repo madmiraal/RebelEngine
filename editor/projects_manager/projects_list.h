@@ -71,10 +71,10 @@ private:
     int icon_load_index = 0;
 
     void _create_project_item_control(int p_index);
-    void _favorite_pressed(Node* p_hb);
     void _load_project_icon(int p_index);
     void _on_search_text_changed(const String& p_newtext);
     void _on_sort_order_selected(int p_index);
+    void _on_item_updated(Node* p_node);
     void _panel_draw(Node* p_hb);
     void _panel_input(const Ref<InputEvent>& p_ev, Node* p_hb);
     void _remove_project(int p_index, bool p_update_settings);

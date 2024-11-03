@@ -43,15 +43,17 @@ public:
 
     ProjectsListItem(const String& p_property_key, bool p_favorite);
 
-    void _notification(int p_what);
-    void set_is_favorite(bool fav);
-
     _FORCE_INLINE_ bool operator==(const ProjectsListItem l) const {
         return project_key == l.project_key;
     }
 
+protected:
+    static void _bind_methods();
+    void _notification(int p_what);
+
 private:
     void _extract_project_values(const String& p_property_key);
+    void _on_favorite_pressed();
 };
 
 class ProjectsListItemComparator {
