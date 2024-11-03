@@ -82,7 +82,6 @@ private:
     );
     void _on_sort_order_selected(int p_index);
     void _on_item_updated(const Node* p_node);
-    void _panel_draw(Node* p_hb);
     void _remove_project(int p_index, bool p_update_settings);
     void _select_item(ProjectsListItem* p_item);
     void _select_range(ProjectsListItem* p_to_item);

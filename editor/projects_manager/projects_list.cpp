@@ -254,6 +254,7 @@ void ProjectsList::load_projects() {
             varray(item)
         );
         item->connect("gui_input", item, "_on_gui_input");
+        item->connect("draw", item, "_on_draw");
     }
 
     // Create controls
@@ -463,7 +464,6 @@ void ProjectsList::_bind_methods() {
         "_on_sort_order_selected",
         &ProjectsList::_on_sort_order_selected
     );
-    ClassDB::bind_method("_panel_draw", &ProjectsList::_panel_draw);
 
     ADD_SIGNAL(MethodInfo(SIGNAL_SELECTION_CHANGED));
     ADD_SIGNAL(MethodInfo(SIGNAL_PROJECT_ASK_OPEN));
@@ -509,8 +509,6 @@ void ProjectsList::_create_project_item_control(int p_index) {
     ERR_FAIL_COND(p_index != projects_container->get_child_count());
 
     ProjectsListItem* item = projects[p_index];
-
-    item->connect("draw", this, "_panel_draw", varray(item));
 
     projects_container->add_child(item);
 }
@@ -613,26 +611,6 @@ void ProjectsList::_on_item_updated(const Node* p_node) {
     }
 
     update_dock_menu();
-}
-
-// Draws selected project highlight
-void ProjectsList::_panel_draw(Node* p_hb) {
-    Control* hb = Object::cast_to<Control>(p_hb);
-
-    hb->draw_line(
-        Point2(0, hb->get_size().y + 1),
-        Point2(hb->get_size().x - 10, hb->get_size().y + 1),
-        get_color("guide_color", "Tree")
-    );
-
-    String key = projects[p_hb->get_index()]->project_key;
-
-    if (selected_project_keys.has(key)) {
-        hb->draw_style_box(
-            get_stylebox("selected", "Tree"),
-            Rect2(Point2(), hb->get_size() - Size2(10, 0) * EDSCALE)
-        );
-    }
 }
 
 void ProjectsList::_remove_project(int p_index, bool p_update_settings) {

@@ -105,6 +105,7 @@ ProjectsListItem::ProjectsListItem(
 }
 
 void ProjectsListItem::_bind_methods() {
+    ClassDB::bind_method("_on_draw", &ProjectsListItem::_on_draw);
     ClassDB::bind_method("_on_gui_input", &ProjectsListItem::_on_gui_input);
     ClassDB::bind_method(
         "_on_favorite_pressed",
@@ -185,6 +186,24 @@ void ProjectsListItem::_extract_project_values(const String& p_property_key) {
         missing = true;
         print_line("Project settings file is missing: " + settings_file_name);
     }
+}
+
+void ProjectsListItem::_on_draw() {
+    Size2 item_size = get_size();
+
+    draw_line(
+        Point2(0, item_size.y + 1),
+        Point2(item_size.x - 10, item_size.y + 1),
+        get_color("guide_color", "Tree")
+    );
+
+    if (!selected) {
+        return;
+    }
+    draw_style_box(
+        get_stylebox("selected", "Tree"),
+        Rect2(Point2(), item_size - Size2(10, 0) * EDSCALE)
+    );
 }
 
 void ProjectsListItem::_on_gui_input(const Ref<InputEvent>& p_input_event) {
