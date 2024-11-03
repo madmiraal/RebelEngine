@@ -79,7 +79,6 @@ private:
     void _panel_input(const Ref<InputEvent>& p_ev, Node* p_hb);
     void _remove_project(int p_index, bool p_update_settings);
     void _select_range(int p_begin, int p_end);
-    void _show_project(const String& p_path);
     void _toggle_select(int p_index);
     void _update_icons_async();
 };

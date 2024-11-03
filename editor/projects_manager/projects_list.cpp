@@ -449,7 +449,6 @@ void ProjectsList::_bind_methods() {
     );
     ClassDB::bind_method("_panel_draw", &ProjectsList::_panel_draw);
     ClassDB::bind_method("_panel_input", &ProjectsList::_panel_input);
-    ClassDB::bind_method("_show_project", &ProjectsList::_show_project);
 
     ADD_SIGNAL(MethodInfo(SIGNAL_SELECTION_CHANGED));
     ADD_SIGNAL(MethodInfo(SIGNAL_PROJECT_ASK_OPEN));
@@ -490,15 +489,6 @@ void ProjectsList::_create_project_item_control(int p_index) {
 
     item->connect("draw", this, "_panel_draw", varray(item));
     item->connect("gui_input", this, "_panel_input", varray(item));
-
-    if (!item->missing) {
-        item->show_folder_button->connect(
-            "pressed",
-            this,
-            "_show_project",
-            varray(item->project_folder)
-        );
-    }
 
     projects_container->add_child(item);
 }
@@ -654,10 +644,6 @@ void ProjectsList::_select_range(int p_begin, int p_end) {
     for (int i = first + 1; i <= last; ++i) {
         _toggle_select(i);
     }
-}
-
-void ProjectsList::_show_project(const String& p_path) {
-    OS::get_singleton()->shell_open(String("file://") + p_path);
 }
 
 void ProjectsList::_toggle_select(int p_index) {

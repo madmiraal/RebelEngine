@@ -54,6 +54,7 @@ protected:
 private:
     void _extract_project_values(const String& p_property_key);
     void _on_favorite_pressed();
+    void _on_show_folder_pressed(const String& p_folder);
 };
 
 class ProjectsListItemComparator {

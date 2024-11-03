@@ -6,6 +6,7 @@
 
 #include "projects_list_item.h"
 
+#include "core/os/os.h"
 #include "editor/editor_scale.h"
 #include "editor/editor_settings.h"
 #include "editor/editor_themes.h"
@@ -82,6 +83,12 @@ ProjectsListItem::ProjectsListItem(
     } else {
         show_folder_button->set_icon(get_icon("Load", "EditorIcons"));
         show_folder_button->set_tooltip(TTR("Show in File Manager"));
+        show_folder_button->connect(
+            "pressed",
+            this,
+            "_on_show_folder_pressed",
+            varray(project_folder)
+        );
     }
     if (!grayed) {
         // Only make the icon less prominent if the item is not already grayed.
@@ -101,6 +108,10 @@ void ProjectsListItem::_bind_methods() {
     ClassDB::bind_method(
         "_on_favorite_pressed",
         &ProjectsListItem::_on_favorite_pressed
+    );
+    ClassDB::bind_method(
+        "_on_show_folder_pressed",
+        &ProjectsListItem::_on_show_folder_pressed
     );
 
     ADD_SIGNAL(MethodInfo("item_updated"));
@@ -187,6 +198,10 @@ void ProjectsListItem::_on_favorite_pressed() {
     EditorSettings::get_singleton()->save();
 
     emit_signal("item_updated");
+}
+
+void ProjectsListItem::_on_show_folder_pressed(const String& p_folder) {
+    OS::get_singleton()->shell_open(String("file://") + p_folder);
 }
 
 bool ProjectsListItemComparator::operator()(
