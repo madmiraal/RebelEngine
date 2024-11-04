@@ -136,12 +136,7 @@ void ProjectsListItem::_notification(int p_what) {
             update();
         } break;
         case NOTIFICATION_DRAW: {
-            if (hover) {
-                draw_style_box(
-                    get_stylebox("hover", "Tree"),
-                    Rect2(Point2(), get_size() - Size2(10, 0) * EDSCALE)
-                );
-            }
+            _on_draw();
         } break;
     }
 }
@@ -197,13 +192,19 @@ void ProjectsListItem::_on_draw() {
         get_color("guide_color", "Tree")
     );
 
-    if (!selected) {
-        return;
+    if (hover) {
+        draw_style_box(
+            get_stylebox("hover", "Tree"),
+            Rect2(Point2(), get_size() - Size2(10, 0) * EDSCALE)
+        );
     }
-    draw_style_box(
-        get_stylebox("selected", "Tree"),
-        Rect2(Point2(), item_size - Size2(10, 0) * EDSCALE)
-    );
+
+    if (selected) {
+        draw_style_box(
+            get_stylebox("selected", "Tree"),
+            Rect2(Point2(), item_size - Size2(10, 0) * EDSCALE)
+        );
+    }
 }
 
 void ProjectsListItem::_on_gui_input(const Ref<InputEvent>& p_input_event) {

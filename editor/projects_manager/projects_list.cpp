@@ -254,7 +254,6 @@ void ProjectsList::load_projects() {
             varray(item)
         );
         item->connect("gui_input", item, "_on_gui_input");
-        item->connect("draw", item, "_on_draw");
         projects_container->add_child(item);
     }
 
