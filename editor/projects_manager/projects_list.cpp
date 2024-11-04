@@ -238,23 +238,9 @@ void ProjectsList::load_projects() {
         if (!property_key.begins_with("projects/")) {
             continue;
         }
-
         String project_key = property_key.get_slice("/", 1);
         bool favorite      = favorites.has("favorite_projects/" + project_key);
-
-        ProjectsListItem* item =
-            memnew(ProjectsListItem(property_key, favorite));
-        projects.push_back(item);
-        item->connect("item_double_clicked", this, "_on_item_double_clicked");
-        item->connect("item_updated", this, "_on_item_updated", varray(item));
-        item->connect(
-            "selection_changed",
-            this,
-            "_on_selection_changed",
-            varray(item)
-        );
-        item->connect("gui_input", item, "_on_gui_input");
-        projects_container->add_child(item);
+        _add_item(property_key, favorite);
     }
 
     sort_projects();
@@ -319,11 +305,7 @@ int ProjectsList::refresh_project(const String& dir_path) {
     int index = -1;
     if (should_be_in_list) {
         // Recreate it with updated info
-
-        ProjectsListItem* item =
-            memnew(ProjectsListItem(property_key, is_favourite));
-        projects.push_back(item);
-        projects_container->add_child(item);
+        _add_item(property_key, is_favourite);
 
         sort_projects();
 
@@ -489,6 +471,21 @@ void ProjectsList::_notification(int p_what) {
             }
         } break;
     }
+}
+
+void ProjectsList::_add_item(const String& property_key, bool favorite) {
+    ProjectsListItem* item = memnew(ProjectsListItem(property_key, favorite));
+    item->connect("item_double_clicked", this, "_on_item_double_clicked");
+    item->connect("item_updated", this, "_on_item_updated", varray(item));
+    item->connect(
+        "selection_changed",
+        this,
+        "_on_selection_changed",
+        varray(item)
+    );
+    item->connect("gui_input", item, "_on_gui_input");
+    projects_container->add_child(item);
+    projects.push_back(item);
 }
 
 void ProjectsList::_clear_selection() {
