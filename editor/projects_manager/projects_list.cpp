@@ -522,7 +522,7 @@ void ProjectsList::_load_project_icon(int p_index) {
         icon = default_icon;
     }
 
-    item->icon_texture->set_texture(icon);
+    item->set_icon_texture(icon);
     item->icon_needs_reload = false;
 }
 

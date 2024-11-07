@@ -35,20 +35,23 @@ public:
     bool grayed            = false;
     bool missing           = false;
     bool icon_needs_reload = true;
-    bool hover             = false;
     bool selected          = false;
 
-    Button* show_folder_button;
-    TextureButton* favorite_button;
-    TextureRect* icon_texture;
-
     ProjectsListItem(const String& p_property_key, bool p_favorite);
+
+    void set_icon_texture(const Ref<Texture>& new_icon_texture);
 
 protected:
     static void _bind_methods();
     void _notification(int p_what);
 
 private:
+    Button* show_folder_button;
+    TextureButton* favorite_button;
+    TextureRect* icon_texture;
+
+    bool hover = false;
+
     void _extract_project_values(const String& p_property_key);
     void _on_draw();
     void _on_gui_input(const Ref<InputEvent>& p_input_event);

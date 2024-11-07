@@ -104,6 +104,10 @@ ProjectsListItem::ProjectsListItem(
     project_folder_container->add_child(project_folder_label);
 }
 
+void ProjectsListItem::set_icon_texture(const Ref<Texture>& new_icon_texture) {
+    icon_texture->set_texture(new_icon_texture);
+}
+
 void ProjectsListItem::_bind_methods() {
     ClassDB::bind_method("_on_draw", &ProjectsListItem::_on_draw);
     ClassDB::bind_method("_on_gui_input", &ProjectsListItem::_on_gui_input);
