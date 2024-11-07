@@ -249,6 +249,7 @@ void ProjectsListItem::_on_show_folder_pressed(const String& p_folder) {
     OS::get_singleton()->shell_open(String("file://") + p_folder);
 }
 
+// operator<
 bool ProjectsListItemComparator::operator()(
     const ProjectsListItem* a,
     const ProjectsListItem* b

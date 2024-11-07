@@ -44,10 +44,6 @@ public:
 
     ProjectsListItem(const String& p_property_key, bool p_favorite);
 
-    _FORCE_INLINE_ bool operator==(const ProjectsListItem l) const {
-        return project_key == l.project_key;
-    }
-
 protected:
     static void _bind_methods();
     void _notification(int p_what);
@@ -64,7 +60,6 @@ class ProjectsListItemComparator {
 public:
     ProjectsListItem::SortOrder sort_order;
 
-    // operator<
     bool operator()(const ProjectsListItem* a, const ProjectsListItem* b) const;
 };
 
