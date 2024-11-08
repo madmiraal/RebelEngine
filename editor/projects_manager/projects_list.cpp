@@ -381,34 +381,39 @@ void ProjectsList::sort_projects() {
 }
 
 void ProjectsList::update_dock_menu() {
-    OS::get_singleton()->global_menu_clear("_dock");
+    OS* os = OS::get_singleton();
+    os->global_menu_clear("_dock");
 
-    int favs_added  = 0;
-    int total_added = 0;
+    bool add_favorite_separator = false;
+    bool add_item_separator     = false;
     for (int i = 0; i < projects.size(); ++i) {
-        if (!projects[i]->disabled && !projects[i]->missing) {
-            if (projects[i]->favorite) {
-                favs_added++;
-            } else {
-                if (favs_added != 0) {
-                    OS::get_singleton()->global_menu_add_separator("_dock");
-                }
-                favs_added = 0;
-            }
-            OS::get_singleton()->global_menu_add_item(
-                "_dock",
-                projects[i]->project_name + " ( " + projects[i]->project_folder
-                    + " )",
-                GLOBAL_OPEN_PROJECT,
-                Variant(projects[i]->project_folder.plus_file("project.rebel"))
-            );
-            total_added++;
+        const ProjectsListItem* project = projects[i];
+        if (project->disabled || project->missing) {
+            continue;
         }
+
+        if (project->favorite) {
+            add_favorite_separator = true;
+        } else {
+            if (add_favorite_separator) {
+                os->global_menu_add_separator("_dock");
+            }
+            add_favorite_separator = false;
+        }
+
+        os->global_menu_add_item(
+            "_dock",
+            project->project_name + " ( " + project->project_folder + " )",
+            GLOBAL_OPEN_PROJECT,
+            Variant(project->project_folder.plus_file("project.rebel"))
+        );
+        add_item_separator = true;
     }
-    if (total_added != 0) {
-        OS::get_singleton()->global_menu_add_separator("_dock");
+    if (add_item_separator) {
+        os->global_menu_add_separator("_dock");
     }
-    OS::get_singleton()->global_menu_add_item(
+
+    os->global_menu_add_item(
         "_dock",
         TTR("New Window"),
         GLOBAL_NEW_WINDOW,
