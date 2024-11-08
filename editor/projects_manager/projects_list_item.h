@@ -25,17 +25,17 @@ public:
 
     String project_key;
     String project_name;
-    String description;
     String project_folder;
+    String description;
     String icon_path;
     String main_scene;
     int version            = 0;
     uint64_t last_modified = 0;
+    bool selected          = false;
     bool favorite          = false;
-    bool grayed            = false;
+    bool disabled          = false;
     bool missing           = false;
     bool icon_needs_reload = true;
-    bool selected          = false;
 
     ProjectsListItem(const String& p_property_key, bool p_favorite);
 

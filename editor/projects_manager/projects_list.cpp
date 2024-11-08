@@ -386,7 +386,7 @@ void ProjectsList::update_dock_menu() {
     int favs_added  = 0;
     int total_added = 0;
     for (int i = 0; i < projects.size(); ++i) {
-        if (!projects[i]->grayed && !projects[i]->missing) {
+        if (!projects[i]->disabled && !projects[i]->missing) {
             if (projects[i]->favorite) {
                 favs_added++;
             } else {

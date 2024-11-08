@@ -52,7 +52,7 @@ ProjectsListItem::ProjectsListItem(
     add_child(icon_texture);
 
     VBoxContainer* project_details_container = memnew(VBoxContainer);
-    if (grayed) {
+    if (disabled) {
         project_details_container->set_modulate(Color(1, 1, 1, 0.5));
     }
     project_details_container->set_h_size_flags(SIZE_EXPAND_FILL);
@@ -90,8 +90,8 @@ ProjectsListItem::ProjectsListItem(
             varray(project_folder)
         );
     }
-    if (!grayed) {
-        // Only make the icon less prominent if the item is not already grayed.
+    if (!disabled) {
+        // The entire container for disabled projects is already grayed.
         show_folder_button->set_modulate(Color(1, 1, 1, 0.5));
     }
     project_folder_container->add_child(show_folder_button);
@@ -168,7 +168,7 @@ void ProjectsListItem::_extract_project_values(const String& p_property_key) {
 
     if (version > ProjectSettings::CONFIG_VERSION) {
         // It comes from an more recent, non-backward compatible version.
-        grayed = true;
+        disabled = true;
     }
 
     if (FileAccess::exists(settings_file_name)) {
@@ -181,8 +181,8 @@ void ProjectsListItem::_extract_project_values(const String& p_property_key) {
             }
         }
     } else {
-        grayed  = true;
-        missing = true;
+        disabled = true;
+        missing  = true;
         print_line("Project settings file is missing: " + settings_file_name);
     }
 }
