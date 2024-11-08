@@ -71,6 +71,7 @@ private:
     int icon_load_index = 0;
 
     void _add_item(const String& property_key, bool favorite);
+    void _clear_projects();
     void _clear_selection();
     void _load_project_icon(int p_index);
     void _on_item_double_clicked();

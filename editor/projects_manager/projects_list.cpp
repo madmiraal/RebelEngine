@@ -17,6 +17,20 @@
 const char* ProjectsList::SIGNAL_SELECTION_CHANGED = "selection_changed";
 const char* ProjectsList::SIGNAL_PROJECT_ASK_OPEN  = "project_ask_open";
 
+namespace {
+Set<String> get_favorites(List<PropertyInfo>& properties) {
+    Set<String> favorites;
+    for (List<PropertyInfo>::Element* E = properties.front(); E;
+         E                              = E->next()) {
+        String property_key = E->get().name;
+        if (property_key.begins_with("favorite_projects/")) {
+            favorites.insert(property_key);
+        }
+    }
+    return favorites;
+}
+} // namespace
+
 ProjectsList::ProjectsList() {
     set_theme(create_custom_theme());
     set_h_size_flags(SIZE_EXPAND_FILL);
@@ -202,33 +216,12 @@ void ProjectsList::load_projects() {
     // This is a full, hard reload of the list. Don't call this unless really
     // required, it's expensive. If you have 150 projects, it may read through
     // 150 files on your disk at once + load 150 icons.
-
-    // Clear whole list
-    for (int i = 0; i < projects.size(); ++i) {
-        ProjectsListItem* project = projects[i];
-        memdelete(project);
-    }
-    projects.clear();
-    first_selected_project_key = "";
-    selected_project_keys.clear();
-
-    // Load data
-    // TODO Would be nice to change how projects and favourites are stored... it
-    // complicates things a bit. Use a dictionary associating project path to
-    // metadata (like is_favorite).
+    _clear_projects();
 
     List<PropertyInfo> properties;
     EditorSettings::get_singleton()->get_property_list(&properties);
 
-    Set<String> favorites;
-    // Find favourites...
-    for (List<PropertyInfo>::Element* E = properties.front(); E;
-         E                              = E->next()) {
-        String property_key = E->get().name;
-        if (property_key.begins_with("favorite_projects/")) {
-            favorites.insert(property_key);
-        }
-    }
+    Set<String> favorites = get_favorites(properties);
 
     for (List<PropertyInfo>::Element* E = properties.front(); E;
          E                              = E->next()) {
@@ -486,6 +479,16 @@ void ProjectsList::_add_item(const String& property_key, bool favorite) {
     item->connect("gui_input", item, "_on_gui_input");
     projects_container->add_child(item);
     projects.push_back(item);
+}
+
+void ProjectsList::_clear_projects() {
+    for (int i = 0; i < projects.size(); ++i) {
+        ProjectsListItem* project = projects[i];
+        memdelete(project);
+    }
+    projects.clear();
+    selected_project_keys.clear();
+    first_selected_project_key = "";
 }
 
 void ProjectsList::_clear_selection() {
