@@ -460,30 +460,30 @@ void ProjectsList::_clear_selection() {
 }
 
 void ProjectsList::_filter_projects(const String& search_text) {
+    if (search_text.empty()) {
+        for (int i = 0; i < projects.size(); ++i) {
+            projects[i]->set_visible(true);
+        }
+        update_dock_menu();
+        return;
+    }
+
+    bool use_full_path = search_text.find("/") != -1;
     for (int i = 0; i < projects.size(); ++i) {
         ProjectsListItem* item = projects[i];
 
-        bool visible = true;
-        if (!search_text.empty()) {
-            String search_path;
-            if (search_text.find("/") != -1) {
-                // Search path will match the whole path
-                search_path = item->project_folder;
-            } else {
-                // Search path will only match the last path component to make
-                // searching more strict
-                search_path = item->project_folder.get_file();
-            }
-
-            // When searching, display projects whose name or path contain the
-            // search term
-            visible = item->project_name.findn(search_text) != -1
-                   || search_path.findn(search_text) != -1;
+        String project_path;
+        if (use_full_path) {
+            project_path = item->project_folder;
+        } else {
+            // Only search project folder name.
+            project_path = item->project_folder.get_file();
         }
 
+        bool visible = item->project_name.findn(search_text) != -1
+                    || project_path.findn(search_text) != -1;
         item->set_visible(visible);
     }
-
     update_dock_menu();
 }
 
