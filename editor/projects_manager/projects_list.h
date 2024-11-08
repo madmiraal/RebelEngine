@@ -44,7 +44,6 @@ public:
     void select_project(int p_index);
     void set_search_focus();
     void set_loading();
-    void sort_projects();
     void update_dock_menu();
 
 protected:
@@ -73,9 +72,10 @@ private:
     void _add_item(const String& property_key, bool favorite);
     void _clear_projects();
     void _clear_selection();
+    void _filter_projects(const String& search_text);
     void _load_project_icon(int p_index);
     void _on_item_double_clicked();
-    void _on_search_text_changed(const String& p_newtext);
+    void _on_search_text_changed(const String& p_search_text);
     void _on_selection_changed(
         bool p_shift_pressed,
         bool p_control_pressed,
@@ -86,6 +86,7 @@ private:
     void _remove_project(int p_index, bool p_update_settings);
     void _select_item(ProjectsListItem* p_item);
     void _select_range(ProjectsListItem* p_to_item);
+    void _sort_projects();
     void _toggle_select(int p_index);
     void _update_icons_async();
 };

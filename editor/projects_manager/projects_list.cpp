@@ -236,13 +236,10 @@ void ProjectsList::load_projects() {
         _add_item(property_key, favorite);
     }
 
-    sort_projects();
-
-    scroll_container->set_v_scroll(0);
-
+    _filter_projects("");
+    _sort_projects();
     _update_icons_async();
-
-    update_dock_menu();
+    scroll_container->set_v_scroll(0);
 }
 
 void ProjectsList::project_created(const String& dir) {
@@ -300,7 +297,7 @@ int ProjectsList::refresh_project(const String& dir_path) {
         // Recreate it with updated info
         _add_item(property_key, is_favourite);
 
-        sort_projects();
+        _sort_projects();
 
         for (int i = 0; i < projects.size(); ++i) {
             if (projects[i]->project_key == project_key) {
@@ -336,48 +333,6 @@ void ProjectsList::set_search_focus() {
 
 void ProjectsList::set_loading() {
     loading_label->set_modulate(Color(1, 1, 1));
-}
-
-void ProjectsList::sort_projects() {
-    SortArray<ProjectsListItem*, ProjectsListItemComparator> sorter;
-    sorter.compare.sort_order = current_sort_order;
-    sorter.sort(projects.ptrw(), projects.size());
-
-    String search_text = search_box->get_text().strip_edges();
-
-    for (int i = 0; i < projects.size(); ++i) {
-        ProjectsListItem* item = projects[i];
-
-        bool visible = true;
-        if (!search_text.empty()) {
-            String search_path;
-            if (search_text.find("/") != -1) {
-                // Search path will match the whole path
-                search_path = item->project_folder;
-            } else {
-                // Search path will only match the last path component to make
-                // searching more strict
-                search_path = item->project_folder.get_file();
-            }
-
-            // When searching, display projects whose name or path contain the
-            // search term
-            visible = item->project_name.findn(search_text) != -1
-                   || search_path.findn(search_text) != -1;
-        }
-
-        item->set_visible(visible);
-    }
-
-    for (int i = 0; i < projects.size(); ++i) {
-        ProjectsListItem* item = projects[i];
-        item->get_parent()->move_child(item, i);
-    }
-
-    // Rewind the coroutine because order of projects changed
-    _update_icons_async();
-
-    update_dock_menu();
 }
 
 void ProjectsList::update_dock_menu() {
@@ -504,6 +459,34 @@ void ProjectsList::_clear_selection() {
     }
 }
 
+void ProjectsList::_filter_projects(const String& search_text) {
+    for (int i = 0; i < projects.size(); ++i) {
+        ProjectsListItem* item = projects[i];
+
+        bool visible = true;
+        if (!search_text.empty()) {
+            String search_path;
+            if (search_text.find("/") != -1) {
+                // Search path will match the whole path
+                search_path = item->project_folder;
+            } else {
+                // Search path will only match the last path component to make
+                // searching more strict
+                search_path = item->project_folder.get_file();
+            }
+
+            // When searching, display projects whose name or path contain the
+            // search term
+            visible = item->project_name.findn(search_text) != -1
+                   || search_path.findn(search_text) != -1;
+        }
+
+        item->set_visible(visible);
+    }
+
+    update_dock_menu();
+}
+
 void ProjectsList::_load_project_icon(int p_index) {
     ProjectsListItem* item = projects[p_index];
 
@@ -538,8 +521,8 @@ void ProjectsList::_on_item_double_clicked() {
     emit_signal(SIGNAL_PROJECT_ASK_OPEN);
 }
 
-void ProjectsList::_on_search_text_changed(const String& p_newtext) {
-    sort_projects();
+void ProjectsList::_on_search_text_changed(const String& p_search_text) {
+    _filter_projects(p_search_text);
 }
 
 void ProjectsList::_on_selection_changed(
@@ -585,11 +568,11 @@ void ProjectsList::_on_sort_order_selected(int p_index) {
     editor_settings->set("project_manager/sorting_order", p_index);
     editor_settings->save();
     current_sort_order = selected_sort_order;
-    sort_projects();
+    _sort_projects();
 }
 
 void ProjectsList::_on_item_updated(const Node* p_node) {
-    sort_projects();
+    _sort_projects();
 
     const ProjectsListItem* item = Object::cast_to<ProjectsListItem>(p_node);
     if (item->favorite) {
@@ -600,8 +583,6 @@ void ProjectsList::_on_item_updated(const Node* p_node) {
             }
         }
     }
-
-    update_dock_menu();
 }
 
 void ProjectsList::_remove_project(int p_index, bool p_update_settings) {
@@ -624,6 +605,23 @@ void ProjectsList::_remove_project(int p_index, bool p_update_settings) {
     projects.remove(p_index);
     memdelete(item);
 
+    update_dock_menu();
+}
+
+void ProjectsList::_sort_projects() {
+    SortArray<ProjectsListItem*, ProjectsListItemComparator> sorter;
+    sorter.compare.sort_order = current_sort_order;
+    sorter.sort(projects.ptrw(), projects.size());
+
+    for (int i = 0; i < projects.size(); ++i) {
+        ProjectsListItem* item = projects[i];
+        item->get_parent()->move_child(item, i);
+    }
+
+    if (icon_load_index < projects.size()) {
+        // Restart updating icons, because the order has changed.
+        _update_icons_async();
+    }
     update_dock_menu();
 }
 
