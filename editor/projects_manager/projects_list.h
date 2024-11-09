@@ -40,7 +40,7 @@ public:
     void project_created(const String& dir);
     int refresh_project(const String& dir_path);
     void remove_missing_projects();
-    void remove_selected_projects(bool p_delete_project_contents);
+    void remove_selected_projects(bool p_delete_project_folder);
     void select_project(int p_index);
     void set_search_focus();
     void set_loading();
