@@ -31,8 +31,6 @@ public:
     ProjectsList();
 
     void ensure_project_visible(int p_index);
-    void erase_missing_projects();
-    void erase_selected_projects(bool p_delete_project_contents);
     int get_project_count() const;
     const Set<String>& get_selected_project_keys() const;
     Vector<ProjectsListItem*> get_selected_projects() const;
@@ -41,6 +39,8 @@ public:
     void load_projects();
     void project_created(const String& dir);
     int refresh_project(const String& dir_path);
+    void remove_missing_projects();
+    void remove_selected_projects(bool p_delete_project_contents);
     void select_project(int p_index);
     void set_search_focus();
     void set_loading();

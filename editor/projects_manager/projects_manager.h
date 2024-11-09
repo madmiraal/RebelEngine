@@ -42,29 +42,29 @@ private:
     AcceptDialog* run_error_diag;
 
     Button* about_btn;
-    Button* erase_btn;
-    Button* erase_missing_btn;
     Button* open_btn;
+    Button* remove_btn;
+    Button* remove_missing_btn;
     Button* rename_btn;
     Button* run_btn;
 
     CheckBox* delete_project_contents;
 
     ConfirmationDialog* ask_update_settings;
-    ConfirmationDialog* erase_ask;
-    ConfirmationDialog* erase_missing_ask;
     ConfirmationDialog* language_restart_ask;
     ConfirmationDialog* multi_open_ask;
     ConfirmationDialog* multi_run_ask;
     ConfirmationDialog* multi_scan_ask;
     ConfirmationDialog* open_templates;
+    ConfirmationDialog* remove_ask;
+    ConfirmationDialog* remove_missing_ask;
 
     EditorAbout* about;
     EditorAssetLibrary* asset_library;
 
     FileDialog* scan_dir;
 
-    Label* erase_ask_label;
+    Label* remove_ask_label;
 
     LinkButton* version_btn;
 
@@ -77,10 +77,6 @@ private:
 
     void _confirm_update_settings();
     void _dim_window();
-    void _erase_missing_projects();
-    void _erase_missing_projects_confirm();
-    void _erase_project();
-    void _erase_project_confirm();
     void _files_dropped(const PoolStringArray& p_files, int p_screen);
     void _global_menu_action(const Variant& p_id, const Variant& p_meta);
     void _import_project();
@@ -93,6 +89,10 @@ private:
     void _open_asset_library();
     void _open_selected_projects_ask();
     void _open_selected_projects();
+    void _remove_missing_projects();
+    void _remove_missing_projects_confirm();
+    void _remove_project();
+    void _remove_project_confirm();
     void _rename_project();
     void _restart_confirm();
     void _run_project_confirm();

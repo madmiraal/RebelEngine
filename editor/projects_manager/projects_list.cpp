@@ -97,67 +97,6 @@ void ProjectsList::ensure_project_visible(int p_index) {
     scroll_container->ensure_control_visible(projects[p_index]);
 }
 
-void ProjectsList::erase_missing_projects() {
-    if (projects.empty()) {
-        return;
-    }
-
-    int deleted_count   = 0;
-    int remaining_count = 0;
-
-    for (int i = 0; i < projects.size(); ++i) {
-        if (projects[i]->missing) {
-            _remove_project(i, true);
-            --i;
-            ++deleted_count;
-
-        } else {
-            ++remaining_count;
-        }
-    }
-
-    print_line(
-        "Removed " + itos(deleted_count) + " projects from the list, remaining "
-        + itos(remaining_count) + " projects"
-    );
-
-    EditorSettings::get_singleton()->save();
-}
-
-void ProjectsList::erase_selected_projects(bool p_delete_project_contents) {
-    if (selected_project_keys.empty()) {
-        return;
-    }
-
-    for (int i = 0; i < projects.size(); ++i) {
-        ProjectsListItem* item = projects.write[i];
-        if (selected_project_keys.has(item->project_key)
-            && item->is_visible()) {
-            EditorSettings::get_singleton()->erase(
-                "projects/" + item->project_key
-            );
-            EditorSettings::get_singleton()->erase(
-                "favorite_projects/" + item->project_key
-            );
-
-            if (p_delete_project_contents) {
-                OS::get_singleton()->move_to_trash(item->project_folder);
-            }
-
-            projects.remove(i);
-            memdelete(item);
-            --i;
-        }
-    }
-
-    EditorSettings::get_singleton()->save();
-
-    selected_project_keys.clear();
-    first_selected_project_key = "";
-
-    update_dock_menu();
-}
-
 int ProjectsList::get_project_count() const {
     return projects.size();
 }
@@ -314,6 +253,67 @@ int ProjectsList::refresh_project(const String& dir_path) {
     }
 
     return index;
+}
+
+void ProjectsList::remove_missing_projects() {
+    if (projects.empty()) {
+        return;
+    }
+
+    int deleted_count   = 0;
+    int remaining_count = 0;
+
+    for (int i = 0; i < projects.size(); ++i) {
+        if (projects[i]->missing) {
+            _remove_project(i, true);
+            --i;
+            ++deleted_count;
+
+        } else {
+            ++remaining_count;
+        }
+    }
+
+    print_line(
+        "Removed " + itos(deleted_count) + " projects from the list, remaining "
+        + itos(remaining_count) + " projects"
+    );
+
+    EditorSettings::get_singleton()->save();
+}
+
+void ProjectsList::remove_selected_projects(bool p_delete_project_contents) {
+    if (selected_project_keys.empty()) {
+        return;
+    }
+
+    for (int i = 0; i < projects.size(); ++i) {
+        ProjectsListItem* item = projects.write[i];
+        if (selected_project_keys.has(item->project_key)
+            && item->is_visible()) {
+            EditorSettings::get_singleton()->erase(
+                "projects/" + item->project_key
+            );
+            EditorSettings::get_singleton()->erase(
+                "favorite_projects/" + item->project_key
+            );
+
+            if (p_delete_project_contents) {
+                OS::get_singleton()->move_to_trash(item->project_folder);
+            }
+
+            projects.remove(i);
+            memdelete(item);
+            --i;
+        }
+    }
+
+    EditorSettings::get_singleton()->save();
+
+    selected_project_keys.clear();
+    first_selected_project_key = "";
+
+    update_dock_menu();
 }
 
 void ProjectsList::select_project(int p_index) {
