@@ -290,14 +290,8 @@ void ProjectsList::remove_selected_projects(bool p_delete_project_folder) {
 }
 
 void ProjectsList::select_project(int p_index) {
-    Vector<ProjectsListItem*> previous_selected_items = get_selected_projects();
-    selected_project_keys.clear();
-
-    for (int i = 0; i < previous_selected_items.size(); ++i) {
-        previous_selected_items[i]->update();
-    }
-
-    _toggle_select(p_index);
+    _clear_selection();
+    _select_item(projects[p_index]);
 }
 
 void ProjectsList::set_search_focus() {
@@ -622,16 +616,6 @@ void ProjectsList::_toggle_item_selected(ProjectsListItem* p_item) {
         selected_project_keys.insert(project_key);
     }
     p_item->update();
-}
-
-void ProjectsList::_toggle_select(int p_index) {
-    ProjectsListItem* item = projects[p_index];
-    if (selected_project_keys.has(item->project_key)) {
-        selected_project_keys.erase(item->project_key);
-    } else {
-        selected_project_keys.insert(item->project_key);
-    }
-    item->update();
 }
 
 void ProjectsList::_update_icons_async() {
