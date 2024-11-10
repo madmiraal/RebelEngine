@@ -87,6 +87,7 @@ private:
     void _select_item(ProjectsListItem* p_item);
     void _select_range(ProjectsListItem* p_to_item);
     void _sort_projects();
+    void _toggle_item_selected(ProjectsListItem* p_item);
     void _toggle_select(int p_index);
     void _update_icons_async();
 };

@@ -509,18 +509,7 @@ void ProjectsList::_on_selection_changed(
         _clear_selection();
         _select_range(item);
     } else if (p_control_pressed) {
-        // Toggle item selection.
-        item->selected = !item->selected;
-        if (item->selected) {
-            item->selected = true;
-            selected_project_keys.insert(project_key);
-        } else {
-            item->selected = false;
-            selected_project_keys.erase(project_key);
-        }
-        // We need to update the item, because we're not clearing the selection,
-        // which calls update on all the items.
-        item->update();
+        _toggle_item_selected(item);
     } else {
         _clear_selection();
         _select_item(item);
@@ -598,8 +587,9 @@ void ProjectsList::_sort_projects() {
 }
 
 void ProjectsList::_select_item(ProjectsListItem* p_item) {
-    p_item->selected = true;
     selected_project_keys.insert(p_item->project_key);
+    p_item->selected = true;
+    p_item->update();
 }
 
 void ProjectsList::_select_range(ProjectsListItem* p_to_item) {
@@ -620,6 +610,18 @@ void ProjectsList::_select_range(ProjectsListItem* p_to_item) {
             _select_item(item);
         }
     }
+}
+
+void ProjectsList::_toggle_item_selected(ProjectsListItem* p_item) {
+    const String& project_key = p_item->project_key;
+    if (p_item->selected) {
+        p_item->selected = false;
+        selected_project_keys.erase(project_key);
+    } else {
+        p_item->selected = true;
+        selected_project_keys.insert(project_key);
+    }
+    p_item->update();
 }
 
 void ProjectsList::_toggle_select(int p_index) {
