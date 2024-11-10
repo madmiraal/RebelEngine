@@ -14,9 +14,6 @@
 #include "scene/gui/label.h"
 #include "scene/gui/panel_container.h"
 
-const char* ProjectsList::SIGNAL_SELECTION_CHANGED = "selection_changed";
-const char* ProjectsList::SIGNAL_PROJECT_ASK_OPEN  = "project_ask_open";
-
 namespace {
 Set<String> get_favorites(List<PropertyInfo>& properties) {
     Set<String> favorites;
@@ -362,8 +359,8 @@ void ProjectsList::_bind_methods() {
         &ProjectsList::_on_sort_order_selected
     );
 
-    ADD_SIGNAL(MethodInfo(SIGNAL_SELECTION_CHANGED));
-    ADD_SIGNAL(MethodInfo(SIGNAL_PROJECT_ASK_OPEN));
+    ADD_SIGNAL(MethodInfo("selection_changed"));
+    ADD_SIGNAL(MethodInfo("item_double_clicked"));
 }
 
 void ProjectsList::_notification(int p_what) {
@@ -484,7 +481,7 @@ void ProjectsList::_load_project_icon(int p_index) {
 }
 
 void ProjectsList::_on_item_double_clicked() {
-    emit_signal(SIGNAL_PROJECT_ASK_OPEN);
+    emit_signal("item_double_clicked");
 }
 
 void ProjectsList::_on_search_text_changed(const String& p_search_text) {
@@ -510,7 +507,7 @@ void ProjectsList::_on_selection_changed(
         first_selected_project_key = project_key;
     }
 
-    emit_signal(SIGNAL_SELECTION_CHANGED);
+    emit_signal("selection_changed");
 }
 
 void ProjectsList::_on_sort_order_selected(int p_index) {

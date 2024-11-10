@@ -83,8 +83,10 @@ private:
     void _install_project(const String& p_zip_path, const String& p_title);
     void _language_selected(int p_id);
     void _new_project();
+    void _on_item_double_clicked();
     void _on_project_created(const String& dir);
     void _on_projects_updated();
+    void _on_selection_changed();
     void _on_tab_changed(int p_tab);
     void _open_asset_library();
     void _open_selected_projects_ask();

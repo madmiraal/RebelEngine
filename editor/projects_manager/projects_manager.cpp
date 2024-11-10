@@ -127,16 +127,9 @@ ProjectsManager::ProjectsManager() {
     tabs->add_child(projects_tab_container);
 
     projects_list = memnew(ProjectsList);
-    projects_list->connect(
-        ProjectsList::SIGNAL_SELECTION_CHANGED,
-        this,
-        "_update_project_buttons"
-    );
-    projects_list->connect(
-        ProjectsList::SIGNAL_PROJECT_ASK_OPEN,
-        this,
-        "_open_selected_projects_ask"
-    );
+    projects_list->connect("selection_changed", this, "_on_selection_changed");
+    projects_list
+        ->connect("item_double_clicked", this, "_on_item_double_clicked");
     projects_tab_container->add_child(projects_list);
 
     VBoxContainer* tree_vb = memnew(VBoxContainer);
@@ -498,6 +491,10 @@ void ProjectsManager::_bind_methods() {
         "_restart_confirm",
         &ProjectsManager::_restart_confirm
     );
+    ClassDB::bind_method(
+        "_on_item_double_clicked",
+        &ProjectsManager::_on_item_double_clicked
+    );
     ClassDB::bind_method("_on_tab_changed", &ProjectsManager::_on_tab_changed);
     ClassDB::bind_method(
         "_on_projects_updated",
@@ -525,8 +522,8 @@ void ProjectsManager::_bind_methods() {
         &ProjectsManager::_confirm_update_settings
     );
     ClassDB::bind_method(
-        "_update_project_buttons",
-        &ProjectsManager::_update_project_buttons
+        "_on_selection_changed",
+        &ProjectsManager::_on_selection_changed
     );
     ClassDB::bind_method(
         D_METHOD("_scan_multiple_folders", "files"),
@@ -705,6 +702,10 @@ void ProjectsManager::_new_project() {
     npdialog->show_dialog();
 }
 
+void ProjectsManager::_on_item_double_clicked() {
+    _open_selected_projects_ask();
+}
+
 void ProjectsManager::_on_project_created(const String& dir) {
     projects_list->project_created(dir);
     _open_selected_projects_ask();
@@ -724,6 +725,10 @@ void ProjectsManager::_on_projects_updated() {
     }
 
     projects_list->update_dock_menu();
+}
+
+void ProjectsManager::_on_selection_changed() {
+    _update_project_buttons();
 }
 
 void ProjectsManager::_on_tab_changed(int p_tab) {

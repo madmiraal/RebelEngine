@@ -20,9 +20,6 @@ class ProjectsList : public VBoxContainer {
     GDCLASS(ProjectsList, VBoxContainer)
 
 public:
-    static const char* SIGNAL_SELECTION_CHANGED;
-    static const char* SIGNAL_PROJECT_ASK_OPEN;
-
     enum MenuOptions {
         GLOBAL_NEW_WINDOW,
         GLOBAL_OPEN_PROJECT
