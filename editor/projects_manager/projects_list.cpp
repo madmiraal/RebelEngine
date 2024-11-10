@@ -379,11 +379,10 @@ void ProjectsList::_notification(int p_what) {
             // when there are many projects.
             if (icon_load_index < projects.size()) {
                 const ProjectsListItem* item = projects[icon_load_index];
-                if (item->icon_needs_reload) {
+                if (!item->icon_loaded) {
                     _load_project_icon(icon_load_index);
                 }
                 icon_load_index++;
-
             } else {
                 set_process(false);
             }
@@ -487,7 +486,7 @@ void ProjectsList::_load_project_icon(int p_index) {
     }
 
     item->set_icon_texture(icon);
-    item->icon_needs_reload = false;
+    item->icon_loaded = true;
 }
 
 void ProjectsList::_on_item_double_clicked() {

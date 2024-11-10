@@ -35,7 +35,7 @@ public:
     bool favorite          = false;
     bool disabled          = false;
     bool missing           = false;
-    bool icon_needs_reload = true;
+    bool icon_loaded       = false;
 
     ProjectsListItem(const String& p_property_key, bool p_favorite);
 
