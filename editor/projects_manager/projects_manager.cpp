@@ -146,7 +146,7 @@ ProjectsManager::ProjectsManager() {
     Button* open = memnew(Button);
     open->set_text(TTR("Edit"));
     open->set_shortcut(ED_SHORTCUT(
-        "project_manager/edit_project",
+        "projects_manager/edit_project",
         TTR("Edit Project"),
         KEY_MASK_CMD | KEY_E
     ));
@@ -157,7 +157,7 @@ ProjectsManager::ProjectsManager() {
     Button* run = memnew(Button);
     run->set_text(TTR("Run"));
     run->set_shortcut(ED_SHORTCUT(
-        "project_manager/run_project",
+        "projects_manager/run_project",
         TTR("Run Project"),
         KEY_MASK_CMD | KEY_R
     ));
@@ -170,7 +170,7 @@ ProjectsManager::ProjectsManager() {
     Button* scan = memnew(Button);
     scan->set_text(TTR("Scan"));
     scan->set_shortcut(ED_SHORTCUT(
-        "project_manager/scan_projects",
+        "projects_manager/scan_projects",
         TTR("Scan Projects"),
         KEY_MASK_CMD | KEY_S
     ));
@@ -193,7 +193,7 @@ ProjectsManager::ProjectsManager() {
     Button* create = memnew(Button);
     create->set_text(TTR("New Project"));
     create->set_shortcut(ED_SHORTCUT(
-        "project_manager/new_project",
+        "projects_manager/new_project",
         TTR("New Project"),
         KEY_MASK_CMD | KEY_N
     ));
@@ -203,7 +203,7 @@ ProjectsManager::ProjectsManager() {
     Button* import = memnew(Button);
     import->set_text(TTR("Import"));
     import->set_shortcut(ED_SHORTCUT(
-        "project_manager/import_project",
+        "projects_manager/import_project",
         TTR("Import exsiting project"),
         KEY_MASK_CMD | KEY_I
     ));
@@ -213,7 +213,7 @@ ProjectsManager::ProjectsManager() {
     Button* rename = memnew(Button);
     rename->set_text(TTR("Rename"));
     rename->set_shortcut(ED_SHORTCUT(
-        "project_manager/rename_project",
+        "projects_manager/rename_project",
         TTR("Rename Project"),
         KEY_F2
     ));
@@ -224,7 +224,7 @@ ProjectsManager::ProjectsManager() {
     remove_btn = memnew(Button);
     remove_btn->set_text(TTR("Remove"));
     remove_btn->set_shortcut(ED_SHORTCUT(
-        "project_manager/remove_project",
+        "projects_manager/remove_project",
         TTR("Remove Project"),
         KEY_DELETE
     ));

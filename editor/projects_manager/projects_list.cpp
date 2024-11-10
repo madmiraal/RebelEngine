@@ -59,7 +59,7 @@ ProjectsList::ProjectsList() {
     sort_order_options->add_item(TTR("Path"));
     sort_order_options->add_item(TTR("Last Modified"));
     int previous_sort_order =
-        EditorSettings::get_singleton()->get("project_manager/sorting_order");
+        EditorSettings::get_singleton()->get("projects_manager/sorting_order");
     current_sort_order = (ProjectsListItem::SortOrder)previous_sort_order;
     sort_order_options->select(previous_sort_order);
     projects_list_tools_container->add_child(sort_order_options);
@@ -197,7 +197,7 @@ int ProjectsList::refresh_project(const String& dir_path) {
 
     String project_key = dir_path.replace("/", "::");
 
-    // Read project manager settings
+    // Read Projects Manager settings
     bool is_favourite      = false;
     bool should_be_in_list = false;
     String property_key    = "projects/" + project_key;
@@ -538,7 +538,7 @@ void ProjectsList::_on_sort_order_selected(int p_index) {
         return;
     }
     EditorSettings* editor_settings = EditorSettings::get_singleton();
-    editor_settings->set("project_manager/sorting_order", p_index);
+    editor_settings->set("projects_manager/sorting_order", p_index);
     editor_settings->save();
     current_sort_order = selected_sort_order;
     _sort_projects();

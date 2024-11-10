@@ -110,7 +110,7 @@ ProjectsDialog::ProjectsDialog() {
 #ifndef SERVER_ENABLED
     bool gles3_viable = RasterizerGLES3::is_viable() == OK;
 #else
-    // Whatever, project manager isn't even used in headless builds.
+    // Projects Manager isn't used in headless builds.
     bool gles3_viable = false;
 #endif
 
