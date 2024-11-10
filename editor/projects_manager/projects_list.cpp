@@ -466,19 +466,19 @@ void ProjectsList::_load_project_icon(int p_index) {
     Ref<Texture> default_icon = get_icon("DefaultProjectIcon", "EditorIcons");
     Ref<Texture> icon;
     if (!item->icon_path.empty()) {
-        Ref<Image> img;
-        img.instance();
-        Error err = img->load(
+        Ref<Image> image;
+        image.instance();
+        Error err = image->load(
             item->icon_path.replace_first("res://", item->project_folder + "/")
         );
         if (err == OK) {
-            img->resize(
+            image->resize(
                 default_icon->get_width(),
                 default_icon->get_height(),
                 Image::INTERPOLATE_LANCZOS
             );
             Ref<ImageTexture> it = memnew(ImageTexture);
-            it->create_from_image(img);
+            it->create_from_image(image);
             icon = it;
         }
     }
