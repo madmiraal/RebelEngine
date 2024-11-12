@@ -712,18 +712,7 @@ void ProjectsManager::_on_project_created(const String& project_key) {
 }
 
 void ProjectsManager::_on_projects_updated() {
-    Vector<ProjectsListItem*> selected_projects =
-        projects_list->get_selected_projects();
-    int index = 0;
-    for (int i = 0; i < selected_projects.size(); ++i) {
-        index =
-            projects_list->refresh_project(selected_projects[i]->project_key);
-    }
-    if (index != -1) {
-        projects_list->ensure_project_visible(index);
-    }
-
-    projects_list->update_dock_menu();
+    projects_list->refresh_selected_projects();
 }
 
 void ProjectsManager::_on_selection_changed() {

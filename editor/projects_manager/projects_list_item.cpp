@@ -58,7 +58,7 @@ ProjectsListItem::ProjectsListItem(
     project_details_container->set_h_size_flags(SIZE_EXPAND_FILL);
     add_child(project_details_container);
 
-    Label* project_name_label =
+    project_name_label =
         memnew(Label(missing ? TTR("Missing project") : project_name));
     project_name_label->add_font_override(
         "font",
@@ -96,12 +96,22 @@ ProjectsListItem::ProjectsListItem(
     }
     project_folder_container->add_child(show_folder_button);
 
-    Label* project_folder_label = memnew(Label(project_folder));
+    project_folder_label = memnew(Label(project_folder));
     project_folder_label->set_h_size_flags(SIZE_EXPAND_FILL);
     project_folder_label->set_modulate(Color(1, 1, 1, 0.5));
     project_folder_label->add_color_override("font_color", font_color);
     project_folder_label->set_clip_text(true);
     project_folder_container->add_child(project_folder_label);
+}
+
+void ProjectsListItem::refresh_item() {
+    String property_key = "projects/" + project_key;
+    _extract_project_values(property_key);
+    project_name_label->set_text(
+        missing ? TTR("Missing project") : project_name
+    );
+    project_folder_label->set_text(project_folder);
+    set_tooltip(description);
 }
 
 void ProjectsListItem::set_icon_texture(const Ref<Texture>& new_icon_texture) {

@@ -91,10 +91,6 @@ ProjectsList::ProjectsList() {
     load_projects();
 }
 
-void ProjectsList::ensure_project_visible(int p_index) {
-    scroll_container->ensure_control_visible(projects[p_index]);
-}
-
 int ProjectsList::get_project_count() const {
     return projects.size();
 }
@@ -201,70 +197,21 @@ void ProjectsList::project_created(const String& project_key) {
     _select_index(item->get_index());
 }
 
-int ProjectsList::refresh_project(String project_key) {
-    // Reads editor settings and reloads information about a specific project.
-    // If it wasn't loaded and should be in the list, it is added (i.e new
-    // project). If it isn't in the list anymore, it is removed. If it is in the
-    // list but doesn't exist anymore, it is marked as missing.
-
-    String dir_path = project_key.replace("::", "/");
-
-    // Read Projects Manager settings
-    bool is_favourite      = false;
-    bool should_be_in_list = false;
-    String property_key    = "projects/" + project_key;
-    {
-        List<PropertyInfo> properties;
-        EditorSettings::get_singleton()->get_property_list(&properties);
-        String favorite_property_key = "favorite_projects/" + project_key;
-
-        bool found = false;
-        for (List<PropertyInfo>::Element* E = properties.front(); E;
-             E                              = E->next()) {
-            String prop = E->get().name;
-            if (!found && prop == property_key) {
-                found = true;
-            } else if (!is_favourite && prop == favorite_property_key) {
-                is_favourite = true;
-            }
-        }
-
-        should_be_in_list = found;
+void ProjectsList::refresh_selected_projects() {
+    if (selected_project_keys.empty()) {
+        return;
     }
 
-    bool was_selected = selected_project_keys.has(project_key);
-
-    // Remove item in any case
-    for (int i = 0; i < projects.size(); ++i) {
-        ProjectsListItem* existing_item = projects[i];
-        if (existing_item->project_folder == dir_path) {
-            _remove_project(i, false);
-            break;
-        }
+    Vector<ProjectsListItem*> selected_projects = get_selected_projects();
+    for (int i = 0; i < selected_projects.size(); ++i) {
+        selected_projects[i]->refresh_item();
+        selected_projects[i]->icon_loaded = false;
     }
 
-    int index = -1;
-    if (should_be_in_list) {
-        // Recreate it with updated info
-        _create_item(property_key, is_favourite);
-
-        _sort_projects();
-
-        for (int i = 0; i < projects.size(); ++i) {
-            if (projects[i]->project_key == project_key) {
-                if (was_selected) {
-                    _select_index(i);
-                    ensure_project_visible(i);
-                }
-                _load_project_icon(i);
-
-                index = i;
-                break;
-            }
-        }
-    }
-
-    return index;
+    _sort_projects();
+    _update_icons_async();
+    _ensure_item_visible(selected_projects[0]->get_index());
+    update_dock_menu();
 }
 
 void ProjectsList::remove_missing_projects() {
@@ -442,6 +389,10 @@ ProjectsListItem* ProjectsList::_create_item(
     return item;
 }
 
+void ProjectsList::_ensure_item_visible(int p_index) {
+    scroll_container->ensure_control_visible(projects[p_index]);
+}
+
 void ProjectsList::_filter_projects() {
     String search_text = search_box->get_text();
     if (search_text.empty()) {
@@ -547,7 +498,7 @@ void ProjectsList::_on_item_updated(const Node* p_node) {
     if (item->favorite) {
         for (int i = 0; i < projects.size(); ++i) {
             if (projects[i]->project_key == item->project_key) {
-                ensure_project_visible(i);
+                _ensure_item_visible(i);
                 break;
             }
         }
@@ -604,7 +555,7 @@ void ProjectsList::_select_index(int p_index) {
     _clear_selection();
     _add_item_to_selection(projects[p_index]);
     first_selected_project_index = p_index;
-    ensure_project_visible(p_index);
+    _ensure_item_visible(p_index);
 }
 
 void ProjectsList::_select_range(ProjectsListItem* p_to_item) {

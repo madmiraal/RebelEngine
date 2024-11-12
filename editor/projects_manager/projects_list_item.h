@@ -39,6 +39,7 @@ public:
 
     ProjectsListItem(const String& p_property_key, bool p_favorite);
 
+    void refresh_item();
     void set_icon_texture(const Ref<Texture>& new_icon_texture);
 
 protected:
@@ -47,6 +48,8 @@ protected:
 
 private:
     Button* show_folder_button;
+    Label* project_folder_label;
+    Label* project_name_label;
     TextureButton* favorite_button;
     TextureRect* icon_texture;
 

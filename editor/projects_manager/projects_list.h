@@ -27,7 +27,6 @@ public:
 
     ProjectsList();
 
-    void ensure_project_visible(int p_index);
     int get_project_count() const;
     const Set<String>& get_selected_project_keys() const;
     Vector<ProjectsListItem*> get_selected_projects() const;
@@ -35,7 +34,7 @@ public:
     bool key_pressed(Ref<InputEventKey> key_event);
     void load_projects();
     void project_created(const String& project_key);
-    int refresh_project(String project_key);
+    void refresh_selected_projects();
     void remove_missing_projects();
     void remove_selected_projects(bool p_delete_project_folder);
     void set_search_focus();
@@ -72,6 +71,7 @@ private:
         const String& property_key,
         bool favorite = false
     );
+    void _ensure_item_visible(int p_index);
     void _filter_projects();
     void _load_project_icon(int p_index);
     void _on_item_double_clicked();
