@@ -707,7 +707,7 @@ void ProjectsManager::_on_item_double_clicked() {
 }
 
 void ProjectsManager::_on_project_created(const String& project_key) {
-    projects_list->project_created(project_key);
+    projects_list->add_project(project_key);
     _open_selected_projects_ask();
 }
 
@@ -1006,11 +1006,14 @@ void ProjectsManager::_scan_begin(const String& p_base) {
     print_line("Found " + itos(projects.size()) + " projects.");
 
     for (List<String>::Element* E = projects.front(); E; E = E->next()) {
-        String proj = E->get().replace("/", "::");
-        EditorSettings::get_singleton()->set("projects/" + proj, E->get());
+        String project_key = E->get().replace("/", "::");
+        EditorSettings::get_singleton()->set(
+            "projects/" + project_key,
+            E->get()
+        );
+        projects_list->add_project(project_key);
     }
     EditorSettings::get_singleton()->save();
-    projects_list->load_projects();
 }
 
 void ProjectsManager::_scan_dir(const String& path, List<String>* r_projects) {

@@ -27,13 +27,12 @@ public:
 
     ProjectsList();
 
+    void add_project(const String& project_key);
     int get_project_count() const;
     const Set<String>& get_selected_project_keys() const;
     Vector<ProjectsListItem*> get_selected_projects() const;
     bool is_any_project_missing() const;
     bool key_pressed(Ref<InputEventKey> key_event);
-    void load_projects();
-    void project_created(const String& project_key);
     void refresh_selected_projects();
     void remove_missing_projects();
     void remove_selected_projects(bool p_delete_project_folder);
@@ -65,15 +64,17 @@ private:
     int icon_load_index = 0;
 
     void _add_item_to_selection(ProjectsListItem* p_item);
-    void _clear_projects();
+
     void _clear_selection();
     ProjectsListItem* _create_item(
-        const String& property_key,
+        const String& project_key,
         bool favorite = false
     );
     void _ensure_item_visible(int p_index);
     void _filter_projects();
+    bool _has_project(const String& project_key);
     void _load_project_icon(int p_index);
+    void _load_projects();
     void _on_item_double_clicked();
     void _on_search_text_changed(const String&);
     void _on_selection_changed(

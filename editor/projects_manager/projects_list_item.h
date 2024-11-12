@@ -37,7 +37,7 @@ public:
     bool missing           = false;
     bool icon_loaded       = false;
 
-    ProjectsListItem(const String& p_property_key, bool p_favorite);
+    ProjectsListItem(const String& p_project_key, bool p_favorite);
 
     void refresh_item();
     void set_icon_texture(const Ref<Texture>& new_icon_texture);
@@ -55,7 +55,7 @@ private:
 
     bool hover = false;
 
-    void _extract_project_values(const String& p_property_key);
+    void _extract_project_values();
     void _on_draw();
     void _on_gui_input(const Ref<InputEvent>& p_input_event);
     void _on_favorite_pressed();

@@ -22,7 +22,8 @@ Set<String> get_favorites(List<PropertyInfo>& properties) {
          E                              = E->next()) {
         String property_key = E->get().name;
         if (property_key.begins_with("favorite_projects/")) {
-            favorites.insert(property_key);
+            String project_key = property_key.get_slice("/", 1);
+            favorites.insert(project_key);
         }
     }
     return favorites;
@@ -88,7 +89,17 @@ ProjectsList::ProjectsList() {
     projects_container->set_h_size_flags(SIZE_EXPAND_FILL);
     scroll_container->add_child(projects_container);
 
-    load_projects();
+    _load_projects();
+}
+
+void ProjectsList::add_project(const String& project_key) {
+    if (_has_project(project_key)) {
+        return;
+    }
+    ProjectsListItem* item = _create_item(project_key);
+    search_box->clear();
+    _refresh_projects_list();
+    _select_index(item->get_index());
 }
 
 int ProjectsList::get_project_count() const {
@@ -159,42 +170,6 @@ bool ProjectsList::key_pressed(Ref<InputEventKey> key_event) {
         } break;
     }
     return false;
-}
-
-void ProjectsList::load_projects() {
-    // This is a full, hard reload of the list. Don't call this unless really
-    // required, it's expensive. If you have 150 projects, it may read through
-    // 150 files on your disk at once + load 150 icons.
-    _clear_projects();
-
-    List<PropertyInfo> properties;
-    EditorSettings::get_singleton()->get_property_list(&properties);
-
-    Set<String> favorites = get_favorites(properties);
-
-    for (List<PropertyInfo>::Element* E = properties.front(); E;
-         E                              = E->next()) {
-        // This is actually something like
-        // "projects/C:::Documents::Projects::MyGame"
-        String property_key = E->get().name;
-        if (!property_key.begins_with("projects/")) {
-            continue;
-        }
-        String project_key = property_key.get_slice("/", 1);
-        bool favorite      = favorites.has("favorite_projects/" + project_key);
-        _create_item(property_key, favorite);
-    }
-
-    _refresh_projects_list();
-    scroll_container->set_v_scroll(0);
-}
-
-void ProjectsList::project_created(const String& project_key) {
-    String property_key    = "projects/" + project_key;
-    ProjectsListItem* item = _create_item(property_key);
-    search_box->clear();
-    _refresh_projects_list();
-    _select_index(item->get_index());
 }
 
 void ProjectsList::refresh_selected_projects() {
@@ -352,16 +327,6 @@ void ProjectsList::_add_item_to_selection(ProjectsListItem* p_item) {
     p_item->update();
 }
 
-void ProjectsList::_clear_projects() {
-    for (int i = 0; i < projects.size(); ++i) {
-        ProjectsListItem* project = projects[i];
-        memdelete(project);
-    }
-    projects.clear();
-    selected_project_keys.clear();
-    first_selected_project_index = -1;
-}
-
 void ProjectsList::_clear_selection() {
     selected_project_keys.clear();
     for (int index = 0; index < projects.size(); index++) {
@@ -371,10 +336,10 @@ void ProjectsList::_clear_selection() {
 }
 
 ProjectsListItem* ProjectsList::_create_item(
-    const String& property_key,
+    const String& project_key,
     bool favorite
 ) {
-    ProjectsListItem* item = memnew(ProjectsListItem(property_key, favorite));
+    ProjectsListItem* item = memnew(ProjectsListItem(project_key, favorite));
     item->connect("item_double_clicked", this, "_on_item_double_clicked");
     item->connect("item_updated", this, "_on_item_updated", varray(item));
     item->connect(
@@ -422,6 +387,15 @@ void ProjectsList::_filter_projects() {
     update_dock_menu();
 }
 
+bool ProjectsList::_has_project(const String& project_key) {
+    for (int i = 0; i < projects.size(); i++) {
+        if (projects[i]->project_key == project_key) {
+            return true;
+        }
+    }
+    return false;
+}
+
 void ProjectsList::_load_project_icon(int p_index) {
     ProjectsListItem* item = projects[p_index];
 
@@ -450,6 +424,27 @@ void ProjectsList::_load_project_icon(int p_index) {
 
     item->set_icon_texture(icon);
     item->icon_loaded = true;
+}
+
+void ProjectsList::_load_projects() {
+    List<PropertyInfo> properties;
+    EditorSettings::get_singleton()->get_property_list(&properties);
+
+    Set<String> favorites = get_favorites(properties);
+
+    for (List<PropertyInfo>::Element* E = properties.front(); E;
+         E                              = E->next()) {
+        String property_key = E->get().name;
+        if (!property_key.begins_with("projects/")) {
+            continue;
+        }
+        String project_key = property_key.get_slice("/", 1);
+        bool favorite      = favorites.has(project_key);
+        _create_item(project_key, favorite);
+    }
+
+    _refresh_projects_list();
+    scroll_container->set_v_scroll(0);
 }
 
 void ProjectsList::_on_item_double_clicked() {

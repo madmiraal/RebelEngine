@@ -13,11 +13,12 @@
 #include "scene/gui/label.h"
 
 ProjectsListItem::ProjectsListItem(
-    const String& p_property_key,
+    const String& p_project_key,
     bool p_favorite
 ) :
+    project_key(p_project_key),
     favorite(p_favorite) {
-    _extract_project_values(p_property_key);
+    _extract_project_values();
 
     set_theme(create_custom_theme());
     set_focus_mode(FocusMode::FOCUS_ALL);
@@ -105,8 +106,7 @@ ProjectsListItem::ProjectsListItem(
 }
 
 void ProjectsListItem::refresh_item() {
-    String property_key = "projects/" + project_key;
-    _extract_project_values(property_key);
+    _extract_project_values();
     project_name_label->set_text(
         missing ? TTR("Missing project") : project_name
     );
@@ -155,9 +155,8 @@ void ProjectsListItem::_notification(int p_what) {
     }
 }
 
-void ProjectsListItem::_extract_project_values(const String& p_property_key) {
-    project_key    = p_property_key.get_slice("/", 1);
-    project_folder = EditorSettings::get_singleton()->get(p_property_key);
+void ProjectsListItem::_extract_project_values() {
+    project_folder = project_key.replace("::", "/");
 
     Ref<ConfigFile> settings_file = memnew(ConfigFile);
     String settings_file_name     = project_folder.plus_file("project.rebel");
