@@ -442,7 +442,8 @@ ProjectsListItem* ProjectsList::_create_item(
     return item;
 }
 
-void ProjectsList::_filter_projects(const String& search_text) {
+void ProjectsList::_filter_projects() {
+    String search_text = search_box->get_text();
     if (search_text.empty()) {
         for (int i = 0; i < projects.size(); ++i) {
             projects[i]->set_visible(true);
@@ -504,8 +505,8 @@ void ProjectsList::_on_item_double_clicked() {
     emit_signal("item_double_clicked");
 }
 
-void ProjectsList::_on_search_text_changed(const String& p_search_text) {
-    _filter_projects(p_search_text);
+void ProjectsList::_on_search_text_changed(const String&) {
+    _filter_projects();
 }
 
 void ProjectsList::_on_selection_changed(

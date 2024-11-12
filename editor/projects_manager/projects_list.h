@@ -72,10 +72,10 @@ private:
         const String& property_key,
         bool favorite = false
     );
-    void _filter_projects(const String& search_text = String());
+    void _filter_projects();
     void _load_project_icon(int p_index);
     void _on_item_double_clicked();
-    void _on_search_text_changed(const String& p_search_text);
+    void _on_search_text_changed(const String&);
     void _on_selection_changed(
         bool p_shift_pressed,
         bool p_control_pressed,
