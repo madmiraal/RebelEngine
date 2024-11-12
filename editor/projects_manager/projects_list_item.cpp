@@ -275,6 +275,12 @@ bool ProjectsListItemComparator::operator()(
     }
     switch (sort_order) {
         case ProjectsListItem::SortOrder::NAME:
+            if (a->project_name.empty()) {
+                return false;
+            }
+            if (b->project_name.empty()) {
+                return true;
+            }
             return a->project_name < b->project_name;
         case ProjectsListItem::SortOrder::PATH:
             return a->project_key < b->project_key;
