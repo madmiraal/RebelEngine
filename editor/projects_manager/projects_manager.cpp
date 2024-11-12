@@ -1056,92 +1056,40 @@ void ProjectsManager::_show_about() {
     about->popup_centered(Size2(780, 500) * EDSCALE);
 }
 
-void ProjectsManager::_unhandled_input(const Ref<InputEvent>& p_ev) {
-    Ref<InputEventKey> k = p_ev;
+void ProjectsManager::_unhandled_input(const Ref<InputEvent>& p_event) {
+    Ref<InputEventKey> key_event = p_event;
+    if (!key_event.is_valid() || !key_event->is_pressed()) {
+        return;
+    }
 
-    if (k.is_valid()) {
-        if (!k->is_pressed()) {
-            return;
-        }
-
-        // Pressing Command + Q quits the Projects Manager
-        // This is handled by the platform implementation on macOS,
-        // so only define the shortcut on other platforms
+    // Pressing Command + Q quits the Projects Manager.
+    // This is handled by the platform implementation on macOS,
+    // so only define the shortcut on other platforms
 #ifndef MACOS_ENABLED
-        if (k->get_scancode_with_modifiers() == (KEY_MASK_CMD | KEY_Q)) {
-            _dim_window();
-            get_tree()->quit();
-        }
+    if (key_event->get_scancode_with_modifiers() == (KEY_MASK_CMD | KEY_Q)) {
+        _dim_window();
+        get_tree()->quit();
+    }
 #endif
 
-        if (tabs->get_current_tab() != 0) {
-            return;
+    if (tabs->get_current_tab() != 0) {
+        return;
+    }
+
+    bool scancode_handled = false;
+    switch (key_event->get_scancode()) {
+        case KEY_ENTER: {
+            _open_selected_projects_ask();
+            scancode_handled = true;
+        } break;
+        default: {
+            scancode_handled = projects_list->key_pressed(key_event);
         }
+    }
 
-        bool scancode_handled = true;
-
-        switch (k->get_scancode()) {
-            case KEY_ENTER: {
-                _open_selected_projects_ask();
-            } break;
-            case KEY_HOME: {
-                if (projects_list->get_project_count() > 0) {
-                    projects_list->select_project(0);
-                    _update_project_buttons();
-                }
-
-            } break;
-            case KEY_END: {
-                if (projects_list->get_project_count() > 0) {
-                    projects_list->select_project(
-                        projects_list->get_project_count() - 1
-                    );
-                    _update_project_buttons();
-                }
-
-            } break;
-            case KEY_UP: {
-                if (k->get_shift()) {
-                    break;
-                }
-
-                int index = projects_list->get_single_selected_index();
-                if (index > 0) {
-                    projects_list->select_project(index - 1);
-                    projects_list->ensure_project_visible(index - 1);
-                    _update_project_buttons();
-                }
-
-                break;
-            }
-            case KEY_DOWN: {
-                if (k->get_shift()) {
-                    break;
-                }
-
-                int index = projects_list->get_single_selected_index();
-                if (index + 1 < projects_list->get_project_count()) {
-                    projects_list->select_project(index + 1);
-                    projects_list->ensure_project_visible(index + 1);
-                    _update_project_buttons();
-                }
-
-            } break;
-            case KEY_F: {
-                if (k->get_command()) {
-                    projects_list->set_search_focus();
-                } else {
-                    scancode_handled = false;
-                }
-            } break;
-            default: {
-                scancode_handled = false;
-            } break;
-        }
-
-        if (scancode_handled) {
-            accept_event();
-        }
+    if (scancode_handled) {
+        _update_project_buttons();
+        accept_event();
     }
 }
 

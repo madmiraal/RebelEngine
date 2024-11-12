@@ -31,14 +31,13 @@ public:
     int get_project_count() const;
     const Set<String>& get_selected_project_keys() const;
     Vector<ProjectsListItem*> get_selected_projects() const;
-    int get_single_selected_index() const;
     bool is_any_project_missing() const;
+    bool key_pressed(Ref<InputEventKey> key_event);
     void load_projects();
     void project_created(const String& dir);
     int refresh_project(const String& dir_path);
     void remove_missing_projects();
     void remove_selected_projects(bool p_delete_project_folder);
-    void select_project(int p_index);
     void set_search_focus();
     void set_loading();
     void update_dock_menu();
@@ -48,7 +47,7 @@ protected:
     void _notification(int p_what);
 
 private:
-    String first_selected_project_key;
+    int first_selected_project_index = -1;
     Set<String> selected_project_keys;
 
     Label* loading_label;
@@ -67,6 +66,7 @@ private:
     int icon_load_index = 0;
 
     void _add_item(const String& property_key, bool favorite);
+    void _add_item_to_selection(ProjectsListItem* p_item);
     void _clear_projects();
     void _clear_selection();
     void _filter_projects(const String& search_text);
@@ -81,7 +81,7 @@ private:
     void _on_sort_order_selected(int p_index);
     void _on_item_updated(const Node* p_node);
     void _remove_project(int p_index, bool p_update_settings);
-    void _select_item(ProjectsListItem* p_item);
+    void _select_index(int p_index);
     void _select_range(ProjectsListItem* p_to_item);
     void _sort_projects();
     void _toggle_item_selected(ProjectsListItem* p_item);
