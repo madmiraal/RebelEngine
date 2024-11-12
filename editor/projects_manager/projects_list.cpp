@@ -189,18 +189,16 @@ void ProjectsList::load_projects() {
         _create_item(property_key, favorite);
     }
 
-    _filter_projects("");
-    _sort_projects();
-    _update_icons_async();
+    _refresh_projects_list();
     scroll_container->set_v_scroll(0);
 }
 
 void ProjectsList::project_created(const String& project_key) {
+    String property_key    = "projects/" + project_key;
+    ProjectsListItem* item = _create_item(property_key);
     search_box->clear();
-    int i = refresh_project(project_key);
-    _select_index(i);
-    ensure_project_visible(i);
-    update_dock_menu();
+    _refresh_projects_list();
+    _select_index(item->get_index());
 }
 
 int ProjectsList::refresh_project(String project_key) {
@@ -553,6 +551,12 @@ void ProjectsList::_on_item_updated(const Node* p_node) {
             }
         }
     }
+}
+
+void ProjectsList::_refresh_projects_list() {
+    _filter_projects();
+    _sort_projects();
+    _update_icons_async();
 }
 
 void ProjectsList::_remove_project(int p_index, bool p_update_settings) {

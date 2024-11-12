@@ -72,7 +72,7 @@ private:
         const String& property_key,
         bool favorite = false
     );
-    void _filter_projects(const String& search_text);
+    void _filter_projects(const String& search_text = String());
     void _load_project_icon(int p_index);
     void _on_item_double_clicked();
     void _on_search_text_changed(const String& p_search_text);
@@ -83,6 +83,7 @@ private:
     );
     void _on_sort_order_selected(int p_index);
     void _on_item_updated(const Node* p_node);
+    void _refresh_projects_list();
     void _remove_project(int p_index, bool p_update_settings);
     void _select_index(int p_index);
     void _select_range(ProjectsListItem* p_to_item);
