@@ -195,21 +195,21 @@ void ProjectsList::load_projects() {
     scroll_container->set_v_scroll(0);
 }
 
-void ProjectsList::project_created(const String& dir) {
+void ProjectsList::project_created(const String& project_key) {
     search_box->clear();
-    int i = refresh_project(dir);
+    int i = refresh_project(project_key);
     _select_index(i);
     ensure_project_visible(i);
     update_dock_menu();
 }
 
-int ProjectsList::refresh_project(const String& dir_path) {
+int ProjectsList::refresh_project(String project_key) {
     // Reads editor settings and reloads information about a specific project.
     // If it wasn't loaded and should be in the list, it is added (i.e new
     // project). If it isn't in the list anymore, it is removed. If it is in the
     // list but doesn't exist anymore, it is marked as missing.
 
-    String project_key = dir_path.replace("/", "::");
+    String dir_path = project_key.replace("::", "/");
 
     // Read Projects Manager settings
     bool is_favourite      = false;

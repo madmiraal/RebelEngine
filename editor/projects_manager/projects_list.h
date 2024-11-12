@@ -34,8 +34,8 @@ public:
     bool is_any_project_missing() const;
     bool key_pressed(Ref<InputEventKey> key_event);
     void load_projects();
-    void project_created(const String& dir);
-    int refresh_project(const String& dir_path);
+    void project_created(const String& project_key);
+    int refresh_project(String project_key);
     void remove_missing_projects();
     void remove_selected_projects(bool p_delete_project_folder);
     void set_search_focus();

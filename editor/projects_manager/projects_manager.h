@@ -84,7 +84,7 @@ private:
     void _language_selected(int p_id);
     void _new_project();
     void _on_item_double_clicked();
-    void _on_project_created(const String& dir);
+    void _on_project_created(const String& project_key);
     void _on_projects_updated();
     void _on_selection_changed();
     void _on_tab_changed(int p_tab);
