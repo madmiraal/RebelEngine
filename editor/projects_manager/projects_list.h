@@ -65,10 +65,13 @@ private:
 
     int icon_load_index = 0;
 
-    void _add_item(const String& property_key, bool favorite);
     void _add_item_to_selection(ProjectsListItem* p_item);
     void _clear_projects();
     void _clear_selection();
+    ProjectsListItem* _create_item(
+        const String& property_key,
+        bool favorite = false
+    );
     void _filter_projects(const String& search_text);
     void _load_project_icon(int p_index);
     void _on_item_double_clicked();
