@@ -18,16 +18,16 @@
 #include "scene/gui/box_container.h"
 #include "scene/gui/button.h"
 #include "scene/gui/check_box.h"
-#include "scene/gui/control.h"
 #include "scene/gui/dialogs.h"
 #include "scene/gui/file_dialog.h"
 #include "scene/gui/label.h"
 #include "scene/gui/link_button.h"
 #include "scene/gui/option_button.h"
+#include "scene/gui/panel.h"
 #include "scene/gui/tab_container.h"
 
-class ProjectsManager : public Control {
-    GDCLASS(ProjectsManager, Control);
+class ProjectsManager : public Panel {
+    GDCLASS(ProjectsManager, Panel);
 
 public:
     ProjectsManager();

@@ -95,22 +95,15 @@ ProjectsManager::ProjectsManager() {
 
     set_anchors_and_margins_preset(Control::PRESET_WIDE);
     set_theme(create_custom_theme());
-
-    Panel* panel = memnew(Panel);
-    add_child(panel);
-    panel->set_anchors_and_margins_preset(Control::PRESET_WIDE);
-    panel->add_style_override(
-        "panel",
-        get_stylebox("Background", "EditorStyles")
-    );
+    add_style_override("panel", get_stylebox("Background", "EditorStyles"));
 
     VBoxContainer* panel_container = memnew(VBoxContainer);
-    panel->add_child(panel_container);
     panel_container->set_anchors_and_margins_preset(
         Control::PRESET_WIDE,
         Control::PRESET_MODE_MINSIZE,
         8 * EDSCALE
     );
+    add_child(panel_container);
 
     Control* center_box = memnew(Control);
     center_box->set_v_size_flags(SIZE_EXPAND_FILL);
