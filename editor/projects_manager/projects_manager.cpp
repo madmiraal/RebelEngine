@@ -132,11 +132,12 @@ ProjectsManager::ProjectsManager() {
 
     _create_local_projects_buttons(projects_buttons_container);
 
+    // Asset Library Projects tab
     if (StreamPeerSSL::is_available()) {
         asset_library = memnew(EditorAssetLibrary(true));
         asset_library->set_name(TTR("Asset Library Projects"));
-        tabs->add_child(asset_library);
         asset_library->connect("install_asset", this, "_install_project");
+        tabs->add_child(asset_library);
     } else {
         WARN_PRINT("Asset Library not available, as it requires SSL to work.");
     }
