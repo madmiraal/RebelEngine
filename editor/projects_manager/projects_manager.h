@@ -41,12 +41,11 @@ private:
     AcceptDialog* dialog_error;
     AcceptDialog* run_error_diag;
 
-    Button* about_btn;
-    Button* open_btn;
-    Button* remove_btn;
-    Button* remove_missing_btn;
-    Button* rename_btn;
-    Button* run_btn;
+    Button* edit_button;
+    Button* remove_button;
+    Button* remove_missing_button;
+    Button* rename_button;
+    Button* run_button;
 
     CheckBox* delete_project_contents;
 
@@ -76,33 +75,38 @@ private:
     TabContainer* tabs;
 
     void _confirm_update_settings();
+    void _create_local_projects_buttons(VBoxContainer* buttons_container);
     void _dim_window();
     void _files_dropped(const PoolStringArray& p_files, int p_screen);
     void _global_menu_action(const Variant& p_id, const Variant& p_meta);
     void _import_project();
     void _install_project(const String& p_zip_path, const String& p_title);
     void _language_selected(int p_id);
-    void _new_project();
+    void _on_about_button_pressed();
+    void _on_edit_button_pressed();
+    void _on_import_button_pressed();
     void _on_item_double_clicked();
+    void _on_new_project_button_pressed();
     void _on_project_created(const String& project_key);
     void _on_projects_updated();
+    void _on_run_button_pressed();
+    void _on_rename_button_pressed();
+    void _on_remove_button_pressed();
+    void _on_remove_missing_button_pressed();
+    void _on_scan_button_pressed();
     void _on_selection_changed();
     void _on_tab_changed(int p_tab);
     void _open_asset_library();
     void _open_selected_projects_ask();
     void _open_selected_projects();
-    void _remove_missing_projects();
     void _remove_missing_projects_confirm();
-    void _remove_project();
     void _remove_project_confirm();
     void _rename_project();
     void _restart_confirm();
     void _run_project_confirm();
-    void _run_project();
     void _scan_begin(const String& p_base);
     void _scan_dir(const String& path, List<String>* r_projects);
     void _scan_multiple_folders(const PoolStringArray& p_files);
-    void _scan_projects();
     void _show_about();
     void _unhandled_input(const Ref<InputEvent>& p_event);
     void _update_project_buttons();

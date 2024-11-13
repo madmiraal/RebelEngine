@@ -115,120 +115,22 @@ ProjectsManager::ProjectsManager() {
     tabs->connect("tab_changed", this, "_on_tab_changed");
     center_box->add_child(tabs);
 
-    HBoxContainer* projects_tab_container = memnew(HBoxContainer);
-    projects_tab_container->set_name(TTR("Local Projects"));
-    tabs->add_child(projects_tab_container);
+    // Local Projects tab
+    HBoxContainer* local_projects_tab_container = memnew(HBoxContainer);
+    local_projects_tab_container->set_name(TTR("Local Projects"));
+    tabs->add_child(local_projects_tab_container);
 
     projects_list = memnew(ProjectsList);
     projects_list->connect("selection_changed", this, "_on_selection_changed");
     projects_list
         ->connect("item_double_clicked", this, "_on_item_double_clicked");
-    projects_tab_container->add_child(projects_list);
+    local_projects_tab_container->add_child(projects_list);
 
-    VBoxContainer* tree_vb = memnew(VBoxContainer);
-    tree_vb->set_custom_minimum_size(Size2(120, 120));
-    projects_tab_container->add_child(tree_vb);
+    VBoxContainer* projects_buttons_container = memnew(VBoxContainer);
+    projects_buttons_container->set_custom_minimum_size(Size2(120, 120));
+    local_projects_tab_container->add_child(projects_buttons_container);
 
-    Button* open = memnew(Button);
-    open->set_text(TTR("Edit"));
-    open->set_shortcut(ED_SHORTCUT(
-        "projects_manager/edit_project",
-        TTR("Edit Project"),
-        KEY_MASK_CMD | KEY_E
-    ));
-    tree_vb->add_child(open);
-    open->connect("pressed", this, "_open_selected_projects_ask");
-    open_btn = open;
-
-    Button* run = memnew(Button);
-    run->set_text(TTR("Run"));
-    run->set_shortcut(ED_SHORTCUT(
-        "projects_manager/run_project",
-        TTR("Run Project"),
-        KEY_MASK_CMD | KEY_R
-    ));
-    tree_vb->add_child(run);
-    run->connect("pressed", this, "_run_project");
-    run_btn = run;
-
-    tree_vb->add_child(memnew(HSeparator));
-
-    Button* scan = memnew(Button);
-    scan->set_text(TTR("Scan"));
-    scan->set_shortcut(ED_SHORTCUT(
-        "projects_manager/scan_projects",
-        TTR("Scan Projects"),
-        KEY_MASK_CMD | KEY_S
-    ));
-    tree_vb->add_child(scan);
-    scan->connect("pressed", this, "_scan_projects");
-
-    tree_vb->add_child(memnew(HSeparator));
-
-    scan_dir = memnew(FileDialog);
-    scan_dir->set_access(FileDialog::ACCESS_FILESYSTEM);
-    scan_dir->set_mode(FileDialog::MODE_OPEN_DIR);
-    scan_dir->set_title(TTR("Select a Folder to Scan")
-    ); // must be after mode or it's overridden
-    scan_dir->set_current_dir(EditorSettings::get_singleton()->get(
-        "filesystem/directories/default_project_path"
-    ));
-    add_child(scan_dir);
-    scan_dir->connect("dir_selected", this, "_scan_begin");
-
-    Button* create = memnew(Button);
-    create->set_text(TTR("New Project"));
-    create->set_shortcut(ED_SHORTCUT(
-        "projects_manager/new_project",
-        TTR("New Project"),
-        KEY_MASK_CMD | KEY_N
-    ));
-    tree_vb->add_child(create);
-    create->connect("pressed", this, "_new_project");
-
-    Button* import = memnew(Button);
-    import->set_text(TTR("Import"));
-    import->set_shortcut(ED_SHORTCUT(
-        "projects_manager/import_project",
-        TTR("Import exsiting project"),
-        KEY_MASK_CMD | KEY_I
-    ));
-    tree_vb->add_child(import);
-    import->connect("pressed", this, "_import_project");
-
-    Button* rename = memnew(Button);
-    rename->set_text(TTR("Rename"));
-    rename->set_shortcut(ED_SHORTCUT(
-        "projects_manager/rename_project",
-        TTR("Rename Project"),
-        KEY_F2
-    ));
-    tree_vb->add_child(rename);
-    rename->connect("pressed", this, "_rename_project");
-    rename_btn = rename;
-
-    remove_btn = memnew(Button);
-    remove_btn->set_text(TTR("Remove"));
-    remove_btn->set_shortcut(ED_SHORTCUT(
-        "projects_manager/remove_project",
-        TTR("Remove Project"),
-        KEY_DELETE
-    ));
-    tree_vb->add_child(remove_btn);
-    remove_btn->connect("pressed", this, "_remove_project");
-
-    Button* remove_missing = memnew(Button);
-    remove_missing->set_text(TTR("Remove Missing"));
-    tree_vb->add_child(remove_missing);
-    remove_missing->connect("pressed", this, "_remove_missing_projects");
-    remove_missing_btn = remove_missing;
-
-    tree_vb->add_spacer();
-
-    about_btn = memnew(Button);
-    about_btn->set_text(TTR("About"));
-    about_btn->connect("pressed", this, "_show_about");
-    tree_vb->add_child(about_btn);
+    _create_local_projects_buttons(projects_buttons_container);
 
     if (StreamPeerSSL::is_available()) {
         asset_library = memnew(EditorAssetLibrary(true));
@@ -426,6 +328,17 @@ ProjectsManager::ProjectsManager() {
 
     about = memnew(EditorAbout);
     add_child(about);
+
+    scan_dir = memnew(FileDialog);
+    scan_dir->set_access(FileDialog::ACCESS_FILESYSTEM);
+    scan_dir->set_mode(FileDialog::MODE_OPEN_DIR);
+    scan_dir->set_title(TTR("Select a Folder to Scan")
+    ); // must be after mode or it's overridden
+    scan_dir->set_current_dir(EditorSettings::get_singleton()->get(
+        "filesystem/directories/default_project_path"
+    ));
+    add_child(scan_dir);
+    scan_dir->connect("dir_selected", this, "_scan_begin");
 }
 
 ProjectsManager::~ProjectsManager() {
@@ -436,9 +349,42 @@ ProjectsManager::~ProjectsManager() {
 
 void ProjectsManager::_bind_methods() {
     ClassDB::bind_method(
-        "_open_selected_projects_ask",
-        &ProjectsManager::_open_selected_projects_ask
+        "_on_about_button_pressed",
+        &ProjectsManager::_on_about_button_pressed
     );
+    ClassDB::bind_method(
+        "_on_edit_button_pressed",
+        &ProjectsManager::_on_edit_button_pressed
+    );
+    ClassDB::bind_method(
+        "_on_import_button_pressed",
+        &ProjectsManager::_on_import_button_pressed
+    );
+    ClassDB::bind_method(
+        "_on_new_project_button_pressed",
+        &ProjectsManager::_on_new_project_button_pressed
+    );
+    ClassDB::bind_method(
+        "_on_run_button_pressed",
+        &ProjectsManager::_on_run_button_pressed
+    );
+    ClassDB::bind_method(
+        "_on_rename_button_pressed",
+        &ProjectsManager::_on_rename_button_pressed
+    );
+    ClassDB::bind_method(
+        "_on_remove_button_pressed",
+        &ProjectsManager::_on_remove_button_pressed
+    );
+    ClassDB::bind_method(
+        "_on_remove_missing_button_pressed",
+        &ProjectsManager::_on_remove_missing_button_pressed
+    );
+    ClassDB::bind_method(
+        "_on_scan_button_pressed",
+        &ProjectsManager::_on_scan_button_pressed
+    );
+
     ClassDB::bind_method(
         "_open_selected_projects",
         &ProjectsManager::_open_selected_projects
@@ -448,21 +394,11 @@ void ProjectsManager::_bind_methods() {
         &ProjectsManager::_global_menu_action,
         DEFVAL(Variant())
     );
-    ClassDB::bind_method("_run_project", &ProjectsManager::_run_project);
     ClassDB::bind_method(
         "_run_project_confirm",
         &ProjectsManager::_run_project_confirm
     );
-    ClassDB::bind_method("_scan_projects", &ProjectsManager::_scan_projects);
     ClassDB::bind_method("_scan_begin", &ProjectsManager::_scan_begin);
-    ClassDB::bind_method("_import_project", &ProjectsManager::_import_project);
-    ClassDB::bind_method("_new_project", &ProjectsManager::_new_project);
-    ClassDB::bind_method("_rename_project", &ProjectsManager::_rename_project);
-    ClassDB::bind_method("_remove_project", &ProjectsManager::_remove_project);
-    ClassDB::bind_method(
-        "_remove_missing_projects",
-        &ProjectsManager::_remove_missing_projects
-    );
     ClassDB::bind_method(
         "_remove_project_confirm",
         &ProjectsManager::_remove_project_confirm
@@ -471,7 +407,6 @@ void ProjectsManager::_bind_methods() {
         "_remove_missing_projects_confirm",
         &ProjectsManager::_remove_missing_projects_confirm
     );
-    ClassDB::bind_method("_show_about", &ProjectsManager::_show_about);
     ClassDB::bind_method(
         "_version_button_pressed",
         &ProjectsManager::_version_button_pressed
@@ -554,6 +489,98 @@ void ProjectsManager::_notification(int p_what) {
 
 void ProjectsManager::_confirm_update_settings() {
     _open_selected_projects();
+}
+
+void ProjectsManager::_create_local_projects_buttons(
+    VBoxContainer* buttons_container
+) {
+    edit_button = memnew(Button);
+    edit_button->set_text(TTR("Edit"));
+    edit_button->set_shortcut(ED_SHORTCUT(
+        "projects_manager/edit_project",
+        TTR("Edit Project"),
+        KEY_MASK_CMD | KEY_E
+    ));
+    edit_button->connect("pressed", this, "_on_edit_button_pressed");
+    buttons_container->add_child(edit_button);
+
+    run_button = memnew(Button);
+    run_button->set_text(TTR("Run"));
+    run_button->set_shortcut(ED_SHORTCUT(
+        "projects_manager/run_project",
+        TTR("Run Project"),
+        KEY_MASK_CMD | KEY_R
+    ));
+    run_button->connect("pressed", this, "_on_run_button_pressed");
+    buttons_container->add_child(run_button);
+
+    buttons_container->add_child(memnew(HSeparator));
+
+    Button* scan_button = memnew(Button);
+    scan_button->set_text(TTR("Scan"));
+    scan_button->set_shortcut(ED_SHORTCUT(
+        "projects_manager/scan_projects",
+        TTR("Scan Projects"),
+        KEY_MASK_CMD | KEY_S
+    ));
+    scan_button->connect("pressed", this, "_on_scan_button_pressed");
+    buttons_container->add_child(scan_button);
+
+    buttons_container->add_child(memnew(HSeparator));
+
+    Button* new_project_button = memnew(Button);
+    new_project_button->set_text(TTR("New Project"));
+    new_project_button->set_shortcut(ED_SHORTCUT(
+        "projects_manager/new_project",
+        TTR("New Project"),
+        KEY_MASK_CMD | KEY_N
+    ));
+    new_project_button
+        ->connect("pressed", this, "_on_new_project_button_pressed");
+    buttons_container->add_child(new_project_button);
+
+    Button* import_button = memnew(Button);
+    import_button->set_text(TTR("Import"));
+    import_button->set_shortcut(ED_SHORTCUT(
+        "projects_manager/import_project",
+        TTR("Import existing project"),
+        KEY_MASK_CMD | KEY_I
+    ));
+    import_button->connect("pressed", this, "_on_import_button_pressed");
+    buttons_container->add_child(import_button);
+
+    rename_button = memnew(Button);
+    rename_button->set_text(TTR("Rename"));
+    rename_button->set_shortcut(ED_SHORTCUT(
+        "projects_manager/rename_project",
+        TTR("Rename Project"),
+        KEY_F2
+    ));
+    rename_button->connect("pressed", this, "_on_rename_button_pressed");
+    buttons_container->add_child(rename_button);
+
+    remove_button = memnew(Button);
+    remove_button->set_text(TTR("Remove"));
+    remove_button->set_shortcut(ED_SHORTCUT(
+        "projects_manager/remove_project",
+        TTR("Remove Project"),
+        KEY_DELETE
+    ));
+    remove_button->connect("pressed", this, "_on_remove_button_pressed");
+    buttons_container->add_child(remove_button);
+
+    remove_missing_button = memnew(Button);
+    remove_missing_button->set_text(TTR("Remove Missing"));
+    remove_missing_button
+        ->connect("pressed", this, "_on_remove_missing_button_pressed");
+    buttons_container->add_child(remove_missing_button);
+
+    buttons_container->add_spacer();
+
+    Button* about_button = memnew(Button);
+    about_button->set_text(TTR("About"));
+    about_button->connect("pressed", this, "_on_about_button_pressed");
+    buttons_container->add_child(about_button);
 }
 
 void ProjectsManager::_dim_window() {
@@ -658,11 +685,6 @@ void ProjectsManager::_global_menu_action(
     }
 }
 
-void ProjectsManager::_import_project() {
-    npdialog->set_mode(ProjectsDialog::MODE_IMPORT);
-    npdialog->show_dialog();
-}
-
 void ProjectsManager::_install_project(
     const String& p_zip_path,
     const String& p_title
@@ -690,13 +712,26 @@ void ProjectsManager::_language_selected(int p_id) {
     language_restart_ask->popup_centered();
 }
 
-void ProjectsManager::_new_project() {
-    npdialog->set_mode(ProjectsDialog::MODE_NEW);
+void ProjectsManager::_on_about_button_pressed() {
+    _show_about();
+}
+
+void ProjectsManager::_on_edit_button_pressed() {
+    _open_selected_projects_ask();
+}
+
+void ProjectsManager::_on_import_button_pressed() {
+    npdialog->set_mode(ProjectsDialog::MODE_IMPORT);
     npdialog->show_dialog();
 }
 
 void ProjectsManager::_on_item_double_clicked() {
     _open_selected_projects_ask();
+}
+
+void ProjectsManager::_on_new_project_button_pressed() {
+    npdialog->set_mode(ProjectsDialog::MODE_NEW);
+    npdialog->show_dialog();
 }
 
 void ProjectsManager::_on_project_created(const String& project_key) {
@@ -706,6 +741,78 @@ void ProjectsManager::_on_project_created(const String& project_key) {
 
 void ProjectsManager::_on_projects_updated() {
     projects_list->refresh_selected_projects();
+}
+
+void ProjectsManager::_on_run_button_pressed() {
+    const Set<String>& selected_list =
+        projects_list->get_selected_project_keys();
+
+    if (selected_list.size() < 1) {
+        return;
+    }
+
+    if (selected_list.size() > 1) {
+        multi_run_ask->set_text(vformat(
+            TTR("Are you sure to run %d projects at once?"),
+            selected_list.size()
+        ));
+        multi_run_ask->popup_centered_minsize();
+    } else {
+        _run_project_confirm();
+    }
+}
+
+void ProjectsManager::_on_rename_button_pressed() {
+    const Set<String>& selected_list =
+        projects_list->get_selected_project_keys();
+
+    if (selected_list.empty()) {
+        return;
+    }
+
+    for (Set<String>::Element* E = selected_list.front(); E; E = E->next()) {
+        const String& selected = E->get();
+        String path =
+            EditorSettings::get_singleton()->get("projects/" + selected);
+        npdialog->set_project_path(path);
+        npdialog->set_mode(ProjectsDialog::MODE_RENAME);
+        npdialog->show_dialog();
+    }
+}
+
+void ProjectsManager::_on_remove_button_pressed() {
+    const Set<String>& selected_list =
+        projects_list->get_selected_project_keys();
+
+    if (selected_list.empty()) {
+        return;
+    }
+
+    String confirm_message;
+    if (selected_list.size() >= 2) {
+        confirm_message = vformat(
+            TTR("Remove %d projects from the list?"),
+            selected_list.size()
+        );
+    } else {
+        confirm_message = TTR("Remove this project from the list?");
+    }
+
+    remove_ask_label->set_text(confirm_message);
+    delete_project_contents->set_pressed(false);
+    remove_ask->popup_centered_minsize();
+}
+
+void ProjectsManager::_on_remove_missing_button_pressed() {
+    remove_missing_ask->set_text(
+        TTR("Remove all missing projects from the list?\n"
+            "The project folders' contents won't be modified.")
+    );
+    remove_missing_ask->popup_centered_minsize();
+}
+
+void ProjectsManager::_on_scan_button_pressed() {
+    scan_dir->popup_centered_ratio();
 }
 
 void ProjectsManager::_on_selection_changed() {
@@ -851,64 +958,15 @@ void ProjectsManager::_open_selected_projects() {
     get_tree()->quit();
 }
 
-void ProjectsManager::_remove_missing_projects() {
-    remove_missing_ask->set_text(
-        TTR("Remove all missing projects from the list?\n"
-            "The project folders' contents won't be modified.")
-    );
-    remove_missing_ask->popup_centered_minsize();
-}
-
 void ProjectsManager::_remove_missing_projects_confirm() {
     projects_list->remove_missing_projects();
     _update_project_buttons();
-}
-
-void ProjectsManager::_remove_project() {
-    const Set<String>& selected_list =
-        projects_list->get_selected_project_keys();
-
-    if (selected_list.empty()) {
-        return;
-    }
-
-    String confirm_message;
-    if (selected_list.size() >= 2) {
-        confirm_message = vformat(
-            TTR("Remove %d projects from the list?"),
-            selected_list.size()
-        );
-    } else {
-        confirm_message = TTR("Remove this project from the list?");
-    }
-
-    remove_ask_label->set_text(confirm_message);
-    delete_project_contents->set_pressed(false);
-    remove_ask->popup_centered_minsize();
 }
 
 void ProjectsManager::_remove_project_confirm() {
     projects_list->remove_selected_projects(delete_project_contents->is_pressed(
     ));
     _update_project_buttons();
-}
-
-void ProjectsManager::_rename_project() {
-    const Set<String>& selected_list =
-        projects_list->get_selected_project_keys();
-
-    if (selected_list.empty()) {
-        return;
-    }
-
-    for (Set<String>::Element* E = selected_list.front(); E; E = E->next()) {
-        const String& selected = E->get();
-        String path =
-            EditorSettings::get_singleton()->get("projects/" + selected);
-        npdialog->set_project_path(path);
-        npdialog->set_mode(ProjectsDialog::MODE_RENAME);
-        npdialog->show_dialog();
-    }
 }
 
 void ProjectsManager::_restart_confirm() {
@@ -972,26 +1030,6 @@ void ProjectsManager::_run_project_confirm() {
     }
 }
 
-// When you press the "Run" button
-void ProjectsManager::_run_project() {
-    const Set<String>& selected_list =
-        projects_list->get_selected_project_keys();
-
-    if (selected_list.size() < 1) {
-        return;
-    }
-
-    if (selected_list.size() > 1) {
-        multi_run_ask->set_text(vformat(
-            TTR("Are you sure to run %d projects at once?"),
-            selected_list.size()
-        ));
-        multi_run_ask->popup_centered_minsize();
-    } else {
-        _run_project_confirm();
-    }
-}
-
 void ProjectsManager::_scan_begin(const String& p_base) {
     print_line("Scanning projects at: " + p_base);
     List<String> projects;
@@ -1030,10 +1068,6 @@ void ProjectsManager::_scan_multiple_folders(const PoolStringArray& p_files) {
     for (int i = 0; i < p_files.size(); i++) {
         _scan_begin(p_files.get(i));
     }
-}
-
-void ProjectsManager::_scan_projects() {
-    scan_dir->popup_centered_ratio();
 }
 
 void ProjectsManager::_show_about() {
@@ -1090,12 +1124,13 @@ void ProjectsManager::_update_project_buttons() {
         }
     }
 
-    remove_btn->set_disabled(empty_selection);
-    open_btn->set_disabled(empty_selection || is_missing_project_selected);
-    rename_btn->set_disabled(empty_selection || is_missing_project_selected);
-    run_btn->set_disabled(empty_selection || is_missing_project_selected);
+    remove_button->set_disabled(empty_selection);
+    edit_button->set_disabled(empty_selection || is_missing_project_selected);
+    rename_button->set_disabled(empty_selection || is_missing_project_selected);
+    run_button->set_disabled(empty_selection || is_missing_project_selected);
 
-    remove_missing_btn->set_disabled(!projects_list->is_any_project_missing());
+    remove_missing_button->set_disabled(!projects_list->is_any_project_missing()
+    );
 }
 
 void ProjectsManager::_version_button_pressed() {
