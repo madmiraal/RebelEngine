@@ -74,10 +74,12 @@ private:
 
     TabContainer* tabs;
 
-    void _add_language_options();
     void _confirm_update_settings();
-    void _create_local_projects_buttons(VBoxContainer* buttons_container);
-    Container* _create_tools_container();
+    Control* _create_buttons();
+    Control* _create_language_options();
+    Control* _create_projects_tab();
+    Control* _create_tabs();
+    Control* _create_tools();
     void _dim_window();
     void _files_dropped(const PoolStringArray& p_files, int p_screen);
     void _global_menu_action(const Variant& p_id, const Variant& p_meta);

@@ -109,40 +109,8 @@ ProjectsManager::ProjectsManager() {
     center_box->set_v_size_flags(SIZE_EXPAND_FILL);
     panel_container->add_child(center_box);
 
-    tabs = memnew(TabContainer);
-    tabs->set_anchors_and_margins_preset(Control::PRESET_WIDE);
-    tabs->set_tab_align(TabContainer::ALIGN_LEFT);
-    tabs->connect("tab_changed", this, "_on_tab_changed");
-    center_box->add_child(tabs);
-
-    // Local Projects tab
-    HBoxContainer* local_projects_tab_container = memnew(HBoxContainer);
-    local_projects_tab_container->set_name(TTR("Local Projects"));
-    tabs->add_child(local_projects_tab_container);
-
-    projects_list = memnew(ProjectsList);
-    projects_list->connect("selection_changed", this, "_on_selection_changed");
-    projects_list
-        ->connect("item_double_clicked", this, "_on_item_double_clicked");
-    local_projects_tab_container->add_child(projects_list);
-
-    VBoxContainer* projects_buttons_container = memnew(VBoxContainer);
-    projects_buttons_container->set_custom_minimum_size(Size2(120, 120));
-    local_projects_tab_container->add_child(projects_buttons_container);
-
-    _create_local_projects_buttons(projects_buttons_container);
-
-    // Asset Library Projects tab
-    if (StreamPeerSSL::is_available()) {
-        asset_library = memnew(EditorAssetLibrary(true));
-        asset_library->set_name(TTR("Asset Library Projects"));
-        asset_library->connect("install_asset", this, "_install_project");
-        tabs->add_child(asset_library);
-    } else {
-        WARN_PRINT("Asset Library not available, as it requires SSL to work.");
-    }
-
-    center_box->add_child(_create_tools_container());
+    center_box->add_child(_create_tabs());
+    center_box->add_child(_create_tools());
 
     //////////////////////////////////////////////////////////////
 
@@ -426,44 +394,14 @@ void ProjectsManager::_notification(int p_what) {
     }
 }
 
-void ProjectsManager::_add_language_options() {
-    Vector<String> language_codes;
-    List<PropertyInfo> properties_list;
-    EditorSettings::get_singleton()->get_property_list(&properties_list);
-    for (List<PropertyInfo>::Element* E = properties_list.front(); E;
-         E                              = E->next()) {
-        PropertyInfo& property_info = E->get();
-        if (property_info.name == "interface/editor/editor_language") {
-            language_codes = property_info.hint_string.split(",");
-        }
-    }
-
-    String current_language_code =
-        EditorSettings::get_singleton()->get("interface/editor/editor_language"
-        );
-    for (int i = 0; i < language_codes.size(); i++) {
-        const String& language_code = language_codes[i];
-        String language_name =
-            TranslationServer::get_singleton()->get_locale_name(language_code);
-        language_options->add_item(
-            language_name + " [" + language_code + "]",
-            i
-        );
-        language_options->set_item_metadata(i, language_code);
-        if (current_language_code == language_code) {
-            language_options->select(i);
-            language_options->set_text(language_code);
-        }
-    }
-}
-
 void ProjectsManager::_confirm_update_settings() {
     _open_selected_projects();
 }
 
-void ProjectsManager::_create_local_projects_buttons(
-    VBoxContainer* buttons_container
-) {
+Control* ProjectsManager::_create_buttons() {
+    VBoxContainer* buttons_container = memnew(VBoxContainer);
+    buttons_container->set_custom_minimum_size(Size2(120, 120));
+
     edit_button = memnew(Button);
     edit_button->set_text(TTR("Edit"));
     edit_button->set_shortcut(ED_SHORTCUT(
@@ -551,9 +489,84 @@ void ProjectsManager::_create_local_projects_buttons(
     about_button->set_text(TTR("About"));
     about_button->connect("pressed", this, "_on_about_button_pressed");
     buttons_container->add_child(about_button);
+
+    return buttons_container;
 }
 
-Container* ProjectsManager::_create_tools_container() {
+Control* ProjectsManager::_create_language_options() {
+    language_options = memnew(OptionButton);
+    language_options->set_flat(true);
+    language_options->set_focus_mode(Control::FOCUS_NONE);
+    language_options->set_icon(get_icon("Environment", "EditorIcons"));
+    language_options->connect("item_selected", this, "_on_language_selected");
+
+    Vector<String> language_codes;
+    List<PropertyInfo> properties_list;
+    EditorSettings::get_singleton()->get_property_list(&properties_list);
+    for (List<PropertyInfo>::Element* E = properties_list.front(); E;
+         E                              = E->next()) {
+        PropertyInfo& property_info = E->get();
+        if (property_info.name == "interface/editor/editor_language") {
+            language_codes = property_info.hint_string.split(",");
+        }
+    }
+
+    String current_language_code =
+        EditorSettings::get_singleton()->get("interface/editor/editor_language"
+        );
+    for (int i = 0; i < language_codes.size(); i++) {
+        const String& language_code = language_codes[i];
+        String language_name =
+            TranslationServer::get_singleton()->get_locale_name(language_code);
+        language_options->add_item(
+            language_name + " [" + language_code + "]",
+            i
+        );
+        language_options->set_item_metadata(i, language_code);
+        if (current_language_code == language_code) {
+            language_options->select(i);
+            language_options->set_text(language_code);
+        }
+    }
+
+    return language_options;
+}
+
+Control* ProjectsManager::_create_projects_tab() {
+    HBoxContainer* projects_tab_container = memnew(HBoxContainer);
+    projects_tab_container->set_name(TTR("Local Projects"));
+
+    projects_list = memnew(ProjectsList);
+    projects_list->connect("selection_changed", this, "_on_selection_changed");
+    projects_list
+        ->connect("item_double_clicked", this, "_on_item_double_clicked");
+    projects_tab_container->add_child(projects_list);
+
+    projects_tab_container->add_child(_create_buttons());
+
+    return projects_tab_container;
+}
+
+Control* ProjectsManager::_create_tabs() {
+    tabs = memnew(TabContainer);
+    tabs->set_anchors_and_margins_preset(Control::PRESET_WIDE);
+    tabs->set_tab_align(TabContainer::ALIGN_LEFT);
+    tabs->connect("tab_changed", this, "_on_tab_changed");
+
+    tabs->add_child(_create_projects_tab());
+    if (StreamPeerSSL::is_available()) {
+        asset_library = memnew(EditorAssetLibrary(true));
+        asset_library->set_name(TTR("Asset Library Projects"));
+        asset_library->connect("install_asset", this, "_install_project");
+        tabs->add_child(asset_library);
+    } else {
+        WARN_PRINT("Asset Library not available, as it requires SSL to work.");
+    }
+
+    return tabs;
+}
+
+Control* ProjectsManager::_create_tools() {
     HBoxContainer* tools_container = memnew(HBoxContainer);
     tools_container->set_anchors_and_margins_preset(Control::PRESET_TOP_RIGHT);
     tools_container->set_alignment(BoxContainer::ALIGN_END);
@@ -579,14 +592,7 @@ Container* ProjectsManager::_create_tools_container() {
 
     tools_container->add_spacer();
 
-    // Language options.
-    language_options = memnew(OptionButton);
-    language_options->set_flat(true);
-    language_options->set_focus_mode(Control::FOCUS_NONE);
-    language_options->set_icon(get_icon("Environment", "EditorIcons"));
-    language_options->connect("item_selected", this, "_on_language_selected");
-    _add_language_options();
-    tools_container->add_child(language_options);
+    tools_container->add_child(_create_language_options());
 
     return tools_container;
 }
