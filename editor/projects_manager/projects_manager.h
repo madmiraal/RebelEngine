@@ -49,21 +49,21 @@ private:
 
     CheckBox* delete_project_contents;
 
-    ConfirmationDialog* ask_update_settings;
-    ConfirmationDialog* language_restart_ask;
-    ConfirmationDialog* multi_open_ask;
-    ConfirmationDialog* multi_run_ask;
-    ConfirmationDialog* multi_scan_ask;
-    ConfirmationDialog* open_templates;
-    ConfirmationDialog* remove_ask;
-    ConfirmationDialog* remove_missing_ask;
+    ConfirmationDialog* edit_multiple_confirmation;
+    ConfirmationDialog* open_asset_library_confirmation;
+    ConfirmationDialog* remove_confirmation;
+    ConfirmationDialog* remove_missing_confirmation;
+    ConfirmationDialog* restart_confirmation;
+    ConfirmationDialog* run_multiple_confirmation;
+    ConfirmationDialog* scan_multiple_folders_confirmation;
+    ConfirmationDialog* upgrade_settings_confirmation;
 
     EditorAbout* about;
     EditorAssetLibrary* asset_library;
 
     FileDialog* scan_dir;
 
-    Label* remove_ask_label;
+    Label* remove_confirmation_label;
 
     LinkButton* version_label;
 
@@ -76,10 +76,20 @@ private:
 
     void _confirm_update_settings();
     Control* _create_buttons();
+    void _create_dialogs();
+    Control* _create_edit_multiple_confirmation();
     Control* _create_language_options();
+    Control* _create_open_asset_library_confirmation();
+    Control* _create_projects_dialog();
     Control* _create_projects_tab();
+    Control* _create_remove_confirmation();
+    Control* _create_remove_missing_confirmation();
+    Control* _create_restart_confirmation();
+    Control* _create_run_multiple_confirmation();
+    Control* _create_scan_multiple_folders_confirmation();
     Control* _create_tabs();
     Control* _create_tools();
+    Control* _create_upgrade_settings_confirmation();
     void _dim_window();
     void _files_dropped(const PoolStringArray& p_files, int p_screen);
     void _global_menu_action(const Variant& p_id, const Variant& p_meta);
@@ -93,10 +103,13 @@ private:
     void _on_new_project_button_pressed();
     void _on_project_created(const String& project_key);
     void _on_projects_updated();
-    void _on_run_button_pressed();
     void _on_rename_button_pressed();
     void _on_remove_button_pressed();
+    void _on_remove_confirmed();
     void _on_remove_missing_button_pressed();
+    void _on_remove_missing_confirmed();
+    void _on_restart_confirmed();
+    void _on_run_button_pressed();
     void _on_scan_button_pressed();
     void _on_selection_changed();
     void _on_tab_changed(int p_tab);
@@ -104,10 +117,7 @@ private:
     void _open_asset_library();
     void _open_selected_projects_ask();
     void _open_selected_projects();
-    void _remove_missing_projects_confirm();
-    void _remove_project_confirm();
     void _rename_project();
-    void _restart_confirm();
     void _run_project_confirm();
     void _scan_begin(const String& p_base);
     void _scan_dir(const String& path, List<String>* r_projects);
