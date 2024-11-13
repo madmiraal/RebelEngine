@@ -65,27 +65,29 @@ private:
 
     Label* remove_ask_label;
 
-    LinkButton* version_btn;
+    LinkButton* version_label;
 
-    OptionButton* language_btn;
+    OptionButton* language_options;
 
     ProjectsDialog* npdialog;
     ProjectsList* projects_list;
 
     TabContainer* tabs;
 
+    void _add_language_options();
     void _confirm_update_settings();
     void _create_local_projects_buttons(VBoxContainer* buttons_container);
+    Container* _create_tools_container();
     void _dim_window();
     void _files_dropped(const PoolStringArray& p_files, int p_screen);
     void _global_menu_action(const Variant& p_id, const Variant& p_meta);
     void _import_project();
     void _install_project(const String& p_zip_path, const String& p_title);
-    void _language_selected(int p_id);
     void _on_about_button_pressed();
     void _on_edit_button_pressed();
     void _on_import_button_pressed();
     void _on_item_double_clicked();
+    void _on_language_selected(int p_id);
     void _on_new_project_button_pressed();
     void _on_project_created(const String& project_key);
     void _on_projects_updated();
@@ -96,6 +98,7 @@ private:
     void _on_scan_button_pressed();
     void _on_selection_changed();
     void _on_tab_changed(int p_tab);
+    void _on_version_label_pressed();
     void _open_asset_library();
     void _open_selected_projects_ask();
     void _open_selected_projects();
@@ -110,7 +113,6 @@ private:
     void _show_about();
     void _unhandled_input(const Ref<InputEvent>& p_event);
     void _update_project_buttons();
-    void _version_button_pressed();
 };
 
 #endif // PROJECTS_MANAGER_H

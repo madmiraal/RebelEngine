@@ -142,77 +142,15 @@ ProjectsManager::ProjectsManager() {
         WARN_PRINT("Asset Library not available, as it requires SSL to work.");
     }
 
-    HBoxContainer* settings_hb = memnew(HBoxContainer);
-    settings_hb->set_alignment(BoxContainer::ALIGN_END);
-    settings_hb->set_h_grow_direction(Control::GROW_DIRECTION_BEGIN);
-
-    // A VBoxContainer that contains a dummy Control node to adjust the
-    // LinkButton's vertical position.
-    VBoxContainer* spacer_vb = memnew(VBoxContainer);
-    settings_hb->add_child(spacer_vb);
-
-    Control* v_spacer = memnew(Control);
-    spacer_vb->add_child(v_spacer);
-
-    version_btn = memnew(LinkButton);
-    String hash = String(VERSION_HASH);
-    if (!hash.empty()) {
-        hash = " " + vformat("[%s]", hash.left(9));
-    }
-    version_btn->set_text("v" VERSION_FULL_BUILD + hash);
-    // Fade the version label to be less prominent, but still readable.
-    version_btn->set_self_modulate(Color(1, 1, 1, 0.6));
-    version_btn->set_underline_mode(LinkButton::UNDERLINE_MODE_ON_HOVER);
-    version_btn->set_tooltip(TTR("Click to copy."));
-    version_btn->connect("pressed", this, "_version_button_pressed");
-    spacer_vb->add_child(version_btn);
-
-    // Add a small horizontal spacer between the version and language buttons
-    // to distinguish them.
-    Control* h_spacer = memnew(Control);
-    settings_hb->add_child(h_spacer);
-
-    language_btn = memnew(OptionButton);
-    language_btn->set_flat(true);
-    language_btn->set_focus_mode(Control::FOCUS_NONE);
-
-    Vector<String> editor_languages;
-    List<PropertyInfo> editor_settings_properties;
-    EditorSettings::get_singleton()->get_property_list(
-        &editor_settings_properties
-    );
-    for (List<PropertyInfo>::Element* E = editor_settings_properties.front(); E;
-         E                              = E->next()) {
-        PropertyInfo& pi = E->get();
-        if (pi.name == "interface/editor/editor_language") {
-            editor_languages = pi.hint_string.split(",");
-        }
-    }
-    String current_lang =
-        EditorSettings::get_singleton()->get("interface/editor/editor_language"
-        );
-    for (int i = 0; i < editor_languages.size(); i++) {
-        const String& lang = editor_languages[i];
-        String lang_name =
-            TranslationServer::get_singleton()->get_locale_name(lang);
-        language_btn->add_item(lang_name + " [" + lang + "]", i);
-        language_btn->set_item_metadata(i, lang);
-        if (current_lang == lang) {
-            language_btn->select(i);
-            language_btn->set_text(lang);
-        }
-    }
-    language_btn->set_icon(get_icon("Environment", "EditorIcons"));
-
-    settings_hb->add_child(language_btn);
-    language_btn->connect("item_selected", this, "_language_selected");
-
-    center_box->add_child(settings_hb);
-    settings_hb->set_anchors_and_margins_preset(Control::PRESET_TOP_RIGHT);
+    center_box->add_child(_create_tools_container());
 
     //////////////////////////////////////////////////////////////
 
     language_restart_ask = memnew(ConfirmationDialog);
+    language_restart_ask->set_text(
+        TTR("Language changed.\n"
+            "The interface will update after restarting Projects Manager")
+    );
     language_restart_ask->get_ok()->set_text(TTR("Restart Now"));
     language_restart_ask->get_ok()
         ->connect("pressed", this, "_restart_confirm");
@@ -362,6 +300,10 @@ void ProjectsManager::_bind_methods() {
         &ProjectsManager::_on_import_button_pressed
     );
     ClassDB::bind_method(
+        "_on_language_selected",
+        &ProjectsManager::_on_language_selected
+    );
+    ClassDB::bind_method(
         "_on_new_project_button_pressed",
         &ProjectsManager::_on_new_project_button_pressed
     );
@@ -385,6 +327,10 @@ void ProjectsManager::_bind_methods() {
         "_on_scan_button_pressed",
         &ProjectsManager::_on_scan_button_pressed
     );
+    ClassDB::bind_method(
+        "_on_version_label_pressed",
+        &ProjectsManager::_on_version_label_pressed
+    );
 
     ClassDB::bind_method(
         "_open_selected_projects",
@@ -407,14 +353,6 @@ void ProjectsManager::_bind_methods() {
     ClassDB::bind_method(
         "_remove_missing_projects_confirm",
         &ProjectsManager::_remove_missing_projects_confirm
-    );
-    ClassDB::bind_method(
-        "_version_button_pressed",
-        &ProjectsManager::_version_button_pressed
-    );
-    ClassDB::bind_method(
-        "_language_selected",
-        &ProjectsManager::_language_selected
     );
     ClassDB::bind_method(
         "_restart_confirm",
@@ -485,6 +423,37 @@ void ProjectsManager::_notification(int p_what) {
         case NOTIFICATION_WM_ABOUT: {
             _show_about();
         } break;
+    }
+}
+
+void ProjectsManager::_add_language_options() {
+    Vector<String> language_codes;
+    List<PropertyInfo> properties_list;
+    EditorSettings::get_singleton()->get_property_list(&properties_list);
+    for (List<PropertyInfo>::Element* E = properties_list.front(); E;
+         E                              = E->next()) {
+        PropertyInfo& property_info = E->get();
+        if (property_info.name == "interface/editor/editor_language") {
+            language_codes = property_info.hint_string.split(",");
+        }
+    }
+
+    String current_language_code =
+        EditorSettings::get_singleton()->get("interface/editor/editor_language"
+        );
+    for (int i = 0; i < language_codes.size(); i++) {
+        const String& language_code = language_codes[i];
+        String language_name =
+            TranslationServer::get_singleton()->get_locale_name(language_code);
+        language_options->add_item(
+            language_name + " [" + language_code + "]",
+            i
+        );
+        language_options->set_item_metadata(i, language_code);
+        if (current_language_code == language_code) {
+            language_options->select(i);
+            language_options->set_text(language_code);
+        }
     }
 }
 
@@ -582,6 +551,44 @@ void ProjectsManager::_create_local_projects_buttons(
     about_button->set_text(TTR("About"));
     about_button->connect("pressed", this, "_on_about_button_pressed");
     buttons_container->add_child(about_button);
+}
+
+Container* ProjectsManager::_create_tools_container() {
+    HBoxContainer* tools_container = memnew(HBoxContainer);
+    tools_container->set_anchors_and_margins_preset(Control::PRESET_TOP_RIGHT);
+    tools_container->set_alignment(BoxContainer::ALIGN_END);
+    tools_container->set_h_grow_direction(Control::GROW_DIRECTION_BEGIN);
+
+    // Clickable version label.
+    VBoxContainer* version_container = memnew(VBoxContainer);
+    // Pushes the version label down.
+    Control* version_spacer          = memnew(Control);
+    version_container->add_child(version_spacer);
+    version_label       = memnew(LinkButton);
+    String version_hash = String(VERSION_HASH);
+    if (!version_hash.empty()) {
+        version_hash = vformat(" [%s]", version_hash.left(9));
+    }
+    version_label->set_text(vformat("v%s%s", VERSION_FULL_BUILD, version_hash));
+    version_label->set_self_modulate(Color(1, 1, 1, 0.6));
+    version_label->set_underline_mode(LinkButton::UNDERLINE_MODE_ON_HOVER);
+    version_label->set_tooltip(TTR("Click to copy."));
+    version_label->connect("pressed", this, "_on_version_label_pressed");
+    version_container->add_child(version_label);
+    tools_container->add_child(version_container);
+
+    tools_container->add_spacer();
+
+    // Language options.
+    language_options = memnew(OptionButton);
+    language_options->set_flat(true);
+    language_options->set_focus_mode(Control::FOCUS_NONE);
+    language_options->set_icon(get_icon("Environment", "EditorIcons"));
+    language_options->connect("item_selected", this, "_on_language_selected");
+    _add_language_options();
+    tools_container->add_child(language_options);
+
+    return tools_container;
 }
 
 void ProjectsManager::_dim_window() {
@@ -696,23 +703,6 @@ void ProjectsManager::_install_project(
     npdialog->show_dialog();
 }
 
-void ProjectsManager::_language_selected(int p_id) {
-    String lang = language_btn->get_item_metadata(p_id);
-    EditorSettings::get_singleton()->set(
-        "interface/editor/editor_language",
-        lang
-    );
-    language_btn->set_text(lang);
-    language_btn->set_icon(get_icon("Environment", "EditorIcons"));
-
-    language_restart_ask->set_text(
-        TTR("Language changed.\n"
-            "The interface will update after restarting Rebel Editor or "
-            "Projects Manager")
-    );
-    language_restart_ask->popup_centered();
-}
-
 void ProjectsManager::_on_about_button_pressed() {
     _show_about();
 }
@@ -728,6 +718,18 @@ void ProjectsManager::_on_import_button_pressed() {
 
 void ProjectsManager::_on_item_double_clicked() {
     _open_selected_projects_ask();
+}
+
+void ProjectsManager::_on_language_selected(int p_id) {
+    String language_code = language_options->get_item_metadata(p_id);
+    EditorSettings::get_singleton()->set(
+        "interface/editor/editor_language",
+        language_code
+    );
+    language_options->set_text(language_code);
+    language_options->set_icon(get_icon("Environment", "EditorIcons"));
+
+    language_restart_ask->popup_centered();
 }
 
 void ProjectsManager::_on_new_project_button_pressed() {
@@ -827,6 +829,10 @@ void ProjectsManager::_on_tab_changed(int p_tab) {
 
     // The Templates tab's search field is focused on display in the asset
     // library editor plugin code.
+}
+
+void ProjectsManager::_on_version_label_pressed() {
+    OS::get_singleton()->set_clipboard(version_label->get_text());
 }
 
 void ProjectsManager::_open_asset_library() {
@@ -1132,8 +1138,4 @@ void ProjectsManager::_update_project_buttons() {
 
     remove_missing_button->set_disabled(!projects_list->is_any_project_missing()
     );
-}
-
-void ProjectsManager::_version_button_pressed() {
-    OS::get_singleton()->set_clipboard(version_btn->get_text());
 }
