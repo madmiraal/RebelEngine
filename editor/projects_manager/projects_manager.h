@@ -74,7 +74,6 @@ private:
 
     TabContainer* tabs;
 
-    void _confirm_update_settings();
     Control* _create_buttons();
     void _create_dialogs();
     Control* _create_edit_multiple_confirmation();
@@ -97,10 +96,12 @@ private:
     void _install_project(const String& p_zip_path, const String& p_title);
     void _on_about_button_pressed();
     void _on_edit_button_pressed();
+    void _on_edit_multiple_confirmed();
     void _on_import_button_pressed();
     void _on_item_double_clicked();
     void _on_language_selected(int p_id);
     void _on_new_project_button_pressed();
+    void _on_open_asset_library_confirmed();
     void _on_project_created(const String& project_key);
     void _on_projects_updated();
     void _on_rename_button_pressed();
@@ -110,15 +111,18 @@ private:
     void _on_remove_missing_confirmed();
     void _on_restart_confirmed();
     void _on_run_button_pressed();
+    void _on_run_multiple_confirmed();
     void _on_scan_button_pressed();
+    void _on_scan_multiple_folders_confirmed(const PoolStringArray& p_folders);
     void _on_selection_changed();
     void _on_tab_changed(int p_tab);
+    void _on_upgrade_settings_confirmed();
     void _on_version_label_pressed();
     void _open_asset_library();
     void _open_selected_projects_ask();
     void _open_selected_projects();
     void _rename_project();
-    void _run_project_confirm();
+    void _run_selected();
     void _scan_begin(const String& p_base);
     void _scan_dir(const String& path, List<String>* r_projects);
     void _scan_multiple_folders(const PoolStringArray& p_files);

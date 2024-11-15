@@ -88,11 +88,39 @@ void apply_window_settings() {
     );
     os->set_low_processor_usage_mode(true);
 }
+
+void create_project_directories() {
+    DirAccessRef dir_access =
+        DirAccess::create(DirAccess::AccessType::ACCESS_FILESYSTEM);
+
+    String default_project_path = EditorSettings::get_singleton()->get(
+        "filesystem/directories/default_project_path"
+    );
+    Error error = dir_access->make_dir_recursive(default_project_path);
+    if (error != OK) {
+        ERR_PRINT(
+            "Could not create default project directory: "
+            + default_project_path
+        );
+    }
+
+    String autoscan_project_path = EditorSettings::get_singleton()->get(
+        "filesystem/directories/autoscan_project_path"
+    );
+    error = dir_access->make_dir_recursive(autoscan_project_path);
+    if (error != OK) {
+        ERR_PRINT(
+            "Could not create autoscan project directory: "
+            + autoscan_project_path
+        );
+    }
+}
 } // namespace
 
 ProjectsManager::ProjectsManager() {
     apply_editor_settings();
     apply_window_settings();
+    create_project_directories();
 
     set_anchors_and_margins_preset(Control::PRESET_WIDE);
     set_theme(create_custom_theme());
@@ -117,37 +145,12 @@ ProjectsManager::ProjectsManager() {
 
     _update_project_buttons();
 
-    DirAccessRef dir_access =
-        DirAccess::create(DirAccess::AccessType::ACCESS_FILESYSTEM);
-
-    String default_project_path = EditorSettings::get_singleton()->get(
-        "filesystem/directories/default_project_path"
-    );
-    if (!dir_access->dir_exists(default_project_path)) {
-        Error error = dir_access->make_dir_recursive(default_project_path);
-        if (error != OK) {
-            ERR_PRINT(
-                "Could not create default project directory at: "
-                + default_project_path
-            );
-        }
-    }
-
-    String autoscan_path = EditorSettings::get_singleton()->get(
+    String autoscan_project_path = EditorSettings::get_singleton()->get(
         "filesystem/directories/autoscan_project_path"
     );
-    if (!autoscan_path.empty()) {
-        if (dir_access->dir_exists(autoscan_path)) {
-            _scan_begin(autoscan_path);
-        } else {
-            Error error = dir_access->make_dir_recursive(autoscan_path);
-            if (error != OK) {
-                ERR_PRINT(
-                    "Could not create project autoscan directory at: "
-                    + autoscan_path
-                );
-            }
-        }
+    if (!autoscan_project_path.empty()
+        && DirAccess::exists(autoscan_project_path)) {
+        _scan_begin(autoscan_project_path);
     }
 
     SceneTree::get_singleton()
@@ -193,12 +196,24 @@ void ProjectsManager::_bind_methods() {
         &ProjectsManager::_on_edit_button_pressed
     );
     ClassDB::bind_method(
+        "_on_edit_multiple_confirmed",
+        &ProjectsManager::_on_edit_multiple_confirmed
+    );
+    ClassDB::bind_method(
         "_on_import_button_pressed",
         &ProjectsManager::_on_import_button_pressed
     );
     ClassDB::bind_method(
+        "_on_item_double_clicked",
+        &ProjectsManager::_on_item_double_clicked
+    );
+    ClassDB::bind_method(
         "_on_language_selected",
         &ProjectsManager::_on_language_selected
+    );
+    ClassDB::bind_method(
+        "_on_open_asset_library_confirmed",
+        &ProjectsManager::_on_open_asset_library_confirmed
     );
     ClassDB::bind_method(
         "_on_new_project_button_pressed",
@@ -213,8 +228,16 @@ void ProjectsManager::_bind_methods() {
         &ProjectsManager::_on_remove_button_pressed
     );
     ClassDB::bind_method(
+        "_on_remove_confirmed",
+        &ProjectsManager::_on_remove_confirmed
+    );
+    ClassDB::bind_method(
         "_on_remove_missing_button_pressed",
         &ProjectsManager::_on_remove_missing_button_pressed
+    );
+    ClassDB::bind_method(
+        "_on_remove_missing_confirmed",
+        &ProjectsManager::_on_remove_missing_confirmed
     );
     ClassDB::bind_method(
         "_on_restart_confirmed",
@@ -225,8 +248,25 @@ void ProjectsManager::_bind_methods() {
         &ProjectsManager::_on_run_button_pressed
     );
     ClassDB::bind_method(
+        "_on_run_multiple_confirmed",
+        &ProjectsManager::_on_run_multiple_confirmed
+    );
+    ClassDB::bind_method(
         "_on_scan_button_pressed",
         &ProjectsManager::_on_scan_button_pressed
+    );
+    ClassDB::bind_method(
+        D_METHOD("_on_scan_multiple_folders_confirmed", "folders"),
+        &ProjectsManager::_on_scan_multiple_folders_confirmed
+    );
+    ClassDB::bind_method(
+        "_on_selection_changed",
+        &ProjectsManager::_on_selection_changed
+    );
+    ClassDB::bind_method("_on_tab_changed", &ProjectsManager::_on_tab_changed);
+    ClassDB::bind_method(
+        "_on_upgrade_settings_confirmed",
+        &ProjectsManager::_on_upgrade_settings_confirmed
     );
     ClassDB::bind_method(
         "_on_version_label_pressed",
@@ -234,32 +274,11 @@ void ProjectsManager::_bind_methods() {
     );
 
     ClassDB::bind_method(
-        "_open_selected_projects",
-        &ProjectsManager::_open_selected_projects
-    );
-    ClassDB::bind_method(
         D_METHOD("_global_menu_action"),
         &ProjectsManager::_global_menu_action,
         DEFVAL(Variant())
     );
-    ClassDB::bind_method(
-        "_run_project_confirm",
-        &ProjectsManager::_run_project_confirm
-    );
     ClassDB::bind_method("_scan_begin", &ProjectsManager::_scan_begin);
-    ClassDB::bind_method(
-        "_on_remove_confirmed",
-        &ProjectsManager::_on_remove_confirmed
-    );
-    ClassDB::bind_method(
-        "_on_remove_missing_confirmed",
-        &ProjectsManager::_on_remove_missing_confirmed
-    );
-    ClassDB::bind_method(
-        "_on_item_double_clicked",
-        &ProjectsManager::_on_item_double_clicked
-    );
-    ClassDB::bind_method("_on_tab_changed", &ProjectsManager::_on_tab_changed);
     ClassDB::bind_method(
         "_on_projects_updated",
         &ProjectsManager::_on_projects_updated
@@ -277,22 +296,6 @@ void ProjectsManager::_bind_methods() {
         &ProjectsManager::_install_project
     );
     ClassDB::bind_method("_files_dropped", &ProjectsManager::_files_dropped);
-    ClassDB::bind_method(
-        "_open_asset_library",
-        &ProjectsManager::_open_asset_library
-    );
-    ClassDB::bind_method(
-        "_confirm_update_settings",
-        &ProjectsManager::_confirm_update_settings
-    );
-    ClassDB::bind_method(
-        "_on_selection_changed",
-        &ProjectsManager::_on_selection_changed
-    );
-    ClassDB::bind_method(
-        D_METHOD("_scan_multiple_folders", "files"),
-        &ProjectsManager::_scan_multiple_folders
-    );
 }
 
 void ProjectsManager::_notification(int p_what) {
@@ -321,10 +324,6 @@ void ProjectsManager::_notification(int p_what) {
             _show_about();
         } break;
     }
-}
-
-void ProjectsManager::_confirm_update_settings() {
-    _open_selected_projects();
 }
 
 Control* ProjectsManager::_create_buttons() {
@@ -424,11 +423,11 @@ Control* ProjectsManager::_create_buttons() {
 
 void ProjectsManager::_create_dialogs() {
     add_child(_create_edit_multiple_confirmation());
-    add_child(_create_run_multiple_confirmation());
     add_child(_create_open_asset_library_confirmation());
     add_child(_create_remove_confirmation());
     add_child(_create_remove_missing_confirmation());
     add_child(_create_restart_confirmation());
+    add_child(_create_run_multiple_confirmation());
     add_child(_create_scan_multiple_folders_confirmation());
     add_child(_create_upgrade_settings_confirmation());
 
@@ -439,7 +438,7 @@ Control* ProjectsManager::_create_edit_multiple_confirmation() {
     edit_multiple_confirmation = memnew(ConfirmationDialog);
     edit_multiple_confirmation->get_ok()->set_text(TTR("Edit"));
     edit_multiple_confirmation->get_ok()
-        ->connect("pressed", this, "_open_selected_projects");
+        ->connect("pressed", this, "_on_edit_multiple_confirmed");
     return edit_multiple_confirmation;
 }
 
@@ -485,13 +484,14 @@ Control* ProjectsManager::_create_language_options() {
 Control* ProjectsManager::_create_open_asset_library_confirmation() {
     open_asset_library_confirmation = memnew(ConfirmationDialog);
     open_asset_library_confirmation->set_text(
-        TTR("You currently don't have any projects.\nWould you like to explore "
-            "official example projects in the Asset Library?")
+        TTR("You currently don't have any projects.\n"
+            "Would you like to explore official example projects in the Asset "
+            "Library?")
     );
     open_asset_library_confirmation->get_ok()->set_text(TTR("Open Asset Library"
     ));
     open_asset_library_confirmation
-        ->connect("confirmed", this, "_open_asset_library");
+        ->connect("confirmed", this, "_on_open_asset_library_confirmed");
     return open_asset_library_confirmation;
 }
 
@@ -550,6 +550,10 @@ Control* ProjectsManager::_create_remove_missing_confirmation() {
 
 Control* ProjectsManager::_create_restart_confirmation() {
     restart_confirmation = memnew(ConfirmationDialog);
+    restart_confirmation->set_text(
+        TTR("Language changed.\n"
+            "The interface will be updated after restarting Projects Manager.")
+    );
     restart_confirmation->get_ok()->set_text(TTR("Restart Now"));
     restart_confirmation->get_ok()
         ->connect("pressed", this, "_on_restart_confirmed");
@@ -561,7 +565,7 @@ Control* ProjectsManager::_create_run_multiple_confirmation() {
     run_multiple_confirmation = memnew(ConfirmationDialog);
     run_multiple_confirmation->get_ok()->set_text(TTR("Run"));
     run_multiple_confirmation->get_ok()
-        ->connect("pressed", this, "_run_project_confirm");
+        ->connect("pressed", this, "_on_run_multiple_confirmed");
     return run_multiple_confirmation;
 }
 
@@ -625,7 +629,7 @@ Control* ProjectsManager::_create_tools() {
 Control* ProjectsManager::_create_upgrade_settings_confirmation() {
     upgrade_settings_confirmation = memnew(ConfirmationDialog);
     upgrade_settings_confirmation->get_ok()
-        ->connect("pressed", this, "_confirm_update_settings");
+        ->connect("pressed", this, "_on_upgrade_settings_confirmed");
     return upgrade_settings_confirmation;
 }
 
@@ -684,12 +688,15 @@ void ProjectsManager::_files_dropped(
             memdelete(dir);
         }
         if (confirm) {
-            scan_multiple_folders_confirmation->get_ok()
-                ->disconnect("pressed", this, "_scan_multiple_folders");
+            scan_multiple_folders_confirmation->get_ok()->disconnect(
+                "pressed",
+                this,
+                "_on_scan_multiple_folders_confirmed"
+            );
             scan_multiple_folders_confirmation->get_ok()->connect(
                 "pressed",
                 this,
-                "_scan_multiple_folders",
+                "_on_scan_multiple_folders_confirmed",
                 varray(folders)
             );
             scan_multiple_folders_confirmation->set_text(vformat(
@@ -749,6 +756,10 @@ void ProjectsManager::_on_edit_button_pressed() {
     _open_selected_projects_ask();
 }
 
+void ProjectsManager::_on_edit_multiple_confirmed() {
+    _open_selected_projects();
+}
+
 void ProjectsManager::_on_import_button_pressed() {
     npdialog->set_mode(ProjectsDialog::MODE_IMPORT);
     npdialog->show_dialog();
@@ -766,17 +777,16 @@ void ProjectsManager::_on_language_selected(int p_id) {
     );
     language_options->set_text(language_code);
     language_options->set_icon(get_icon("Environment", "EditorIcons"));
-
-    restart_confirmation->set_text(
-        TTR("Language changed.\n"
-            "The interface will update after restarting Projects Manager.")
-    );
     restart_confirmation->popup_centered();
 }
 
 void ProjectsManager::_on_new_project_button_pressed() {
     npdialog->set_mode(ProjectsDialog::MODE_NEW);
     npdialog->show_dialog();
+}
+
+void ProjectsManager::_on_open_asset_library_confirmed() {
+    _open_asset_library();
 }
 
 void ProjectsManager::_on_project_created(const String& project_key) {
@@ -789,14 +799,15 @@ void ProjectsManager::_on_projects_updated() {
 }
 
 void ProjectsManager::_on_rename_button_pressed() {
-    const Set<String>& selected_list =
+    const Set<String>& selected_project_keys =
         projects_list->get_selected_project_keys();
 
-    if (selected_list.empty()) {
+    if (selected_project_keys.empty()) {
         return;
     }
 
-    for (Set<String>::Element* E = selected_list.front(); E; E = E->next()) {
+    for (Set<String>::Element* E = selected_project_keys.front(); E;
+         E                       = E->next()) {
         const String& selected = E->get();
         String path =
             EditorSettings::get_singleton()->get("projects/" + selected);
@@ -807,18 +818,18 @@ void ProjectsManager::_on_rename_button_pressed() {
 }
 
 void ProjectsManager::_on_remove_button_pressed() {
-    const Set<String>& selected_list =
+    const Set<String>& selected_project_keys =
         projects_list->get_selected_project_keys();
 
-    if (selected_list.empty()) {
+    if (selected_project_keys.empty()) {
         return;
     }
 
     String confirm_message;
-    if (selected_list.size() > 1) {
+    if (selected_project_keys.size() > 1) {
         confirm_message = vformat(
             TTR("Remove %d projects from the list?"),
-            selected_list.size()
+            selected_project_keys.size()
         );
     } else {
         confirm_message = TTR("Remove selected project from the list?");
@@ -845,10 +856,11 @@ void ProjectsManager::_on_remove_missing_confirmed() {
 }
 
 void ProjectsManager::_on_restart_confirmed() {
-    List<String> args = OS::get_singleton()->get_cmdline_args();
-    String exec       = OS::get_singleton()->get_executable_path();
+    OS* os            = OS::get_singleton();
+    List<String> args = os->get_cmdline_args();
+    String exec       = os->get_executable_path();
     OS::ProcessID pid = 0;
-    Error err         = OS::get_singleton()->execute(exec, args, false, &pid);
+    Error err         = os->execute(exec, args, false, &pid);
     ERR_FAIL_COND(err);
 
     _dim_window();
@@ -856,26 +868,36 @@ void ProjectsManager::_on_restart_confirmed() {
 }
 
 void ProjectsManager::_on_run_button_pressed() {
-    const Set<String>& selected_list =
+    const Set<String>& selected_project_keys =
         projects_list->get_selected_project_keys();
 
-    if (selected_list.size() < 1) {
+    if (selected_project_keys.empty()) {
         return;
     }
 
-    if (selected_list.size() > 1) {
+    if (selected_project_keys.size() > 1) {
         run_multiple_confirmation->set_text(vformat(
             TTR("Are you sure to run %d projects at once?"),
-            selected_list.size()
+            selected_project_keys.size()
         ));
         run_multiple_confirmation->popup_centered_minsize();
     } else {
-        _run_project_confirm();
+        _run_selected();
     }
+}
+
+void ProjectsManager::_on_run_multiple_confirmed() {
+    _run_selected();
 }
 
 void ProjectsManager::_on_scan_button_pressed() {
     scan_dir->popup_centered_ratio();
+}
+
+void ProjectsManager::_on_scan_multiple_folders_confirmed(
+    const PoolStringArray& p_folders
+) {
+    _scan_multiple_folders(p_folders);
 }
 
 void ProjectsManager::_on_selection_changed() {
@@ -891,6 +913,10 @@ void ProjectsManager::_on_tab_changed(int p_tab) {
     // library editor plugin code.
 }
 
+void ProjectsManager::_on_upgrade_settings_confirmed() {
+    _open_selected_projects();
+}
+
 void ProjectsManager::_on_version_label_pressed() {
     OS::get_singleton()->set_clipboard(version_label->get_text());
 }
@@ -901,14 +927,14 @@ void ProjectsManager::_open_asset_library() {
 }
 
 void ProjectsManager::_open_selected_projects_ask() {
-    const Set<String>& selected_list =
+    const Set<String>& selected_project_keys =
         projects_list->get_selected_project_keys();
 
-    if (selected_list.size() < 1) {
+    if (selected_project_keys.empty()) {
         return;
     }
 
-    if (selected_list.size() > 1) {
+    if (selected_project_keys.size() > 1) {
         edit_multiple_confirmation->set_text(
             TTR("Are you sure to open more than one project?")
         );
@@ -975,10 +1001,10 @@ void ProjectsManager::_open_selected_projects() {
     // loading. This is especially important for the Web Projects Manager.
     projects_list->set_loading();
 
-    const Set<String>& selected_list =
+    const Set<String>& selected_project_keys =
         projects_list->get_selected_project_keys();
 
-    for (const Set<String>::Element* E = selected_list.front(); E;
+    for (const Set<String>::Element* E = selected_project_keys.front(); E;
          E                             = E->next()) {
         const String& selected = E->get();
         String path =
@@ -1025,7 +1051,7 @@ void ProjectsManager::_open_selected_projects() {
     get_tree()->quit();
 }
 
-void ProjectsManager::_run_project_confirm() {
+void ProjectsManager::_run_selected() {
     Vector<ProjectsListItem*> selected_list =
         projects_list->get_selected_projects();
 
