@@ -30,7 +30,7 @@ public:
     void add_project(const String& project_key);
     int get_project_count() const;
     const Set<String>& get_selected_project_keys() const;
-    Vector<ProjectsListItem*> get_selected_projects() const;
+    Vector<ProjectsListItem*> get_selected_project_items() const;
     bool is_any_project_missing() const;
     bool key_pressed(Ref<InputEventKey> key_event);
     void refresh_selected_projects();

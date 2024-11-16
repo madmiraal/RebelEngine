@@ -942,14 +942,15 @@ void ProjectsManager::_open_selected_projects_ask() {
         return;
     }
 
-    const ProjectsListItem* project = projects_list->get_selected_projects()[0];
-    if (project->missing) {
+    const ProjectsListItem* selected_project =
+        projects_list->get_selected_project_items()[0];
+    if (selected_project->missing) {
         return;
     }
 
     // Update the project settings or don't open
-    String conf        = project->project_folder.plus_file("project.rebel");
-    int config_version = project->version;
+    String conf = selected_project->project_folder.plus_file("project.rebel");
+    int config_version = selected_project->version;
 
     // Check if the config_version property was empty or 0
     if (config_version == 0) {
@@ -986,7 +987,7 @@ void ProjectsManager::_open_selected_projects_ask() {
                 + TTR("The project settings were created by a newer engine "
                       "version, whose settings are not compatible with this "
                       "version."),
-            project->project_folder
+            selected_project->project_folder
         ));
         dialog_error->popup_centered_minsize();
         return;
@@ -1052,11 +1053,11 @@ void ProjectsManager::_open_selected_projects() {
 }
 
 void ProjectsManager::_run_selected() {
-    Vector<ProjectsListItem*> selected_list =
-        projects_list->get_selected_projects();
+    Vector<ProjectsListItem*> selected_project_items =
+        projects_list->get_selected_project_items();
 
-    for (int i = 0; i < selected_list.size(); ++i) {
-        const String& selected_main = selected_list[i]->main_scene;
+    for (int i = 0; i < selected_project_items.size(); ++i) {
+        const String& selected_main = selected_project_items[i]->main_scene;
         if (selected_main.empty()) {
             run_error_diag->set_text(
                 TTR("Can't run project: no main scene defined.\nPlease edit "
@@ -1067,7 +1068,7 @@ void ProjectsManager::_run_selected() {
             continue;
         }
 
-        const String& selected = selected_list[i]->project_key;
+        const String& selected = selected_project_items[i]->project_key;
         String path =
             EditorSettings::get_singleton()->get("projects/" + selected);
 
@@ -1184,7 +1185,7 @@ void ProjectsManager::_unhandled_input(const Ref<InputEvent>& p_event) {
 
 void ProjectsManager::_update_project_buttons() {
     Vector<ProjectsListItem*> selected_projects =
-        projects_list->get_selected_projects();
+        projects_list->get_selected_project_items();
     bool empty_selection = selected_projects.empty();
 
     bool is_missing_project_selected = false;

@@ -111,7 +111,7 @@ const Set<String>& ProjectsList::get_selected_project_keys() const {
     return selected_project_keys;
 }
 
-Vector<ProjectsListItem*> ProjectsList::get_selected_projects() const {
+Vector<ProjectsListItem*> ProjectsList::get_selected_project_items() const {
     Vector<ProjectsListItem*> items;
     if (selected_project_keys.empty()) {
         return items;
@@ -177,15 +177,16 @@ void ProjectsList::refresh_selected_projects() {
         return;
     }
 
-    Vector<ProjectsListItem*> selected_projects = get_selected_projects();
-    for (int i = 0; i < selected_projects.size(); ++i) {
-        selected_projects[i]->refresh_item();
-        selected_projects[i]->icon_loaded = false;
+    Vector<ProjectsListItem*> selected_project_items =
+        get_selected_project_items();
+    for (int i = 0; i < selected_project_items.size(); ++i) {
+        selected_project_items[i]->refresh_item();
+        selected_project_items[i]->icon_loaded = false;
     }
 
     _sort_projects();
     _update_icons_async();
-    _ensure_item_visible(selected_projects[0]->get_index());
+    _ensure_item_visible(selected_project_items[0]->get_index());
     update_dock_menu();
 }
 
