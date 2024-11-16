@@ -37,7 +37,7 @@ public:
     void remove_missing_projects();
     void remove_selected_projects(bool p_delete_project_folder);
     void set_search_focus();
-    void set_loading();
+    void show_loading();
     void update_dock_menu();
 
 protected:

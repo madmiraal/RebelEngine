@@ -115,6 +115,45 @@ void create_project_directories() {
         );
     }
 }
+
+void edit_project(const String& project_name, const String& project_folder) {
+    print_line(vformat("Editing project: %s (%s)", project_name, project_folder)
+    );
+
+    OS* os = OS::get_singleton();
+    List<String> args;
+    args.push_back("--path");
+    args.push_back(project_folder);
+    args.push_back("--editor");
+    if (os->is_stdout_debug_enabled()) {
+        args.push_back("--debug");
+    }
+    if (os->is_stdout_verbose()) {
+        args.push_back("--verbose");
+    }
+    if (os->is_disable_crash_handler()) {
+        args.push_back("--disable-crash-handler");
+    }
+    String exec       = os->get_executable_path();
+    OS::ProcessID pid = 0;
+    Error error       = os->execute(exec, args, false, &pid);
+    ERR_FAIL_COND(error);
+}
+
+void run_project(const String& project_name, const String& project_folder) {
+    print_line(vformat("Running project: %s (%s)", project_name, project_folder)
+    );
+    List<String> args;
+    args.push_back("--path");
+    args.push_back(project_folder);
+    if (OS::get_singleton()->is_disable_crash_handler()) {
+        args.push_back("--disable-crash-handler");
+    }
+    String exec       = OS::get_singleton()->get_executable_path();
+    OS::ProcessID pid = 0;
+    Error error       = OS::get_singleton()->execute(exec, args, false, &pid);
+    ERR_FAIL_COND(error);
+}
 } // namespace
 
 ProjectsManager::ProjectsManager() {
@@ -157,13 +196,6 @@ ProjectsManager::ProjectsManager() {
         ->connect("files_dropped", this, "_files_dropped");
     SceneTree::get_singleton()
         ->connect("global_menu_action", this, "_global_menu_action");
-
-    run_error_diag = memnew(AcceptDialog);
-    add_child(run_error_diag);
-    run_error_diag->set_title(TTR("Can't run project"));
-
-    dialog_error = memnew(AcceptDialog);
-    add_child(dialog_error);
 
     about = memnew(EditorAbout);
     add_child(about);
@@ -431,11 +463,19 @@ void ProjectsManager::_create_dialogs() {
     add_child(_create_scan_multiple_folders_confirmation());
     add_child(_create_upgrade_settings_confirmation());
 
+    add_child(_create_newer_settings_file_version_error());
+    add_child(_create_no_assets_folder_error());
+    add_child(_create_no_main_scene_defined_error());
+    add_child(_create_no_settings_file_error());
+
     add_child(_create_projects_dialog());
 }
 
 Control* ProjectsManager::_create_edit_multiple_confirmation() {
     edit_multiple_confirmation = memnew(ConfirmationDialog);
+    edit_multiple_confirmation->set_text(
+        TTR("Are you sure you want to edit more than one project?")
+    );
     edit_multiple_confirmation->get_ok()->set_text(TTR("Edit"));
     edit_multiple_confirmation->get_ok()
         ->connect("pressed", this, "_on_edit_multiple_confirmed");
@@ -479,6 +519,37 @@ Control* ProjectsManager::_create_language_options() {
     }
 
     return language_options;
+}
+
+Control* ProjectsManager::_create_newer_settings_file_version_error() {
+    newer_settings_file_version_error = memnew(AcceptDialog);
+    return newer_settings_file_version_error;
+}
+
+Control* ProjectsManager::_create_no_assets_folder_error() {
+    no_assets_folder_error = memnew(AcceptDialog);
+    no_assets_folder_error->set_title(TTR("Can't run project"));
+    no_assets_folder_error->set_text(
+        TTR("Can't run project: Assets need to be imported.\n"
+            "Please edit the project to trigger the initial import.")
+    );
+    return no_assets_folder_error;
+}
+
+Control* ProjectsManager::_create_no_main_scene_defined_error() {
+    no_main_scene_defined_error = memnew(AcceptDialog);
+    no_main_scene_defined_error->set_title(TTR("Can't run project"));
+    no_main_scene_defined_error->set_text(
+        TTR("Can't run project: no main scene defined.\n"
+            "Please edit the project and set the main scene in the Project "
+            "Settings under the \"Application\" category.")
+    );
+    return no_main_scene_defined_error;
+}
+
+Control* ProjectsManager::_create_no_settings_file_error() {
+    no_settings_file_error = memnew(AcceptDialog);
+    return no_settings_file_error;
 }
 
 Control* ProjectsManager::_create_open_asset_library_confirmation() {
@@ -935,9 +1006,6 @@ void ProjectsManager::_open_selected_projects_ask() {
     }
 
     if (selected_project_keys.size() > 1) {
-        edit_multiple_confirmation->set_text(
-            TTR("Are you sure to open more than one project?")
-        );
         edit_multiple_confirmation->popup_centered_minsize();
         return;
     }
@@ -948,108 +1016,74 @@ void ProjectsManager::_open_selected_projects_ask() {
         return;
     }
 
-    // Update the project settings or don't open
-    String conf = selected_project->project_folder.plus_file("project.rebel");
-    int config_version = selected_project->version;
-
-    // Check if the config_version property was empty or 0
-    if (config_version == 0) {
-        upgrade_settings_confirmation->set_text(vformat(
-            TTR("The following project settings file does not specify the "
-                "version of Rebel used to create it.\n\n%s\n\n"
-                "If you proceed with opening it, it will be converted to "
-                "Rebel's current configuration file format.\n"
-                "Warning: You won't be able to open the project with previous "
-                "versions of the engine anymore."),
-            conf
-        ));
-        upgrade_settings_confirmation->popup_centered_minsize();
-        return;
-    }
-    // Check if we need to convert project settings from an earlier engine
-    // version
+    int config_version           = selected_project->version;
+    String project_folder        = selected_project->project_folder;
+    String project_settings_file = project_folder.plus_file("project.rebel");
     if (config_version < ProjectSettings::CONFIG_VERSION) {
-        upgrade_settings_confirmation->set_text(vformat(
-            TTR("The following project settings file was generated by an older "
-                "engine version, and needs to be converted for this "
-                "version:\n\n%s\n\nDo you want to convert it?\nWarning: You "
-                "won't be able to open the project with previous versions of "
-                "the engine anymore."),
-            conf
-        ));
-        upgrade_settings_confirmation->popup_centered_minsize();
+        _popup_upgrade_settings_confirmation(project_settings_file);
         return;
     }
-    // Check if the file was generated by a newer, incompatible engine version
     if (config_version > ProjectSettings::CONFIG_VERSION) {
-        dialog_error->set_text(vformat(
-            TTR("Can't open project at '%s'.") + "\n"
-                + TTR("The project settings were created by a newer engine "
-                      "version, whose settings are not compatible with this "
-                      "version."),
-            selected_project->project_folder
-        ));
-        dialog_error->popup_centered_minsize();
+        _popup_newer_settings_file_version_error(project_settings_file);
         return;
     }
 
-    // Open if the project is up-to-date
     _open_selected_projects();
 }
 
 void ProjectsManager::_open_selected_projects() {
-    // Show loading text to tell the user that the Projects Manager is busy
-    // loading. This is especially important for the Web Projects Manager.
-    projects_list->set_loading();
+    projects_list->show_loading();
 
-    const Set<String>& selected_project_keys =
-        projects_list->get_selected_project_keys();
-
-    for (const Set<String>::Element* E = selected_project_keys.front(); E;
-         E                             = E->next()) {
-        const String& selected = E->get();
-        String path =
-            EditorSettings::get_singleton()->get("projects/" + selected);
-        String conf = path.plus_file("project.rebel");
-
-        if (!FileAccess::exists(conf)) {
-            dialog_error->set_text(
-                vformat(TTR("Can't open project at '%s'."), path)
-            );
-            dialog_error->popup_centered_minsize();
+    Vector<ProjectsListItem*> selected_project_items =
+        projects_list->get_selected_project_items();
+    for (int i = 0; i < selected_project_items.size(); i++) {
+        const ProjectsListItem* project = selected_project_items[i];
+        String project_folder           = project->project_folder;
+        String project_settings_file =
+            project_folder.plus_file("project.rebel");
+        if (!FileAccess::exists(project_settings_file)) {
+            _popup_no_settings_file_error(project_settings_file);
             return;
         }
-
-        print_line("Editing project: " + path + " (" + selected + ")");
-
-        List<String> args;
-
-        args.push_back("--path");
-        args.push_back(path);
-
-        args.push_back("--editor");
-
-        if (OS::get_singleton()->is_stdout_debug_enabled()) {
-            args.push_back("--debug");
-        }
-
-        if (OS::get_singleton()->is_stdout_verbose()) {
-            args.push_back("--verbose");
-        }
-
-        if (OS::get_singleton()->is_disable_crash_handler()) {
-            args.push_back("--disable-crash-handler");
-        }
-
-        String exec = OS::get_singleton()->get_executable_path();
-
-        OS::ProcessID pid = 0;
-        Error err = OS::get_singleton()->execute(exec, args, false, &pid);
-        ERR_FAIL_COND(err);
+        String project_name = project->project_name;
+        edit_project(project_name, project_folder);
     }
 
     _dim_window();
     get_tree()->quit();
+}
+
+void ProjectsManager::_popup_newer_settings_file_version_error(
+    const String& p_file
+) {
+    String first_line = TTR("Can't open project settings file ");
+    String second_line =
+        TTR("The project settings were created with a newer version of Rebel "
+            "Engine.\n");
+    newer_settings_file_version_error->set_text(
+        first_line + p_file + "\n" + second_line
+    );
+    newer_settings_file_version_error->popup_centered_minsize();
+}
+
+void ProjectsManager::_popup_no_settings_file_error(const String& p_file) {
+    no_settings_file_error->set_text(
+        vformat(TTR("Can't open project at '%s'."), p_file)
+    );
+    no_settings_file_error->popup_centered_minsize();
+}
+
+void ProjectsManager::_popup_upgrade_settings_confirmation(const String& p_file
+) {
+    upgrade_settings_confirmation->set_text(vformat(
+        TTR("The following project settings file %s was created with an older "
+            "version of Rebel Editor.\n"
+            "Do you want to upgrade the settings file?\n"
+            "Warning: You will not be able to open the project with the "
+            "previous version of Rebel Editor again."),
+        p_file
+    ));
+    upgrade_settings_confirmation->popup_centered_minsize();
 }
 
 void ProjectsManager::_run_selected() {
@@ -1057,48 +1091,23 @@ void ProjectsManager::_run_selected() {
         projects_list->get_selected_project_items();
 
     for (int i = 0; i < selected_project_items.size(); ++i) {
-        const String& selected_main = selected_project_items[i]->main_scene;
-        if (selected_main.empty()) {
-            run_error_diag->set_text(
-                TTR("Can't run project: no main scene defined.\nPlease edit "
-                    "the project and set the main scene in the Project "
-                    "Settings under the \"Application\" category.")
-            );
-            run_error_diag->popup_centered();
+        const ProjectsListItem* project = selected_project_items[i];
+        const String& main_scene        = project->main_scene;
+        if (main_scene.empty()) {
+            no_main_scene_defined_error->popup_centered();
             continue;
         }
 
-        const String& selected = selected_project_items[i]->project_key;
-        String path =
-            EditorSettings::get_singleton()->get("projects/" + selected);
-
-        String project_data_dir_name =
+        const String& project_folder = project->project_folder;
+        const String& project_data_dir_name =
             ProjectSettings::get_singleton()->get_project_data_dir_name();
-        if (!DirAccess::exists(path + "/" + project_data_dir_name)) {
-            run_error_diag->set_text(
-                TTR("Can't run project: Assets need to be imported.\n"
-                    "Please edit the project to trigger the initial import.")
-            );
-            run_error_diag->popup_centered();
+        if (!DirAccess::exists(project_folder + "/" + project_data_dir_name)) {
+            no_assets_folder_error->popup_centered();
             continue;
         }
 
-        print_line("Running project: " + path + " (" + selected + ")");
-
-        List<String> args;
-
-        args.push_back("--path");
-        args.push_back(path);
-
-        if (OS::get_singleton()->is_disable_crash_handler()) {
-            args.push_back("--disable-crash-handler");
-        }
-
-        String exec = OS::get_singleton()->get_executable_path();
-
-        OS::ProcessID pid = 0;
-        Error err = OS::get_singleton()->execute(exec, args, false, &pid);
-        ERR_FAIL_COND(err);
+        const String& project_name = project->project_name;
+        run_project(project_name, project_folder);
     }
 }
 

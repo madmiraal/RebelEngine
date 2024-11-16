@@ -228,7 +228,7 @@ void ProjectsList::set_search_focus() {
     search_box->grab_focus();
 }
 
-void ProjectsList::set_loading() {
+void ProjectsList::show_loading() {
     loading_label->set_modulate(Color(1, 1, 1));
 }
 

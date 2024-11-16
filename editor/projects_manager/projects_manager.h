@@ -38,8 +38,10 @@ protected:
     void _notification(int p_what);
 
 private:
-    AcceptDialog* dialog_error;
-    AcceptDialog* run_error_diag;
+    AcceptDialog* newer_settings_file_version_error;
+    AcceptDialog* no_assets_folder_error;
+    AcceptDialog* no_main_scene_defined_error;
+    AcceptDialog* no_settings_file_error;
 
     Button* edit_button;
     Button* remove_button;
@@ -78,6 +80,10 @@ private:
     void _create_dialogs();
     Control* _create_edit_multiple_confirmation();
     Control* _create_language_options();
+    Control* _create_newer_settings_file_version_error();
+    Control* _create_no_assets_folder_error();
+    Control* _create_no_main_scene_defined_error();
+    Control* _create_no_settings_file_error();
     Control* _create_open_asset_library_confirmation();
     Control* _create_projects_dialog();
     Control* _create_projects_tab();
@@ -121,7 +127,9 @@ private:
     void _open_asset_library();
     void _open_selected_projects_ask();
     void _open_selected_projects();
-    void _rename_project();
+    void _popup_newer_settings_file_version_error(const String& p_file);
+    void _popup_no_settings_file_error(const String& p_file);
+    void _popup_upgrade_settings_confirmation(const String& p_file);
     void _run_selected();
     void _scan_begin(const String& p_base);
     void _scan_dir(const String& path, List<String>* r_projects);
