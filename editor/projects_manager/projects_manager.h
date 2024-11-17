@@ -63,7 +63,7 @@ private:
     EditorAbout* editor_about;
     EditorAssetLibrary* asset_library;
 
-    FileDialog* scan_dir;
+    FileDialog* select_search_folder;
 
     Label* remove_confirmation_label;
 

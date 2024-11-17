@@ -197,16 +197,16 @@ ProjectsManager::ProjectsManager() {
     SceneTree::get_singleton()
         ->connect("global_menu_action", this, "_global_menu_action");
 
-    scan_dir = memnew(FileDialog);
-    scan_dir->set_access(FileDialog::ACCESS_FILESYSTEM);
-    scan_dir->set_mode(FileDialog::MODE_OPEN_DIR);
-    scan_dir->set_title(TTR("Select a Folder to Scan")
+    select_search_folder = memnew(FileDialog);
+    select_search_folder->set_access(FileDialog::ACCESS_FILESYSTEM);
+    select_search_folder->set_mode(FileDialog::MODE_OPEN_DIR);
+    select_search_folder->set_title(TTR("Select a Folder to Scan")
     ); // must be after mode or it's overridden
-    scan_dir->set_current_dir(EditorSettings::get_singleton()->get(
+    select_search_folder->set_current_dir(EditorSettings::get_singleton()->get(
         "filesystem/directories/default_project_path"
     ));
-    add_child(scan_dir);
-    scan_dir->connect("dir_selected", this, "_scan_begin");
+    add_child(select_search_folder);
+    select_search_folder->connect("dir_selected", this, "_scan_begin");
 }
 
 ProjectsManager::~ProjectsManager() {
@@ -955,7 +955,7 @@ void ProjectsManager::_on_run_multiple_confirmed() {
 }
 
 void ProjectsManager::_on_scan_button_pressed() {
-    scan_dir->popup_centered_ratio();
+    select_search_folder->popup_centered_ratio();
 }
 
 void ProjectsManager::_on_scan_multiple_folders_confirmed(
