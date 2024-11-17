@@ -209,6 +209,10 @@ void ProjectsManager::_bind_methods() {
         &ProjectsManager::_on_about_button_pressed
     );
     ClassDB::bind_method(
+        D_METHOD("_on_add_multiple_files_confirmed", "folders"),
+        &ProjectsManager::_on_add_multiple_files_confirmed
+    );
+    ClassDB::bind_method(
         "_on_edit_button_pressed",
         &ProjectsManager::_on_edit_button_pressed
     );
@@ -292,10 +296,6 @@ void ProjectsManager::_bind_methods() {
     ClassDB::bind_method(
         "_on_scan_button_pressed",
         &ProjectsManager::_on_scan_button_pressed
-    );
-    ClassDB::bind_method(
-        D_METHOD("_on_scan_multiple_folders_confirmed", "folders"),
-        &ProjectsManager::_on_scan_multiple_folders_confirmed
     );
     ClassDB::bind_method(
         "_on_search_folder_selected",
@@ -445,13 +445,13 @@ Control* ProjectsManager::_create_buttons() {
 }
 
 void ProjectsManager::_create_dialogs() {
+    add_child(_create_add_multiple_files_confirmation());
     add_child(_create_edit_multiple_confirmation());
     add_child(_create_open_asset_library_confirmation());
     add_child(_create_remove_confirmation());
     add_child(_create_remove_missing_confirmation());
     add_child(_create_restart_confirmation());
     add_child(_create_run_multiple_confirmation());
-    add_child(_create_scan_multiple_folders_confirmation());
     add_child(_create_upgrade_settings_confirmation());
 
     add_child(_create_newer_settings_file_version_error());
@@ -464,6 +464,21 @@ void ProjectsManager::_create_dialogs() {
 
     editor_about = memnew(EditorAbout);
     add_child(editor_about);
+}
+
+Control* ProjectsManager::_create_add_multiple_files_confirmation() {
+    add_multiple_files_confirmation = memnew(ConfirmationDialog);
+    add_multiple_files_confirmation->set_text(
+        TTR("Are you sure you want to add or scan multiple files and folders?")
+    );
+    add_multiple_files_confirmation->get_ok()->set_text(TTR("Add"));
+    add_multiple_files_confirmation->get_ok()->connect(
+        "pressed",
+        this,
+        "_on_add_multiple_files_confirmed",
+        varray()
+    );
+    return add_multiple_files_confirmation;
 }
 
 Control* ProjectsManager::_create_edit_multiple_confirmation() {
@@ -635,12 +650,6 @@ Control* ProjectsManager::_create_run_multiple_confirmation() {
     return run_multiple_confirmation;
 }
 
-Control* ProjectsManager::_create_scan_multiple_folders_confirmation() {
-    scan_multiple_folders_confirmation = memnew(ConfirmationDialog);
-    scan_multiple_folders_confirmation->get_ok()->set_text(TTR("Scan"));
-    return scan_multiple_folders_confirmation;
-}
-
 Control* ProjectsManager::_create_select_search_folder() {
     select_search_folder = memnew(FileDialog);
     select_search_folder->set_access(FileDialog::ACCESS_FILESYSTEM);
@@ -712,6 +721,30 @@ Control* ProjectsManager::_create_upgrade_settings_confirmation() {
     return upgrade_settings_confirmation;
 }
 
+void ProjectsManager::_add_file(const String& p_file) {
+    DirAccessRef dir_access = DirAccess::create(DirAccess::ACCESS_FILESYSTEM);
+    if (dir_access->dir_exists(p_file)) {
+        // File is a folder.
+        _scan_folder(p_file);
+        return;
+    }
+
+    String folder    = p_file.get_base_dir();
+    String file_name = p_file.get_file();
+    if (file_name == "project.rebel") {
+        _add_project(folder);
+    } else if (file_name.ends_with(".zip")) {
+        String title = file_name.substr(0, p_file.length() - 4).capitalize();
+        _install_zip_file(p_file, title);
+    }
+}
+
+void ProjectsManager::_add_multiple_files(const PoolStringArray& p_files) {
+    for (int i = 0; i < p_files.size(); i++) {
+        _add_file(p_files[i]);
+    }
+}
+
 void ProjectsManager::_add_project(const String& p_folder) {
     String folder = p_folder.replace("\\", "/");
     if (folder.ends_with("/")) {
@@ -754,67 +787,11 @@ void ProjectsManager::_on_edit_multiple_confirmed() {
 }
 
 void ProjectsManager::_on_files_dropped(const PoolStringArray& p_files, int) {
-    if (p_files.size() == 1 && p_files[0].ends_with(".zip")) {
-        const String file = p_files[0].get_file();
-        _install_zip_file(
-            p_files[0],
-            file.substr(0, file.length() - 4).capitalize()
-        );
+    if (p_files.size() == 1) {
+        _add_file(p_files[0]);
         return;
     }
-    Set<String> folders_set;
-    DirAccess* da = DirAccess::create(DirAccess::ACCESS_FILESYSTEM);
-    for (int i = 0; i < p_files.size(); i++) {
-        String file = p_files[i];
-        folders_set.insert(da->dir_exists(file) ? file : file.get_base_dir());
-    }
-    memdelete(da);
-    if (!folders_set.empty()) {
-        PoolStringArray folders;
-        for (Set<String>::Element* E = folders_set.front(); E; E = E->next()) {
-            folders.append(E->get());
-        }
-
-        bool confirm = true;
-        if (folders.size() == 1) {
-            DirAccess* dir = DirAccess::create(DirAccess::ACCESS_FILESYSTEM);
-            if (dir->change_dir(folders[0]) == OK) {
-                dir->list_dir_begin();
-                String file = dir->get_next();
-                while (confirm && !file.empty()) {
-                    if (!dir->current_is_dir()
-                        && file.ends_with("project.rebel")) {
-                        confirm = false;
-                    }
-                    file = dir->get_next();
-                }
-                dir->list_dir_end();
-            }
-            memdelete(dir);
-        }
-        if (confirm) {
-            scan_multiple_folders_confirmation->get_ok()->disconnect(
-                "pressed",
-                this,
-                "_on_scan_multiple_folders_confirmed"
-            );
-            scan_multiple_folders_confirmation->get_ok()->connect(
-                "pressed",
-                this,
-                "_on_scan_multiple_folders_confirmed",
-                varray(folders)
-            );
-            scan_multiple_folders_confirmation->set_text(vformat(
-                TTR("Are you sure to scan %s folders for existing Rebel "
-                    "projects?\n"
-                    "This could take a while."),
-                folders.size()
-            ));
-            scan_multiple_folders_confirmation->popup_centered_minsize();
-        } else {
-            _scan_multiple_folders(folders);
-        }
-    }
+    _popup_add_multiple_files_confirmation(p_files);
 }
 
 void ProjectsManager::_on_global_menu_action(
@@ -983,10 +960,10 @@ void ProjectsManager::_on_scan_button_pressed() {
     select_search_folder->popup_centered_ratio();
 }
 
-void ProjectsManager::_on_scan_multiple_folders_confirmed(
-    const PoolStringArray& p_folders
+void ProjectsManager::_on_add_multiple_files_confirmed(
+    const PoolStringArray& p_files
 ) {
-    _scan_multiple_folders(p_folders);
+    _add_multiple_files(p_files);
 }
 
 void ProjectsManager::_on_search_folder_selected(const String& p_folder) {
@@ -1074,6 +1051,20 @@ void ProjectsManager::_open_selected_projects() {
     _quit();
 }
 
+void ProjectsManager::_popup_add_multiple_files_confirmation(
+    const PoolStringArray& p_files
+) {
+    add_multiple_files_confirmation->get_ok()
+        ->disconnect("pressed", this, "_on_add_multiple_files_confirmed");
+    add_multiple_files_confirmation->get_ok()->connect(
+        "pressed",
+        this,
+        "_on_add_multiple_files_confirmed",
+        varray(p_files)
+    );
+    add_multiple_files_confirmation->popup_centered_minsize();
+}
+
 void ProjectsManager::_popup_newer_settings_file_version_error(
     const String& p_file
 ) {
@@ -1152,12 +1143,6 @@ void ProjectsManager::_scan_folder(const String& p_folder) {
             _add_project(p_folder);
         }
         dir_entry = dir_access->get_next();
-    }
-}
-
-void ProjectsManager::_scan_multiple_folders(const PoolStringArray& p_folders) {
-    for (int i = 0; i < p_folders.size(); i++) {
-        _scan_folder(p_folders.get(i));
     }
 }
 

@@ -51,13 +51,13 @@ private:
 
     CheckBox* delete_project_folder;
 
+    ConfirmationDialog* add_multiple_files_confirmation;
     ConfirmationDialog* edit_multiple_confirmation;
     ConfirmationDialog* open_asset_library_confirmation;
     ConfirmationDialog* remove_confirmation;
     ConfirmationDialog* remove_missing_confirmation;
     ConfirmationDialog* restart_confirmation;
     ConfirmationDialog* run_multiple_confirmation;
-    ConfirmationDialog* scan_multiple_folders_confirmation;
     ConfirmationDialog* upgrade_settings_confirmation;
 
     EditorAbout* editor_about;
@@ -78,6 +78,7 @@ private:
 
     Control* _create_buttons();
     void _create_dialogs();
+    Control* _create_add_multiple_files_confirmation();
     Control* _create_edit_multiple_confirmation();
     Control* _create_language_options();
     Control* _create_newer_settings_file_version_error();
@@ -91,15 +92,17 @@ private:
     Control* _create_remove_missing_confirmation();
     Control* _create_restart_confirmation();
     Control* _create_run_multiple_confirmation();
-    Control* _create_scan_multiple_folders_confirmation();
     Control* _create_select_search_folder();
     Control* _create_tabs();
     Control* _create_tools();
     Control* _create_upgrade_settings_confirmation();
+    void _add_file(const String& p_file);
+    void _add_multiple_files(const PoolStringArray& p_files);
     void _add_project(const String& p_folder);
     void _dim_window();
     void _install_zip_file(const String& p_zip_path, const String& p_title);
     void _on_about_button_pressed();
+    void _on_add_multiple_files_confirmed(const PoolStringArray& p_files);
     void _on_edit_button_pressed();
     void _on_edit_multiple_confirmed();
     void _on_files_dropped(const PoolStringArray& p_files, int);
@@ -121,7 +124,6 @@ private:
     void _on_run_button_pressed();
     void _on_run_multiple_confirmed();
     void _on_scan_button_pressed();
-    void _on_scan_multiple_folders_confirmed(const PoolStringArray& p_folders);
     void _on_search_folder_selected(const String& p_folder);
     void _on_selection_changed();
     void _on_tab_changed(int p_tab);
@@ -130,13 +132,13 @@ private:
     void _open_asset_library();
     void _open_selected_projects_ask();
     void _open_selected_projects();
+    void _popup_add_multiple_files_confirmation(const PoolStringArray& p_files);
     void _popup_newer_settings_file_version_error(const String& p_file);
     void _popup_no_settings_file_error(const String& p_file);
     void _popup_upgrade_settings_confirmation(const String& p_file);
     void _quit();
     void _run_selected();
     void _scan_folder(const String& p_base);
-    void _scan_multiple_folders(const PoolStringArray& p_folders);
     void _show_editor_about();
     void _unhandled_input(const Ref<InputEvent>& p_event);
     void _update_project_buttons();
