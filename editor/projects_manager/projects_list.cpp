@@ -94,6 +94,7 @@ ProjectsList::ProjectsList() {
 
 void ProjectsList::add_project(const String& project_key) {
     if (_has_project(project_key)) {
+        print_line(vformat("Ignoring existing project key %s", project_key));
         return;
     }
     ProjectsListItem* item = _create_item(project_key);
