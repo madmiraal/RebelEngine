@@ -1191,21 +1191,20 @@ void ProjectsManager::_unhandled_input(const Ref<InputEvent>& p_event) {
 void ProjectsManager::_update_project_buttons() {
     Vector<ProjectsListItem*> selected_projects =
         projects_list->get_selected_project_items();
-    bool empty_selection = selected_projects.empty();
 
-    bool is_missing_project_selected = false;
+    bool missing_projects         = projects_list->is_any_project_missing();
+    bool nothing_selected         = selected_projects.empty();
+    bool missing_project_selected = false;
     for (int i = 0; i < selected_projects.size(); ++i) {
         if (selected_projects[i]->missing) {
-            is_missing_project_selected = true;
+            missing_project_selected = true;
             break;
         }
     }
 
-    remove_button->set_disabled(empty_selection);
-    edit_button->set_disabled(empty_selection || is_missing_project_selected);
-    rename_button->set_disabled(empty_selection || is_missing_project_selected);
-    run_button->set_disabled(empty_selection || is_missing_project_selected);
-
-    remove_missing_button->set_disabled(!projects_list->is_any_project_missing()
-    );
+    edit_button->set_disabled(nothing_selected || missing_project_selected);
+    run_button->set_disabled(nothing_selected || missing_project_selected);
+    rename_button->set_disabled(nothing_selected || missing_project_selected);
+    remove_button->set_disabled(nothing_selected);
+    remove_missing_button->set_disabled(!missing_projects);
 }
