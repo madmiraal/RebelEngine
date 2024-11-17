@@ -181,8 +181,12 @@ ProjectsManager::ProjectsManager() {
     center_box->add_child(_create_tools());
 
     _create_dialogs();
-
     _update_project_buttons();
+
+    SceneTree::get_singleton()
+        ->connect("files_dropped", this, "_on_files_dropped");
+    SceneTree::get_singleton()
+        ->connect("global_menu_action", this, "_on_global_menu_action");
 
     String autoscan_project_path = EditorSettings::get_singleton()->get(
         "filesystem/directories/autoscan_project_path"
@@ -191,11 +195,6 @@ ProjectsManager::ProjectsManager() {
         && DirAccess::exists(autoscan_project_path)) {
         _scan_begin(autoscan_project_path);
     }
-
-    SceneTree::get_singleton()
-        ->connect("files_dropped", this, "_files_dropped");
-    SceneTree::get_singleton()
-        ->connect("global_menu_action", this, "_global_menu_action");
 }
 
 ProjectsManager::~ProjectsManager() {
@@ -218,8 +217,21 @@ void ProjectsManager::_bind_methods() {
         &ProjectsManager::_on_edit_multiple_confirmed
     );
     ClassDB::bind_method(
+        "_on_files_dropped",
+        &ProjectsManager::_on_files_dropped
+    );
+    ClassDB::bind_method(
+        D_METHOD("_on_global_menu_action"),
+        &ProjectsManager::_on_global_menu_action,
+        DEFVAL(Variant())
+    );
+    ClassDB::bind_method(
         "_on_import_button_pressed",
         &ProjectsManager::_on_import_button_pressed
+    );
+    ClassDB::bind_method(
+        "_on_install_asset",
+        &ProjectsManager::_on_install_asset
     );
     ClassDB::bind_method(
         "_on_item_double_clicked",
@@ -236,6 +248,14 @@ void ProjectsManager::_bind_methods() {
     ClassDB::bind_method(
         "_on_new_project_button_pressed",
         &ProjectsManager::_on_new_project_button_pressed
+    );
+    ClassDB::bind_method(
+        "_on_project_created",
+        &ProjectsManager::_on_project_created
+    );
+    ClassDB::bind_method(
+        "_on_projects_updated",
+        &ProjectsManager::_on_projects_updated
     );
     ClassDB::bind_method(
         "_on_rename_button_pressed",
@@ -296,27 +316,9 @@ void ProjectsManager::_bind_methods() {
     );
 
     ClassDB::bind_method(
-        D_METHOD("_global_menu_action"),
-        &ProjectsManager::_global_menu_action,
-        DEFVAL(Variant())
-    );
-    ClassDB::bind_method(
-        "_on_projects_updated",
-        &ProjectsManager::_on_projects_updated
-    );
-    ClassDB::bind_method(
-        "_on_project_created",
-        &ProjectsManager::_on_project_created
-    );
-    ClassDB::bind_method(
         "_unhandled_input",
         &ProjectsManager::_unhandled_input
     );
-    ClassDB::bind_method(
-        "_install_project",
-        &ProjectsManager::_install_project
-    );
-    ClassDB::bind_method("_files_dropped", &ProjectsManager::_files_dropped);
 }
 
 void ProjectsManager::_notification(int p_what) {
@@ -662,7 +664,7 @@ Control* ProjectsManager::_create_tabs() {
     if (StreamPeerSSL::is_available()) {
         asset_library = memnew(EditorAssetLibrary(true));
         asset_library->set_name(TTR("Asset Library Projects"));
-        asset_library->connect("install_asset", this, "_install_project");
+        asset_library->connect("install_asset", this, "_on_install_asset");
         tabs->add_child(asset_library);
     } else {
         WARN_PRINT("Asset Library not available, as it requires SSL to work.");
@@ -716,13 +718,32 @@ void ProjectsManager::_dim_window() {
     set_modulate(dim_color);
 }
 
-void ProjectsManager::_files_dropped(
-    const PoolStringArray& p_files,
-    int p_screen
+void ProjectsManager::_install_zip_file(
+    const String& p_zip_path,
+    const String& p_title
 ) {
+    projects_dialog->set_mode(ProjectsDialog::MODE_INSTALL);
+    projects_dialog->set_zip_path(p_zip_path);
+    projects_dialog->set_zip_title(p_title);
+    projects_dialog->show_dialog();
+}
+
+void ProjectsManager::_on_about_button_pressed() {
+    _show_editor_about();
+}
+
+void ProjectsManager::_on_edit_button_pressed() {
+    _open_selected_projects_ask();
+}
+
+void ProjectsManager::_on_edit_multiple_confirmed() {
+    _open_selected_projects();
+}
+
+void ProjectsManager::_on_files_dropped(const PoolStringArray& p_files, int) {
     if (p_files.size() == 1 && p_files[0].ends_with(".zip")) {
         const String file = p_files[0].get_file();
-        _install_project(
+        _install_zip_file(
             p_files[0],
             file.substr(0, file.length() - 4).capitalize()
         );
@@ -783,7 +804,7 @@ void ProjectsManager::_files_dropped(
     }
 }
 
-void ProjectsManager::_global_menu_action(
+void ProjectsManager::_on_global_menu_action(
     const Variant& p_id,
     const Variant& p_meta
 ) {
@@ -809,31 +830,16 @@ void ProjectsManager::_global_menu_action(
     }
 }
 
-void ProjectsManager::_install_project(
-    const String& p_zip_path,
-    const String& p_title
-) {
-    projects_dialog->set_mode(ProjectsDialog::MODE_INSTALL);
-    projects_dialog->set_zip_path(p_zip_path);
-    projects_dialog->set_zip_title(p_title);
-    projects_dialog->show_dialog();
-}
-
-void ProjectsManager::_on_about_button_pressed() {
-    _show_editor_about();
-}
-
-void ProjectsManager::_on_edit_button_pressed() {
-    _open_selected_projects_ask();
-}
-
-void ProjectsManager::_on_edit_multiple_confirmed() {
-    _open_selected_projects();
-}
-
 void ProjectsManager::_on_import_button_pressed() {
     projects_dialog->set_mode(ProjectsDialog::MODE_IMPORT);
     projects_dialog->show_dialog();
+}
+
+void ProjectsManager::_on_install_asset(
+    const String& p_zip_path,
+    const String& p_title
+) {
+    _install_zip_file(p_zip_path, p_title);
 }
 
 void ProjectsManager::_on_item_double_clicked() {

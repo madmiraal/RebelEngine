@@ -97,14 +97,14 @@ private:
     Control* _create_tools();
     Control* _create_upgrade_settings_confirmation();
     void _dim_window();
-    void _files_dropped(const PoolStringArray& p_files, int p_screen);
-    void _global_menu_action(const Variant& p_id, const Variant& p_meta);
-    void _import_project();
-    void _install_project(const String& p_zip_path, const String& p_title);
+    void _install_zip_file(const String& p_zip_path, const String& p_title);
     void _on_about_button_pressed();
     void _on_edit_button_pressed();
     void _on_edit_multiple_confirmed();
+    void _on_files_dropped(const PoolStringArray& p_files, int);
+    void _on_global_menu_action(const Variant& p_id, const Variant& p_meta);
     void _on_import_button_pressed();
+    void _on_install_asset(const String& p_zip_path, const String& p_title);
     void _on_item_double_clicked();
     void _on_language_selected(int p_id);
     void _on_new_project_button_pressed();
