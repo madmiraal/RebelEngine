@@ -130,6 +130,7 @@ private:
     void _popup_newer_settings_file_version_error(const String& p_file);
     void _popup_no_settings_file_error(const String& p_file);
     void _popup_upgrade_settings_confirmation(const String& p_file);
+    void _quit();
     void _run_selected();
     void _scan_begin(const String& p_base);
     void _scan_dir(const String& path, List<String>* r_projects);

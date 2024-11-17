@@ -705,12 +705,6 @@ Control* ProjectsManager::_create_upgrade_settings_confirmation() {
 }
 
 void ProjectsManager::_dim_window() {
-    // This method must be called before calling `get_tree()->quit()`.
-    // Otherwise, its effect won't be visible
-
-    // Dim the Projects Manager window while it's quitting to make it clearer
-    // that it's busy. No transition is applied, as the effect needs to be
-    // visible immediately
     float c         = 0.5f;
     Color dim_color = Color(c, c, c);
     set_modulate(dim_color);
@@ -931,11 +925,10 @@ void ProjectsManager::_on_restart_confirmed() {
     List<String> args = os->get_cmdline_args();
     String exec       = os->get_executable_path();
     OS::ProcessID pid = 0;
-    Error err         = os->execute(exec, args, false, &pid);
-    ERR_FAIL_COND(err);
+    Error error       = os->execute(exec, args, false, &pid);
+    ERR_FAIL_COND(error);
 
-    _dim_window();
-    get_tree()->quit();
+    _quit();
 }
 
 void ProjectsManager::_on_run_button_pressed() {
@@ -1049,8 +1042,7 @@ void ProjectsManager::_open_selected_projects() {
         edit_project(project_name, project_folder);
     }
 
-    _dim_window();
-    get_tree()->quit();
+    _quit();
 }
 
 void ProjectsManager::_popup_newer_settings_file_version_error(
@@ -1084,6 +1076,11 @@ void ProjectsManager::_popup_upgrade_settings_confirmation(const String& p_file
         p_file
     ));
     upgrade_settings_confirmation->popup_centered_minsize();
+}
+
+void ProjectsManager::_quit() {
+    _dim_window();
+    get_tree()->quit();
 }
 
 void ProjectsManager::_run_selected() {
@@ -1166,8 +1163,7 @@ void ProjectsManager::_unhandled_input(const Ref<InputEvent>& p_event) {
     // so only define the shortcut on other platforms
 #ifndef MACOS_ENABLED
     if (key_event->get_scancode_with_modifiers() == (KEY_MASK_CMD | KEY_Q)) {
-        _dim_window();
-        get_tree()->quit();
+        _quit();
     }
 #endif
 
