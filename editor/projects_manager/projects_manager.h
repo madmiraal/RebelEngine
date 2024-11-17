@@ -60,7 +60,7 @@ private:
     ConfirmationDialog* scan_multiple_folders_confirmation;
     ConfirmationDialog* upgrade_settings_confirmation;
 
-    EditorAbout* about;
+    EditorAbout* editor_about;
     EditorAssetLibrary* asset_library;
 
     FileDialog* scan_dir;
@@ -135,7 +135,7 @@ private:
     void _scan_begin(const String& p_base);
     void _scan_dir(const String& path, List<String>* r_projects);
     void _scan_multiple_folders(const PoolStringArray& p_files);
-    void _show_about();
+    void _show_editor_about();
     void _unhandled_input(const Ref<InputEvent>& p_event);
     void _update_project_buttons();
 };

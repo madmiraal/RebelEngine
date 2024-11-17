@@ -197,9 +197,6 @@ ProjectsManager::ProjectsManager() {
     SceneTree::get_singleton()
         ->connect("global_menu_action", this, "_global_menu_action");
 
-    about = memnew(EditorAbout);
-    add_child(about);
-
     scan_dir = memnew(FileDialog);
     scan_dir->set_access(FileDialog::ACCESS_FILESYSTEM);
     scan_dir->set_mode(FileDialog::MODE_OPEN_DIR);
@@ -353,7 +350,7 @@ void ProjectsManager::_notification(int p_what) {
             _dim_window();
         } break;
         case NOTIFICATION_WM_ABOUT: {
-            _show_about();
+            _show_editor_about();
         } break;
     }
 }
@@ -469,6 +466,9 @@ void ProjectsManager::_create_dialogs() {
     add_child(_create_no_settings_file_error());
 
     add_child(_create_projects_dialog());
+
+    editor_about = memnew(EditorAbout);
+    add_child(editor_about);
 }
 
 Control* ProjectsManager::_create_edit_multiple_confirmation() {
@@ -814,7 +814,7 @@ void ProjectsManager::_install_project(
 }
 
 void ProjectsManager::_on_about_button_pressed() {
-    _show_about();
+    _show_editor_about();
 }
 
 void ProjectsManager::_on_edit_button_pressed() {
@@ -1148,8 +1148,8 @@ void ProjectsManager::_scan_multiple_folders(const PoolStringArray& p_files) {
     }
 }
 
-void ProjectsManager::_show_about() {
-    about->popup_centered(Size2(780, 500) * EDSCALE);
+void ProjectsManager::_show_editor_about() {
+    editor_about->popup_centered(Size2(780, 500) * EDSCALE);
 }
 
 void ProjectsManager::_unhandled_input(const Ref<InputEvent>& p_event) {
