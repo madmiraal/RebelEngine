@@ -1158,16 +1158,16 @@ void ProjectsManager::_unhandled_input(const Ref<InputEvent>& p_event) {
         return;
     }
 
-    // Pressing Command + Q quits the Projects Manager.
-    // This is handled by the platform implementation on macOS,
-    // so only define the shortcut on other platforms
 #ifndef MACOS_ENABLED
+    // Pressing Command + Q quits the application on macOS.
+    // Therefore, only action the shortcut on other platforms.
     if (key_event->get_scancode_with_modifiers() == (KEY_MASK_CMD | KEY_Q)) {
         _quit();
     }
 #endif
 
     if (tabs->get_current_tab() != 0) {
+        // Only manage key presses on the projects tab.
         return;
     }
 
