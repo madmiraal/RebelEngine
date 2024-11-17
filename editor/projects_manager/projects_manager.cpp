@@ -196,17 +196,6 @@ ProjectsManager::ProjectsManager() {
         ->connect("files_dropped", this, "_files_dropped");
     SceneTree::get_singleton()
         ->connect("global_menu_action", this, "_global_menu_action");
-
-    select_search_folder = memnew(FileDialog);
-    select_search_folder->set_access(FileDialog::ACCESS_FILESYSTEM);
-    select_search_folder->set_mode(FileDialog::MODE_OPEN_DIR);
-    select_search_folder->set_title(TTR("Select a Folder to Scan")
-    ); // must be after mode or it's overridden
-    select_search_folder->set_current_dir(EditorSettings::get_singleton()->get(
-        "filesystem/directories/default_project_path"
-    ));
-    add_child(select_search_folder);
-    select_search_folder->connect("dir_selected", this, "_scan_begin");
 }
 
 ProjectsManager::~ProjectsManager() {
@@ -289,6 +278,10 @@ void ProjectsManager::_bind_methods() {
         &ProjectsManager::_on_scan_multiple_folders_confirmed
     );
     ClassDB::bind_method(
+        "_on_search_folder_selected",
+        &ProjectsManager::_on_search_folder_selected
+    );
+    ClassDB::bind_method(
         "_on_selection_changed",
         &ProjectsManager::_on_selection_changed
     );
@@ -307,7 +300,6 @@ void ProjectsManager::_bind_methods() {
         &ProjectsManager::_global_menu_action,
         DEFVAL(Variant())
     );
-    ClassDB::bind_method("_scan_begin", &ProjectsManager::_scan_begin);
     ClassDB::bind_method(
         "_on_projects_updated",
         &ProjectsManager::_on_projects_updated
@@ -466,6 +458,7 @@ void ProjectsManager::_create_dialogs() {
     add_child(_create_no_settings_file_error());
 
     add_child(_create_projects_dialog());
+    add_child(_create_select_search_folder());
 
     editor_about = memnew(EditorAbout);
     add_child(editor_about);
@@ -644,6 +637,19 @@ Control* ProjectsManager::_create_scan_multiple_folders_confirmation() {
     scan_multiple_folders_confirmation = memnew(ConfirmationDialog);
     scan_multiple_folders_confirmation->get_ok()->set_text(TTR("Scan"));
     return scan_multiple_folders_confirmation;
+}
+
+Control* ProjectsManager::_create_select_search_folder() {
+    select_search_folder = memnew(FileDialog);
+    select_search_folder->set_access(FileDialog::ACCESS_FILESYSTEM);
+    select_search_folder->set_mode(FileDialog::MODE_OPEN_DIR);
+    select_search_folder->set_title(TTR("Select a Folder to Scan"));
+    select_search_folder->set_current_dir(EditorSettings::get_singleton()->get(
+        "filesystem/directories/default_project_path"
+    ));
+    select_search_folder
+        ->connect("dir_selected", this, "_on_search_folder_selected");
+    return select_search_folder;
 }
 
 Control* ProjectsManager::_create_tabs() {
@@ -962,6 +968,10 @@ void ProjectsManager::_on_scan_multiple_folders_confirmed(
     const PoolStringArray& p_folders
 ) {
     _scan_multiple_folders(p_folders);
+}
+
+void ProjectsManager::_on_search_folder_selected(const String& p_folder) {
+    _scan_begin(p_folder);
 }
 
 void ProjectsManager::_on_selection_changed() {

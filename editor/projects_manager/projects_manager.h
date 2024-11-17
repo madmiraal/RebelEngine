@@ -92,6 +92,7 @@ private:
     Control* _create_restart_confirmation();
     Control* _create_run_multiple_confirmation();
     Control* _create_scan_multiple_folders_confirmation();
+    Control* _create_select_search_folder();
     Control* _create_tabs();
     Control* _create_tools();
     Control* _create_upgrade_settings_confirmation();
@@ -120,6 +121,7 @@ private:
     void _on_run_multiple_confirmed();
     void _on_scan_button_pressed();
     void _on_scan_multiple_folders_confirmed(const PoolStringArray& p_folders);
+    void _on_search_folder_selected(const String& p_folder);
     void _on_selection_changed();
     void _on_tab_changed(int p_tab);
     void _on_upgrade_settings_confirmed();
