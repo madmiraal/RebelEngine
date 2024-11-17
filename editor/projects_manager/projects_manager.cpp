@@ -567,10 +567,10 @@ Control* ProjectsManager::_create_open_asset_library_confirmation() {
 }
 
 Control* ProjectsManager::_create_projects_dialog() {
-    npdialog = memnew(ProjectsDialog);
-    npdialog->connect("projects_updated", this, "_on_projects_updated");
-    npdialog->connect("project_created", this, "_on_project_created");
-    return npdialog;
+    projects_dialog = memnew(ProjectsDialog);
+    projects_dialog->connect("projects_updated", this, "_on_projects_updated");
+    projects_dialog->connect("project_created", this, "_on_project_created");
+    return projects_dialog;
 }
 
 Control* ProjectsManager::_create_projects_tab() {
@@ -813,10 +813,10 @@ void ProjectsManager::_install_project(
     const String& p_zip_path,
     const String& p_title
 ) {
-    npdialog->set_mode(ProjectsDialog::MODE_INSTALL);
-    npdialog->set_zip_path(p_zip_path);
-    npdialog->set_zip_title(p_title);
-    npdialog->show_dialog();
+    projects_dialog->set_mode(ProjectsDialog::MODE_INSTALL);
+    projects_dialog->set_zip_path(p_zip_path);
+    projects_dialog->set_zip_title(p_title);
+    projects_dialog->show_dialog();
 }
 
 void ProjectsManager::_on_about_button_pressed() {
@@ -832,8 +832,8 @@ void ProjectsManager::_on_edit_multiple_confirmed() {
 }
 
 void ProjectsManager::_on_import_button_pressed() {
-    npdialog->set_mode(ProjectsDialog::MODE_IMPORT);
-    npdialog->show_dialog();
+    projects_dialog->set_mode(ProjectsDialog::MODE_IMPORT);
+    projects_dialog->show_dialog();
 }
 
 void ProjectsManager::_on_item_double_clicked() {
@@ -852,8 +852,8 @@ void ProjectsManager::_on_language_selected(int p_id) {
 }
 
 void ProjectsManager::_on_new_project_button_pressed() {
-    npdialog->set_mode(ProjectsDialog::MODE_NEW);
-    npdialog->show_dialog();
+    projects_dialog->set_mode(ProjectsDialog::MODE_NEW);
+    projects_dialog->show_dialog();
 }
 
 void ProjectsManager::_on_open_asset_library_confirmed() {
@@ -882,9 +882,9 @@ void ProjectsManager::_on_rename_button_pressed() {
         const String& selected = E->get();
         String path =
             EditorSettings::get_singleton()->get("projects/" + selected);
-        npdialog->set_project_path(path);
-        npdialog->set_mode(ProjectsDialog::MODE_RENAME);
-        npdialog->show_dialog();
+        projects_dialog->set_project_path(path);
+        projects_dialog->set_mode(ProjectsDialog::MODE_RENAME);
+        projects_dialog->show_dialog();
     }
 }
 

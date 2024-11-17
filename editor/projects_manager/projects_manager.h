@@ -71,7 +71,7 @@ private:
 
     OptionButton* language_options;
 
-    ProjectsDialog* npdialog;
+    ProjectsDialog* projects_dialog;
     ProjectsList* projects_list;
 
     TabContainer* tabs;
