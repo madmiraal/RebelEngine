@@ -96,6 +96,7 @@ private:
     Control* _create_tabs();
     Control* _create_tools();
     Control* _create_upgrade_settings_confirmation();
+    void _add_project(const String& p_folder);
     void _dim_window();
     void _install_zip_file(const String& p_zip_path, const String& p_title);
     void _on_about_button_pressed();
@@ -109,7 +110,7 @@ private:
     void _on_language_selected(int p_id);
     void _on_new_project_button_pressed();
     void _on_open_asset_library_confirmed();
-    void _on_project_created(const String& project_key);
+    void _on_project_created(const String& p_project_folder);
     void _on_projects_updated();
     void _on_rename_button_pressed();
     void _on_remove_button_pressed();
@@ -134,9 +135,8 @@ private:
     void _popup_upgrade_settings_confirmation(const String& p_file);
     void _quit();
     void _run_selected();
-    void _scan_begin(const String& p_base);
-    void _scan_dir(const String& path, List<String>* r_projects);
-    void _scan_multiple_folders(const PoolStringArray& p_files);
+    void _scan_folder(const String& p_base);
+    void _scan_multiple_folders(const PoolStringArray& p_folders);
     void _show_editor_about();
     void _unhandled_input(const Ref<InputEvent>& p_event);
     void _update_project_buttons();

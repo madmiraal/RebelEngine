@@ -193,7 +193,7 @@ ProjectsManager::ProjectsManager() {
     );
     if (!autoscan_project_path.empty()
         && DirAccess::exists(autoscan_project_path)) {
-        _scan_begin(autoscan_project_path);
+        _scan_folder(autoscan_project_path);
     }
 }
 
@@ -712,6 +712,19 @@ Control* ProjectsManager::_create_upgrade_settings_confirmation() {
     return upgrade_settings_confirmation;
 }
 
+void ProjectsManager::_add_project(const String& p_folder) {
+    String folder = p_folder.replace("\\", "/");
+    if (folder.ends_with("/")) {
+        folder = folder.substr(0, folder.length() - 1);
+    }
+    String project_key  = folder.replace("/", "::");
+    String property_key = "projects/" + project_key;
+    EditorSettings::get_singleton()->set(property_key, folder);
+    EditorSettings::get_singleton()->save();
+
+    projects_list->add_project(project_key);
+}
+
 void ProjectsManager::_dim_window() {
     float c         = 0.5f;
     Color dim_color = Color(c, c, c);
@@ -866,8 +879,8 @@ void ProjectsManager::_on_open_asset_library_confirmed() {
     _open_asset_library();
 }
 
-void ProjectsManager::_on_project_created(const String& project_key) {
-    projects_list->add_project(project_key);
+void ProjectsManager::_on_project_created(const String& p_project_folder) {
+    _add_project(p_project_folder);
     _open_selected_projects_ask();
 }
 
@@ -977,7 +990,7 @@ void ProjectsManager::_on_scan_multiple_folders_confirmed(
 }
 
 void ProjectsManager::_on_search_folder_selected(const String& p_folder) {
-    _scan_begin(p_folder);
+    _scan_folder(p_folder);
 }
 
 void ProjectsManager::_on_selection_changed() {
@@ -1124,43 +1137,27 @@ void ProjectsManager::_run_selected() {
     }
 }
 
-void ProjectsManager::_scan_begin(const String& p_base) {
-    print_line("Scanning projects at: " + p_base);
-    List<String> projects;
-    _scan_dir(p_base, &projects);
-    print_line("Found " + itos(projects.size()) + " projects.");
+void ProjectsManager::_scan_folder(const String& p_folder) {
+    DirAccessRef dir_access = DirAccess::create(DirAccess::ACCESS_FILESYSTEM);
+    Error error             = dir_access->change_dir(p_folder);
+    ERR_FAIL_COND_MSG(error != OK, "Could not scan directory: " + p_folder);
 
-    for (List<String>::Element* E = projects.front(); E; E = E->next()) {
-        String project_key = E->get().replace("/", "::");
-        EditorSettings::get_singleton()->set(
-            "projects/" + project_key,
-            E->get()
-        );
-        projects_list->add_project(project_key);
-    }
-    EditorSettings::get_singleton()->save();
-}
-
-void ProjectsManager::_scan_dir(const String& path, List<String>* r_projects) {
-    DirAccessRef da = DirAccess::create(DirAccess::ACCESS_FILESYSTEM);
-    Error error     = da->change_dir(path);
-    ERR_FAIL_COND_MSG(error != OK, "Could not scan directory at: " + path);
-    da->list_dir_begin();
-    String n = da->get_next();
-    while (!n.empty()) {
-        if (da->current_is_dir() && !n.begins_with(".")) {
-            _scan_dir(da->get_current_dir().plus_file(n), r_projects);
-        } else if (n == "project.rebel") {
-            r_projects->push_back(da->get_current_dir());
+    dir_access->list_dir_begin();
+    String dir_entry = dir_access->get_next();
+    while (!dir_entry.empty()) {
+        if (dir_access->current_is_dir() && !dir_entry.begins_with(".")) {
+            _scan_folder(p_folder.plus_file(dir_entry));
+        } else if (dir_entry == "project.rebel") {
+            print_line("Found Rebel Project in " + p_folder);
+            _add_project(p_folder);
         }
-        n = da->get_next();
+        dir_entry = dir_access->get_next();
     }
-    da->list_dir_end();
 }
 
-void ProjectsManager::_scan_multiple_folders(const PoolStringArray& p_files) {
-    for (int i = 0; i < p_files.size(); i++) {
-        _scan_begin(p_files.get(i));
+void ProjectsManager::_scan_multiple_folders(const PoolStringArray& p_folders) {
+    for (int i = 0; i < p_folders.size(); i++) {
+        _scan_folder(p_folders.get(i));
     }
 }
 

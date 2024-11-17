@@ -585,17 +585,8 @@ void ProjectsDialog::ok_pressed() {
             }
         }
 
-        dir = dir.replace("\\", "/");
-        if (dir.ends_with("/")) {
-            dir = dir.substr(0, dir.length() - 1);
-        }
-        String project_key  = dir.replace("/", "::");
-        String property_key = "projects/" + project_key;
-        EditorSettings::get_singleton()->set(property_key, dir);
-        EditorSettings::get_singleton()->save();
-
         hide();
-        emit_signal("project_created", project_key);
+        emit_signal("project_created", dir);
     }
 }
 
