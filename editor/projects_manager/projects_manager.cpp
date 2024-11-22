@@ -610,9 +610,10 @@ Control* ProjectsManager::_create_remove_confirmation() {
     remove_confirmation_label = memnew(Label);
     remove_confirmation_vb->add_child(remove_confirmation_label);
 
-    delete_project_folder = memnew(CheckBox);
-    delete_project_folder->set_text(TTR("Also delete project folder?"));
-    remove_confirmation_vb->add_child(delete_project_folder);
+    delete_project_folder_check_box = memnew(CheckBox);
+    delete_project_folder_check_box->set_text(TTR("Also delete project folder?")
+    );
+    remove_confirmation_vb->add_child(delete_project_folder_check_box);
 
     return remove_confirmation;
 }
@@ -903,12 +904,13 @@ void ProjectsManager::_on_remove_button_pressed() {
     }
 
     remove_confirmation_label->set_text(confirm_message);
-    delete_project_folder->set_pressed(false);
+    delete_project_folder_check_box->set_pressed(false);
     remove_confirmation->popup_centered_minsize();
 }
 
 void ProjectsManager::_on_remove_confirmed() {
-    projects_list->remove_selected_projects(delete_project_folder->is_pressed()
+    projects_list->remove_selected_projects(
+        delete_project_folder_check_box->is_pressed()
     );
     _update_project_buttons();
 }

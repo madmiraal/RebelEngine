@@ -49,7 +49,7 @@ private:
     Button* rename_button;
     Button* run_button;
 
-    CheckBox* delete_project_folder;
+    CheckBox* delete_project_folder_check_box;
 
     ConfirmationDialog* add_multiple_files_confirmation;
     ConfirmationDialog* edit_multiple_confirmation;
