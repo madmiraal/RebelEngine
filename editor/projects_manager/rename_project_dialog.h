@@ -8,10 +8,7 @@
 #define RENAME_PROJECT_DIALOG_H
 
 #include "core/ustring.h"
-#include "scene/gui/button.h"
-#include "scene/gui/container.h"
 #include "scene/gui/dialogs.h"
-#include "scene/gui/file_dialog.h"
 #include "scene/gui/label.h"
 #include "scene/gui/line_edit.h"
 #include "scene/gui/texture_rect.h"
@@ -22,69 +19,19 @@ class RenameProjectDialog : public ConfirmationDialog {
 public:
     RenameProjectDialog();
 
-    void show_dialog();
-    void set_project_path(const String& p_path);
+    void show_dialog(const String& p_folder);
 
 protected:
     static void _bind_methods();
-    void _notification(int p_what);
     virtual void ok_pressed();
 
 private:
-    enum MessageType {
-        MESSAGE_ERROR,
-        MESSAGE_WARNING,
-        MESSAGE_SUCCESS
-    };
+    LineEdit* project_name_line_edit;
+    Label* project_folder_label;
+    TextureRect* project_path_error_icon;
+    Label* error_message;
 
-    enum InputType {
-        PROJECT_PATH,
-        INSTALL_PATH
-    };
-
-    String created_folder_path;
-    String fav_dir;
-
-    AcceptDialog* dialog_error;
-
-    Button* browse;
-    Button* create_dir;
-    Button* install_browse;
-    Ref<ButtonGroup> rasterizer_button_group;
-
-    Container* install_path_container;
-    Container* name_container;
-    Container* path_container;
-    Container* rasterizer_container;
-
-    FileDialog* fdialog;
-    FileDialog* fdialog_install;
-
-    Label* msg;
-
-    LineEdit* install_path;
-    LineEdit* project_name;
-    LineEdit* project_path;
-
-    TextureRect* install_status_rect;
-    TextureRect* status_rect;
-
-    void _browse_path();
-    void _browse_install_path();
-    void _cancel_pressed();
-    void _create_folder();
-    void _file_selected(const String& p_path);
-    void _install_path_selected(const String& p_path);
-    void _path_selected(const String& p_path);
-    void _path_text_changed(const String& p_path);
-    void _remove_created_folder();
-    void _set_message(
-        const String& p_msg,
-        MessageType p_type   = MESSAGE_SUCCESS,
-        InputType input_type = PROJECT_PATH
-    );
-    String _test_path();
-    void _text_changed(const String& p_text);
+    String project_folder;
 };
 
 #endif // RENAME_PROJECT_DIALOG_H

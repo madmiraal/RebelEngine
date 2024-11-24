@@ -663,8 +663,6 @@ Control* ProjectsManager::_create_rename_project_dialog() {
     rename_project_dialog = memnew(RenameProjectDialog);
     rename_project_dialog
         ->connect("projects_updated", this, "_on_projects_updated");
-    rename_project_dialog
-        ->connect("project_created", this, "_on_project_created");
     return rename_project_dialog;
 }
 
@@ -970,20 +968,11 @@ void ProjectsManager::_on_projects_updated() {
 }
 
 void ProjectsManager::_on_rename_button_pressed() {
-    const Set<String>& selected_project_keys =
-        projects_list->get_selected_project_keys();
+    const Vector<ProjectsListItem*> project_items =
+        projects_list->get_selected_project_items();
 
-    if (selected_project_keys.empty()) {
-        return;
-    }
-
-    for (Set<String>::Element* E = selected_project_keys.front(); E;
-         E                       = E->next()) {
-        const String& selected = E->get();
-        String path =
-            EditorSettings::get_singleton()->get("projects/" + selected);
-        rename_project_dialog->set_project_path(path);
-        rename_project_dialog->show_dialog();
+    for (int i = 0; i < project_items.size(); i++) {
+        rename_project_dialog->show_dialog(project_items[i]->project_folder);
     }
 }
 
