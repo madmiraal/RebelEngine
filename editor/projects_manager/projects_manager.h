@@ -13,8 +13,11 @@
 #include "core/variant.h"
 #include "editor/editor_about.h"
 #include "editor/plugins/asset_library_editor_plugin.h"
-#include "projects_dialog.h"
+#include "import_project_dialog.h"
+#include "install_project_dialog.h"
+#include "new_project_dialog.h"
 #include "projects_list.h"
+#include "rename_project_dialog.h"
 #include "scene/gui/box_container.h"
 #include "scene/gui/button.h"
 #include "scene/gui/check_box.h"
@@ -60,6 +63,11 @@ private:
     ConfirmationDialog* run_multiple_confirmation;
     ConfirmationDialog* upgrade_settings_confirmation;
 
+    ImportProjectDialog* import_project_dialog;
+    InstallProjectDialog* install_project_dialog;
+    NewProjectDialog* new_project_dialog;
+    RenameProjectDialog* rename_project_dialog;
+
     EditorAbout* editor_about;
     EditorAssetLibrary* asset_library;
 
@@ -71,7 +79,6 @@ private:
 
     OptionButton* language_options;
 
-    ProjectsDialog* projects_dialog;
     ProjectsList* projects_list;
 
     TabContainer* tabs;
@@ -82,16 +89,19 @@ private:
     void _create_dialogs();
     Control* _create_add_multiple_files_confirmation();
     Control* _create_edit_multiple_confirmation();
+    Control* _create_import_project_dialog();
+    Control* _create_install_project_dialog();
     Control* _create_language_options();
+    Control* _create_new_project_dialog();
     Control* _create_newer_settings_file_version_error();
     Control* _create_no_assets_folder_error();
     Control* _create_no_main_scene_defined_error();
     Control* _create_no_settings_file_error();
     Control* _create_open_asset_library_confirmation();
-    Control* _create_projects_dialog();
     Control* _create_projects_tab();
     Control* _create_remove_confirmation();
     Control* _create_remove_missing_confirmation();
+    Control* _create_rename_project_dialog();
     Control* _create_restart_confirmation();
     Control* _create_run_multiple_confirmation();
     Control* _create_select_search_folder();

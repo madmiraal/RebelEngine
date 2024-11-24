@@ -4,8 +4,8 @@
 //
 // SPDX-License-Identifier: MIT
 
-#ifndef PROJECTS_DIALOG_H
-#define PROJECTS_DIALOG_H
+#ifndef INSTALL_PROJECT_DIALOG_H
+#define INSTALL_PROJECT_DIALOG_H
 
 #include "core/ustring.h"
 #include "scene/gui/button.h"
@@ -16,22 +16,13 @@
 #include "scene/gui/line_edit.h"
 #include "scene/gui/texture_rect.h"
 
-class ProjectsDialog : public ConfirmationDialog {
-    GDCLASS(ProjectsDialog, ConfirmationDialog);
+class InstallProjectDialog : public ConfirmationDialog {
+    GDCLASS(InstallProjectDialog, ConfirmationDialog);
 
 public:
-    enum Mode {
-        MODE_NEW,
-        MODE_IMPORT,
-        MODE_INSTALL,
-        MODE_RENAME
-    };
-
-    ProjectsDialog();
+    InstallProjectDialog();
 
     void show_dialog();
-    void set_mode(Mode p_mode);
-    void set_project_path(const String& p_path);
     void set_zip_path(const String& p_path);
     void set_zip_title(const String& p_title);
 
@@ -51,8 +42,6 @@ private:
         PROJECT_PATH,
         INSTALL_PATH
     };
-
-    Mode mode;
 
     String created_folder_path;
     String fav_dir;
@@ -101,4 +90,4 @@ private:
     void _text_changed(const String& p_text);
 };
 
-#endif // PROJECTS_DIALOG_H
+#endif // INSTALL_PROJECT_DIALOG_H

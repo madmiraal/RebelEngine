@@ -464,7 +464,11 @@ void ProjectsManager::_create_dialogs() {
     add_child(_create_no_main_scene_defined_error());
     add_child(_create_no_settings_file_error());
 
-    add_child(_create_projects_dialog());
+    add_child(_create_import_project_dialog());
+    add_child(_create_install_project_dialog());
+    add_child(_create_new_project_dialog());
+    add_child(_create_rename_project_dialog());
+
     add_child(_create_select_search_folder());
 
     editor_about = memnew(EditorAbout);
@@ -496,6 +500,24 @@ Control* ProjectsManager::_create_edit_multiple_confirmation() {
     edit_multiple_confirmation->get_ok()
         ->connect("pressed", this, "_on_edit_multiple_confirmed");
     return edit_multiple_confirmation;
+}
+
+Control* ProjectsManager::_create_import_project_dialog() {
+    import_project_dialog = memnew(ImportProjectDialog);
+    import_project_dialog
+        ->connect("projects_updated", this, "_on_projects_updated");
+    import_project_dialog
+        ->connect("project_created", this, "_on_project_created");
+    return import_project_dialog;
+}
+
+Control* ProjectsManager::_create_install_project_dialog() {
+    install_project_dialog = memnew(InstallProjectDialog);
+    install_project_dialog
+        ->connect("projects_updated", this, "_on_projects_updated");
+    install_project_dialog
+        ->connect("project_created", this, "_on_project_created");
+    return install_project_dialog;
 }
 
 Control* ProjectsManager::_create_language_options() {
@@ -535,6 +557,14 @@ Control* ProjectsManager::_create_language_options() {
     }
 
     return language_options;
+}
+
+Control* ProjectsManager::_create_new_project_dialog() {
+    new_project_dialog = memnew(NewProjectDialog);
+    new_project_dialog
+        ->connect("projects_updated", this, "_on_projects_updated");
+    new_project_dialog->connect("project_created", this, "_on_project_created");
+    return new_project_dialog;
 }
 
 Control* ProjectsManager::_create_newer_settings_file_version_error() {
@@ -582,13 +612,6 @@ Control* ProjectsManager::_create_open_asset_library_confirmation() {
     return open_asset_library_confirmation;
 }
 
-Control* ProjectsManager::_create_projects_dialog() {
-    projects_dialog = memnew(ProjectsDialog);
-    projects_dialog->connect("projects_updated", this, "_on_projects_updated");
-    projects_dialog->connect("project_created", this, "_on_project_created");
-    return projects_dialog;
-}
-
 Control* ProjectsManager::_create_projects_tab() {
     HBoxContainer* projects_tab_container = memnew(HBoxContainer);
     projects_tab_container->set_name(TTR("Local Projects"));
@@ -634,6 +657,15 @@ Control* ProjectsManager::_create_remove_missing_confirmation() {
     remove_missing_confirmation->get_ok()
         ->connect("pressed", this, "_on_remove_missing_confirmed");
     return remove_missing_confirmation;
+}
+
+Control* ProjectsManager::_create_rename_project_dialog() {
+    rename_project_dialog = memnew(RenameProjectDialog);
+    rename_project_dialog
+        ->connect("projects_updated", this, "_on_projects_updated");
+    rename_project_dialog
+        ->connect("project_created", this, "_on_project_created");
+    return rename_project_dialog;
 }
 
 Control* ProjectsManager::_create_restart_confirmation() {
@@ -843,10 +875,9 @@ void ProjectsManager::_install_zip_file(
     const String& p_zip_path,
     const String& p_title
 ) {
-    projects_dialog->set_mode(ProjectsDialog::MODE_INSTALL);
-    projects_dialog->set_zip_path(p_zip_path);
-    projects_dialog->set_zip_title(p_title);
-    projects_dialog->show_dialog();
+    install_project_dialog->set_zip_path(p_zip_path);
+    install_project_dialog->set_zip_title(p_title);
+    install_project_dialog->show_dialog();
 }
 
 void ProjectsManager::_on_about_button_pressed() {
@@ -896,8 +927,7 @@ void ProjectsManager::_on_global_menu_action(
 }
 
 void ProjectsManager::_on_import_button_pressed() {
-    projects_dialog->set_mode(ProjectsDialog::MODE_IMPORT);
-    projects_dialog->show_dialog();
+    import_project_dialog->show_dialog();
 }
 
 void ProjectsManager::_on_install_asset(
@@ -923,8 +953,7 @@ void ProjectsManager::_on_language_selected(int p_id) {
 }
 
 void ProjectsManager::_on_new_project_button_pressed() {
-    projects_dialog->set_mode(ProjectsDialog::MODE_NEW);
-    projects_dialog->show_dialog();
+    new_project_dialog->show_dialog();
 }
 
 void ProjectsManager::_on_open_asset_library_confirmed() {
@@ -953,9 +982,8 @@ void ProjectsManager::_on_rename_button_pressed() {
         const String& selected = E->get();
         String path =
             EditorSettings::get_singleton()->get("projects/" + selected);
-        projects_dialog->set_project_path(path);
-        projects_dialog->set_mode(ProjectsDialog::MODE_RENAME);
-        projects_dialog->show_dialog();
+        rename_project_dialog->set_project_path(path);
+        rename_project_dialog->show_dialog();
     }
 }
 
