@@ -337,6 +337,11 @@ void ProjectsManager::_notification(int p_what) {
                 open_asset_library_confirmation->popup_centered_minsize();
             }
         } break;
+        case NOTIFICATION_PROCESS: {
+            if (editing_project) {
+                _quit();
+            }
+        } break;
         case NOTIFICATION_VISIBILITY_CHANGED: {
             set_process_unhandled_input(is_visible_in_tree());
         } break;
@@ -471,8 +476,9 @@ Control* ProjectsManager::_create_add_multiple_files_confirmation() {
     add_multiple_files_confirmation->set_text(
         TTR("Are you sure you want to add or scan multiple files and folders?")
     );
-    add_multiple_files_confirmation->get_ok()->set_text(TTR("Add"));
-    add_multiple_files_confirmation->get_ok()->connect(
+    Button* ok_button = add_multiple_files_confirmation->get_ok();
+    ok_button->set_text(TTR("Add"));
+    ok_button->connect(
         "pressed",
         this,
         "_on_add_multiple_files_confirmed",
@@ -718,7 +724,7 @@ Control* ProjectsManager::_create_tools() {
 Control* ProjectsManager::_create_upgrade_settings_confirmation() {
     upgrade_settings_confirmation = memnew(ConfirmationDialog);
     upgrade_settings_confirmation->get_ok()
-        ->connect("pressed", this, "_on_upgrade_settings_confirmed");
+        ->connect("pressed", this, "_on_upgrade_settings_confirmed", varray());
     return upgrade_settings_confirmation;
 }
 
@@ -765,6 +771,74 @@ void ProjectsManager::_dim_window() {
     set_modulate(dim_color);
 }
 
+void ProjectsManager::_edit_project(const String& project_key) {
+    projects_list->show_loading();
+    Vector<ProjectsListItem*> selected_project_items =
+        projects_list->get_selected_project_items();
+    for (int i = 0; i < selected_project_items.size(); i++) {
+        ProjectsListItem* project = selected_project_items[i];
+        if (project->project_key == project_key) {
+            String project_name   = project->project_name;
+            String project_folder = project->project_folder;
+            edit_project(project_name, project_folder);
+            break;
+        }
+    }
+    // Quit projects manager on next iteration.
+    editing_project = true;
+    set_process(true);
+}
+
+void ProjectsManager::_edit_selected_projects() {
+    Vector<ProjectsListItem*> selected_project_items =
+        projects_list->get_selected_project_items();
+    for (int i = 0; i < selected_project_items.size(); i++) {
+        const ProjectsListItem* project = selected_project_items[i];
+        int config_version              = project->version;
+        String project_key              = project->project_key;
+        String project_folder           = project->project_folder;
+        String project_settings_file =
+            project_folder.plus_file("project.rebel");
+
+        if (project->missing) {
+            continue;
+        }
+        if (!FileAccess::exists(project_settings_file)) {
+            _popup_no_settings_file_error(project_settings_file);
+            continue;
+        }
+        if (config_version > ProjectSettings::CONFIG_VERSION) {
+            _popup_newer_settings_file_version_error(project_settings_file);
+            continue;
+        }
+        if (config_version < ProjectSettings::CONFIG_VERSION) {
+            _popup_upgrade_settings_confirmation(
+                project_key,
+                project_settings_file
+            );
+            continue;
+        }
+
+        _edit_project(project->project_key);
+    }
+}
+
+void ProjectsManager::_edit_selected_projects_requested() {
+    const Set<String>& selected_project_keys =
+        projects_list->get_selected_project_keys();
+
+    if (selected_project_keys.empty()) {
+        return;
+    }
+
+    if (selected_project_keys.size() == 1) {
+        _edit_selected_projects();
+        return;
+    }
+
+    edit_multiple_confirmation->popup_centered_minsize();
+}
+
 void ProjectsManager::_install_zip_file(
     const String& p_zip_path,
     const String& p_title
@@ -780,11 +854,11 @@ void ProjectsManager::_on_about_button_pressed() {
 }
 
 void ProjectsManager::_on_edit_button_pressed() {
-    _open_selected_projects_ask();
+    _edit_selected_projects_requested();
 }
 
 void ProjectsManager::_on_edit_multiple_confirmed() {
-    _open_selected_projects();
+    _edit_selected_projects();
 }
 
 void ProjectsManager::_on_files_dropped(const PoolStringArray& p_files, int) {
@@ -834,7 +908,7 @@ void ProjectsManager::_on_install_asset(
 }
 
 void ProjectsManager::_on_item_double_clicked() {
-    _open_selected_projects_ask();
+    _edit_selected_projects_requested();
 }
 
 void ProjectsManager::_on_language_selected(int p_id) {
@@ -859,7 +933,7 @@ void ProjectsManager::_on_open_asset_library_confirmed() {
 
 void ProjectsManager::_on_project_created(const String& p_project_folder) {
     _add_project(p_project_folder);
-    _open_selected_projects_ask();
+    _edit_selected_projects_requested();
 }
 
 void ProjectsManager::_on_projects_updated() {
@@ -985,8 +1059,9 @@ void ProjectsManager::_on_tab_changed(int p_tab) {
     // library editor plugin code.
 }
 
-void ProjectsManager::_on_upgrade_settings_confirmed() {
-    _open_selected_projects();
+void ProjectsManager::_on_upgrade_settings_confirmed(const String& p_project_key
+) {
+    _edit_project(p_project_key);
 }
 
 void ProjectsManager::_on_version_label_pressed() {
@@ -998,67 +1073,12 @@ void ProjectsManager::_open_asset_library() {
     tabs->set_current_tab(1);
 }
 
-void ProjectsManager::_open_selected_projects_ask() {
-    const Set<String>& selected_project_keys =
-        projects_list->get_selected_project_keys();
-
-    if (selected_project_keys.empty()) {
-        return;
-    }
-
-    if (selected_project_keys.size() > 1) {
-        edit_multiple_confirmation->popup_centered_minsize();
-        return;
-    }
-
-    const ProjectsListItem* selected_project =
-        projects_list->get_selected_project_items()[0];
-    if (selected_project->missing) {
-        return;
-    }
-
-    int config_version           = selected_project->version;
-    String project_folder        = selected_project->project_folder;
-    String project_settings_file = project_folder.plus_file("project.rebel");
-    if (config_version < ProjectSettings::CONFIG_VERSION) {
-        _popup_upgrade_settings_confirmation(project_settings_file);
-        return;
-    }
-    if (config_version > ProjectSettings::CONFIG_VERSION) {
-        _popup_newer_settings_file_version_error(project_settings_file);
-        return;
-    }
-
-    _open_selected_projects();
-}
-
-void ProjectsManager::_open_selected_projects() {
-    projects_list->show_loading();
-
-    Vector<ProjectsListItem*> selected_project_items =
-        projects_list->get_selected_project_items();
-    for (int i = 0; i < selected_project_items.size(); i++) {
-        const ProjectsListItem* project = selected_project_items[i];
-        String project_folder           = project->project_folder;
-        String project_settings_file =
-            project_folder.plus_file("project.rebel");
-        if (!FileAccess::exists(project_settings_file)) {
-            _popup_no_settings_file_error(project_settings_file);
-            return;
-        }
-        String project_name = project->project_name;
-        edit_project(project_name, project_folder);
-    }
-
-    _quit();
-}
-
 void ProjectsManager::_popup_add_multiple_files_confirmation(
     const PoolStringArray& p_files
 ) {
-    add_multiple_files_confirmation->get_ok()
-        ->disconnect("pressed", this, "_on_add_multiple_files_confirmed");
-    add_multiple_files_confirmation->get_ok()->connect(
+    Button* ok_button = upgrade_settings_confirmation->get_ok();
+    ok_button->disconnect("pressed", this, "_on_add_multiple_files_confirmed");
+    ok_button->connect(
         "pressed",
         this,
         "_on_add_multiple_files_confirmed",
@@ -1087,7 +1107,9 @@ void ProjectsManager::_popup_no_settings_file_error(const String& p_file) {
     no_settings_file_error->popup_centered_minsize();
 }
 
-void ProjectsManager::_popup_upgrade_settings_confirmation(const String& p_file
+void ProjectsManager::_popup_upgrade_settings_confirmation(
+    const String& p_project_key,
+    const String& p_settings_file
 ) {
     upgrade_settings_confirmation->set_text(vformat(
         TTR("The following project settings file %s was created with an older "
@@ -1095,8 +1117,16 @@ void ProjectsManager::_popup_upgrade_settings_confirmation(const String& p_file
             "Do you want to upgrade the settings file?\n"
             "Warning: You will not be able to open the project with the "
             "previous version of Rebel Editor again."),
-        p_file
+        p_settings_file
     ));
+    Button* ok_button = upgrade_settings_confirmation->get_ok();
+    ok_button->disconnect("pressed", this, "_on_upgrade_settings_confirmed");
+    ok_button->connect(
+        "pressed",
+        this,
+        "_on_upgrade_settings_confirmed",
+        varray(p_project_key)
+    );
     upgrade_settings_confirmation->popup_centered_minsize();
 }
 
@@ -1174,7 +1204,7 @@ void ProjectsManager::_unhandled_input(const Ref<InputEvent>& p_event) {
     bool scancode_handled = false;
     switch (key_event->get_scancode()) {
         case KEY_ENTER: {
-            _open_selected_projects_ask();
+            _edit_selected_projects_requested();
             scancode_handled = true;
         } break;
         default: {

@@ -76,6 +76,8 @@ private:
 
     TabContainer* tabs;
 
+    bool editing_project = false;
+
     Control* _create_buttons();
     void _create_dialogs();
     Control* _create_add_multiple_files_confirmation();
@@ -100,6 +102,9 @@ private:
     void _add_multiple_files(const PoolStringArray& p_files);
     void _add_project(const String& p_folder);
     void _dim_window();
+    void _edit_project(const String& project_key);
+    void _edit_selected_projects();
+    void _edit_selected_projects_requested();
     void _install_zip_file(const String& p_zip_path, const String& p_title);
     void _on_about_button_pressed();
     void _on_add_multiple_files_confirmed(const PoolStringArray& p_files);
@@ -127,15 +132,16 @@ private:
     void _on_search_folder_selected(const String& p_folder);
     void _on_selection_changed();
     void _on_tab_changed(int p_tab);
-    void _on_upgrade_settings_confirmed();
+    void _on_upgrade_settings_confirmed(const String& p_project_key);
     void _on_version_label_pressed();
     void _open_asset_library();
-    void _open_selected_projects_ask();
-    void _open_selected_projects();
     void _popup_add_multiple_files_confirmation(const PoolStringArray& p_files);
     void _popup_newer_settings_file_version_error(const String& p_file);
     void _popup_no_settings_file_error(const String& p_file);
-    void _popup_upgrade_settings_confirmation(const String& p_file);
+    void _popup_upgrade_settings_confirmation(
+        const String& p_project_key,
+        const String& p_settings_file
+    );
     void _quit();
     void _run_selected();
     void _scan_folder(const String& p_base);
