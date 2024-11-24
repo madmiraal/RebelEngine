@@ -119,7 +119,6 @@ void create_project_directories() {
 void edit_project(const String& project_name, const String& project_folder) {
     print_line(vformat("Editing project: %s (%s)", project_name, project_folder)
     );
-
     OS* os = OS::get_singleton();
     List<String> args;
     args.push_back("--path");
@@ -143,15 +142,16 @@ void edit_project(const String& project_name, const String& project_folder) {
 void run_project(const String& project_name, const String& project_folder) {
     print_line(vformat("Running project: %s (%s)", project_name, project_folder)
     );
+    OS* os = OS::get_singleton();
     List<String> args;
     args.push_back("--path");
     args.push_back(project_folder);
-    if (OS::get_singleton()->is_disable_crash_handler()) {
+    if (os->is_disable_crash_handler()) {
         args.push_back("--disable-crash-handler");
     }
-    String exec       = OS::get_singleton()->get_executable_path();
+    String exec       = os->get_executable_path();
     OS::ProcessID pid = 0;
-    Error error       = OS::get_singleton()->execute(exec, args, false, &pid);
+    Error error       = os->execute(exec, args, false, &pid);
     ERR_FAIL_COND(error);
 }
 } // namespace
@@ -175,13 +175,11 @@ ProjectsManager::ProjectsManager() {
 
     Control* center_box = memnew(Control);
     center_box->set_v_size_flags(SIZE_EXPAND_FILL);
-    panel_container->add_child(center_box);
-
     center_box->add_child(_create_tabs());
     center_box->add_child(_create_tools());
+    panel_container->add_child(center_box);
 
     _create_dialogs();
-    _update_project_buttons();
 
     SceneTree::get_singleton()
         ->connect("files_dropped", this, "_on_files_dropped");
@@ -195,6 +193,8 @@ ProjectsManager::ProjectsManager() {
         && DirAccess::exists(autoscan_project_path)) {
         _scan_folder(autoscan_project_path);
     }
+
+    _update_project_buttons();
 }
 
 ProjectsManager::~ProjectsManager() {
