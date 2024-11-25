@@ -7,6 +7,7 @@
 #ifndef PROJECTS_MANAGER_H
 #define PROJECTS_MANAGER_H
 
+#include "add_zip_file_dialog.h"
 #include "core/list.h"
 #include "core/os/input_event.h"
 #include "core/ustring.h"
@@ -14,7 +15,6 @@
 #include "editor/editor_about.h"
 #include "editor/plugins/asset_library_editor_plugin.h"
 #include "import_project_dialog.h"
-#include "install_project_dialog.h"
 #include "new_project_dialog.h"
 #include "projects_list.h"
 #include "rename_project_dialog.h"
@@ -63,8 +63,8 @@ private:
     ConfirmationDialog* run_multiple_confirmation;
     ConfirmationDialog* upgrade_settings_confirmation;
 
+    AddZipFileDialog* add_zip_file_dialog;
     ImportProjectDialog* import_project_dialog;
-    InstallProjectDialog* install_project_dialog;
     NewProjectDialog* new_project_dialog;
     RenameProjectDialog* rename_project_dialog;
 
@@ -88,9 +88,9 @@ private:
     Control* _create_buttons();
     void _create_dialogs();
     Control* _create_add_multiple_files_confirmation();
+    Control* _create_add_zip_file_dialog();
     Control* _create_edit_multiple_confirmation();
     Control* _create_import_project_dialog();
-    Control* _create_install_project_dialog();
     Control* _create_language_options();
     Control* _create_new_project_dialog();
     Control* _create_newer_settings_file_version_error();
@@ -111,13 +111,17 @@ private:
     void _add_file(const String& p_file);
     void _add_multiple_files(const PoolStringArray& p_files);
     void _add_project(const String& p_folder);
+    void _add_zip_file(
+        const String& p_zip_file_path,
+        const String& p_project_name = String()
+    );
     void _dim_window();
     void _edit_project(const String& project_key);
     void _edit_selected_projects();
     void _edit_selected_projects_requested();
-    void _install_zip_file(const String& p_zip_path, const String& p_title);
     void _on_about_button_pressed();
     void _on_add_multiple_files_confirmed(const PoolStringArray& p_files);
+    void _on_add_zip_file(const String& p_zip_file_path);
     void _on_edit_button_pressed();
     void _on_edit_multiple_confirmed();
     void _on_files_dropped(const PoolStringArray& p_files, int);

@@ -213,6 +213,10 @@ void ProjectsManager::_bind_methods() {
         &ProjectsManager::_on_add_multiple_files_confirmed
     );
     ClassDB::bind_method(
+        "_on_add_zip_file",
+        &ProjectsManager::_on_add_zip_file
+    );
+    ClassDB::bind_method(
         "_on_edit_button_pressed",
         &ProjectsManager::_on_edit_button_pressed
     );
@@ -464,8 +468,8 @@ void ProjectsManager::_create_dialogs() {
     add_child(_create_no_main_scene_defined_error());
     add_child(_create_no_settings_file_error());
 
+    add_child(_create_add_zip_file_dialog());
     add_child(_create_import_project_dialog());
-    add_child(_create_install_project_dialog());
     add_child(_create_new_project_dialog());
     add_child(_create_rename_project_dialog());
 
@@ -491,6 +495,13 @@ Control* ProjectsManager::_create_add_multiple_files_confirmation() {
     return add_multiple_files_confirmation;
 }
 
+Control* ProjectsManager::_create_add_zip_file_dialog() {
+    add_zip_file_dialog = memnew(AddZipFileDialog);
+    add_zip_file_dialog
+        ->connect("project_created", this, "_on_project_created");
+    return add_zip_file_dialog;
+}
+
 Control* ProjectsManager::_create_edit_multiple_confirmation() {
     edit_multiple_confirmation = memnew(ConfirmationDialog);
     edit_multiple_confirmation->set_text(
@@ -504,20 +515,10 @@ Control* ProjectsManager::_create_edit_multiple_confirmation() {
 
 Control* ProjectsManager::_create_import_project_dialog() {
     import_project_dialog = memnew(ImportProjectDialog);
+    import_project_dialog->connect("add_zip_file", this, "_on_add_zip_file");
     import_project_dialog
-        ->connect("projects_updated", this, "_on_projects_updated");
-    import_project_dialog
-        ->connect("project_created", this, "_on_project_created");
+        ->connect("project_added", this, "_on_project_created");
     return import_project_dialog;
-}
-
-Control* ProjectsManager::_create_install_project_dialog() {
-    install_project_dialog = memnew(InstallProjectDialog);
-    install_project_dialog
-        ->connect("projects_updated", this, "_on_projects_updated");
-    install_project_dialog
-        ->connect("project_created", this, "_on_project_created");
-    return install_project_dialog;
 }
 
 Control* ProjectsManager::_create_language_options() {
@@ -771,8 +772,7 @@ void ProjectsManager::_add_file(const String& p_file) {
     if (file_name == "project.rebel") {
         _add_project(folder);
     } else if (file_name.ends_with(".zip")) {
-        String title = file_name.substr(0, p_file.length() - 4).capitalize();
-        _install_zip_file(p_file, title);
+        _add_zip_file(p_file);
     }
 }
 
@@ -793,6 +793,13 @@ void ProjectsManager::_add_project(const String& p_folder) {
     EditorSettings::get_singleton()->save();
 
     projects_list->add_project(project_key);
+}
+
+void ProjectsManager::_add_zip_file(
+    const String& p_zip_file_path,
+    const String& p_project_name
+) {
+    add_zip_file_dialog->show_dialog(p_zip_file_path, p_project_name);
 }
 
 void ProjectsManager::_dim_window() {
@@ -869,17 +876,12 @@ void ProjectsManager::_edit_selected_projects_requested() {
     edit_multiple_confirmation->popup_centered_minsize();
 }
 
-void ProjectsManager::_install_zip_file(
-    const String& p_zip_path,
-    const String& p_title
-) {
-    install_project_dialog->set_zip_path(p_zip_path);
-    install_project_dialog->set_zip_title(p_title);
-    install_project_dialog->show_dialog();
-}
-
 void ProjectsManager::_on_about_button_pressed() {
     _show_editor_about();
+}
+
+void ProjectsManager::_on_add_zip_file(const String& p_zip_file_path) {
+    _add_zip_file(p_zip_file_path);
 }
 
 void ProjectsManager::_on_edit_button_pressed() {
@@ -932,7 +934,7 @@ void ProjectsManager::_on_install_asset(
     const String& p_zip_path,
     const String& p_title
 ) {
-    _install_zip_file(p_zip_path, p_title);
+    _add_zip_file(p_zip_path, p_title);
 }
 
 void ProjectsManager::_on_item_double_clicked() {

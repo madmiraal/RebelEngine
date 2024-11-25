@@ -178,8 +178,6 @@ ImportProjectDialog::ImportProjectDialog() {
     fdialog_install->connect("dir_selected", this, "_install_path_selected");
     fdialog_install->connect("file_selected", this, "_install_path_selected");
 
-    set_hide_on_ok(false);
-
     dialog_error = memnew(AcceptDialog);
     add_child(dialog_error);
 }
@@ -254,8 +252,9 @@ void ImportProjectDialog::_bind_methods() {
         "_browse_install_path",
         &ImportProjectDialog::_browse_install_path
     );
-    ADD_SIGNAL(MethodInfo("project_created"));
-    ADD_SIGNAL(MethodInfo("projects_updated"));
+
+    ADD_SIGNAL(MethodInfo("add_zip_file"));
+    ADD_SIGNAL(MethodInfo("project_added"));
 }
 
 void ImportProjectDialog::_notification(int p_what) {
@@ -267,15 +266,11 @@ void ImportProjectDialog::_notification(int p_what) {
 void ImportProjectDialog::ok_pressed() {
     String dir = project_path->get_text();
 
-    // TODO: Fix!!!!
-    //    if (project_path->get_text().ends_with(".zip")) {
-    //        mode = MODE_INSTALL;
-    //        ok_pressed();
-    //        return;
-    //    }
-
-    hide();
-    emit_signal("project_created", dir);
+    if (dir.ends_with("zip")) {
+        emit_signal("add_zip_file", dir);
+    } else {
+        emit_signal("project_added", dir);
+    }
 }
 
 void ImportProjectDialog::_browse_path() {
