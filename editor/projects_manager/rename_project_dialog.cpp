@@ -9,6 +9,7 @@
 #include "core/io/config_file.h"
 #include "editor/editor_scale.h"
 #include "editor/editor_themes.h"
+#include "scene/gui/container.h"
 
 RenameProjectDialog::RenameProjectDialog() {
     set_title(TTR("Rename Project"));

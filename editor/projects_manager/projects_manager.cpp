@@ -258,8 +258,8 @@ void ProjectsManager::_bind_methods() {
         &ProjectsManager::_on_new_project_button_pressed
     );
     ClassDB::bind_method(
-        "_on_project_created",
-        &ProjectsManager::_on_project_created
+        "_on_project_added",
+        &ProjectsManager::_on_project_added
     );
     ClassDB::bind_method(
         "_on_projects_updated",
@@ -468,8 +468,8 @@ void ProjectsManager::_create_dialogs() {
     add_child(_create_no_main_scene_defined_error());
     add_child(_create_no_settings_file_error());
 
+    add_child(_create_add_project_dialog());
     add_child(_create_add_zip_file_dialog());
-    add_child(_create_import_project_dialog());
     add_child(_create_new_project_dialog());
     add_child(_create_rename_project_dialog());
 
@@ -495,10 +495,16 @@ Control* ProjectsManager::_create_add_multiple_files_confirmation() {
     return add_multiple_files_confirmation;
 }
 
+Control* ProjectsManager::_create_add_project_dialog() {
+    add_project_dialog = memnew(AddProjectDialog);
+    add_project_dialog->connect("add_zip_file", this, "_on_add_zip_file");
+    add_project_dialog->connect("project_added", this, "_on_project_added");
+    return add_project_dialog;
+}
+
 Control* ProjectsManager::_create_add_zip_file_dialog() {
     add_zip_file_dialog = memnew(AddZipFileDialog);
-    add_zip_file_dialog
-        ->connect("project_created", this, "_on_project_created");
+    add_zip_file_dialog->connect("project_added", this, "_on_project_added");
     return add_zip_file_dialog;
 }
 
@@ -511,14 +517,6 @@ Control* ProjectsManager::_create_edit_multiple_confirmation() {
     edit_multiple_confirmation->get_ok()
         ->connect("pressed", this, "_on_edit_multiple_confirmed");
     return edit_multiple_confirmation;
-}
-
-Control* ProjectsManager::_create_import_project_dialog() {
-    import_project_dialog = memnew(ImportProjectDialog);
-    import_project_dialog->connect("add_zip_file", this, "_on_add_zip_file");
-    import_project_dialog
-        ->connect("project_added", this, "_on_project_created");
-    return import_project_dialog;
 }
 
 Control* ProjectsManager::_create_language_options() {
@@ -564,7 +562,7 @@ Control* ProjectsManager::_create_new_project_dialog() {
     new_project_dialog = memnew(NewProjectDialog);
     new_project_dialog
         ->connect("projects_updated", this, "_on_projects_updated");
-    new_project_dialog->connect("project_created", this, "_on_project_created");
+    new_project_dialog->connect("project_added", this, "_on_project_added");
     return new_project_dialog;
 }
 
@@ -927,7 +925,7 @@ void ProjectsManager::_on_global_menu_action(
 }
 
 void ProjectsManager::_on_import_button_pressed() {
-    import_project_dialog->show_dialog();
+    add_project_dialog->show_dialog();
 }
 
 void ProjectsManager::_on_install_asset(
@@ -960,7 +958,7 @@ void ProjectsManager::_on_open_asset_library_confirmed() {
     _open_asset_library();
 }
 
-void ProjectsManager::_on_project_created(const String& p_project_folder) {
+void ProjectsManager::_on_project_added(const String& p_project_folder) {
     _add_project(p_project_folder);
     _edit_selected_projects_requested();
 }

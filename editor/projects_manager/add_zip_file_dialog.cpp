@@ -12,6 +12,7 @@
 #include "editor/editor_scale.h"
 #include "editor/editor_settings.h"
 #include "editor/editor_themes.h"
+#include "scene/gui/container.h"
 
 namespace {
 String get_zipped_project_folder(const unzFile& unz_file) {
@@ -232,7 +233,7 @@ void AddZipFileDialog::_bind_methods() {
         &AddZipFileDialog::_on_project_folder_selected
     );
 
-    ADD_SIGNAL(MethodInfo("project_created"));
+    ADD_SIGNAL(MethodInfo("project_added"));
 }
 
 void AddZipFileDialog::cancel_pressed() {
@@ -258,7 +259,7 @@ void AddZipFileDialog::ok_pressed() {
     unzip_project_files(unz_file, zipped_project_folder, project_folder);
     unzClose(unz_file);
     hide();
-    emit_signal("project_created", project_folder);
+    emit_signal("project_added", project_folder);
 }
 
 void AddZipFileDialog::_on_browse_button_pressed() {

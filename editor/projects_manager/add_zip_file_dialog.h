@@ -9,7 +9,6 @@
 
 #include "core/ustring.h"
 #include "scene/gui/button.h"
-#include "scene/gui/container.h"
 #include "scene/gui/dialogs.h"
 #include "scene/gui/file_dialog.h"
 #include "scene/gui/label.h"

@@ -7,6 +7,7 @@
 #ifndef PROJECTS_MANAGER_H
 #define PROJECTS_MANAGER_H
 
+#include "add_project_dialog.h"
 #include "add_zip_file_dialog.h"
 #include "core/list.h"
 #include "core/os/input_event.h"
@@ -14,7 +15,6 @@
 #include "core/variant.h"
 #include "editor/editor_about.h"
 #include "editor/plugins/asset_library_editor_plugin.h"
-#include "import_project_dialog.h"
 #include "new_project_dialog.h"
 #include "projects_list.h"
 #include "rename_project_dialog.h"
@@ -63,8 +63,8 @@ private:
     ConfirmationDialog* run_multiple_confirmation;
     ConfirmationDialog* upgrade_settings_confirmation;
 
+    AddProjectDialog* add_project_dialog;
     AddZipFileDialog* add_zip_file_dialog;
-    ImportProjectDialog* import_project_dialog;
     NewProjectDialog* new_project_dialog;
     RenameProjectDialog* rename_project_dialog;
 
@@ -88,9 +88,9 @@ private:
     Control* _create_buttons();
     void _create_dialogs();
     Control* _create_add_multiple_files_confirmation();
+    Control* _create_add_project_dialog();
     Control* _create_add_zip_file_dialog();
     Control* _create_edit_multiple_confirmation();
-    Control* _create_import_project_dialog();
     Control* _create_language_options();
     Control* _create_new_project_dialog();
     Control* _create_newer_settings_file_version_error();
@@ -132,7 +132,7 @@ private:
     void _on_language_selected(int p_id);
     void _on_new_project_button_pressed();
     void _on_open_asset_library_confirmed();
-    void _on_project_created(const String& p_project_folder);
+    void _on_project_added(const String& p_project_folder);
     void _on_projects_updated();
     void _on_rename_button_pressed();
     void _on_remove_button_pressed();

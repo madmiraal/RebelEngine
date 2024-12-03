@@ -246,7 +246,7 @@ void NewProjectDialog::_bind_methods() {
         "_browse_install_path",
         &NewProjectDialog::_browse_install_path
     );
-    ADD_SIGNAL(MethodInfo("project_created"));
+    ADD_SIGNAL(MethodInfo("project_added"));
     ADD_SIGNAL(MethodInfo("projects_updated"));
 }
 
@@ -316,7 +316,7 @@ void NewProjectDialog::ok_pressed() {
     }
 
     hide();
-    emit_signal("project_created", dir);
+    emit_signal("project_added", dir);
 }
 
 void NewProjectDialog::_browse_path() {
