@@ -560,8 +560,6 @@ Control* ProjectsManager::_create_language_options() {
 
 Control* ProjectsManager::_create_new_project_dialog() {
     new_project_dialog = memnew(NewProjectDialog);
-    new_project_dialog
-        ->connect("projects_updated", this, "_on_projects_updated");
     new_project_dialog->connect("project_added", this, "_on_project_added");
     return new_project_dialog;
 }
