@@ -29,127 +29,97 @@ jobs:
             artifact: windows-editor
             build-options: production=yes target=release_debug
 
-          - name: macOS Editor x86 64 bit
+          - name: macOS Editor x86
             os: macos-latest
             artifact: macos-editor-x86-64
             build-options: production=yes target=release_debug
 
-          - name: macOS Editor armv8 64 bit
+          - name: macOS Editor arm
             os: macos-latest
             artifact: macos-editor-arm64
             build-options: production=yes target=release_debug arch=arm64
 
           # Rebel Engine Linux builds
-          - name: Linux Engine 64 bit
+          - name: Linux Engine
             os: ubuntu-22.04
             artifact: linux-engine-x86-64
             build-options: production=yes tools=no target=release
 
-          - name: Linux Engine 64 bit Debug
+          - name: Linux Engine Debug
             os: ubuntu-22.04
             artifact: linux-engine-x86-64-debug
             build-options: production=yes tools=no target=release_debug
 
           # Rebel Engine Windows builds
-          - name: Windows Engine 64 bit
+          - name: Windows Engine
             os: windows-latest
             artifact: windows-engine-x86-64
             build-options: production=yes tools=no target=release
 
-          - name: Windows Engine 64 bit Debug
+          - name: Windows Engine Debug
             os: windows-latest
             artifact: windows-engine-x86-64-debug
             build-options: production=yes tools=no target=release_debug
 
-          - name: Windows Engine 32 bit
-            os: windows-latest
-            artifact: windows-engine-x86-32
-            build-options: production=yes tools=no target=release bits=32
-
-          - name: Windows Engine 32 bit Debug
-            os: windows-latest
-            artifact: windows-engine-x86-32-debug
-            build-options: production=yes tools=no target=release_debug bits=32
-
           # Rebel Engine macOS builds
-          - name: macOS Engine x86 64 bit
+          - name: macOS Engine x86
             os: macos-latest
             artifact: macos-engine-x86-64
             build-options: production=yes tools=no target=release
 
-          - name: macOS Engine x86 64 bit Debug
+          - name: macOS Engine x86 Debug
             os: macos-latest
             artifact: macos-engine-x86-64-debug
             build-options: production=yes tools=no target=release_debug
 
-          - name: macOS Engine armv8 64 bit
+          - name: macOS Engine arm
             os: macos-latest
             artifact: macos-engine-arm64
             build-options: production=yes tools=no target=release arch=arm64
 
-          - name: macOS Engine armv8 64 bit Debug
+          - name: macOS Engine arm Debug
             os: macos-latest
             artifact: macos-engine-arm64-debug
             build-options: production=yes tools=no target=release_debug arch=arm64
 
           # Rebel Engine Android Library builds
-          - name: Android Engine Library armv8 64 bit
+          - name: Android Engine Library arm
             os: ubuntu-latest
             artifact: android-engine-library-arm64
             build-options: platform=android production=yes tools=no target=release
 
-          - name: Android Engine Library armv8 64 bit Debug
+          - name: Android Engine Library arm Debug
             os: ubuntu-latest
             artifact: android-engine-library-arm64-debug
             build-options: platform=android production=yes tools=no target=release_debug
 
-          - name: Android Engine Library armv7 Neon
-            os: ubuntu-latest
-            artifact: android-engine-library-arm-neon
-            build-options: platform=android production=yes tools=no target=release android_arch=armv7
-
-          - name: Android Engine Library armv7 Neon Debug
-            os: ubuntu-latest
-            artifact: android-engine-library-arm-neon-debug
-            build-options: platform=android production=yes tools=no target=release_debug android_arch=armv7
-
-          - name: Android Engine Library x86 64 bit
+          - name: Android Engine Library x86
             os: ubuntu-latest
             artifact: android-engine-library-x86-64
             build-options: platform=android production=yes tools=no target=release android_arch=x86_64
 
-          - name: Android Engine Library x86 64 bit Debug
+          - name: Android Engine Library x86 Debug
             os: ubuntu-latest
             artifact: android-engine-library-x86-64-debug
             build-options: platform=android production=yes tools=no target=release_debug android_arch=x86_64
 
-          - name: Android Engine Library x86 32 bit
-            os: ubuntu-latest
-            artifact: android-engine-library-x86-32
-            build-options: platform=android production=yes tools=no target=release android_arch=x86
-
-          - name: Android Engine Library x86 32 bit Debug
-            os: ubuntu-latest
-            artifact: android-engine-library-x86-32-debug
-            build-options: platform=android production=yes tools=no target=release_debug android_arch=x86
-
           # Rebel Engine iOS Library builds
-          - name: iOS Engine Library arm 64 bit
+          - name: iOS Engine Library arm
             os: macos-latest
             artifact: ios-engine-library-arm64
             build-options: platform=ios production=yes tools=no target=release
 
-          - name: iOS Engine Library arm 64 bit Debug
+          - name: iOS Engine Library arm Debug
             os: macos-latest
             artifact: ios-engine-library-arm64-debug
             build-options: platform=ios production=yes tools=no target=release_debug
 
-          - name: iOS Engine Library x86 64 bit Simulator
+          - name: iOS Engine Library x86 Simulator
             os: macos-latest
             artifact: ios-engine-library-x86-64
             build-options: platform=ios production=yes tools=no ios_simulator=yes target=release arch=x86_64
 
-          - name: iOS Engine Library x86 64 bit Simulator Debug
+          - name: iOS Engine Library x86 Simulator Debug
             os: macos-latest
             artifact: ios-engine-library-x86-64-debug
             build-options: platform=ios production=yes tools=no ios_simulator=yes target=release_debug arch=x86_64
