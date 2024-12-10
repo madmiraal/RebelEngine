@@ -31,17 +31,12 @@ def get_opts():
             "android_arch",
             "Target architecture",
             "arm64v8",
-            ("armv7", "arm64v8", "x86", "x86_64"),
+            ("arm64v8", "x86_64"),
         ),
         (
             "android_ndk_api",
             "Android NDK API level (minimum SDK supported)",
             21,
-        ),
-        BoolVariable(
-            "android_neon",
-            "Set to False to disable NEON support (armv7 only)",
-            True,
         ),
     ]
 
@@ -99,51 +94,24 @@ def configure(env):
         env.Append(CPPDEFINES=["_FILE_OFFSET_BITS", 64])
 
     # Architecture
-    if env["android_arch"] not in ["armv7", "arm64v8", "x86", "x86_64"]:
+    if env["android_arch"] not in ["arm64v8", "x86_64"]:
         print("ERROR: Unrecognised android arch: " + env["android_arch"])
         sys.exit()
-    neon_text = ""
-    if env["android_arch"] == "armv7" and env["android_neon"]:
-        neon_text = " with NEON"
-    print("Building for Android (" + env["android_arch"] + neon_text + ")")
+    print("Building for Android (" + env["android_arch"] + ")")
 
-    if env["android_arch"] == "armv7":
-        triple = "arm-linux-androideabi"
-        target_triple = "armv7a-linux-androideabi"
-        if env["android_neon"]:
-            env.extra_suffix = ".armv7.neon" + env.extra_suffix
-        else:
-            env.extra_suffix = ".armv7" + env.extra_suffix
-    elif env["android_arch"] == "arm64v8":
+    if env["android_arch"] == "arm64v8":
         triple = "aarch64-linux-android"
-        target_triple = triple
         env.extra_suffix = ".armv8" + env.extra_suffix
-    elif env["android_arch"] == "x86":
-        triple = "i686-linux-android"
-        target_triple = triple
-        env.extra_suffix = ".x86" + env.extra_suffix
     elif env["android_arch"] == "x86_64":
         triple = "x86_64-linux-android"
-        target_triple = triple
         env.extra_suffix = ".x86_64" + env.extra_suffix
-    target_triple = target_triple + str(ndk_api_level)
+    target_triple = triple + str(ndk_api_level)
     env.Append(CCFLAGS=["-target", target_triple])
     env.Append(ASFLAGS=["-target", target_triple])
     env.Append(LINKFLAGS=["-target", target_triple])
 
-    env["neon_enabled"] = False
-    if env["android_arch"] == "armv7":
-        if env["android_neon"]:
-            env["neon_enabled"] = True
-            env.Append(CCFLAGS=["-mfpu=neon"])
-        else:
-            env.Append(CCFLAGS=["-mfpu=vfpv3-d16"])
-    elif env["android_arch"] == "arm64v8":
+    if env["android_arch"] == "arm64v8":
         env.Append(CCFLAGS=["-mfix-cortex-a53-835769"])
-    elif env["android_arch"] == "x86":
-        # For x86 targets prior to Android Nougat (API 24),
-        # -mstackrealign is needed to properly align stacks for global constructors.
-        env.Append(CCFLAGS=["-mstackrealign"])
 
     # Build type
     if env["target"].startswith("release"):
