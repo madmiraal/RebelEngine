@@ -126,9 +126,6 @@ opts.Add(
 )
 opts.Add("arch", "Platform-dependent architecture (arm/arm64/x86/x64/mips/...)", "")
 opts.Add(
-    EnumVariable("bits", "Target platform bits", "default", ("default", "32", "64"))
-)
-opts.Add(
     EnumVariable("optimize", "Optimization type", "speed", ("speed", "size", "none"))
 )
 opts.Add(
@@ -586,10 +583,6 @@ if selected_platform in platform_list:
 
     if env["arch"] != "":
         suffix += "." + env["arch"]
-    elif env["bits"] == "32":
-        suffix += ".32"
-    elif env["bits"] == "64":
-        suffix += ".64"
 
     suffix += env.extra_suffix
 
