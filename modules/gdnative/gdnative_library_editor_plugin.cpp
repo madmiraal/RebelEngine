@@ -353,14 +353,12 @@ GDNativeLibraryEditor::GDNativeLibraryEditor() {
         NativePlatformConfig platform_windows;
         platform_windows.name = "Windows";
         platform_windows.entries.push_back("64");
-        platform_windows.entries.push_back("32");
         platform_windows.library_extension = "*.dll";
         platforms["Windows"]               = platform_windows;
 
         NativePlatformConfig platform_linux;
         platform_linux.name = "Linux";
         platform_linux.entries.push_back("64");
-        platform_linux.entries.push_back("32");
         platform_linux.library_extension = "*.so";
         platforms["Linux"]               = platform_linux;
 
@@ -374,7 +372,6 @@ GDNativeLibraryEditor::GDNativeLibraryEditor() {
         NativePlatformConfig platform_uwp;
         platform_uwp.name = "UWP";
         platform_uwp.entries.push_back("arm");
-        platform_uwp.entries.push_back("32");
         platform_uwp.entries.push_back("64");
         platform_uwp.library_extension = "*.dll";
         platforms["UWP"]               = platform_uwp;
@@ -396,7 +393,6 @@ GDNativeLibraryEditor::GDNativeLibraryEditor() {
 
         NativePlatformConfig platform_ios;
         platform_ios.name = "iOS";
-        platform_ios.entries.push_back("armv7");
         platform_ios.entries.push_back("arm64");
         platform_ios.entries.push_back("x86_64");
         // iOS can use both Static and Dynamic libraries.
