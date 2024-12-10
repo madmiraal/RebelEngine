@@ -244,12 +244,8 @@ jobs:
                 ;;
             esac
             case $arch_id in
-              armv7 )
-                arch="armeabi-v7a" ;;
               armv8 )
                 arch="arm64-v8a" ;;
-              x86 )
-                arch="x86" ;;
               x86_64 )
                 arch="x86_64" ;;
             esac
