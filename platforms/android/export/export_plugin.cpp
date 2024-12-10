@@ -644,9 +644,7 @@ zip_fileinfo EditorExportPlatformAndroid::get_zip_fileinfo() {
 
 Vector<String> EditorExportPlatformAndroid::get_abis() {
     Vector<String> abis;
-    abis.push_back("armeabi-v7a");
     abis.push_back("arm64-v8a");
-    abis.push_back("x86");
     abis.push_back("x86_64");
     return abis;
 }
@@ -2283,7 +2281,7 @@ void EditorExportPlatformAndroid::get_export_options(
     Vector<String> abis = get_abis();
     for (int i = 0; i < abis.size(); ++i) {
         String abi      = abis[i];
-        bool is_default = (abi == "armeabi-v7a" || abi == "arm64-v8a");
+        bool is_default = abi == "arm64-v8a";
         r_options->push_back(ExportOption(
             PropertyInfo(Variant::BOOL, "architectures/" + abi),
             is_default

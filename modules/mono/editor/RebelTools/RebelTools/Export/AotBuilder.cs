@@ -647,9 +647,7 @@ MONO_AOT_MODE_LAST = 1000,
 
                 var androidToolPrefixes = new Dictionary<string, string>
                 {
-                    ["armeabi-v7a"] = "arm-linux-androideabi-",
                     ["arm64-v8a"] = "aarch64-linux-android-",
-                    ["x86"] = "i686-linux-android-",
                     ["x86_64"] = "x86_64-linux-android-"
                 };
 
@@ -763,9 +761,7 @@ MONO_AOT_MODE_LAST = 1000,
         {
             var androidAbis = new[]
             {
-                "armeabi-v7a",
                 "arm64-v8a",
-                "x86",
                 "x86_64"
             };
 
@@ -776,9 +772,7 @@ MONO_AOT_MODE_LAST = 1000,
         {
             var abiArchs = new Dictionary<string, string>
             {
-                ["armeabi-v7a"] = "armv7",
                 ["arm64-v8a"] = "aarch64-v8a",
-                ["x86"] = "i686",
                 ["x86_64"] = "x86_64"
             };
 

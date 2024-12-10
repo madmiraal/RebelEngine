@@ -10,9 +10,7 @@ if os.name == "nt":
 
 
 android_arch_dirs = {
-    "armv7": "armeabi-v7a",
     "arm64v8": "arm64-v8a",
-    "x86": "x86",
     "x86_64": "x86_64",
 }
 

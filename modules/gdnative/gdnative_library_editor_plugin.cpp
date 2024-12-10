@@ -378,9 +378,7 @@ GDNativeLibraryEditor::GDNativeLibraryEditor() {
 
         NativePlatformConfig platform_android;
         platform_android.name = "Android";
-        platform_android.entries.push_back("armeabi-v7a");
         platform_android.entries.push_back("arm64-v8a");
-        platform_android.entries.push_back("x86");
         platform_android.entries.push_back("x86_64");
         platform_android.library_extension = "*.so";
         platforms["Android"]               = platform_android;
