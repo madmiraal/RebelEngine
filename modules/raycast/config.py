@@ -6,9 +6,6 @@ def can_build(env, platform):
     if env["arch"].startswith("rv"):
         return False
 
-    if platform == "android":
-        return env["android_arch"] in ["arm64v8", "x86_64"]
-
     if platform in ["web", "server"]:
         return False
 

@@ -532,19 +532,9 @@ bool AndroidOS::_check_internal_feature_support(const String& p_feature) {
         // TODO support etc2 only if GLES3 driver is selected
         return true;
     }
-#if defined(__aarch64__)
     if (p_feature == "arm64-v8a") {
         return true;
     }
-#elif defined(__ARM_ARCH_7A__)
-    if (p_feature == "armeabi-v7a" || p_feature == "armeabi") {
-        return true;
-    }
-#elif defined(__arm__)
-    if (p_feature == "armeabi") {
-        return true;
-    }
-#endif
     return false;
 }
 
