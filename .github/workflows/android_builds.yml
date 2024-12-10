@@ -34,18 +34,18 @@ jobs:
       - name: Setup build dependencies
         uses: ./.github/actions/build-dependencies
 
-      - name: Build (armv7)
-        uses: ./.github/actions/build
-        with:
-          sconsflags: ${{ env.SCONSFLAGS }} android_arch=armv7
-          platform: android
-          target: release
-          tools: false
-
       - name: Build (arm64v8)
         uses: ./.github/actions/build
         with:
           sconsflags: ${{ env.SCONSFLAGS }} android_arch=arm64v8
+          platform: android
+          target: release
+          tools: false
+
+      - name: Build (x86_64)
+        uses: ./.github/actions/build
+        with:
+          sconsflags: ${{ env.SCONSFLAGS }} android_arch=x86_64
           platform: android
           target: release
           tools: false
