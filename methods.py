@@ -765,21 +765,21 @@ def generate_vs_project(env, num_jobs):
         release_variants = ["release|Win32"] + ["release|x64"]
         release_debug_variants = ["release_debug|Win32"] + ["release_debug|x64"]
         variants = debug_variants + release_variants + release_debug_variants
-        debug_targets = ["bin\\rebel.windows.tools.32.exe"] + [
-            "bin\\rebel.windows.tools.64.exe"
+        debug_targets = ["bin\\rebel.windows.tools.32.msvc.exe"] + [
+            "bin\\rebel.windows.tools.64.msvc.exe"
         ]
-        release_targets = ["bin\\rebel.windows.opt.32.exe"] + [
-            "bin\\rebel.windows.opt.64.exe"
+        release_targets = ["bin\\rebel.windows.opt.32.msvc.exe"] + [
+            "bin\\rebel.windows.opt.64.msvc.exe"
         ]
-        release_debug_targets = ["bin\\rebel.windows.opt.tools.32.exe"] + [
-            "bin\\rebel.windows.opt.tools.64.exe"
+        release_debug_targets = ["bin\\rebel.windows.opt.tools.32.msvc.exe"] + [
+            "bin\\rebel.windows.opt.tools.64.msvc.exe"
         ]
         targets = debug_targets + release_targets + release_debug_targets
         if not env.get("MSVS"):
             env["MSVS"]["PROJECTSUFFIX"] = ".vcxproj"
             env["MSVS"]["SOLUTIONSUFFIX"] = ".sln"
         env.MSVSProject(
-            target=["#rebel" + env["MSVSPROJECTSUFFIX"]],
+            target=["Rebel Engine" + env["MSVSPROJECTSUFFIX"]],
             incs=env.vs_incs,
             srcs=env.vs_srcs,
             runfile=targets,
