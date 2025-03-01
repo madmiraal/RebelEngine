@@ -199,11 +199,18 @@ class LinuxOS : public UnixOS {
 
     const char* cursor_theme;
     int cursor_size;
-    XcursorImage* img[CURSOR_MAX];
-    Cursor cursors[CURSOR_MAX];
+    Map<CursorShape, const char*> xcursor_names;
+    Map<CursorShape, XcursorImage*> cursor_images;
+    Map<CursorShape, Cursor> cursors;
     Cursor null_cursor;
-    CursorShape current_cursor;
-    Map<CursorShape, Vector<Variant>> cursors_cache;
+    CursorShape current_cursor_shape;
+
+    void create_cursors();
+    void create_cursor(CursorShape cursor_shape, const char* xcursor_name);
+    void set_cursor(CursorShape cursor_shape, XcursorImage* xcursor_image);
+    void free_cursors();
+    void free_cursor(CursorShape cursor_shape);
+    void update_cursor();
 
     InputDefault* input;
 
@@ -270,12 +277,12 @@ protected:
 public:
     virtual String get_name() const;
 
-    virtual void set_cursor_shape(CursorShape p_shape);
+    virtual void set_cursor_shape(CursorShape cursor_shape);
     virtual CursorShape get_cursor_shape() const;
     virtual void set_custom_mouse_cursor(
-        const RES& p_cursor,
-        CursorShape p_shape,
-        const Vector2& p_hotspot
+        const RES& cursor_image,
+        CursorShape cursor_shape,
+        const Vector2& cursor_hotspot
     );
 
     void set_mouse_mode(MouseMode p_mode);
