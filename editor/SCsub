@@ -1,8 +1,8 @@
 #!/usr/bin/env python
 
-Import("env")
+Import("environment")
 
-env.editor_sources = []
+environment.editor_sources = []
 
 import os
 import glob
@@ -16,33 +16,33 @@ def _make_modules_classes_docs_path(to_path):
     g = open_utf8(os.path.join(to_path, "modules_classes_docs_path.gen.h"), "w")
     g.write(
         "static const int _modules_classes_docs_path_count = "
-        + str(len(env.modules_classes_docs_path))
+        + str(len(environment.modules_classes_docs_path))
         + ";\n"
     )
     g.write("struct ModulesClassesDocsPath { const char* name; const char* path; };\n")
 
     g.write(
         "static const ModulesClassesDocsPath _modules_classes_docs_path["
-        + str(len(env.modules_classes_docs_path) + 1)
+        + str(len(environment.modules_classes_docs_path) + 1)
         + "] = {\n"
     )
-    for name in sorted(env.modules_classes_docs_path):
+    for name in sorted(environment.modules_classes_docs_path):
         g.write(
-            '    {"' + name + '", "' + env.modules_classes_docs_path[name] + '"},\n'
+            '    {"' + name + '", "' + environment.modules_classes_docs_path[name] + '"},\n'
         )
     g.write("    {NULL, NULL}\n")
     g.write("};\n")
     g.close()
 
 
-if env["tools"]:
+if environment["tools"]:
     # Register exporters
     reg_exporters_inc = '#include "register_exporters.h"\n'
     reg_exporters = "void register_exporters() {\n"
-    for e in env.platform_exporters:
+    for e in environment.platform_exporters:
         # Glob all .cpp files in export folder
         files = Glob("#platforms/" + e + "/export/" + "*.cpp")
-        env.add_source_files(env.editor_sources, files)
+        environment.add_source_files(environment.editor_sources, files)
 
         reg_exporters += "\tregister_" + e + "_exporter();\n"
         reg_exporters_inc += '#include "platforms/' + e + '/export/export.h"\n'
@@ -59,7 +59,7 @@ if env["tools"]:
 
     # Module API documentation.
     module_dirs = []
-    for d in env.modules_classes_docs_path.values():
+    for d in environment.modules_classes_docs_path.values():
         if d not in module_dirs:
             module_dirs.append(d)
 
@@ -69,11 +69,11 @@ if env["tools"]:
         else:
             docs += Glob(d + "/*.xml")  # Custom.
 
-    _make_modules_classes_docs_path(env.Dir("#editor/docs").abspath)
+    _make_modules_classes_docs_path(environment.Dir("#editor/docs").abspath)
 
     docs = sorted(docs)
-    env.Depends("#editor/docs_data_compressed.gen.h", docs)
-    env.CommandNoCache(
+    environment.Depends("#editor/docs_data_compressed.gen.h", docs)
+    environment.CommandNoCache(
         "#editor/docs_data_compressed.gen.h",
         docs,
         run_in_subprocess(editor_builders.make_docs_header),
@@ -92,10 +92,10 @@ if env["tools"]:
         "bg,ca,cs,de,el,eo,es_AR,es,fi,fr,gl,hu,id,it,ja,ko,lv,ms,nb,nl,pl,pt_BR,pt,ro,ru,sk,sv,th,tr,uk,vi,zh_CN,zh_TW"
     ).split(",")
     tlist = [
-        env.Dir("#editor/translations").abspath + "/" + f + ".po" for f in to_include
+        environment.Dir("#editor/translations").abspath + "/" + f + ".po" for f in to_include
     ]
-    env.Depends("#editor/editor_translations.gen.h", tlist)
-    env.CommandNoCache(
+    environment.Depends("#editor/editor_translations.gen.h", tlist)
+    environment.CommandNoCache(
         "#editor/editor_translations.gen.h",
         tlist,
         run_in_subprocess(editor_builders.make_editor_translations_header),
@@ -103,27 +103,27 @@ if env["tools"]:
 
     # Documentation translations
     to_include = "de,es,fr,ja,zh_CN".split(",")
-    tlist = [env.Dir("#translations").abspath + "/" + f + ".po" for f in to_include]
-    env.Depends("#editor/docs_translations.gen.h", tlist)
-    env.CommandNoCache(
+    tlist = [environment.Dir("#translations").abspath + "/" + f + ".po" for f in to_include]
+    environment.Depends("#editor/docs_translations.gen.h", tlist)
+    environment.CommandNoCache(
         "#editor/docs_translations.gen.h",
         tlist,
         run_in_subprocess(editor_builders.make_docs_translations_header),
     )
 
     # Fonts
-    flist = glob.glob(env.Dir("#thirdparty").abspath + "/fonts/*.ttf")
-    flist.extend(glob.glob(env.Dir("#thirdparty").abspath + "/fonts/*.otf"))
+    flist = glob.glob(environment.Dir("#thirdparty").abspath + "/fonts/*.ttf")
+    flist.extend(glob.glob(environment.Dir("#thirdparty").abspath + "/fonts/*.otf"))
     flist.sort()
-    env.Depends("#editor/builtin_fonts.gen.h", flist)
-    env.CommandNoCache(
+    environment.Depends("#editor/builtin_fonts.gen.h", flist)
+    environment.CommandNoCache(
         "#editor/builtin_fonts.gen.h",
         flist,
         run_in_subprocess(editor_builders.make_fonts_header),
     )
 
-    env.add_source_files(env.editor_sources, "*.cpp")
-    env.add_source_files(env.editor_sources, "register_exporters.gen.cpp")
+    environment.add_source_files(environment.editor_sources, "*.cpp")
+    environment.add_source_files(environment.editor_sources, "register_exporters.gen.cpp")
 
     SConscript("collada/SCsub")
     SConscript("docs/SCsub")
@@ -132,5 +132,5 @@ if env["tools"]:
     SConscript("import/SCsub")
     SConscript("plugins/SCsub")
 
-    lib = env.add_library("editor", env.editor_sources)
-    env.Prepend(LIBS=[lib])
+    lib = environment.add_library("editor", environment.editor_sources)
+    environment.Prepend(LIBS=[lib])

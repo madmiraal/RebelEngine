@@ -5,10 +5,6 @@ import os
 STACK_SIZE = 8388608
 
 
-def is_active():
-    return True
-
-
 def get_name():
     return "Windows"
 
@@ -36,7 +32,7 @@ def can_build():
     return False
 
 
-def get_opts():
+def get_options():
     from SCons.Variables import BoolVariable, EnumVariable
 
     mingw32 = ""

@@ -4,10 +4,6 @@ import sys
 from methods import get_compiler_version, using_gcc, using_clang
 
 
-def is_active():
-    return True
-
-
 def get_name():
     return "Linux"
 
@@ -60,7 +56,7 @@ def can_build():
     return True
 
 
-def get_opts():
+def get_options():
     from SCons.Variables import BoolVariable, EnumVariable
 
     return [

@@ -6,13 +6,9 @@ import sys
 # If editing this file, make sure to apply relevant changes here too.
 
 
-def is_active():
-    return True
-
-
 def get_name():
     return "Server"
-
+ 
 
 def get_program_suffix():
     if sys.platform == "darwin":
@@ -27,7 +23,7 @@ def can_build():
     return True
 
 
-def get_opts():
+def get_options():
     from SCons.Variables import BoolVariable, EnumVariable
 
     return [
