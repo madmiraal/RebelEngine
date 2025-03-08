@@ -2,7 +2,7 @@
 
 Import("env")
 
-android_files = [
+android_sources = [
     "android_audio_driver.cpp",
     "android_file_access.cpp",
     "android_input_handler.cpp",
@@ -19,23 +19,25 @@ android_files = [
     "android_net_socket.cpp",
 ]
 
-env_android = env.Clone()
+android_environment = env.Clone()
 
 android_objects = []
-for x in android_files:
-    android_objects.append(env_android.SharedObject(x))
+for filename in android_sources:
+    android_objects.append(android_environment.SharedObject(filename))
 
-env_thirdparty = env_android.Clone()
-env_thirdparty.disable_warnings()
-thirdparty_obj = env_thirdparty.SharedObject("#thirdparty/misc/ifaddrs-android.cc")
-android_objects.append(thirdparty_obj)
+thirdparty_environment = android_environment.Clone()
+thirdparty_environment.disable_warnings()
+thirdparty_objects = thirdparty_environment.SharedObject(
+    "#thirdparty/misc/ifaddrs-android.cc"
+)
+android_objects.append(thirdparty_objects)
 
-lib = env_android.add_shared_library(
+android_library = android_environment.add_shared_library(
     "#bin/librebel", [android_objects], SHLIBSUFFIX=env["SHLIBSUFFIX"]
 )
 
 # Needed to force rebuilding the platform files when the thirdparty code is updated.
-env.Depends(lib, thirdparty_obj)
+env.Depends(android_library, thirdparty_objects)
 
 arch_dir = ""
 if env["android_arch"] == "armv7":
@@ -60,7 +62,7 @@ if arch_dir != "":
     project_src_dir = "project/engine/src/"
     target = project_src_dir + build_dir + "jniLibs/" + arch_dir + "librebel_android.so"
     source = "#bin/librebel" + env["SHLIBSUFFIX"]
-    env_android.Command(target, source, Copy("$TARGET", "$SOURCE"))
+    android_environment.Command(target, source, Copy("$TARGET", "$SOURCE"))
     target = project_src_dir + "main/" + "jniLibs/" + arch_dir + "libc++_shared.so"
     source = env["LIBC"]
-    env_android.Command(target, source, Copy("$TARGET", "$SOURCE"))
+    android_environment.Command(target, source, Copy("$TARGET", "$SOURCE"))

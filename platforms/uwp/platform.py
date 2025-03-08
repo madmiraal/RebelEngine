@@ -3,10 +3,6 @@ import os
 import sys
 
 
-def is_active():
-    return True
-
-
 def get_name():
     return "UWP"
 
@@ -22,7 +18,7 @@ def can_build():
     return False
 
 
-def get_opts():
+def get_options():
     return [
         (
             "msvc_version",

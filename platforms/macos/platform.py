@@ -3,10 +3,6 @@ import sys
 from methods import get_darwin_sdk_path
 
 
-def is_active():
-    return True
-
-
 def get_name():
     return "MacOS"
 
@@ -18,7 +14,7 @@ def can_build():
     return False
 
 
-def get_opts():
+def get_options():
     from SCons.Variables import BoolVariable, EnumVariable
 
     return [

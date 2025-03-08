@@ -5,19 +5,20 @@ Import("env")
 from platform_methods import run_in_subprocess
 import platform_linux_builders
 
-linux_files = [
+linux_sources = [
     "linux_crash_handler.cpp",
     "linux_gl_context.cpp",
     "linux_joypad.cpp",
     "linux_key_mapping.cpp",
+    "linux_main.cpp",
     "linux_os.cpp",
     "linux_power.cpp",
 ]
 
 if "udev" in env and env["udev"]:
-    linux_files.append("libudev-so_wrap.c")
+    linux_sources.append("libudev-so_wrap.c")
 
-prog = env.add_program("#bin/rebel", ["linux_main.cpp"] + linux_files)
+prog = env.add_program("#bin/rebel", linux_sources)
 
 if env["debug_symbols"] and env["separate_debug_symbols"]:
     env.AddPostAction(prog, run_in_subprocess(platform_linux_builders.make_debug_linux))

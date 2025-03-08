@@ -4,10 +4,6 @@ import platform
 import subprocess
 
 
-def is_active():
-    return True
-
-
 def get_name():
     return "Android"
 
@@ -23,7 +19,7 @@ def can_build():
     return True
 
 
-def get_opts():
+def get_options():
     from SCons.Variables import BoolVariable, EnumVariable
 
     return [

@@ -413,7 +413,6 @@ def configure(env, env_mono):
             env_mono.ParseConfig("pkg-config monosgen-2 --cflags")
 
             tmpenv = Environment()
-            tmpenv.AppendENVPath("PKG_CONFIG_PATH", os.getenv("PKG_CONFIG_PATH"))
             tmpenv.ParseConfig("pkg-config monosgen-2 --libs-only-L")
 
             for hint_dir in tmpenv["LIBPATH"]:
@@ -677,7 +676,6 @@ def copy_mono_shared_libs(env, mono_root, target_mono_root_dir):
 
 def pkgconfig_try_find_mono_root(mono_lib_names, sharedlib_ext):
     tmpenv = Environment()
-    tmpenv.AppendENVPath("PKG_CONFIG_PATH", os.getenv("PKG_CONFIG_PATH"))
     tmpenv.ParseConfig("pkg-config monosgen-2 --libs-only-L")
     for hint_dir in tmpenv["LIBPATH"]:
         name_found = find_name_in_dir_files(

@@ -1,12 +1,12 @@
 #!/usr/bin/env python
 
-Import("env")
+Import("environment")
 
 import core_builders
 import make_binders
 from platform_methods import run_in_subprocess
 
-env.core_sources = []
+environment.core_sources = []
 
 
 # Generate AES256 script encryption key
@@ -54,7 +54,7 @@ with open("script_encryption_key.gen.cpp", "w") as f:
 
 thirdparty_obj = []
 
-env_thirdparty = env.Clone()
+env_thirdparty = environment.Clone()
 env_thirdparty.disable_warnings()
 
 # Misc thirdparty code: header paths are hardcoded, we don't need to append
@@ -76,7 +76,7 @@ thirdparty_misc_sources = [
 env_thirdparty.add_source_files(thirdparty_obj, thirdparty_misc_sources)
 
 # Zlib library, can be unbundled
-if env["builtin_zlib"]:
+if environment["builtin_zlib"]:
     thirdparty_zlib_dir = "#thirdparty/zlib/"
     thirdparty_zlib_sources = [
         "adler32.c",
@@ -96,9 +96,9 @@ if env["builtin_zlib"]:
     ]
 
     env_thirdparty.Prepend(CPPPATH=[thirdparty_zlib_dir])
-    # Needs to be available in main env too
-    env.Prepend(CPPPATH=[thirdparty_zlib_dir])
-    if env["target"] == "debug":
+    # Needs to be available in main environment too
+    environment.Prepend(CPPPATH=[thirdparty_zlib_dir])
+    if environment["target"] == "debug":
         env_thirdparty.Append(CPPDEFINES=["ZLIB_DEBUG"])
 
     env_thirdparty.add_source_files(thirdparty_obj, thirdparty_zlib_sources)
@@ -119,7 +119,7 @@ env_thirdparty.add_source_files(thirdparty_obj, thirdparty_minizip_sources)
 # Zstd library, can be unbundled in theory
 # though we currently use some private symbols
 # https://github.com/godotengine/godot/issues/17374
-if env["builtin_zstd"]:
+if environment["builtin_zstd"]:
     thirdparty_zstd_dir = "#thirdparty/zstd/"
     thirdparty_zstd_sources = [
         "common/debug.c",
@@ -156,62 +156,62 @@ if env["builtin_zstd"]:
         CPPPATH=[thirdparty_zstd_dir, thirdparty_zstd_dir + "common"]
     )
     env_thirdparty.Append(CPPDEFINES=["ZSTD_STATIC_LINKING_ONLY"])
-    env.Prepend(CPPPATH=thirdparty_zstd_dir)
-    # Also needed in main env includes will trigger warnings
-    env.Append(CPPDEFINES=["ZSTD_STATIC_LINKING_ONLY"])
+    environment.Prepend(CPPPATH=thirdparty_zstd_dir)
+    # Also needed in main environment includes will trigger warnings
+    environment.Append(CPPDEFINES=["ZSTD_STATIC_LINKING_ONLY"])
 
     env_thirdparty.add_source_files(thirdparty_obj, thirdparty_zstd_sources)
 
 
-env.core_sources += thirdparty_obj
+environment.core_sources += thirdparty_obj
 
 
 # Rebel source files
 
-env.add_source_files(env.core_sources, "*.cpp")
-env.add_source_files(env.core_sources, "script_encryption_key.gen.cpp")
+environment.add_source_files(environment.core_sources, "*.cpp")
+environment.add_source_files(environment.core_sources, "script_encryption_key.gen.cpp")
 
 # Certificates
-env.Depends(
+environment.Depends(
     "#core/io/certs_compressed.gen.h",
     [
         "#thirdparty/certs/ca-bundle.crt",
-        env.Value(env["builtin_certs"]),
-        env.Value(env["system_certs_path"]),
+        environment.Value(environment["builtin_certs"]),
+        environment.Value(environment["system_certs_path"]),
     ],
 )
-env.CommandNoCache(
+environment.CommandNoCache(
     "#core/io/certs_compressed.gen.h",
     "#thirdparty/certs/ca-bundle.crt",
     run_in_subprocess(core_builders.make_certs_header),
 )
 
 # Make binders
-env.CommandNoCache(
+environment.CommandNoCache(
     ["method_bind.gen.inc", "method_bind_ext.gen.inc", "method_bind_free_func.gen.inc"],
     "make_binders.py",
     run_in_subprocess(make_binders.run),
 )
 
 # Authors
-env.Depends("#core/authors.gen.h", "../AUTHORS.md")
-env.CommandNoCache(
+environment.Depends("#core/authors.gen.h", "../AUTHORS.md")
+environment.CommandNoCache(
     "#core/authors.gen.h",
     "../AUTHORS.md",
     run_in_subprocess(core_builders.make_authors_header),
 )
 
 # Donors
-env.Depends("#core/donors.gen.h", "../DONORS.md")
-env.CommandNoCache(
+environment.Depends("#core/donors.gen.h", "../DONORS.md")
+environment.CommandNoCache(
     "#core/donors.gen.h",
     "../DONORS.md",
     run_in_subprocess(core_builders.make_donors_header),
 )
 
 # License
-env.Depends("#core/license.gen.h", ["../copyright", "../LICENSE"])
-env.CommandNoCache(
+environment.Depends("#core/license.gen.h", ["../copyright", "../LICENSE"])
+environment.CommandNoCache(
     "#core/license.gen.h",
     ["../copyright", "../LICENSE"],
     run_in_subprocess(core_builders.make_license_header),
@@ -226,8 +226,8 @@ SConscript("bind/SCsub")
 
 
 # Build it all as a library
-lib = env.add_library("core", env.core_sources)
-env.Prepend(LIBS=[lib])
+lib = environment.add_library("core", environment.core_sources)
+environment.Prepend(LIBS=[lib])
 
 # Needed to force rebuilding the core files when the thirdparty code is updated.
-env.Depends(lib, thirdparty_obj)
+environment.Depends(lib, thirdparty_obj)
