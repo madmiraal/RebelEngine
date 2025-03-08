@@ -46,6 +46,119 @@ __declspec(dllexport) int AmdPowerXpressRequestHighPerformance = 1;
 #define GetProcAddress (void*)GetProcAddress
 #endif
 
+namespace {
+XcursorImage* create_cursor_icon(
+    Ref<Texture> cursor_texture,
+    const Point2& cursor_hotspot
+) {
+    Size2 cursor_size = cursor_texture->get_size();
+    ERR_FAIL_COND_V_MSG(
+        cursor_hotspot.x > cursor_size.x || cursor_hotspot.y > cursor_size.y,
+        nullptr,
+        "Cursor hotspot not inside cursor image texture size."
+    );
+
+    Ref<Image> image;
+    image = cursor_texture->get_data();
+    ERR_FAIL_COND_V_MSG(
+        !image.is_valid(),
+        nullptr,
+        "Invalid cursor texture data."
+    );
+
+    UINT pixel_count = cursor_size.x * cursor_size.y;
+    COLORREF* pixel  = (COLORREF*)memalloc(sizeof(COLORREF) * pixel_count);
+    image->lock();
+    for (int row = 0; row < cursor_size.y; row++) {
+        for (int col = 0; col < cursor_size.x; col++) {
+            *pixel = image->get_pixel(col, row).to_argb32();
+            pixel++;
+        }
+    }
+    image->unlock();
+
+    HBITMAP bitmap =
+        CreateBitmap(cursor_size.width, cursor_size.height, 1, 32, pixels);
+    COLORREF clrTransparent = -1;
+
+    XcursorDim memory_size = sizeof(XcursorPixel) * pixels;
+    XcursorImage* xcursor_image =
+        XcursorImageCreate(cursor_size.x, cursor_size.y);
+
+    xcursor_image->version = 1;
+    xcursor_image->size    = memory_size;
+    xcursor_image->xhot    = cursor_hotspot.x;
+    xcursor_image->yhot    = cursor_hotspot.y;
+    xcursor_image->pixels  = (XcursorPixel*)memalloc(memory_size);
+
+    return xcursor_image;
+}
+
+// Create the AND and XOR masks for the bitmap
+HBITMAP hAndMask = NULL;
+HBITMAP hXorMask = NULL;
+
+GetMaskBitmaps(bitmap, clrTransparent, hAndMask, hXorMask);
+
+if (NULL == hAndMask || NULL == hXorMask) {
+    memfree(buffer);
+    DeleteObject(bitmap);
+    return;
+}
+
+// Finally, create the icon
+ICONINFO iconinfo;
+iconinfo.fIcon    = FALSE;
+iconinfo.xHotspot = p_hotspot.x;
+iconinfo.yHotspot = p_hotspot.y;
+iconinfo.hbmMask  = hAndMask;
+iconinfo.hbmColor = hXorMask;
+
+if (cursors[cursor_shape]) {
+    DestroyIcon(cursors[cursor_shape]);
+}
+
+cursors[cursor_shape] = CreateIconIndirect(&iconinfo);
+
+Vector<Variant> params;
+params.push_back(cursor_image);
+params.push_back(p_hotspot);
+cursors_cache.insert(cursor_shape, params);
+
+if (cursor_shape == current_cursor_shape) {
+    if (mouse_mode == MOUSE_MODE_VISIBLE || mouse_mode == MOUSE_MODE_CONFINED) {
+        SetCursor(cursors[cursor_shape]);
+    }
+}
+
+if (hAndMask != NULL) {
+    DeleteObject(hAndMask);
+}
+
+if (hXorMask != NULL) {
+    DeleteObject(hXorMask);
+}
+
+memfree(buffer);
+DeleteObject(bitmap);
+}
+
+else {
+    // Reset to default system cursor
+    if (cursors[cursor_shape]) {
+        DestroyIcon(cursors[cursor_shape]);
+        cursors[cursor_shape] = NULL;
+    }
+
+    CursorShape c        = current_cursor_shape;
+    current_cursor_shape = CURSOR_MAX;
+    set_cursor_shape(c);
+
+    cursors_cache.erase(cursor_shape);
+}
+}
+} // namespace
+
 typedef struct {
     int count;
     int screen;
@@ -244,7 +357,7 @@ void WindowsOS::initialize_core() {
 
     DefaultIP::make_default();
 
-    cursor_shape = CURSOR_ARROW;
+    current_cursor_shape = CURSOR_ARROW;
 }
 
 bool WindowsOS::can_draw() const {
@@ -258,6 +371,90 @@ bool WindowsOS::can_draw() const {
 #define IsPenEvent(dw)   (((dw) & SIGNATURE_MASK) == MI_WP_SIGNATURE)
 // This one tells whether the event comes from touchscreen (and not from pen)
 #define IsTouchEvent(dw) (IsPenEvent(dw) && ((dw) & 0x80))
+
+void WindowsOS::create_cursors() {
+    create_cursor(CURSOR_ARROW, IDC_ARROW);
+    create_cursor(CURSOR_IBEAM, IDC_IBEAM);
+    create_cursor(CURSOR_POINTING_HAND, IDC_HAND);
+    create_cursor(CURSOR_CROSS, IDC_CROSS);
+    create_cursor(CURSOR_WAIT, IDC_WAIT);
+    create_cursor(CURSOR_BUSY, IDC_APPSTARTING);
+    create_cursor(CURSOR_DRAG, IDC_ARROW);
+    create_cursor(CURSOR_CAN_DROP, IDC_ARROW);
+    create_cursor(CURSOR_FORBIDDEN, IDC_NO);
+    create_cursor(CURSOR_VSIZE, IDC_SIZENS);
+    create_cursor(CURSOR_HSIZE, IDC_SIZEWE);
+    create_cursor(CURSOR_BDIAGSIZE, IDC_SIZENESW);
+    create_cursor(CURSOR_FDIAGSIZE, IDC_SIZENWSE);
+    create_cursor(CURSOR_MOVE, IDC_SIZEALL);
+    create_cursor(CURSOR_VSPLIT, IDC_SIZENS);
+    create_cursor(CURSOR_HSPLIT, IDC_SIZEWE);
+    create_cursor(CURSOR_HELP, IDC_HELP);
+}
+
+void WindowsOS::create_cursor(
+    CursorShape cursor_shape,
+    const char* xcursor_name
+) {
+    xcursor_names[cursor_shape] = xcursor_name;
+    XcursorImage* xcursor_image =
+        XcursorLibraryLoadImage(xcursor_name, cursor_theme, cursor_size);
+    ERR_FAIL_NULL_MSG(
+        xcursor_image,
+        String("Failed to load system XcursorImage ") + xcursor_name
+    );
+    set_cursor(cursor_shape, xcursor_image);
+}
+
+void WindowsOS::set_cursor(
+    CursorShape cursor_shape,
+    XcursorImage* xcursor_image
+) {
+    cursor_images[cursor_shape] = xcursor_image;
+    cursors[cursor_shape] = XcursorImageLoadCursor(x11_display, xcursor_image);
+}
+
+void WindowsOS::free_cursors() {
+    free_cursor(CURSOR_ARROW);
+    free_cursor(CURSOR_IBEAM);
+    free_cursor(CURSOR_POINTING_HAND);
+    free_cursor(CURSOR_CROSS);
+    free_cursor(CURSOR_WAIT);
+    free_cursor(CURSOR_BUSY);
+    free_cursor(CURSOR_DRAG);
+    free_cursor(CURSOR_CAN_DROP);
+    free_cursor(CURSOR_FORBIDDEN);
+    free_cursor(CURSOR_VSIZE);
+    free_cursor(CURSOR_HSIZE);
+    free_cursor(CURSOR_BDIAGSIZE);
+    free_cursor(CURSOR_FDIAGSIZE);
+    free_cursor(CURSOR_MOVE);
+    free_cursor(CURSOR_VSPLIT);
+    free_cursor(CURSOR_HSPLIT);
+    free_cursor(CURSOR_HELP);
+}
+
+void WindowsOS::free_cursor(CursorShape cursor_shape) {
+    if (cursors.has(cursor_shape) && cursors[cursor_shape] != None) {
+        XFreeCursor(x11_display, cursors[cursor_shape]);
+    }
+    if (cursor_images.has(cursor_shape)
+        && cursor_images[cursor_shape] != nullptr) {
+        XcursorImageDestroy(cursor_images[cursor_shape]);
+    }
+}
+
+void WindowsOS::update_cursor() {
+    if (mouse_mode == MOUSE_MODE_VISIBLE || mouse_mode == MOUSE_MODE_CONFINED) {
+        if (cursors.has(current_cursor_shape)) {
+            // Specify the cursor to be displayed.
+            SetCursor(cursors[cursor_shape]);
+        }
+    } else {
+        // Hide the cursor.
+        SetCursor(NULL);
+    }
+}
 
 void WindowsOS::_touch_event(bool p_pressed, float p_x, float p_y, int idx) {
     // Defensive
@@ -715,8 +912,8 @@ LRESULT WindowsOS::WndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam) {
                     );
                 }
 
-                CursorShape c = cursor_shape;
-                cursor_shape  = CURSOR_MAX;
+                CursorShape c        = current_cursor_shape;
+                current_cursor_shape = CURSOR_MAX;
                 set_cursor_shape(c);
                 outside = false;
 
@@ -830,8 +1027,8 @@ LRESULT WindowsOS::WndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam) {
                     );
                 }
 
-                CursorShape c = cursor_shape;
-                cursor_shape  = CURSOR_MAX;
+                CursorShape c        = current_cursor_shape;
+                current_cursor_shape = CURSOR_MAX;
                 set_cursor_shape(c);
                 outside = false;
 
@@ -1281,8 +1478,8 @@ LRESULT WindowsOS::WndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam) {
                     }
                 } else {
                     if (hCursor != NULL) {
-                        CursorShape c = cursor_shape;
-                        cursor_shape  = CURSOR_MAX;
+                        CursorShape c        = current_cursor_shape;
+                        current_cursor_shape = CURSOR_MAX;
                         set_cursor_shape(c);
                         hCursor = NULL;
                     }
@@ -2068,8 +2265,8 @@ void WindowsOS::_set_mouse_mode_impl(MouseMode p_mode) {
             SetCursor(NULL);
         }
     } else {
-        CursorShape c = cursor_shape;
-        cursor_shape  = CURSOR_MAX;
+        CursorShape c        = current_cursor_shape;
+        current_cursor_shape = CURSOR_MAX;
         set_cursor_shape(c);
     }
 }
@@ -2955,200 +3152,55 @@ void WindowsOS::process_events() {
     }
 }
 
-void WindowsOS::set_cursor_shape(CursorShape p_shape) {
-    ERR_FAIL_INDEX(p_shape, CURSOR_MAX);
+void WindowsOS::set_cursor_shape(CursorShape cursor_shape) {
+    ERR_FAIL_INDEX_MSG(cursor_shape, CURSOR_MAX, "Invalid CursorShape");
 
-    if (cursor_shape == p_shape) {
+    if (current_cursor_shape == cursor_shape) {
+        return;
+    }
+    if (!cursors.has(cursor_shape)) {
         return;
     }
 
-    if (mouse_mode != MOUSE_MODE_VISIBLE && mouse_mode != MOUSE_MODE_CONFINED) {
-        cursor_shape = p_shape;
-        return;
-    }
-
-    static const LPCTSTR win_cursors[CURSOR_MAX] = {
-        IDC_ARROW,
-        IDC_IBEAM,
-        IDC_HAND, // finger
-        IDC_CROSS,
-        IDC_WAIT,
-        IDC_APPSTARTING,
-        IDC_ARROW,
-        IDC_ARROW,
-        IDC_NO,
-        IDC_SIZENS,
-        IDC_SIZEWE,
-        IDC_SIZENESW,
-        IDC_SIZENWSE,
-        IDC_SIZEALL,
-        IDC_SIZENS,
-        IDC_SIZEWE,
-        IDC_HELP
-    };
-
-    if (cursors[p_shape] != NULL) {
-        SetCursor(cursors[p_shape]);
-    } else {
-        SetCursor(LoadCursor(hInstance, win_cursors[p_shape]));
-    }
-
-    cursor_shape = p_shape;
+    current_cursor_shape = cursor_shape;
+    update_cursor();
 }
 
 OS::CursorShape WindowsOS::get_cursor_shape() const {
-    return cursor_shape;
+    return current_cursor_shape;
 }
 
 void WindowsOS::set_custom_mouse_cursor(
-    const RES& p_cursor,
-    CursorShape p_shape,
+    const RES& cursor_image,
+    CursorShape cursor_shape,
     const Vector2& p_hotspot
 ) {
-    if (p_cursor.is_valid()) {
-        Map<CursorShape, Vector<Variant>>::Element* cursor_c =
-            cursors_cache.find(p_shape);
-
-        if (cursor_c) {
-            if (cursor_c->get()[0] == p_cursor
-                && cursor_c->get()[1] == p_hotspot) {
-                set_cursor_shape(p_shape);
-                return;
-            }
-
-            cursors_cache.erase(p_shape);
-        }
-
-        Ref<Texture> texture            = p_cursor;
-        Ref<AtlasTexture> atlas_texture = p_cursor;
-        Ref<Image> image;
-        Size2 texture_size;
-        Rect2 atlas_rect;
-
-        if (texture.is_valid()) {
-            image = texture->get_data();
-        }
-
-        if (!image.is_valid() && atlas_texture.is_valid()) {
-            texture = atlas_texture->get_atlas();
-
-            atlas_rect.size.width  = texture->get_width();
-            atlas_rect.size.height = texture->get_height();
-            atlas_rect.position.x  = atlas_texture->get_region().position.x;
-            atlas_rect.position.y  = atlas_texture->get_region().position.y;
-
-            texture_size.width  = atlas_texture->get_region().size.x;
-            texture_size.height = atlas_texture->get_region().size.y;
-        } else if (image.is_valid()) {
-            texture_size.width  = texture->get_width();
-            texture_size.height = texture->get_height();
-        }
-
-        ERR_FAIL_COND(!texture.is_valid());
-        ERR_FAIL_COND(p_hotspot.x < 0 || p_hotspot.y < 0);
-        ERR_FAIL_COND(texture_size.width > 256 || texture_size.height > 256);
-        ERR_FAIL_COND(
-            p_hotspot.x > texture_size.width
-            || p_hotspot.y > texture_size.height
-        );
-
-        image = texture->get_data();
-
-        ERR_FAIL_COND(!image.is_valid());
-
-        UINT image_size = texture_size.width * texture_size.height;
-
-        // Create the BITMAP with alpha channel
-        COLORREF* buffer = (COLORREF*)memalloc(sizeof(COLORREF) * image_size);
-
-        image->lock();
-        for (UINT index = 0; index < image_size; index++) {
-            int row_index =
-                floor(index / texture_size.width) + atlas_rect.position.y;
-            int column_index =
-                (index % int(texture_size.width)) + atlas_rect.position.x;
-
-            if (atlas_texture.is_valid()) {
-                column_index = MIN(column_index, atlas_rect.size.width - 1);
-                row_index    = MIN(row_index, atlas_rect.size.height - 1);
-            }
-
-            *(buffer + index) =
-                image->get_pixel(column_index, row_index).to_argb32();
-        }
-        image->unlock();
-
-        // Using 4 channels, so 4 * 8 bits
-        HBITMAP bitmap = CreateBitmap(
-            texture_size.width,
-            texture_size.height,
-            1,
-            4 * 8,
-            buffer
-        );
-        COLORREF clrTransparent = -1;
-
-        // Create the AND and XOR masks for the bitmap
-        HBITMAP hAndMask = NULL;
-        HBITMAP hXorMask = NULL;
-
-        GetMaskBitmaps(bitmap, clrTransparent, hAndMask, hXorMask);
-
-        if (NULL == hAndMask || NULL == hXorMask) {
-            memfree(buffer);
-            DeleteObject(bitmap);
-            return;
-        }
-
-        // Finally, create the icon
-        ICONINFO iconinfo;
-        iconinfo.fIcon    = FALSE;
-        iconinfo.xHotspot = p_hotspot.x;
-        iconinfo.yHotspot = p_hotspot.y;
-        iconinfo.hbmMask  = hAndMask;
-        iconinfo.hbmColor = hXorMask;
-
-        if (cursors[p_shape]) {
-            DestroyIcon(cursors[p_shape]);
-        }
-
-        cursors[p_shape] = CreateIconIndirect(&iconinfo);
-
-        Vector<Variant> params;
-        params.push_back(p_cursor);
-        params.push_back(p_hotspot);
-        cursors_cache.insert(p_shape, params);
-
-        if (p_shape == cursor_shape) {
-            if (mouse_mode == MOUSE_MODE_VISIBLE
-                || mouse_mode == MOUSE_MODE_CONFINED) {
-                SetCursor(cursors[p_shape]);
-            }
-        }
-
-        if (hAndMask != NULL) {
-            DeleteObject(hAndMask);
-        }
-
-        if (hXorMask != NULL) {
-            DeleteObject(hXorMask);
-        }
-
-        memfree(buffer);
-        DeleteObject(bitmap);
-    } else {
-        // Reset to default system cursor
-        if (cursors[p_shape]) {
-            DestroyIcon(cursors[p_shape]);
-            cursors[p_shape] = NULL;
-        }
-
-        CursorShape c = cursor_shape;
-        cursor_shape  = CURSOR_MAX;
-        set_cursor_shape(c);
-
-        cursors_cache.erase(p_shape);
+    ERR_FAIL_INDEX_MSG(cursor_shape, CURSOR_MAX, "Invalid CursorShape.");
+    if (cursor_image.is_null()) {
+        // Use default Windows cursor.
+        free_cursor(cursor_shape);
+        create_cursor(cursor_shape, cursor_names[cursor_shape]);
+        update_cursor();
+        return;
     }
+
+    ERR_FAIL_COND_MSG(
+        cursor_hotspot.x < 0 || cursor_hotspot.y < 0,
+        "Cursor hotspot must be positive."
+    );
+
+    Ref<Texture> cursor_texture = cursor_image;
+    ERR_FAIL_COND_MSG(
+        !cursor_texture.is_valid(),
+        "Invalid cursor image texture."
+    );
+
+    XcursorImage* xcursor_image =
+        create_cursor_icon(cursor_texture, cursor_hotspot);
+    ERR_FAIL_NULL_MSG(xcursor_image, "Failed to create XcursorImage.");
+    free_cursor(cursor_shape);
+    set_cursor(cursor_shape, xcursor_image);
+    update_cursor();
 }
 
 void WindowsOS::GetMaskBitmaps(

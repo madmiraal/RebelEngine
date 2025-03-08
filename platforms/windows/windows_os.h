@@ -334,9 +334,17 @@ class WindowsOS : public OS {
     bool use_raw_input;
     bool drop_events;
 
-    HCURSOR cursors[CURSOR_MAX] = {NULL};
-    CursorShape cursor_shape;
-    Map<CursorShape, Vector<Variant>> cursors_cache;
+    Map<CursorShape, LPCSTR> cursor_names;
+    Map<CursorShape, HICON> cursor_icons;
+    Map<CursorShape, HCURSOR> cursors;
+    CursorShape current_cursor_shape;
+
+    void create_cursors();
+    void create_cursor(CursorShape cursor_shape, const char* xcursor_name);
+    void set_cursor(CursorShape cursor_shape, XcursorImage* xcursor_image);
+    void free_cursors();
+    void free_cursor(CursorShape cursor_shape);
+    void update_cursor();
 
     InputDefault* input;
     WindowsJoypad* joypad;
@@ -520,12 +528,12 @@ public:
     virtual void set_clipboard(const String& p_text);
     virtual String get_clipboard() const;
 
-    void set_cursor_shape(CursorShape p_shape);
+    void set_cursor_shape(CursorShape cursor_shape);
     CursorShape get_cursor_shape() const;
     virtual void set_custom_mouse_cursor(
-        const RES& p_cursor,
-        CursorShape p_shape,
-        const Vector2& p_hotspot
+        const RES& cursor_image,
+        CursorShape cursor_shape,
+        const Vector2& cursor_hotspot
     );
     void GetMaskBitmaps(
         HBITMAP hSourceBitmap,
