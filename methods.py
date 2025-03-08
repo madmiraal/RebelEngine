@@ -11,6 +11,28 @@ from SCons.Script import Glob
 from SCons.Variables.BoolVariable import _text2bool
 
 
+def print_suppoted_platforms(supported_platforms):
+    print("The following platforms are supported:")
+    for supported_platform in supported_platforms:
+        print("\t" + supported_platform)
+
+
+def get_supported_platforms():
+    supported_platforms = []
+    for platform_path in sorted(glob.glob("platform/*")):
+        if not os.path.isdir(platform_path) or not os.path.exists(
+            platform_path + "/platform.py"
+        ):
+            continue
+
+        platform_dir = platform_path[9:]
+        from platform_path import platform
+
+        if platform.can_build():
+            supported_platforms.append(platform_dir)
+    return supported_platforms
+
+
 def add_source_files(self, sources, files):
     # Convert string to list of absolute paths (including expanding wildcard)
     if isbasestring(files):

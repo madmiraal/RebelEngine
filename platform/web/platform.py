@@ -13,10 +13,6 @@ from methods import get_compiler_version
 from SCons.Util import WhereIs
 
 
-def is_active():
-    return True
-
-
 def get_name():
     return "Web"
 
@@ -25,7 +21,7 @@ def can_build():
     return WhereIs("emcc") is not None
 
 
-def get_opts():
+def get_options():
     from SCons.Variables import BoolVariable
 
     return [
