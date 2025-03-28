@@ -28,8 +28,8 @@ Error ImageLoaderTinyEXR::load_image(
 
     f->close();
 
-    // Re-implementation of tinyexr's LoadEXRFromMemory using Godot types to
-    // store the Image data and Godot's error codes. When debugging after
+    // Re-implementation of tinyexr's LoadEXRFromMemory using Rebel types to
+    // store the Image data and Rebel's error codes. When debugging after
     // updating the thirdparty library, check that we're still in sync with
     // their API usage in LoadEXRFromMemory.
 
@@ -99,7 +99,7 @@ Error ImageLoaderTinyEXR::load_image(
         }
     }
 
-    // EXR image data loaded, now parse it into Godot-friendly image data
+    // EXR image data loaded, now parse it into Rebel-friendly image data
 
     PoolVector<uint8_t> imgdata;
     Image::Format format;
