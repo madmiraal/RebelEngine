@@ -7,11 +7,10 @@
 #ifndef BVH_ABB_H
 #define BVH_ABB_H
 
-// special optimized version of axis aligned bounding box
+// Optimized version of axis aligned bounding box.
 template <class BOUNDS = AABB, class POINT = Vector3>
 struct BVH_ABB {
     struct ConvexHull {
-        // convex hulls (optional)
         const Plane* planes;
         int num_planes;
         const Vector3* points;
@@ -29,7 +28,7 @@ struct BVH_ABB {
         IR_FULL,
     };
 
-    // we store mins with a negative value in order to test them with SIMD
+    // Minimums are stored with a negative value to test them with SIMD.
     POINT min;
     POINT neg_max;
 
@@ -46,7 +45,7 @@ struct BVH_ABB {
         neg_max = -_max;
     }
 
-    // to and from standard AABB
+    // To and from standard AABB.
     void from(const BOUNDS& p_aabb) {
         min     = p_aabb.position;
         neg_max = -(p_aabb.position + p_aabb.size);
@@ -106,7 +105,7 @@ struct BVH_ABB {
         Vector3 half_extents = size * 0.5;
         Vector3 ofs          = min + half_extents;
 
-        // forward side of plane?
+        // Forward side of plane.
         Vector3 point_offset(
             (p_p.normal.x < 0) ? -half_extents.x : half_extents.x,
             (p_p.normal.y < 0) ? -half_extents.y : half_extents.y,
@@ -164,7 +163,7 @@ struct BVH_ABB {
 
     IntersectResult intersects_convex(const ConvexHull& p_hull) const {
         if (intersects_convex_partial(p_hull)) {
-            // fully within? very important for tree checks
+            // Fully within is very important for tree checks.
             if (is_within_convex(p_hull)) {
                 return IR_FULL;
             }
@@ -176,7 +175,7 @@ struct BVH_ABB {
     }
 
     bool is_within_convex(const ConvexHull& p_hull) const {
-        // use half extents routine
+        // Use half extents routine.
         BOUNDS bb;
         to(bb);
         return bb.inside_convex_shape(p_hull.planes, p_hull.num_planes);
@@ -239,7 +238,7 @@ struct BVH_ABB {
         grow(change);
     }
 
-    // Actually surface area metric.
+    // Surface area metric.
     float get_area() const {
         POINT d = calculate_size();
         return 2.0f * (d.x * d.y + d.y * d.z + d.z * d.x);
