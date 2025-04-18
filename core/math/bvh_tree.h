@@ -17,7 +17,7 @@
 
 #include <limits.h>
 
-#define BVHAABB_CLASS BVH_AABB<BOUNDS, POINT>
+#define BVHAABB_CLASS AABB<BOUNDS, POINT>
 
 // TODO: Check if this is better.
 #define BVH_EXPAND_LEAF_AABBS
@@ -49,18 +49,15 @@
 
 namespace BVH {
 
-// Really just a namespace.
-struct BVHCommon {
-    // These could possibly also be the same constant,
-    // although this may be useful for debugging.
-    // Could use zero for invalid and +1 based indices.
-    static const uint32_t INVALID  = (0xffffffff);
-    static const uint32_t INACTIVE = (0xfffffffe);
-};
+// These could possibly also be the same constant,
+// although this may be useful for debugging.
+// Could use zero for invalid and +1 based indices.
+static const uint32_t INVALID  = (0xffffffff);
+static const uint32_t INACTIVE = (0xfffffffe);
 
 // Note: Zero is a valid reference for the BVH.
 // May need a plus one based ID for clients that expect 0 to be invalid.
-struct BVHHandle {
+struct Handle {
     // Conversion operator.
     operator uint32_t() const {
         return _data;
@@ -73,11 +70,11 @@ struct BVHHandle {
     uint32_t _data;
 
     void set_invalid() {
-        _data = BVHCommon::INVALID;
+        _data = INVALID;
     }
 
     bool is_invalid() const {
-        return _data == BVHCommon::INVALID;
+        return _data == INVALID;
     }
 
     uint32_t id() const {
@@ -88,18 +85,18 @@ struct BVHHandle {
         _data = p_id;
     }
 
-    bool operator==(const BVHHandle& p_h) const {
+    bool operator==(const Handle& p_h) const {
         return _data == p_h._data;
     }
 
-    bool operator!=(const BVHHandle& p_h) const {
+    bool operator!=(const Handle& p_h) const {
         return (*this == p_h) == false;
     }
 };
 
 // Helper class to make iterative versions of recursive functions.
 template <class T>
-class BVH_IterativeInfo {
+class IterativeInfo {
 public:
     enum {
         ALLOCA_STACK_SIZE = 128
@@ -159,19 +156,19 @@ template <
     int MAX_CHILDREN,
     int MAX_ITEMS,
     bool USE_PAIRS = false,
-    class BOUNDS   = AABB,
+    class BOUNDS   = ::AABB,
     class POINT    = Vector3>
-class BVH_Tree {
+class Tree {
 public:
     // TODO: Check if this should be attached to another node structure.
     struct ItemPairs {
         struct Link {
-            void set(BVHHandle h, void* ud) {
+            void set(Handle h, void* ud) {
                 handle   = h;
                 userdata = ud;
             }
 
-            BVHHandle handle;
+            Handle handle;
             void* userdata;
         };
 
@@ -187,7 +184,7 @@ public:
         int32_t num_pairs;
         LocalVector<Link> extended_pairs;
 
-        void add_pair_to(BVHHandle h, void* p_userdata) {
+        void add_pair_to(Handle h, void* p_userdata) {
             Link temp;
             temp.set(h, p_userdata);
 
@@ -195,7 +192,7 @@ public:
             num_pairs++;
         }
 
-        uint32_t find_pair_to(BVHHandle h) const {
+        uint32_t find_pair_to(Handle h) const {
             for (int n = 0; n < num_pairs; n++) {
                 if (extended_pairs[n].handle == h) {
                     return n;
@@ -204,12 +201,12 @@ public:
             return -1;
         }
 
-        bool contains_pair_to(BVHHandle h) const {
-            return find_pair_to(h) != BVHCommon::INVALID;
+        bool contains_pair_to(Handle h) const {
+            return find_pair_to(h) != INVALID;
         }
 
         // Return success
-        void* remove_pair_to(BVHHandle h) {
+        void* remove_pair_to(Handle h) {
             void* userdata = nullptr;
 
             for (int n = 0; n < num_pairs; n++) {
@@ -242,12 +239,12 @@ public:
         uint32_t item_id;
 
         bool is_active() const {
-            return tnode_id != BVHCommon::INACTIVE;
+            return tnode_id != INACTIVE;
         }
 
         void set_inactive() {
-            tnode_id = BVHCommon::INACTIVE;
-            item_id  = BVHCommon::INACTIVE;
+            tnode_id = INACTIVE;
+            item_id  = INACTIVE;
         }
     };
 
@@ -355,7 +352,7 @@ public:
 
         void clear() {
             num_children = 0;
-            parent_id    = BVHCommon::INVALID;
+            parent_id    = INVALID;
             // Set to -1 for testing.
             height       = 0;
 
@@ -444,9 +441,9 @@ public:
     real_t _aabb_shrinkage_threshold = 0.0;
 
 public:
-    BVH_Tree() {
+    Tree() {
         for (int n = 0; n < NUM_TREES; n++) {
-            _root_node_id[n] = BVHCommon::INVALID;
+            _root_node_id[n] = INVALID;
         }
 
         // Leaf ids are stored as negative numbers in the node.
@@ -486,7 +483,7 @@ private:
         BVH_ASSERT(!parent.is_leaf());
 
         int child_num = parent.find_child(p_old_child_id);
-        BVH_ASSERT(child_num != BVHCommon::INVALID);
+        BVH_ASSERT(child_num != INVALID);
         parent.children[child_num] = p_new_child_id;
 
         TNode& new_child    = _nodes[p_new_child_id];
@@ -503,7 +500,7 @@ private:
         BVH_ASSERT(!parent.is_leaf());
 
         int child_num = parent.find_child(p_child_id);
-        BVH_ASSERT(child_num != BVHCommon::INVALID);
+        BVH_ASSERT(child_num != INVALID);
 
         parent.remove_child_internal(child_num);
 
@@ -528,7 +525,7 @@ private:
         uint32_t grandparent_id = parent.parent_id;
 
         // Special case for a root node.
-        if (grandparent_id == BVHCommon::INVALID) {
+        if (grandparent_id == INVALID) {
             if (sibling_present) {
                 change_root_node(sibling_id, p_tree_id);
 
@@ -566,7 +563,7 @@ private:
         TNode& root              = _nodes[p_new_root_id];
 
         // A root node has no parent.
-        root.parent_id = BVHCommon::INVALID;
+        root.parent_id = INVALID;
     }
 
     void node_make_leaf(uint32_t p_node_id) {
@@ -589,7 +586,7 @@ private:
         uint32_t owner_node_id = ref.tnode_id;
 
         // TODO: Check if this is needed.
-        if (owner_node_id == BVHCommon::INVALID) {
+        if (owner_node_id == INVALID) {
             return;
         }
 
@@ -639,7 +636,7 @@ private:
             }
         } else {
             // Remove node if it is empty, and remove the link from parent.
-            if (tnode.parent_id != BVHCommon::INVALID) {
+            if (tnode.parent_id != INVALID) {
                 // Check if the root noode only has one child.
                 uint32_t parent_id = tnode.parent_id;
 
@@ -651,8 +648,8 @@ private:
             }
         }
 
-        ref.tnode_id = BVHCommon::INVALID;
-        ref.item_id  = BVHCommon::INVALID;
+        ref.tnode_id = INVALID;
+        ref.item_id  = INVALID;
     }
 
     // Return true if parent tree needs a refit.
@@ -772,7 +769,7 @@ public:
         r_params.result_count = 0;
 
         for (int n = 0; n < NUM_TREES; n++) {
-            if (_root_node_id[n] == BVHCommon::INVALID) {
+            if (_root_node_id[n] == INVALID) {
                 continue;
             }
 
@@ -791,7 +788,7 @@ public:
         r_params.result_count = 0;
 
         for (int n = 0; n < NUM_TREES; n++) {
-            if (_root_node_id[n] == BVHCommon::INVALID) {
+            if (_root_node_id[n] == INVALID) {
                 continue;
             }
 
@@ -810,7 +807,7 @@ public:
         r_params.result_count = 0;
 
         for (int n = 0; n < NUM_TREES; n++) {
-            if (_root_node_id[n] == BVHCommon::INVALID) {
+            if (_root_node_id[n] == INVALID) {
                 continue;
             }
 
@@ -829,7 +826,7 @@ public:
         r_params.result_count = 0;
 
         for (int n = 0; n < NUM_TREES; n++) {
-            if (_root_node_id[n] == BVHCommon::INVALID) {
+            if (_root_node_id[n] == INVALID) {
                 continue;
             }
 
@@ -900,7 +897,7 @@ public:
         };
 
         // Most of the iterative functionality is contained in the helper class.
-        BVH_IterativeInfo<CullSegParams> ii;
+        IterativeInfo<CullSegParams> ii;
 
         // Allocate the stack from this function, because it cannot be allocated
         // in the helper class.
@@ -960,7 +957,7 @@ public:
             uint32_t node_id;
         };
 
-        BVH_IterativeInfo<CullPointParams> ii;
+        IterativeInfo<CullPointParams> ii;
 
         // Allocate the stack from this function, because it cannot be allocated
         // in the helper class.
@@ -1023,7 +1020,7 @@ public:
             bool fully_within;
         };
 
-        BVH_IterativeInfo<CullAABBParams> ii;
+        IterativeInfo<CullAABBParams> ii;
 
         // Allocate the stack from this function, because it cannot be allocated
         // in the helper class.
@@ -1121,7 +1118,7 @@ public:
             bool fully_within;
         };
 
-        BVH_IterativeInfo<CullConvexParams> ii;
+        IterativeInfo<CullConvexParams> ii;
 
         // Allocate the stack from this function, because it cannot be allocated
         // in the helper class.
@@ -1269,7 +1266,7 @@ public:
 public:
 #ifdef BVH_VERBOSE
     void _debug_recursive_print_tree(int p_tree_id) const {
-        if (_root_node_id[p_tree_id] != BVHCommon::INVALID) {
+        if (_root_node_id[p_tree_id] != INVALID) {
             _debug_recursive_print_tree_node(_root_node_id[p_tree_id]);
         }
     }
@@ -1339,7 +1336,7 @@ public:
 #ifdef BVH_INTEGRITY_CHECKS
         for (int n = 0; n < NUM_TREES; n++) {
             uint32_t root = _root_node_id[n];
-            if (root != BVHCommon::INVALID) {
+            if (root != INVALID) {
                 _integrity_check_down(root);
             }
         }
@@ -1387,13 +1384,13 @@ public:
             return;
         }
 
-        if (ref.item_id == BVHCommon::INVALID) {
+        if (ref.item_id == INVALID) {
             return;
         }
 
-        BVH_ASSERT(ref.tnode_id != BVHCommon::INVALID);
+        BVH_ASSERT(ref.tnode_id != INVALID);
 
-        BVHHandle temp_handle;
+        Handle temp_handle;
         temp_handle.set_id(p_ref_id);
         uint32_t tree_id = _handle_get_tree_id(temp_handle);
 
@@ -1477,7 +1474,7 @@ public:
             TNode* G   = &_nodes[iG];
 
             // Grandparent point to C.
-            if (A->parent_id != BVHCommon::INVALID) {
+            if (A->parent_id != INVALID) {
                 if (_nodes[A->parent_id].children[0] == iA) {
                     _nodes[A->parent_id].children[0] = iC;
 
@@ -1528,7 +1525,7 @@ public:
             TNode* E   = &_nodes[iE];
 
             // Grandparent point to B.
-            if (A->parent_id != BVHCommon::INVALID) {
+            if (A->parent_id != INVALID) {
                 if (_nodes[A->parent_id].children[0] == iA) {
                     _nodes[A->parent_id].children[0] = iB;
                 } else {
@@ -1581,7 +1578,7 @@ public:
         const BVHAABB_CLASS& p_aabb
     ) {
         while (true) {
-            BVH_ASSERT(p_node_id != BVHCommon::INVALID);
+            BVH_ASSERT(p_node_id != INVALID);
             TNode& tnode = _nodes[p_node_id];
 
             if (tnode.is_leaf()) {
@@ -1614,7 +1611,7 @@ public:
         }
     }
 
-    int _handle_get_tree_id(BVHHandle p_handle) const {
+    int _handle_get_tree_id(Handle p_handle) const {
         if (USE_PAIRS) {
             int tree = 0;
             if (_extra[p_handle.id()].pairable) {
@@ -1626,18 +1623,18 @@ public:
     }
 
 public:
-    void _handle_sort(BVHHandle& p_ha, BVHHandle& p_hb) const {
+    void _handle_sort(Handle& p_ha, Handle& p_hb) const {
         if (p_ha.id() > p_hb.id()) {
-            BVHHandle temp = p_hb;
-            p_hb           = p_ha;
-            p_ha           = temp;
+            Handle temp = p_hb;
+            p_hb        = p_ha;
+            p_ha        = temp;
         }
     }
 
 private:
     void create_root_node(int p_tree) {
         // If there is no root node, create one.
-        if (_root_node_id[p_tree] == BVHCommon::INVALID) {
+        if (_root_node_id[p_tree] == INVALID) {
             uint32_t root_node_id;
             TNode* node = _nodes.request(root_node_id);
             node->clear();
@@ -1670,7 +1667,7 @@ public:
 private:
 
 public:
-    BVHHandle item_add(
+    Handle item_add(
         T* p_userdata,
         bool p_active,
         const BOUNDS& p_aabb,
@@ -1696,7 +1693,7 @@ public:
         // 2. We don't know how many objects will be paired.
         //    This is used to modify the expansion margin.
 
-        BVHHandle handle;
+        Handle handle;
         // Ref id easier to pass around than handle.
         uint32_t ref_id;
 
@@ -1756,7 +1753,7 @@ public:
             if (refit) {
                 // Only need to refit from the parent.
                 const TNode& add_node = _nodes[ref->tnode_id];
-                if (add_node.parent_id != BVHCommon::INVALID) {
+                if (add_node.parent_id != INVALID) {
                     refit_upward_and_balance(add_node.parent_id, tree_id);
                 }
             }
@@ -1798,7 +1795,7 @@ public:
     }
 
     // Return false if noop.
-    bool item_move(BVHHandle p_handle, const BOUNDS& p_aabb) {
+    bool item_move(Handle p_handle, const BOUNDS& p_aabb) {
         uint32_t ref_id = p_handle.id();
 
         ItemRef& ref = _refs[ref_id];
@@ -1820,7 +1817,7 @@ public:
         }
 #endif
 
-        BVH_ASSERT(ref.tnode_id != BVHCommon::INVALID);
+        BVH_ASSERT(ref.tnode_id != INVALID);
         TNode& tnode = _nodes[ref.tnode_id];
 
         // Does it fit within the current leaf AABB?
@@ -1884,7 +1881,7 @@ public:
         // Only need to refit from the parent.
         if (needs_refit) {
             const TNode& add_node = _nodes[ref.tnode_id];
-            if (add_node.parent_id != BVHCommon::INVALID) {
+            if (add_node.parent_id != INVALID) {
                 // TODO: We don't need to rebalance all the time.
                 refit_upward(add_node.parent_id);
             }
@@ -1893,7 +1890,7 @@ public:
         return true;
     }
 
-    void item_remove(BVHHandle p_handle) {
+    void item_remove(Handle p_handle) {
         uint32_t ref_id = p_handle.id();
 
         uint32_t tree_id = _handle_get_tree_id(p_handle);
@@ -1930,7 +1927,7 @@ public:
 #endif
     }
 
-    bool item_activate(BVHHandle p_handle, const BOUNDS& p_aabb) {
+    bool item_activate(Handle p_handle, const BOUNDS& p_aabb) {
         uint32_t ref_id = p_handle.id();
         ItemRef& ref    = _refs[ref_id];
         if (ref.is_active()) {
@@ -1953,7 +1950,7 @@ public:
         return true;
     }
 
-    bool item_deactivate(BVHHandle p_handle) {
+    bool item_deactivate(Handle p_handle) {
         uint32_t ref_id = p_handle.id();
         ItemRef& ref    = _refs[ref_id];
         if (!ref.is_active()) {
@@ -1971,14 +1968,14 @@ public:
         return true;
     }
 
-    bool item_get_active(BVHHandle p_handle) const {
+    bool item_get_active(Handle p_handle) const {
         uint32_t ref_id    = p_handle.id();
         const ItemRef& ref = _refs[ref_id];
         return ref.is_active();
     }
 
     // During collision testing, we set the from item's mask and pairable.
-    void item_fill_cullparams(BVHHandle p_handle, CullParams& r_params) const {
+    void item_fill_cullparams(Handle p_handle, CullParams& r_params) const {
         uint32_t ref_id        = p_handle.id();
         const ItemExtra& extra = _extra[ref_id];
 
@@ -1990,16 +1987,13 @@ public:
         r_params.pairable_type = extra.pairable_type;
     }
 
-    bool item_is_pairable(const BVHHandle& p_handle) {
+    bool item_is_pairable(const Handle& p_handle) {
         uint32_t ref_id        = p_handle.id();
         const ItemExtra& extra = _extra[ref_id];
         return extra.pairable != 0;
     }
 
-    void item_get_bvh_aabb(
-        const BVHHandle& p_handle,
-        BVHAABB_CLASS& r_bvh_aabb
-    ) {
+    void item_get_bvh_aabb(const Handle& p_handle, BVHAABB_CLASS& r_bvh_aabb) {
         uint32_t ref_id    = p_handle.id();
         const ItemRef& ref = _refs[ref_id];
 
@@ -2010,7 +2004,7 @@ public:
     }
 
     bool item_set_pairable(
-        const BVHHandle& p_handle,
+        const Handle& p_handle,
         bool p_pairable,
         uint32_t p_pairable_type,
         uint32_t p_pairable_mask
@@ -2057,7 +2051,7 @@ public:
             // Only need to refit from the parent.
             if (needs_refit) {
                 const TNode& add_node = _nodes[ref.tnode_id];
-                if (add_node.parent_id != BVHCommon::INVALID) {
+                if (add_node.parent_id != INVALID) {
                     refit_upward_and_balance(add_node.parent_id, tree_id);
                 }
             }
@@ -2073,7 +2067,7 @@ public:
         // Cheaper than doing it on each move as each leaf may get touched
         // multiple times in a frame.
         for (int n = 0; n < NUM_TREES; n++) {
-            if (_root_node_id[n] != BVHCommon::INVALID) {
+            if (_root_node_id[n] != INVALID) {
                 refit_branch(_root_node_id[n]);
             }
         }
@@ -2107,7 +2101,7 @@ public:
 
             for (int n = 0; n < NUM_TREES; n++) {
                 uint32_t node_id = _root_node_id[n];
-                if (node_id != BVHCommon::INVALID) {
+                if (node_id != INVALID) {
                     world_bound.merge(_nodes[node_id].aabb);
                     bound_valid = true;
                 }
@@ -2218,7 +2212,7 @@ public:
 #ifdef BVH_CHECKS
             if (!tnode.num_children) {
                 // An empty AABB will break the parent AABBs.
-                WARN_PRINT("BVH_Tree::TNode no children, AABB is undefined");
+                WARN_PRINT("Tree::TNode no children, AABB is undefined");
             }
 #endif
         } else {
@@ -2233,7 +2227,7 @@ public:
 #ifdef BVH_CHECKS
             if (!leaf.num_items) {
                 // An empty AABB will break the parent AABBs.
-                WARN_PRINT("BVH_Tree::TLeaf no items, AABB is undefined");
+                WARN_PRINT("Tree::TLeaf no items, AABB is undefined");
             }
 #endif
         }
@@ -2244,7 +2238,7 @@ public:
     }
 
     void refit_upward(uint32_t p_node_id) {
-        while (p_node_id != BVHCommon::INVALID) {
+        while (p_node_id != INVALID) {
             TNode& tnode = _nodes[p_node_id];
             node_update_aabb(tnode);
             p_node_id = tnode.parent_id;
@@ -2252,7 +2246,7 @@ public:
     }
 
     void refit_upward_and_balance(uint32_t p_node_id, uint32_t p_tree_id) {
-        while (p_node_id != BVHCommon::INVALID) {
+        while (p_node_id != INVALID) {
             uint32_t before = p_node_id;
             p_node_id       = _logic_balance(p_node_id, p_tree_id);
 
@@ -2288,7 +2282,7 @@ public:
             uint32_t node_id;
         };
 
-        BVH_IterativeInfo<RefitParams> ii;
+        IterativeInfo<RefitParams> ii;
 
         // Allocate the stack from this function, because it cannot be allocated
         // in the helper class.
@@ -2610,7 +2604,7 @@ public:
             tnode.aabb
         );
 
-        uint32_t wildcard_node = BVHCommon::INVALID;
+        uint32_t wildcard_node = INVALID;
 
         // Now there should be equal numbers in both groups.
         for (int n = 0; n < num_a; n++) {
@@ -2656,7 +2650,7 @@ public:
 
         refit_upward(p_node_id);
 
-        BVH_ASSERT(wildcard_node != BVHCommon::INVALID);
+        BVH_ASSERT(wildcard_node != INVALID);
         return wildcard_node;
     }
 };
