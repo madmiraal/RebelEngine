@@ -160,8 +160,6 @@ template <
     class BOUNDS   = AABB,
     class POINT    = Vector3>
 class BVH_Tree {
-    friend class BVH;
-
 public:
     // TODO: Check if this should be attached to another node structure.
     struct ItemPairs {
