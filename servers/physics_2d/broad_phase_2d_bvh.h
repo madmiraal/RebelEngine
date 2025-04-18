@@ -13,7 +13,7 @@
 #include "core/math/vector2.h"
 
 class BroadPhase2DBVH : public BroadPhase2DSW {
-    BVH_Manager<CollisionObject2DSW, true, 128, Rect2, Vector2> bvh;
+    BVH::Manager<CollisionObject2DSW, true, 128, Rect2, Vector2> bvh;
 
     static void* _pair_callback(
         void* p_self,

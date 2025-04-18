@@ -10,7 +10,7 @@
 #include "bvh_tree.h"
 #include "core/os/mutex.h"
 
-#define BVHTREE_CLASS BVH_Tree<T, 2, MAX_ITEMS, USE_PAIRS, BOUNDS, POINT>
+#define BVHTREE_CLASS Tree<T, 2, MAX_ITEMS, USE_PAIRS, BOUNDS, POINT>
 #define BVH_LOCKED_FUNCTION                                                    \
     BVHLockedFunction(&_mutex, BVH_THREAD_SAFE&& _thread_safe);
 
@@ -34,12 +34,12 @@ template <
     class T,
     bool USE_PAIRS       = false,
     int MAX_ITEMS        = 32,
-    class BOUNDS         = AABB,
+    class BOUNDS         = ::AABB,
     class POINT          = Vector3,
     bool BVH_THREAD_SAFE = true>
-class BVH_Manager {
+class Manager {
 public:
-    // Use uint32_t instead of BVHHandle to maintain compatibility with octree.
+    // Use uint32_t instead of Handle to maintain compatibility with octree.
     typedef void* (*PairCallback)(void*, uint32_t, T*, int, uint32_t, T*, int);
     typedef void (*UnpairCallback)(void*, uint32_t, T*, int, uint32_t, T*, int, void*);
     typedef void* (*CheckPairCallback)(void*, uint32_t, T*, int, uint32_t, T*, int, void*);
@@ -86,7 +86,7 @@ public:
         check_pair_callback_userdata = p_userdata;
     }
 
-    BVHHandle create(
+    Handle create(
         T* p_userdata,
         bool p_active,
         const BOUNDS& p_aabb     = BOUNDS(),
@@ -112,7 +112,7 @@ public:
         }
 #endif
 
-        BVHHandle h = tree.item_add(
+        Handle h = tree.item_add(
             p_userdata,
             p_active,
             p_aabb,
@@ -138,27 +138,27 @@ public:
         return h;
     }
 
-    // Wrapper versions that use uint32_t instead of BVHHandle.
+    // Wrapper versions that use uint32_t instead of Handle.
     void move(uint32_t p_handle, const BOUNDS& p_aabb) {
-        BVHHandle h;
+        Handle h;
         h.set(p_handle);
         move(h, p_aabb);
     }
 
     void recheck_pairs(uint32_t p_handle) {
-        BVHHandle h;
+        Handle h;
         h.set(p_handle);
         recheck_pairs(h);
     }
 
     void erase(uint32_t p_handle) {
-        BVHHandle h;
+        Handle h;
         h.set(p_handle);
         erase(h);
     }
 
     void force_collision_check(uint32_t p_handle) {
-        BVHHandle h;
+        Handle h;
         h.set(p_handle);
         force_collision_check(h);
     }
@@ -168,13 +168,13 @@ public:
         const BOUNDS& p_aabb,
         bool p_delay_collision_check = false
     ) {
-        BVHHandle h;
+        Handle h;
         h.set(p_handle);
         return activate(h, p_aabb, p_delay_collision_check);
     }
 
     bool deactivate(uint32_t p_handle) {
-        BVHHandle h;
+        Handle h;
         h.set(p_handle);
         return deactivate(h);
     }
@@ -186,7 +186,7 @@ public:
         uint32_t p_pairable_mask,
         bool p_force_collision_check = true
     ) {
-        BVHHandle h;
+        Handle h;
         h.set(p_handle);
         set_pairable(
             h,
@@ -198,26 +198,26 @@ public:
     }
 
     bool is_pairable(uint32_t p_handle) const {
-        BVHHandle h;
+        Handle h;
         h.set(p_handle);
         return item_is_pairable(h);
     }
 
     int get_subindex(uint32_t p_handle) const {
-        BVHHandle h;
+        Handle h;
         h.set(p_handle);
         return item_get_subindex(h);
     }
 
     T* get(uint32_t p_handle) const {
-        BVHHandle h;
+        Handle h;
         h.set(p_handle);
         return item_get_userdata(h);
     }
 
     ////////////////////////////////////////////////////
 
-    void move(BVHHandle p_handle, const BOUNDS& p_aabb) {
+    void move(Handle p_handle, const BOUNDS& p_aabb) {
         BVH_LOCKED_FUNCTION
         if (tree.item_move(p_handle, p_aabb)) {
             if (USE_PAIRS) {
@@ -226,14 +226,14 @@ public:
         }
     }
 
-    void recheck_pairs(BVHHandle p_handle) {
+    void recheck_pairs(Handle p_handle) {
         BVH_LOCKED_FUNCTION
         if (USE_PAIRS) {
             _recheck_pairs(p_handle);
         }
     }
 
-    void erase(BVHHandle p_handle) {
+    void erase(Handle p_handle) {
         BVH_LOCKED_FUNCTION
         // Call unpair and remove all references before deleting from the tree.
         if (USE_PAIRS) {
@@ -248,7 +248,7 @@ public:
     // Use in conjunction with activate if collision checks were deferred,
     // and set pairable was never called.
     // Deferred collision checks are a workaround for visual server.
-    void force_collision_check(BVHHandle p_handle) {
+    void force_collision_check(Handle p_handle) {
         BVH_LOCKED_FUNCTION
         if (USE_PAIRS) {
             BOUNDS aabb;
@@ -260,7 +260,7 @@ public:
 
     // Should be read as set_visible for render trees.
     bool activate(
-        BVHHandle p_handle,
+        Handle p_handle,
         const BOUNDS& p_aabb,
         bool p_delay_collision_check = false
     ) {
@@ -285,7 +285,7 @@ public:
         return false;
     }
 
-    bool deactivate(BVHHandle p_handle) {
+    bool deactivate(Handle p_handle) {
         BVH_LOCKED_FUNCTION
         if (tree.item_deactivate(p_handle)) {
             // Call unpair and remove all references before deleting.
@@ -298,7 +298,7 @@ public:
         return false;
     }
 
-    bool get_active(BVHHandle p_handle) {
+    bool get_active(Handle p_handle) {
         BVH_LOCKED_FUNCTION
         return tree.item_get_active(p_handle);
     }
@@ -320,7 +320,7 @@ public:
     }
 
     void set_pairable(
-        const BVHHandle& p_handle,
+        const Handle& p_handle,
         bool p_pairable,
         uint32_t p_pairable_type,
         uint32_t p_pairable_mask,
@@ -482,7 +482,7 @@ private:
         params.pairable_type        = 0;
 
         for (unsigned int n = 0; n < changed_items.size(); n++) {
-            const BVHHandle& h = changed_items[n];
+            const Handle& h = changed_items[n];
 
             // Use the expanded aabb for pairing.
             const BOUNDS& expanded_aabb = tree._pairs[h.id()].expanded_aabb;
@@ -510,7 +510,7 @@ private:
                     continue;
                 }
 
-                BVHHandle h_collidee;
+                Handle h_collidee;
                 h_collidee.set_id(ref_id);
                 _collide(h, h_collidee);
             }
@@ -519,26 +519,26 @@ private:
     }
 
 public:
-    void item_get_AABB(BVHHandle p_handle, BOUNDS& r_aabb) {
+    void item_get_AABB(Handle p_handle, BOUNDS& r_aabb) {
         BVHAABB_CLASS bvh_aabb;
         tree.item_get_bvh_aabb(p_handle, bvh_aabb);
         bvh_aabb.to(r_aabb);
     }
 
 private:
-    bool item_is_pairable(BVHHandle p_handle) const {
+    bool item_is_pairable(Handle p_handle) const {
         return _get_extra(p_handle).pairable;
     }
 
-    T* item_get_userdata(BVHHandle p_handle) const {
+    T* item_get_userdata(Handle p_handle) const {
         return _get_extra(p_handle).userdata;
     }
 
-    int item_get_subindex(BVHHandle p_handle) const {
+    int item_get_subindex(Handle p_handle) const {
         return _get_extra(p_handle).subindex;
     }
 
-    void _unpair(BVHHandle p_from, BVHHandle p_to) {
+    void _unpair(Handle p_from, Handle p_to) {
         tree._handle_sort(p_from, p_to);
 
         typename BVHTREE_CLASS::ItemExtra& exa = tree._extra[p_from.id()];
@@ -575,7 +575,7 @@ private:
         }
     }
 
-    void* _recheck_pair(BVHHandle p_from, BVHHandle p_to, void* p_pair_data) {
+    void* _recheck_pair(Handle p_from, Handle p_to, void* p_pair_data) {
         tree._handle_sort(p_from, p_to);
 
         typename BVHTREE_CLASS::ItemExtra& exa = tree._extra[p_from.id()];
@@ -606,8 +606,8 @@ private:
     bool _find_leavers_process_pair(
         typename BVHTREE_CLASS::ItemPairs& p_pairs_from,
         const BVHAABB_CLASS& p_abb_from,
-        BVHHandle p_from,
-        BVHHandle p_to,
+        Handle p_from,
+        Handle p_to,
         bool p_full_check
     ) {
         BVHAABB_CLASS bvh_aabb_to;
@@ -642,7 +642,7 @@ private:
 
     // Find all paired aabbs that are no longer paired, and send callbacks.
     void _find_leavers(
-        BVHHandle p_handle,
+        Handle p_handle,
         const BVHAABB_CLASS& expanded_abb_from,
         bool p_full_check
     ) {
@@ -652,7 +652,7 @@ private:
 
         // Remove every partner from pairing list.
         for (unsigned int n = 0; n < p_from.extended_pairs.size(); n++) {
-            BVHHandle h_to = p_from.extended_pairs[n].handle;
+            Handle h_to = p_from.extended_pairs[n].handle;
             if (_find_leavers_process_pair(
                     p_from,
                     bvh_aabb_from,
@@ -666,7 +666,7 @@ private:
         }
     }
 
-    void _collide(BVHHandle p_ha, BVHHandle p_hb) {
+    void _collide(Handle p_ha, Handle p_hb) {
         // We only need to do this oneway: lower ID then higher ID.
         tree._handle_sort(p_ha, p_hb);
 
@@ -716,25 +716,25 @@ private:
     }
 
     // If we remove an item, remove the pairs.
-    void _remove_pairs_containing(BVHHandle p_handle) {
+    void _remove_pairs_containing(Handle p_handle) {
         typename BVHTREE_CLASS::ItemPairs& p_from = tree._pairs[p_handle.id()];
 
         // Remove from pairing list for every partner.
         while (p_from.extended_pairs.size()) {
-            BVHHandle h_to = p_from.extended_pairs[0].handle;
+            Handle h_to = p_from.extended_pairs[0].handle;
             _unpair(p_handle, h_to);
         }
     }
 
     // Send pair callbacks again for all existing pairs for the given handle.
-    void _recheck_pairs(BVHHandle p_handle) {
+    void _recheck_pairs(Handle p_handle) {
         typename BVHTREE_CLASS::ItemPairs& from = tree._pairs[p_handle.id()];
 
         // Check pair for every partner.
         for (unsigned int n = 0; n < from.extended_pairs.size(); n++) {
             typename BVHTREE_CLASS::ItemPairs::Link& pair =
                 from.extended_pairs[n];
-            BVHHandle h_to      = pair.handle;
+            Handle h_to         = pair.handle;
             void* new_pair_data = _recheck_pair(p_handle, h_to, pair.userdata);
 
             if (new_pair_data != pair.userdata) {
@@ -757,12 +757,11 @@ private:
     }
 
 private:
-    const typename BVHTREE_CLASS::ItemExtra& _get_extra(BVHHandle p_handle
-    ) const {
+    const typename BVHTREE_CLASS::ItemExtra& _get_extra(Handle p_handle) const {
         return tree._extra[p_handle.id()];
     }
 
-    const typename BVHTREE_CLASS::ItemRef& _get_ref(BVHHandle p_handle) const {
+    const typename BVHTREE_CLASS::ItemRef& _get_ref(Handle p_handle) const {
         return tree._refs[p_handle.id()];
     }
 
@@ -772,7 +771,7 @@ private:
     }
 
     void _add_changed_item(
-        BVHHandle p_handle,
+        Handle p_handle,
         const BOUNDS& aabb,
         bool p_check_aabb = true
     ) {
@@ -813,7 +812,7 @@ private:
         changed_items.push_back(p_handle);
     }
 
-    void _remove_changed_item(BVHHandle p_handle) {
+    void _remove_changed_item(Handle p_handle) {
         // Care must be taken for items that are deleted.
         // The ref ID could be reused on the same tick for new items.
         // This is probably rare but should be taken into consideration.
@@ -845,7 +844,7 @@ private:
     BVHTREE_CLASS tree;
 
     // Maintain a list of all items moved to test for collision pairing.
-    LocalVector<BVHHandle, uint32_t, true> changed_items;
+    LocalVector<Handle, uint32_t, true> changed_items;
     uint32_t _tick;
 
     class BVHLockedFunction {
@@ -883,7 +882,7 @@ private:
     bool _thread_safe;
 
 public:
-    BVH_Manager() {
+    Manager() {
         // Start from 1. so items with 0 indicate never updated.
         _tick                    = 1;
         pair_callback            = nullptr;
