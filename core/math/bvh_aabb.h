@@ -10,7 +10,7 @@
 namespace BVH {
 
 // Optimized version of axis aligned bounding box.
-template <class BOUNDS = AABB, class POINT = Vector3>
+template <class BOUNDS = ::AABB, class POINT = Vector3>
 struct AABB {
     struct ConvexHull {
         const Plane* planes;
