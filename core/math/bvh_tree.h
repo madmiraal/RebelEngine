@@ -1139,16 +1139,16 @@ public:
             const TNode& tnode = _nodes[ccp.node_id];
 
             if (!ccp.fully_within) {
-                typename BVHAABB_CLASS::IntersectResult res =
+                IntersectResult result =
                     tnode.aabb.intersects_convex(r_params.hull);
 
-                switch (res) {
-                    default: {
+                switch (result) {
+                    case IntersectResult::MISS: {
                         continue;
                     } break;
-                    case BVHAABB_CLASS::IR_PARTIAL: {
+                    case IntersectResult::PARTIAL: {
                     } break;
-                    case BVHAABB_CLASS::IR_FULL: {
+                    case IntersectResult::FULL: {
                         ccp.fully_within = true;
                     } break;
                 }
