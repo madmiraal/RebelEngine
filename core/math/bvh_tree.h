@@ -9,7 +9,7 @@
 
 #include "core/local_vector.h"
 #include "core/math/aabb.h"
-#include "core/math/bvh_abb.h"
+#include "core/math/bvh_aabb.h"
 #include "core/math/geometry.h"
 #include "core/math/vector3.h"
 #include "core/pooled_list.h"
@@ -17,7 +17,7 @@
 
 #include <limits.h>
 
-#define BVHABB_CLASS BVH_ABB<BOUNDS, POINT>
+#define BVHAABB_CLASS BVH_AABB<BOUNDS, POINT>
 
 // TODO: Check if this is better.
 #define BVH_EXPAND_LEAF_AABBS
@@ -271,14 +271,14 @@ public:
         uint16_t dirty;
         // separate data orientated lists for faster SIMD traversal
         uint32_t item_ref_ids[MAX_ITEMS];
-        BVHABB_CLASS aabbs[MAX_ITEMS];
+        BVHAABB_CLASS aabbs[MAX_ITEMS];
 
     public:
-        BVHABB_CLASS& get_aabb(uint32_t p_id) {
+        BVHAABB_CLASS& get_aabb(uint32_t p_id) {
             return aabbs[p_id];
         }
 
-        const BVHABB_CLASS& get_aabb(uint32_t p_id) const {
+        const BVHAABB_CLASS& get_aabb(uint32_t p_id) const {
             return aabbs[p_id];
         }
 
@@ -323,7 +323,7 @@ public:
     };
 
     struct TNode {
-        BVHABB_CLASS aabb;
+        BVHAABB_CLASS aabb;
 
         // Either number of children is positive or leaf id if negative.
         // Leaf id = 0 is disallowed.
@@ -581,7 +581,7 @@ private:
     void node_remove_item(
         uint32_t p_ref_id,
         uint32_t p_tree_id,
-        BVHABB_CLASS* r_old_aabb = nullptr
+        BVHAABB_CLASS* r_old_aabb = nullptr
     ) {
         ItemRef& ref           = _refs[p_ref_id];
         uint32_t owner_node_id = ref.tnode_id;
@@ -598,7 +598,7 @@ private:
 
         // If the AABB is not determining the corner size, don't refit,
         // because merging AABBs takes a lot of time.
-        const BVHABB_CLASS& old_aabb = leaf.get_aabb(ref.item_id);
+        const BVHAABB_CLASS& old_aabb = leaf.get_aabb(ref.item_id);
 
         // Shrink a little to prevent using corner AABBs.
         // To miss the corners, first we shrink by node_expansion, which is
@@ -606,7 +606,7 @@ private:
         // Second, we shrink by an epsilon, to miss the very corner AABBs,
         // which are important in determining the bound.
         // AABBs within this can be removed and not affect the overall bound.
-        BVHABB_CLASS node_bound = tnode.aabb;
+        BVHAABB_CLASS node_bound = tnode.aabb;
         node_bound.expand(-_node_expansion - 0.001f);
         bool refit = true;
 
@@ -658,7 +658,7 @@ private:
     bool _node_add_item(
         uint32_t p_node_id,
         uint32_t p_ref_id,
-        const BVHABB_CLASS& p_aabb
+        const BVHAABB_CLASS& p_aabb
     ) {
         ItemRef& ref = _refs[p_ref_id];
         ref.tnode_id = p_node_id;
@@ -670,7 +670,7 @@ private:
         // We only need to refit if the added item is changing the node's AABB.
         bool needs_refit = true;
 
-        BVHABB_CLASS expanded = p_aabb;
+        BVHAABB_CLASS expanded = p_aabb;
         expanded.expand(_node_expansion);
 
         // The bound will only be valid if it contains an item already.
@@ -698,7 +698,7 @@ private:
 
     uint32_t _node_create_another_child(
         uint32_t p_node_id,
-        const BVHABB_CLASS& p_aabb
+        const BVHAABB_CLASS& p_aabb
     ) {
         uint32_t child_node_id;
         TNode* child_node = _nodes.request(child_node_id);
@@ -726,9 +726,9 @@ public:
 
         // Optional components for different tests.
         POINT point;
-        BVHABB_CLASS abb;
-        typename BVHABB_CLASS::ConvexHull hull;
-        typename BVHABB_CLASS::Segment segment;
+        BVHAABB_CLASS bvh_aabb;
+        typename BVHAABB_CLASS::ConvexHull hull;
+        typename BVHAABB_CLASS::Segment segment;
 
         // When collision testing, non pairable moving items only need to be
         // tested against the pairable tree.
@@ -923,7 +923,7 @@ public:
 
                 // Test the children individually.
                 for (int n = 0; n < leaf.num_items; n++) {
-                    const BVHABB_CLASS& aabb = leaf.get_aabb(n);
+                    const BVHAABB_CLASS& aabb = leaf.get_aabb(n);
 
                     if (aabb.intersects_segment(r_params.segment)) {
                         uint32_t child_id = leaf.get_item_ref_id(n);
@@ -935,10 +935,10 @@ public:
             } else {
                 // Test the children individually.
                 for (int n = 0; n < tnode.num_children; n++) {
-                    uint32_t child_id             = tnode.children[n];
-                    const BVHABB_CLASS& child_abb = _nodes[child_id].aabb;
+                    uint32_t child_id                   = tnode.children[n];
+                    const BVHAABB_CLASS& child_bvh_aabb = _nodes[child_id].aabb;
 
-                    if (child_abb.intersects_segment(r_params.segment)) {
+                    if (child_bvh_aabb.intersects_segment(r_params.segment)) {
                         // Add to the stack.
                         CullSegParams* child = ii.request();
                         child->node_id       = child_id;
@@ -1055,9 +1055,9 @@ public:
                     }
                 } else {
                     for (int n = 0; n < leaf.num_items; n++) {
-                        const BVHABB_CLASS& aabb = leaf.get_aabb(n);
+                        const BVHAABB_CLASS& aabb = leaf.get_aabb(n);
 
-                        if (aabb.intersects(r_params.abb)) {
+                        if (aabb.intersects(r_params.bvh_aabb)) {
                             uint32_t child_id = leaf.get_item_ref_id(n);
 
                             // Register a hit.
@@ -1069,13 +1069,15 @@ public:
                 if (!cap.fully_within) {
                     // Test children individually.
                     for (int n = 0; n < tnode.num_children; n++) {
-                        uint32_t child_id             = tnode.children[n];
-                        const BVHABB_CLASS& child_abb = _nodes[child_id].aabb;
+                        uint32_t child_id = tnode.children[n];
+                        const BVHAABB_CLASS& child_bvh_aabb =
+                            _nodes[child_id].aabb;
 
-                        if (child_abb.intersects(r_params.abb)) {
+                        if (child_bvh_aabb.intersects(r_params.bvh_aabb)) {
                             // Is the node totally within the aabb?
                             bool fully_within =
-                                r_params.abb.is_other_within(child_abb);
+                                r_params.bvh_aabb.is_other_within(child_bvh_aabb
+                                );
 
                             // Add to the stack.
                             CullAABBParams* child = ii.request();
@@ -1138,16 +1140,16 @@ public:
             const TNode& tnode = _nodes[ccp.node_id];
 
             if (!ccp.fully_within) {
-                typename BVHABB_CLASS::IntersectResult res =
+                typename BVHAABB_CLASS::IntersectResult res =
                     tnode.aabb.intersects_convex(r_params.hull);
 
                 switch (res) {
                     default: {
                         continue;
                     } break;
-                    case BVHABB_CLASS::IR_PARTIAL: {
+                    case BVHAABB_CLASS::IR_PARTIAL: {
                     } break;
-                    case BVHABB_CLASS::IR_FULL: {
+                    case BVHAABB_CLASS::IR_FULL: {
                         ccp.fully_within = true;
                     } break;
                 }
@@ -1192,7 +1194,7 @@ public:
 
                     // Test children individually.
                     for (int n = 0; n < leaf.num_items; n++) {
-                        const BVHABB_CLASS& aabb = leaf.get_aabb(n);
+                        const BVHAABB_CLASS& aabb = leaf.get_aabb(n);
 
                         if (aabb.intersects_convex_optimized(
                                 r_params.hull,
@@ -1214,7 +1216,7 @@ public:
                     uint32_t test_count = 0;
 
                     for (int n = 0; n < leaf.num_items; n++) {
-                        const BVHABB_CLASS& aabb = leaf.get_aabb(n);
+                        const BVHAABB_CLASS& aabb = leaf.get_aabb(n);
 
                         if (aabb.intersects_convex_partial(r_params.hull)) {
                             uint32_t child_id = leaf.get_item_ref_id(n);
@@ -1229,7 +1231,7 @@ public:
 
                     // Test children individually.
                     for (int n = 0; n < leaf.num_items; n++) {
-                        const BVHABB_CLASS& aabb = leaf.get_aabb(n);
+                        const BVHAABB_CLASS& aabb = leaf.get_aabb(n);
 
                         if (aabb.intersects_convex_partial(r_params.hull)) {
                             uint32_t child_id = leaf.get_item_ref_id(n);
@@ -1270,7 +1272,7 @@ public:
         }
     }
 
-    String _debug_aabb_to_string(const BVHABB_CLASS& aabb) const {
+    String _debug_aabb_to_string(const BVHAABB_CLASS& aabb) const {
         POINT size = aabb.calculate_size();
 
         String sz;
@@ -1345,13 +1347,13 @@ public:
     void _integrity_check_up(uint32_t p_node_id) {
         TNode& node = _nodes[p_node_id];
 
-        BVHABB_CLASS abb = node.aabb;
+        BVHAABB_CLASS bvh_aabb = node.aabb;
         node_update_aabb(node);
 
-        BVHABB_CLASS abb2 = node.aabb;
-        abb2.expand(-_node_expansion);
+        BVHAABB_CLASS bvh_aabb2 = node.aabb;
+        bvh_aabb2.expand(-_node_expansion);
 
-        CRASH_COND(!abb.is_other_within(abb2));
+        CRASH_COND(!bvh_aabb.is_other_within(bvh_aabb2));
     }
 
     void _integrity_check_down(uint32_t p_node_id) {
@@ -1394,12 +1396,13 @@ public:
         uint32_t tree_id = _handle_get_tree_id(temp_handle);
 
         // Remove and reinsert.
-        BVHABB_CLASS abb;
-        node_remove_item(p_ref_id, tree_id, &abb);
+        BVHAABB_CLASS bvh_aabb;
+        node_remove_item(p_ref_id, tree_id, &bvh_aabb);
 
         // We must choose where to add it to the tree.
-        ref.tnode_id = _logic_choose_item_add_node(_root_node_id[tree_id], abb);
-        _node_add_item(ref.tnode_id, p_ref_id, abb);
+        ref.tnode_id =
+            _logic_choose_item_add_node(_root_node_id[tree_id], bvh_aabb);
+        _node_add_item(ref.tnode_id, p_ref_id, bvh_aabb);
 
         refit_upward_and_balance(ref.tnode_id, tree_id);
     }
@@ -1427,14 +1430,14 @@ public:
      */
     //--------------------------------------------------------------------------------------------------
 
-    // _logic__abb_merge and _logic balance are based on the 'Balance' function
-    // from Randy Gaul's qu3e: https://github.com/RandyGaul/qu3e
+    // _logic_bvh_aabb_merge and _logic balance are based on the 'Balance'
+    // function from Randy Gaul's qu3e: https://github.com/RandyGaul/qu3e
 
-    BVHABB_CLASS _logic_abb_merge(
-        const BVHABB_CLASS& a,
-        const BVHABB_CLASS& b
+    BVHAABB_CLASS _logic_bvh_aabb_merge(
+        const BVHAABB_CLASS& a,
+        const BVHAABB_CLASS& b
     ) {
-        BVHABB_CLASS c = a;
+        BVHAABB_CLASS c = a;
         c.merge(b);
         return c;
     }
@@ -1494,8 +1497,8 @@ public:
                 C->children[1] = iF;
                 A->children[1] = iG;
                 G->parent_id   = iA;
-                A->aabb        = _logic_abb_merge(B->aabb, G->aabb);
-                C->aabb        = _logic_abb_merge(A->aabb, F->aabb);
+                A->aabb        = _logic_bvh_aabb_merge(B->aabb, G->aabb);
+                C->aabb        = _logic_bvh_aabb_merge(A->aabb, F->aabb);
 
                 A->height = 1 + MAX(B->height, G->height);
                 C->height = 1 + MAX(A->height, F->height);
@@ -1505,8 +1508,8 @@ public:
                 C->children[1] = iG;
                 A->children[1] = iF;
                 F->parent_id   = iA;
-                A->aabb        = _logic_abb_merge(B->aabb, F->aabb);
-                C->aabb        = _logic_abb_merge(A->aabb, G->aabb);
+                A->aabb        = _logic_bvh_aabb_merge(B->aabb, F->aabb);
+                C->aabb        = _logic_bvh_aabb_merge(A->aabb, G->aabb);
 
                 A->height = 1 + MAX(B->height, F->height);
                 C->height = 1 + MAX(A->height, G->height);
@@ -1546,8 +1549,8 @@ public:
                 B->children[0] = iD;
                 A->children[0] = iE;
                 E->parent_id   = iA;
-                A->aabb        = _logic_abb_merge(C->aabb, E->aabb);
-                B->aabb        = _logic_abb_merge(A->aabb, D->aabb);
+                A->aabb        = _logic_bvh_aabb_merge(C->aabb, E->aabb);
+                B->aabb        = _logic_bvh_aabb_merge(A->aabb, D->aabb);
 
                 A->height = 1 + MAX(C->height, E->height);
                 B->height = 1 + MAX(A->height, D->height);
@@ -1557,8 +1560,8 @@ public:
                 B->children[0] = iE;
                 A->children[0] = iD;
                 D->parent_id   = iA;
-                A->aabb        = _logic_abb_merge(C->aabb, D->aabb);
-                B->aabb        = _logic_abb_merge(A->aabb, E->aabb);
+                A->aabb        = _logic_bvh_aabb_merge(C->aabb, D->aabb);
+                B->aabb        = _logic_bvh_aabb_merge(A->aabb, E->aabb);
 
                 A->height = 1 + MAX(C->height, D->height);
                 B->height = 1 + MAX(A->height, E->height);
@@ -1573,7 +1576,7 @@ public:
     // Either choose an existing node to add item to, or create a new node.
     uint32_t _logic_choose_item_add_node(
         uint32_t p_node_id,
-        const BVHABB_CLASS& p_aabb
+        const BVHAABB_CLASS& p_aabb
     ) {
         while (true) {
             BVH_ASSERT(p_node_id != BVHCommon::INVALID);
@@ -1681,8 +1684,8 @@ public:
         VERBOSE_PRINT("\n");
 #endif
 
-        BVHABB_CLASS abb;
-        abb.from(p_aabb);
+        BVHAABB_CLASS bvh_aabb;
+        bvh_aabb.from(p_aabb);
 
         // Note: We do not expand the AABB for the first create even if
         // leaf expansion is switched on, because:
@@ -1744,9 +1747,9 @@ public:
         // We must choose where to add it to the tree.
         if (p_active) {
             ref->tnode_id =
-                _logic_choose_item_add_node(_root_node_id[tree_id], abb);
+                _logic_choose_item_add_node(_root_node_id[tree_id], bvh_aabb);
 
-            bool refit = _node_add_item(ref->tnode_id, ref_id, abb);
+            bool refit = _node_add_item(ref->tnode_id, ref_id, bvh_aabb);
 
             if (refit) {
                 // Only need to refit from the parent.
@@ -1801,16 +1804,17 @@ public:
             return false;
         }
 
-        BVHABB_CLASS abb;
-        abb.from(p_aabb);
+        BVHAABB_CLASS bvh_aabb;
+        bvh_aabb.from(p_aabb);
 
 #ifdef BVH_EXPAND_LEAF_AABBS
         if (USE_PAIRS) {
             // Scale the pairing expansion by the number of pairs.
-            abb.expand(_pairs[ref_id].scale_expansion_margin(_pairing_expansion)
+            bvh_aabb.expand(
+                _pairs[ref_id].scale_expansion_margin(_pairing_expansion)
             );
         } else {
-            abb.expand(_pairing_expansion);
+            bvh_aabb.expand(_pairing_expansion);
         }
 #endif
 
@@ -1818,18 +1822,18 @@ public:
         TNode& tnode = _nodes[ref.tnode_id];
 
         // Does it fit within the current leaf AABB?
-        if (tnode.aabb.is_other_within(abb)) {
+        if (tnode.aabb.is_other_within(bvh_aabb)) {
             // It has not moved enough to require a refit: Do nothing.
             // However, we update the exact AABB in the leaf, as this will be
             // needed for accurate collision detection.
             TLeaf& leaf = _node_get_leaf(tnode);
 
-            BVHABB_CLASS& leaf_abb = leaf.get_aabb(ref.item_id);
+            BVHAABB_CLASS& leaf_bvh_aabb = leaf.get_aabb(ref.item_id);
 
             // No change?
 #ifdef BVH_EXPAND_LEAF_AABBS
             BOUNDS leaf_aabb;
-            leaf_abb.to(leaf_aabb);
+            leaf_bvh_aabb.to(leaf_aabb);
 
             // This test should pass in a lot of cases, and by returning false
             // we can avoid collision pairing checks later, which greatly
@@ -1838,7 +1842,7 @@ public:
                 return false;
             }
 #else
-            if (leaf_abb == abb) {
+            if (leaf_bvh_aabb == bvh_aabb) {
                 return false;
             }
 #endif
@@ -1850,7 +1854,7 @@ public:
             );
 #endif
 
-            leaf_abb = abb;
+            leaf_bvh_aabb = bvh_aabb;
             _integrity_check_all();
 
             return true;
@@ -1869,10 +1873,11 @@ public:
         node_remove_item(ref_id, tree_id);
 
         // We must choose where to add it to the tree.
-        ref.tnode_id = _logic_choose_item_add_node(_root_node_id[tree_id], abb);
+        ref.tnode_id =
+            _logic_choose_item_add_node(_root_node_id[tree_id], bvh_aabb);
 
         // Add it to the tree.
-        bool needs_refit = _node_add_item(ref.tnode_id, ref_id, abb);
+        bool needs_refit = _node_add_item(ref.tnode_id, ref_id, bvh_aabb);
 
         // Only need to refit from the parent.
         if (needs_refit) {
@@ -1931,14 +1936,15 @@ public:
         }
 
         // Add to the tree.
-        BVHABB_CLASS abb;
-        abb.from(p_aabb);
+        BVHAABB_CLASS bvh_aabb;
+        bvh_aabb.from(p_aabb);
 
         uint32_t tree_id = _handle_get_tree_id(p_handle);
 
         // We must choose where to add it to the tree.
-        ref.tnode_id = _logic_choose_item_add_node(_root_node_id[tree_id], abb);
-        _node_add_item(ref.tnode_id, ref_id, abb);
+        ref.tnode_id =
+            _logic_choose_item_add_node(_root_node_id[tree_id], bvh_aabb);
+        _node_add_item(ref.tnode_id, ref_id, bvh_aabb);
 
         refit_upward_and_balance(ref.tnode_id, tree_id);
 
@@ -1955,8 +1961,8 @@ public:
         uint32_t tree_id = _handle_get_tree_id(p_handle);
 
         // Remove it from the tree.
-        BVHABB_CLASS abb;
-        node_remove_item(ref_id, tree_id, &abb);
+        BVHAABB_CLASS bvh_aabb;
+        node_remove_item(ref_id, tree_id, &bvh_aabb);
 
         // Mark as inactive.
         ref.set_inactive();
@@ -1988,14 +1994,17 @@ public:
         return extra.pairable != 0;
     }
 
-    void item_get_ABB(const BVHHandle& p_handle, BVHABB_CLASS& r_abb) {
+    void item_get_bvh_aabb(
+        const BVHHandle& p_handle,
+        BVHAABB_CLASS& r_bvh_aabb
+    ) {
         uint32_t ref_id    = p_handle.id();
         const ItemRef& ref = _refs[ref_id];
 
         TNode& tnode = _nodes[ref.tnode_id];
         TLeaf& leaf  = _node_get_leaf(tnode);
 
-        r_abb = leaf.get_aabb(ref.item_id);
+        r_bvh_aabb = leaf.get_aabb(ref.item_id);
     }
 
     bool item_set_pairable(
@@ -2020,9 +2029,9 @@ public:
 
         if (active && pairable_changed) {
             // Record AABB
-            TNode& tnode     = _nodes[ref.tnode_id];
-            TLeaf& leaf      = _node_get_leaf(tnode);
-            BVHABB_CLASS abb = leaf.get_aabb(ref.item_id);
+            TNode& tnode           = _nodes[ref.tnode_id];
+            TLeaf& leaf            = _node_get_leaf(tnode);
+            BVHAABB_CLASS bvh_aabb = leaf.get_aabb(ref.item_id);
 
             // Make sure the current tree is correct prior to changing.
             uint32_t tree_id = _handle_get_tree_id(p_handle);
@@ -2040,8 +2049,8 @@ public:
 
             // We must choose where to add it to the tree.
             ref.tnode_id =
-                _logic_choose_item_add_node(_root_node_id[tree_id], abb);
-            bool needs_refit = _node_add_item(ref.tnode_id, ref_id, abb);
+                _logic_choose_item_add_node(_root_node_id[tree_id], bvh_aabb);
+            bool needs_refit = _node_add_item(ref.tnode_id, ref_id, bvh_aabb);
 
             // Only need to refit from the parent.
             if (needs_refit) {
@@ -2089,7 +2098,7 @@ public:
 // #define BVH_ALLOW_AUTO_EXPANSION
 #ifdef BVH_ALLOW_AUTO_EXPANSION
         if (_auto_node_expansion || _auto_pairing_expansion) {
-            BVHABB_CLASS world_bound;
+            BVHAABB_CLASS world_bound;
             world_bound.set_to_max_opposite_extents();
 
             bool bound_valid = false;
@@ -2174,13 +2183,13 @@ public:
     }
 
     void _debug_node_verify_bound(uint32_t p_node_id) {
-        TNode& node             = _nodes[p_node_id];
-        BVHABB_CLASS abb_before = node.aabb;
+        TNode& node                   = _nodes[p_node_id];
+        BVHAABB_CLASS bvh_aabb_before = node.aabb;
 
         node_update_aabb(node);
 
-        BVHABB_CLASS abb_after = node.aabb;
-        CRASH_COND(abb_before != abb_after);
+        BVHAABB_CLASS bvh_aabb_after = node.aabb;
+        CRASH_COND(bvh_aabb_before != bvh_aabb_after);
     }
 
     void node_update_aabb(TNode& tnode) {
@@ -2330,8 +2339,8 @@ public:
         int& num_b,
         uint16_t* group_a,
         uint16_t* group_b,
-        const BVHABB_CLASS* temp_bounds,
-        const BVHABB_CLASS full_bound
+        const BVHAABB_CLASS* temp_bounds,
+        const BVHAABB_CLASS full_bound
     ) {
         // Special case for low leaf sizes.
         if (MAX_ITEMS < 4) {
@@ -2470,17 +2479,17 @@ public:
         int& num_b,
         uint16_t* group_a,
         uint16_t* group_b,
-        const BVHABB_CLASS* temp_bounds
+        const BVHAABB_CLASS* temp_bounds
     ) {
-        BVHABB_CLASS groupb_aabb;
+        BVHAABB_CLASS groupb_aabb;
         groupb_aabb.set_to_max_opposite_extents();
         for (int n = 0; n < num_b; n++) {
             int which = group_b[n];
             groupb_aabb.merge(temp_bounds[which]);
         }
-        BVHABB_CLASS groupb_aabb_new;
+        BVHAABB_CLASS groupb_aabb_new;
 
-        BVHABB_CLASS rest_aabb;
+        BVHAABB_CLASS rest_aabb;
 
         float best_size    = FLT_MAX;
         int best_candidate = -1;
@@ -2518,7 +2527,7 @@ public:
 
     uint32_t split_leaf(
         uint32_t p_node_id,
-        const BVHABB_CLASS& p_added_item_aabb
+        const BVHAABB_CLASS& p_added_item_aabb
     ) {
         return split_leaf_complex(p_node_id, p_added_item_aabb);
     }
@@ -2526,7 +2535,7 @@ public:
     // AABB is the new inserted node.
     uint32_t split_leaf_complex(
         uint32_t p_node_id,
-        const BVHABB_CLASS& p_added_item_aabb
+        const BVHAABB_CLASS& p_added_item_aabb
     ) {
         VERBOSE_PRINT("split_leaf");
 
@@ -2573,8 +2582,8 @@ public:
         uint16_t* group_b = (uint16_t*)alloca(sizeof(uint16_t) * max_children);
 
         // We are copying the AABBs, because we need one for the inserted item.
-        BVHABB_CLASS* temp_bounds =
-            (BVHABB_CLASS*)alloca(sizeof(BVHABB_CLASS) * max_children);
+        BVHAABB_CLASS* temp_bounds =
+            (BVHAABB_CLASS*)alloca(sizeof(BVHAABB_CLASS) * max_children);
 
         int num_a = max_children;
         int num_b = 0;
@@ -2606,7 +2615,7 @@ public:
             int which = group_a[n];
 
             if (which != wildcard) {
-                const BVHABB_CLASS& source_item_aabb =
+                const BVHAABB_CLASS& source_item_aabb =
                     orig_leaf.get_aabb(which);
                 uint32_t source_item_ref_id = orig_leaf.get_item_ref_id(which);
                 _node_add_item(
@@ -2622,7 +2631,7 @@ public:
             int which = group_b[n];
 
             if (which != wildcard) {
-                const BVHABB_CLASS& source_item_aabb =
+                const BVHAABB_CLASS& source_item_aabb =
                     orig_leaf.get_aabb(which);
                 uint32_t source_item_ref_id = orig_leaf.get_item_ref_id(which);
                 _node_add_item(
