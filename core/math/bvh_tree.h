@@ -94,6 +94,108 @@ struct Handle {
     }
 };
 
+template <class T>
+struct ItemExtra {
+    uint32_t last_updated_tick;
+    uint32_t pairable;
+    uint32_t pairable_mask;
+    uint32_t pairable_type;
+
+    int32_t subindex;
+
+    // The active reference allows iterating over many frames.
+    uint32_t active_ref_id;
+
+    T* userdata;
+};
+
+template <class BoundingBox>
+struct ItemPairs {
+    struct Link {
+        void set(Handle h, void* ud) {
+            handle   = h;
+            userdata = ud;
+        }
+
+        Handle handle;
+        void* userdata;
+    };
+
+    void clear() {
+        num_pairs = 0;
+        extended_pairs.reset();
+        expanded_aabb = BoundingBox();
+    }
+
+    BoundingBox expanded_aabb;
+
+    // TODO: Could use Vector size.
+    int32_t num_pairs;
+    LocalVector<Link> extended_pairs;
+
+    void add_pair_to(Handle h, void* p_userdata) {
+        Link temp;
+        temp.set(h, p_userdata);
+
+        extended_pairs.push_back(temp);
+        num_pairs++;
+    }
+
+    uint32_t find_pair_to(Handle h) const {
+        for (int n = 0; n < num_pairs; n++) {
+            if (extended_pairs[n].handle == h) {
+                return n;
+            }
+        }
+        return -1;
+    }
+
+    bool contains_pair_to(Handle h) const {
+        return find_pair_to(h) != INVALID;
+    }
+
+    // Return success
+    void* remove_pair_to(Handle h) {
+        void* userdata = nullptr;
+
+        for (int n = 0; n < num_pairs; n++) {
+            if (extended_pairs[n].handle == h) {
+                userdata = extended_pairs[n].userdata;
+                extended_pairs.remove_unordered(n);
+                num_pairs--;
+                break;
+            }
+        }
+
+        return userdata;
+    }
+
+    // Experiment: Scale the pairing expansion by the number of pairs.
+    // When the number of pairs is high, the density is high and a lower
+    // collision margin is better.
+    // When there are few local pairs, a larger margin is more optimal.
+    real_t scale_expansion_margin(real_t p_margin) const {
+        real_t x = real_t(num_pairs) * (1.0 / 9.0);
+        x        = MIN(x, 1.0);
+        x        = 1.0 - x;
+        return p_margin * x;
+    }
+};
+
+struct ItemRef {
+    uint32_t tnode_id;
+    uint32_t item_id;
+
+    bool is_active() const {
+        return tnode_id != INACTIVE;
+    }
+
+    void set_inactive() {
+        tnode_id = INACTIVE;
+        item_id  = INACTIVE;
+    }
+};
+
 // Helper class to make iterative versions of recursive functions.
 template <class T>
 class IterativeInfo {
@@ -144,6 +246,128 @@ public:
     }
 };
 
+template <int MAX_ITEMS, class BoundingBox, class Point>
+struct TLeaf {
+    uint16_t num_items;
+
+private:
+    uint16_t dirty;
+    // separate data orientated lists for faster SIMD traversal
+    uint32_t item_ref_ids[MAX_ITEMS];
+    BVHAABB_CLASS aabbs[MAX_ITEMS];
+
+public:
+    BVHAABB_CLASS& get_aabb(uint32_t p_id) {
+        return aabbs[p_id];
+    }
+
+    const BVHAABB_CLASS& get_aabb(uint32_t p_id) const {
+        return aabbs[p_id];
+    }
+
+    uint32_t& get_item_ref_id(uint32_t p_id) {
+        return item_ref_ids[p_id];
+    }
+
+    const uint32_t& get_item_ref_id(uint32_t p_id) const {
+        return item_ref_ids[p_id];
+    }
+
+    bool is_dirty() const {
+        return dirty;
+    }
+
+    void set_dirty(bool p) {
+        dirty = p;
+    }
+
+    void clear() {
+        num_items = 0;
+        set_dirty(true);
+    }
+
+    bool is_full() const {
+        return num_items >= MAX_ITEMS;
+    }
+
+    void remove_item_unordered(uint32_t p_id) {
+        BVH_ASSERT(p_id < num_items);
+        num_items--;
+        aabbs[p_id]        = aabbs[num_items];
+        item_ref_ids[p_id] = item_ref_ids[num_items];
+    }
+
+    uint32_t request_item() {
+        CRASH_COND_MSG(num_items >= MAX_ITEMS, "BVH leaf is full");
+        uint32_t id = num_items;
+        num_items++;
+        return id;
+    }
+};
+
+template <int MAX_CHILDREN, class BoundingBox, class Point>
+struct TNode {
+    BVHAABB_CLASS aabb;
+
+    // Either number of children is positive or leaf id if negative.
+    // Leaf id = 0 is disallowed.
+    union {
+        int32_t num_children;
+        int32_t neg_leaf_id;
+    };
+
+    // Set to -1 if there is no parent.
+    uint32_t parent_id;
+    uint16_t children[MAX_CHILDREN];
+
+    // Height in the tree, where leaves are 0, and all above are +1.
+    int32_t height;
+
+    bool is_leaf() const {
+        return num_children < 0;
+    }
+
+    void set_leaf_id(int id) {
+        neg_leaf_id = -id;
+    }
+
+    int get_leaf_id() const {
+        return -neg_leaf_id;
+    }
+
+    void clear() {
+        num_children = 0;
+        parent_id    = INVALID;
+        // Set to -1 for testing.
+        height       = 0;
+
+        // For safety, set to improbable value.
+        aabb.set_to_max_opposite_extents();
+    }
+
+    bool is_full_of_children() const {
+        return num_children >= MAX_CHILDREN;
+    }
+
+    void remove_child_internal(uint32_t child_num) {
+        children[child_num] = children[num_children - 1];
+        num_children--;
+    }
+
+    int find_child(uint32_t p_child_node_id) {
+        BVH_ASSERT(!is_leaf());
+
+        for (int n = 0; n < num_children; n++) {
+            if (children[n] == p_child_node_id) {
+                return n;
+            }
+        }
+
+        // Not found.
+        return -1;
+    }
+};
+
 // BVH Tree is an implementation of a dynamic BVH with templated leaf size.
 // This differs from most dynamic BVH in that it can handle more than 1 object
 // in leaf nodes. This can make it far more efficient in certain circumstances.
@@ -159,236 +383,13 @@ template <
     class Point       = Vector3>
 class Tree {
 public:
-    // TODO: Check if this should be attached to another node structure.
-    struct ItemPairs {
-        struct Link {
-            void set(Handle h, void* ud) {
-                handle   = h;
-                userdata = ud;
-            }
-
-            Handle handle;
-            void* userdata;
-        };
-
-        void clear() {
-            num_pairs = 0;
-            extended_pairs.reset();
-            expanded_aabb = BoundingBox();
-        }
-
-        BoundingBox expanded_aabb;
-
-        // TODO: Could use Vector size.
-        int32_t num_pairs;
-        LocalVector<Link> extended_pairs;
-
-        void add_pair_to(Handle h, void* p_userdata) {
-            Link temp;
-            temp.set(h, p_userdata);
-
-            extended_pairs.push_back(temp);
-            num_pairs++;
-        }
-
-        uint32_t find_pair_to(Handle h) const {
-            for (int n = 0; n < num_pairs; n++) {
-                if (extended_pairs[n].handle == h) {
-                    return n;
-                }
-            }
-            return -1;
-        }
-
-        bool contains_pair_to(Handle h) const {
-            return find_pair_to(h) != INVALID;
-        }
-
-        // Return success
-        void* remove_pair_to(Handle h) {
-            void* userdata = nullptr;
-
-            for (int n = 0; n < num_pairs; n++) {
-                if (extended_pairs[n].handle == h) {
-                    userdata = extended_pairs[n].userdata;
-                    extended_pairs.remove_unordered(n);
-                    num_pairs--;
-                    break;
-                }
-            }
-
-            return userdata;
-        }
-
-        // Experiment: Scale the pairing expansion by the number of pairs.
-        // When the number of pairs is high, the density is high and a lower
-        // collision margin is better.
-        // When there are few local pairs, a larger margin is more optimal.
-        real_t scale_expansion_margin(real_t p_margin) const {
-            real_t x = real_t(num_pairs) * (1.0 / 9.0);
-            x        = MIN(x, 1.0);
-            x        = 1.0 - x;
-            return p_margin * x;
-        }
-    };
-
-public:
-    struct ItemRef {
-        uint32_t tnode_id;
-        uint32_t item_id;
-
-        bool is_active() const {
-            return tnode_id != INACTIVE;
-        }
-
-        void set_inactive() {
-            tnode_id = INACTIVE;
-            item_id  = INACTIVE;
-        }
-    };
-
-    // Extra info is less used. So, for better caching, it is kept separate.
-    struct ItemExtra {
-        uint32_t last_updated_tick;
-        uint32_t pairable;
-        uint32_t pairable_mask;
-        uint32_t pairable_type;
-
-        int32_t subindex;
-
-        // The active reference allows iterating over many frames.
-        uint32_t active_ref_id;
-
-        T* userdata;
-    };
-
-    struct TLeaf {
-        uint16_t num_items;
-
-    private:
-        uint16_t dirty;
-        // separate data orientated lists for faster SIMD traversal
-        uint32_t item_ref_ids[MAX_ITEMS];
-        BVHAABB_CLASS aabbs[MAX_ITEMS];
-
-    public:
-        BVHAABB_CLASS& get_aabb(uint32_t p_id) {
-            return aabbs[p_id];
-        }
-
-        const BVHAABB_CLASS& get_aabb(uint32_t p_id) const {
-            return aabbs[p_id];
-        }
-
-        uint32_t& get_item_ref_id(uint32_t p_id) {
-            return item_ref_ids[p_id];
-        }
-
-        const uint32_t& get_item_ref_id(uint32_t p_id) const {
-            return item_ref_ids[p_id];
-        }
-
-        bool is_dirty() const {
-            return dirty;
-        }
-
-        void set_dirty(bool p) {
-            dirty = p;
-        }
-
-        void clear() {
-            num_items = 0;
-            set_dirty(true);
-        }
-
-        bool is_full() const {
-            return num_items >= MAX_ITEMS;
-        }
-
-        void remove_item_unordered(uint32_t p_id) {
-            BVH_ASSERT(p_id < num_items);
-            num_items--;
-            aabbs[p_id]        = aabbs[num_items];
-            item_ref_ids[p_id] = item_ref_ids[num_items];
-        }
-
-        uint32_t request_item() {
-            CRASH_COND_MSG(num_items >= MAX_ITEMS, "BVH leaf is full");
-            uint32_t id = num_items;
-            num_items++;
-            return id;
-        }
-    };
-
-    struct TNode {
-        BVHAABB_CLASS aabb;
-
-        // Either number of children is positive or leaf id if negative.
-        // Leaf id = 0 is disallowed.
-        union {
-            int32_t num_children;
-            int32_t neg_leaf_id;
-        };
-
-        // Set to -1 if there is no parent.
-        uint32_t parent_id;
-        uint16_t children[MAX_CHILDREN];
-
-        // Height in the tree, where leaves are 0, and all above are +1.
-        int32_t height;
-
-        bool is_leaf() const {
-            return num_children < 0;
-        }
-
-        void set_leaf_id(int id) {
-            neg_leaf_id = -id;
-        }
-
-        int get_leaf_id() const {
-            return -neg_leaf_id;
-        }
-
-        void clear() {
-            num_children = 0;
-            parent_id    = INVALID;
-            // Set to -1 for testing.
-            height       = 0;
-
-            // For safety, set to improbable value.
-            aabb.set_to_max_opposite_extents();
-        }
-
-        bool is_full_of_children() const {
-            return num_children >= MAX_CHILDREN;
-        }
-
-        void remove_child_internal(uint32_t child_num) {
-            children[child_num] = children[num_children - 1];
-            num_children--;
-        }
-
-        int find_child(uint32_t p_child_node_id) {
-            BVH_ASSERT(!is_leaf());
-
-            for (int n = 0; n < num_children; n++) {
-                if (children[n] == p_child_node_id) {
-                    return n;
-                }
-            }
-
-            // Not found.
-            return -1;
-        }
-    };
-
     // Instead of using a linked list, we use item references for quick lookups.
     PooledList<ItemRef, true> _refs;
-    PooledList<ItemExtra, true> _extra;
-    PooledList<ItemPairs> _pairs;
+    PooledList<ItemExtra<T>, true> _extra;
+    PooledList<ItemPairs<BoundingBox>> _pairs;
 
-    PooledList<TNode, true> _nodes;
-    PooledList<TLeaf, true> _leaves;
+    PooledList<TNode<MAX_CHILDREN, BoundingBox, Point>, true> _nodes;
+    PooledList<TLeaf<MAX_ITEMS, BoundingBox, Point>, true> _leaves;
 
     // We can maintain an un-ordered list of which references are active.
     // Enables a slow incremental optimize of the tree over each frame.
@@ -460,7 +461,7 @@ private:
     const bool use_pairs;
 
     bool node_add_child(uint32_t p_node_id, uint32_t p_child_node_id) {
-        TNode& tnode = _nodes[p_node_id];
+        TNode<MAX_CHILDREN, BoundingBox, Point>& tnode = _nodes[p_node_id];
         if (tnode.is_full_of_children()) {
             return false;
         }
@@ -469,7 +470,8 @@ private:
         tnode.num_children                 += 1;
 
         // Back link from the child to the parent.
-        TNode& tnode_child    = _nodes[p_child_node_id];
+        TNode<MAX_CHILDREN, BoundingBox, Point>& tnode_child =
+            _nodes[p_child_node_id];
         tnode_child.parent_id = p_node_id;
 
         return true;
@@ -480,14 +482,15 @@ private:
         uint32_t p_old_child_id,
         uint32_t p_new_child_id
     ) {
-        TNode& parent = _nodes[p_parent_id];
+        TNode<MAX_CHILDREN, BoundingBox, Point>& parent = _nodes[p_parent_id];
         BVH_ASSERT(!parent.is_leaf());
 
         int child_num = parent.find_child(p_old_child_id);
         BVH_ASSERT(child_num != INVALID);
         parent.children[child_num] = p_new_child_id;
 
-        TNode& new_child    = _nodes[p_new_child_id];
+        TNode<MAX_CHILDREN, BoundingBox, Point>& new_child =
+            _nodes[p_new_child_id];
         new_child.parent_id = p_parent_id;
     }
 
@@ -497,7 +500,7 @@ private:
         uint32_t p_tree_id,
         bool p_prevent_sibling = false
     ) {
-        TNode& parent = _nodes[p_parent_id];
+        TNode<MAX_CHILDREN, BoundingBox, Point>& parent = _nodes[p_parent_id];
         BVH_ASSERT(!parent.is_leaf());
 
         int child_num = parent.find_child(p_child_id);
@@ -550,7 +553,7 @@ private:
     // A node can either be a node, or a node AND a leaf combo.
     // Both must be deleted to prevent a leak.
     void node_free_node_and_leaf(uint32_t p_node_id) {
-        TNode& node = _nodes[p_node_id];
+        TNode<MAX_CHILDREN, BoundingBox, Point>& node = _nodes[p_node_id];
         if (node.is_leaf()) {
             int leaf_id = node.get_leaf_id();
             _leaves.free(leaf_id);
@@ -560,8 +563,8 @@ private:
     }
 
     void change_root_node(uint32_t p_new_root_id, uint32_t p_tree_id) {
-        _root_node_id[p_tree_id] = p_new_root_id;
-        TNode& root              = _nodes[p_new_root_id];
+        _root_node_id[p_tree_id]                      = p_new_root_id;
+        TNode<MAX_CHILDREN, BoundingBox, Point>& root = _nodes[p_new_root_id];
 
         // A root node has no parent.
         root.parent_id = INVALID;
@@ -569,13 +572,14 @@ private:
 
     void node_make_leaf(uint32_t p_node_id) {
         uint32_t child_leaf_id;
-        TLeaf* child_leaf = _leaves.request(child_leaf_id);
+        TLeaf<MAX_ITEMS, BoundingBox, Point>* child_leaf =
+            _leaves.request(child_leaf_id);
         child_leaf->clear();
 
         BVH_ASSERT(child_leaf_id != 0);
 
-        TNode& node      = _nodes[p_node_id];
-        node.neg_leaf_id = -(int)child_leaf_id;
+        TNode<MAX_CHILDREN, BoundingBox, Point>& node = _nodes[p_node_id];
+        node.neg_leaf_id                              = -(int)child_leaf_id;
     }
 
     void node_remove_item(
@@ -591,10 +595,10 @@ private:
             return;
         }
 
-        TNode& tnode = _nodes[owner_node_id];
+        TNode<MAX_CHILDREN, BoundingBox, Point>& tnode = _nodes[owner_node_id];
         CRASH_COND(!tnode.is_leaf());
 
-        TLeaf& leaf = _node_get_leaf(tnode);
+        TLeaf<MAX_ITEMS, BoundingBox, Point>& leaf = _node_get_leaf(tnode);
 
         // If the AABB is not determining the corner size, don't refit,
         // because merging AABBs takes a lot of time.
@@ -663,9 +667,9 @@ private:
         ItemRef& ref = _refs[p_ref_id];
         ref.tnode_id = p_node_id;
 
-        TNode& node = _nodes[p_node_id];
+        TNode<MAX_CHILDREN, BoundingBox, Point>& node = _nodes[p_node_id];
         BVH_ASSERT(node.is_leaf());
-        TLeaf& leaf = _node_get_leaf(node);
+        TLeaf<MAX_ITEMS, BoundingBox, Point>& leaf = _node_get_leaf(node);
 
         // We only need to refit if the added item is changing the node's AABB.
         bool needs_refit = true;
@@ -701,7 +705,8 @@ private:
         const BVHAABB_CLASS& p_aabb
     ) {
         uint32_t child_node_id;
-        TNode* child_node = _nodes.request(child_node_id);
+        TNode<MAX_CHILDREN, BoundingBox, Point>* child_node =
+            _nodes.request(child_node_id);
         child_node->clear();
 
         // TODO: Check if necessary.
@@ -750,8 +755,8 @@ private:
         for (int n = 0; n < num_hits; n++) {
             uint32_t ref_id = _cull_hits[n];
 
-            const ItemExtra& ex   = _extra[ref_id];
-            p.result_array[out_n] = ex.userdata;
+            const ItemExtra<T>& ex = _extra[ref_id];
+            p.result_array[out_n]  = ex.userdata;
 
             if (p.subindex_array) {
                 p.subindex_array[out_n] = ex.subindex;
@@ -876,7 +881,7 @@ public:
         // It would be more efficient to do before plane checks,
         // but done here to ease gettting started.
         if (use_pairs) {
-            const ItemExtra& ex = _extra[p_ref_id];
+            const ItemExtra<T>& ex = _extra[p_ref_id];
 
             if (!_cull_pairing_mask_test_hit(
                     p.mask,
@@ -911,7 +916,8 @@ public:
 
         // Loop while there are still more nodes on the stack.
         while (ii.pop(csp)) {
-            TNode& tnode = _nodes[csp.node_id];
+            TNode<MAX_CHILDREN, BoundingBox, Point>& tnode =
+                _nodes[csp.node_id];
 
             if (tnode.is_leaf()) {
                 // Lazy check for hits full condition.
@@ -919,7 +925,8 @@ public:
                     return false;
                 }
 
-                TLeaf& leaf = _node_get_leaf(tnode);
+                TLeaf<MAX_ITEMS, BoundingBox, Point>& leaf =
+                    _node_get_leaf(tnode);
 
                 // Test the children individually.
                 for (int n = 0; n < leaf.num_items; n++) {
@@ -971,7 +978,8 @@ public:
 
         // Loop while there are still more nodes on the stack.
         while (ii.pop(cpp)) {
-            TNode& tnode = _nodes[cpp.node_id];
+            TNode<MAX_CHILDREN, BoundingBox, Point>& tnode =
+                _nodes[cpp.node_id];
             // Check for hit.
             if (!tnode.aabb.intersects_point(r_params.point)) {
                 continue;
@@ -983,7 +991,8 @@ public:
                     return false;
                 }
 
-                TLeaf& leaf = _node_get_leaf(tnode);
+                TLeaf<MAX_ITEMS, BoundingBox, Point>& leaf =
+                    _node_get_leaf(tnode);
 
                 // Test the children individually.
                 for (int n = 0; n < leaf.num_items; n++) {
@@ -1035,7 +1044,8 @@ public:
 
         // Loop while there are still more nodes on the stack.
         while (ii.pop(cap)) {
-            TNode& tnode = _nodes[cap.node_id];
+            TNode<MAX_CHILDREN, BoundingBox, Point>& tnode =
+                _nodes[cap.node_id];
 
             if (tnode.is_leaf()) {
                 // Lazy check for hits full condition.
@@ -1043,7 +1053,8 @@ public:
                     return false;
                 }
 
-                TLeaf& leaf = _node_get_leaf(tnode);
+                TLeaf<MAX_ITEMS, BoundingBox, Point>& leaf =
+                    _node_get_leaf(tnode);
 
                 // If fully within, we add all items that pass mask checks.
                 if (cap.fully_within) {
@@ -1137,7 +1148,8 @@ public:
 
         // Loop while there are still more nodes on the stack.
         while (ii.pop(ccp)) {
-            const TNode& tnode = _nodes[ccp.node_id];
+            const TNode<MAX_CHILDREN, BoundingBox, Point>& tnode =
+                _nodes[ccp.node_id];
 
             if (!ccp.fully_within) {
                 IntersectResult result =
@@ -1161,7 +1173,8 @@ public:
                     return false;
                 }
 
-                const TLeaf& leaf = _node_get_leaf(tnode);
+                const TLeaf<MAX_ITEMS, BoundingBox, Point>& leaf =
+                    _node_get_leaf(tnode);
 
                 // If fully within, add all items taking masks into account.
                 if (ccp.fully_within) {
@@ -1295,7 +1308,8 @@ public:
 
     void _debug_recursive_print_tree_node(uint32_t p_node_id, int depth = 0)
         const {
-        const TNode& tnode = _nodes[p_node_id];
+        const TNode<MAX_CHILDREN, BoundingBox, Point>& tnode =
+            _nodes[p_node_id];
 
         String sz = "";
         for (int n = 0; n < depth; n++) {
@@ -1304,9 +1318,10 @@ public:
         sz += itos(p_node_id);
 
         if (tnode.is_leaf()) {
-            sz                += " L";
-            sz                += itos(tnode.height) + " ";
-            const TLeaf& leaf  = _node_get_leaf(tnode);
+            sz += " L";
+            sz += itos(tnode.height) + " ";
+            const TLeaf<MAX_ITEMS, BoundingBox, Point>& leaf =
+                _node_get_leaf(tnode);
 
             sz += "[";
             for (int n = 0; n < leaf.num_items; n++) {
@@ -1345,7 +1360,7 @@ public:
     }
 
     void _integrity_check_up(uint32_t p_node_id) {
-        TNode& node = _nodes[p_node_id];
+        TNode<MAX_CHILDREN, BoundingBox, Point>& node = _nodes[p_node_id];
 
         BVHAABB_CLASS bvh_aabb = node.aabb;
         node_update_aabb(node);
@@ -1357,7 +1372,7 @@ public:
     }
 
     void _integrity_check_down(uint32_t p_node_id) {
-        const TNode& node = _nodes[p_node_id];
+        const TNode<MAX_CHILDREN, BoundingBox, Point>& node = _nodes[p_node_id];
 
         if (node.is_leaf()) {
             _integrity_check_up(p_node_id);
@@ -1368,7 +1383,8 @@ public:
                 uint32_t child_id = node.children[n];
 
                 // Check that the children's parent pointers are correct.
-                TNode& child = _nodes[child_id];
+                TNode<MAX_CHILDREN, BoundingBox, Point>& child =
+                    _nodes[child_id];
                 CRASH_COND(child.parent_id != p_node_id);
 
                 _integrity_check_down(child_id);
@@ -1446,7 +1462,7 @@ public:
         // Uncomment to bypass balance.
         // return iA;
 
-        TNode* A = &_nodes[iA];
+        TNode<MAX_CHILDREN, BoundingBox, Point>* A = &_nodes[iA];
 
         if (A->is_leaf() || A->height == 1) {
             return iA;
@@ -1460,19 +1476,19 @@ public:
          */
 
         CRASH_COND(A->num_children != 2);
-        int32_t iB = A->children[0];
-        int32_t iC = A->children[1];
-        TNode* B   = &_nodes[iB];
-        TNode* C   = &_nodes[iC];
+        int32_t iB                                 = A->children[0];
+        int32_t iC                                 = A->children[1];
+        TNode<MAX_CHILDREN, BoundingBox, Point>* B = &_nodes[iB];
+        TNode<MAX_CHILDREN, BoundingBox, Point>* C = &_nodes[iC];
 
         int32_t balance = C->height - B->height;
 
         // If C is higher, promote C.
         if (balance > 1) {
-            int32_t iF = C->children[0];
-            int32_t iG = C->children[1];
-            TNode* F   = &_nodes[iF];
-            TNode* G   = &_nodes[iG];
+            int32_t iF                                 = C->children[0];
+            int32_t iG                                 = C->children[1];
+            TNode<MAX_CHILDREN, BoundingBox, Point>* F = &_nodes[iF];
+            TNode<MAX_CHILDREN, BoundingBox, Point>* G = &_nodes[iG];
 
             // Grandparent point to C.
             if (A->parent_id != INVALID) {
@@ -1520,10 +1536,10 @@ public:
 
         // If B is higher, promote B.
         else if (balance < -1) {
-            int32_t iD = B->children[0];
-            int32_t iE = B->children[1];
-            TNode* D   = &_nodes[iD];
-            TNode* E   = &_nodes[iE];
+            int32_t iD                                 = B->children[0];
+            int32_t iE                                 = B->children[1];
+            TNode<MAX_CHILDREN, BoundingBox, Point>* D = &_nodes[iD];
+            TNode<MAX_CHILDREN, BoundingBox, Point>* E = &_nodes[iE];
 
             // Grandparent point to B.
             if (A->parent_id != INVALID) {
@@ -1580,7 +1596,7 @@ public:
     ) {
         while (true) {
             BVH_ASSERT(p_node_id != INVALID);
-            TNode& tnode = _nodes[p_node_id];
+            TNode<MAX_CHILDREN, BoundingBox, Point>& tnode = _nodes[p_node_id];
 
             if (tnode.is_leaf()) {
                 // If a leaf, and not full, use it.
@@ -1602,8 +1618,10 @@ public:
                 p_node_id = tnode.children[0];
             } else {
                 BVH_ASSERT(tnode.num_children == 2);
-                TNode& childA = _nodes[tnode.children[0]];
-                TNode& childB = _nodes[tnode.children[1]];
+                TNode<MAX_CHILDREN, BoundingBox, Point>& childA =
+                    _nodes[tnode.children[0]];
+                TNode<MAX_CHILDREN, BoundingBox, Point>& childB =
+                    _nodes[tnode.children[1]];
                 int which =
                     p_aabb.select_by_proximity(childA.aabb, childB.aabb);
 
@@ -1637,30 +1655,38 @@ private:
         // If there is no root node, create one.
         if (_root_node_id[p_tree] == INVALID) {
             uint32_t root_node_id;
-            TNode* node = _nodes.request(root_node_id);
+            TNode<MAX_CHILDREN, BoundingBox, Point>* node =
+                _nodes.request(root_node_id);
             node->clear();
             _root_node_id[p_tree] = root_node_id;
 
             // Make the root node a leaf.
             uint32_t leaf_id;
-            TLeaf* leaf = _leaves.request(leaf_id);
+            TLeaf<MAX_ITEMS, BoundingBox, Point>* leaf =
+                _leaves.request(leaf_id);
             leaf->clear();
             node->neg_leaf_id = -(int)leaf_id;
         }
     }
 
-    bool node_is_leaf_full(TNode& tnode) const {
-        const TLeaf& leaf = _node_get_leaf(tnode);
+    bool node_is_leaf_full(TNode<MAX_CHILDREN, BoundingBox, Point>& tnode
+    ) const {
+        const TLeaf<MAX_ITEMS, BoundingBox, Point>& leaf =
+            _node_get_leaf(tnode);
         return leaf.is_full();
     }
 
 public:
-    TLeaf& _node_get_leaf(TNode& tnode) {
+    TLeaf<MAX_ITEMS, BoundingBox, Point>& _node_get_leaf(
+        TNode<MAX_CHILDREN, BoundingBox, Point>& tnode
+    ) {
         BVH_ASSERT(tnode.is_leaf());
         return _leaves[tnode.get_leaf_id()];
     }
 
-    const TLeaf& _node_get_leaf(const TNode& tnode) const {
+    const TLeaf<MAX_ITEMS, BoundingBox, Point>& _node_get_leaf(
+        const TNode<MAX_CHILDREN, BoundingBox, Point>& tnode
+    ) const {
         BVH_ASSERT(tnode.is_leaf());
         return _leaves[tnode.get_leaf_id()];
     }
@@ -1703,13 +1729,13 @@ public:
 
         // The extra data should be a parallel list to the references.
         uint32_t extra_id;
-        ItemExtra* extra = _extra.request(extra_id);
+        ItemExtra<T>* extra = _extra.request(extra_id);
         BVH_ASSERT(extra_id == ref_id);
 
         // Pairs info.
         if (use_pairs) {
             uint32_t pairs_id;
-            ItemPairs* pairs = _pairs.request(pairs_id);
+            ItemPairs<BoundingBox>* pairs = _pairs.request(pairs_id);
             pairs->clear();
             BVH_ASSERT(pairs_id == ref_id);
         }
@@ -1753,7 +1779,8 @@ public:
 
             if (refit) {
                 // Only need to refit from the parent.
-                const TNode& add_node = _nodes[ref->tnode_id];
+                const TNode<MAX_CHILDREN, BoundingBox, Point>& add_node =
+                    _nodes[ref->tnode_id];
                 if (add_node.parent_id != INVALID) {
                     refit_upward_and_balance(add_node.parent_id, tree_id);
                 }
@@ -1819,14 +1846,14 @@ public:
 #endif
 
         BVH_ASSERT(ref.tnode_id != INVALID);
-        TNode& tnode = _nodes[ref.tnode_id];
+        TNode<MAX_CHILDREN, BoundingBox, Point>& tnode = _nodes[ref.tnode_id];
 
         // Does it fit within the current leaf AABB?
         if (tnode.aabb.is_other_within(bvh_aabb)) {
             // It has not moved enough to require a refit: Do nothing.
             // However, we update the exact AABB in the leaf, as this will be
             // needed for accurate collision detection.
-            TLeaf& leaf = _node_get_leaf(tnode);
+            TLeaf<MAX_ITEMS, BoundingBox, Point>& leaf = _node_get_leaf(tnode);
 
             BVHAABB_CLASS& leaf_bvh_aabb = leaf.get_aabb(ref.item_id);
 
@@ -1881,7 +1908,8 @@ public:
 
         // Only need to refit from the parent.
         if (needs_refit) {
-            const TNode& add_node = _nodes[ref.tnode_id];
+            const TNode<MAX_CHILDREN, BoundingBox, Point>& add_node =
+                _nodes[ref.tnode_id];
             if (add_node.parent_id != INVALID) {
                 // TODO: We don't need to rebalance all the time.
                 refit_upward(add_node.parent_id);
@@ -1977,8 +2005,8 @@ public:
 
     // During collision testing, we set the from item's mask and pairable.
     void item_fill_cullparams(Handle p_handle, CullParams& r_params) const {
-        uint32_t ref_id        = p_handle.id();
-        const ItemExtra& extra = _extra[ref_id];
+        uint32_t ref_id           = p_handle.id();
+        const ItemExtra<T>& extra = _extra[ref_id];
 
         // Only test from pairable items.
         r_params.test_pairable_only = extra.pairable == 0;
@@ -1989,8 +2017,8 @@ public:
     }
 
     bool item_is_pairable(const Handle& p_handle) {
-        uint32_t ref_id        = p_handle.id();
-        const ItemExtra& extra = _extra[ref_id];
+        uint32_t ref_id           = p_handle.id();
+        const ItemExtra<T>& extra = _extra[ref_id];
         return extra.pairable != 0;
     }
 
@@ -1998,8 +2026,8 @@ public:
         uint32_t ref_id    = p_handle.id();
         const ItemRef& ref = _refs[ref_id];
 
-        TNode& tnode = _nodes[ref.tnode_id];
-        TLeaf& leaf  = _node_get_leaf(tnode);
+        TNode<MAX_CHILDREN, BoundingBox, Point>& tnode = _nodes[ref.tnode_id];
+        TLeaf<MAX_ITEMS, BoundingBox, Point>& leaf     = _node_get_leaf(tnode);
 
         r_bvh_aabb = leaf.get_aabb(ref.item_id);
     }
@@ -2012,8 +2040,8 @@ public:
     ) {
         uint32_t ref_id = p_handle.id();
 
-        ItemExtra& ex = _extra[ref_id];
-        ItemRef& ref  = _refs[ref_id];
+        ItemExtra<T>& ex = _extra[ref_id];
+        ItemRef& ref     = _refs[ref_id];
 
         bool active           = ref.is_active();
         bool pairable_changed = (ex.pairable != 0) != p_pairable;
@@ -2026,8 +2054,9 @@ public:
 
         if (active && pairable_changed) {
             // Record AABB
-            TNode& tnode           = _nodes[ref.tnode_id];
-            TLeaf& leaf            = _node_get_leaf(tnode);
+            TNode<MAX_CHILDREN, BoundingBox, Point>& tnode =
+                _nodes[ref.tnode_id];
+            TLeaf<MAX_ITEMS, BoundingBox, Point>& leaf = _node_get_leaf(tnode);
             BVHAABB_CLASS bvh_aabb = leaf.get_aabb(ref.item_id);
 
             // Make sure the current tree is correct prior to changing.
@@ -2051,7 +2080,8 @@ public:
 
             // Only need to refit from the parent.
             if (needs_refit) {
-                const TNode& add_node = _nodes[ref.tnode_id];
+                const TNode<MAX_CHILDREN, BoundingBox, Point>& add_node =
+                    _nodes[ref.tnode_id];
                 if (add_node.parent_id != INVALID) {
                     refit_upward_and_balance(add_node.parent_id, tree_id);
                 }
@@ -2180,8 +2210,8 @@ public:
     }
 
     void _debug_node_verify_bound(uint32_t p_node_id) {
-        TNode& node                   = _nodes[p_node_id];
-        BVHAABB_CLASS bvh_aabb_before = node.aabb;
+        TNode<MAX_CHILDREN, BoundingBox, Point>& node = _nodes[p_node_id];
+        BVHAABB_CLASS bvh_aabb_before                 = node.aabb;
 
         node_update_aabb(node);
 
@@ -2189,7 +2219,7 @@ public:
         CRASH_COND(bvh_aabb_before != bvh_aabb_after);
     }
 
-    void node_update_aabb(TNode& tnode) {
+    void node_update_aabb(TNode<MAX_CHILDREN, BoundingBox, Point>& tnode) {
         tnode.aabb.set_to_max_opposite_extents();
         tnode.height = 0;
 
@@ -2198,7 +2228,8 @@ public:
                 uint32_t child_node_id = tnode.children[n];
 
                 // Merge with child AABB.
-                const TNode& tchild = _nodes[child_node_id];
+                const TNode<MAX_CHILDREN, BoundingBox, Point>& tchild =
+                    _nodes[child_node_id];
                 tnode.aabb.merge(tchild.aabb);
 
                 // Do heights at the same time.
@@ -2213,11 +2244,15 @@ public:
 #ifdef BVH_CHECKS
             if (!tnode.num_children) {
                 // An empty AABB will break the parent AABBs.
-                WARN_PRINT("Tree::TNode no children, AABB is undefined");
+                WARN_PRINT(
+                    "Tree::TNode<MAX_CHILDREN, BoundingBox, Point> no "
+                    "children, AABB is undefined"
+                );
             }
 #endif
         } else {
-            const TLeaf& leaf = _node_get_leaf(tnode);
+            const TLeaf<MAX_ITEMS, BoundingBox, Point>& leaf =
+                _node_get_leaf(tnode);
 
             for (int n = 0; n < leaf.num_items; n++) {
                 tnode.aabb.merge(leaf.get_aabb(n));
@@ -2228,7 +2263,10 @@ public:
 #ifdef BVH_CHECKS
             if (!leaf.num_items) {
                 // An empty AABB will break the parent AABBs.
-                WARN_PRINT("Tree::TLeaf no items, AABB is undefined");
+                WARN_PRINT(
+                    "Tree::TLeaf<MAX_ITEMS, BoundingBox, Point> no items, AABB "
+                    "is undefined"
+                );
             }
 #endif
         }
@@ -2240,7 +2278,7 @@ public:
 
     void refit_upward(uint32_t p_node_id) {
         while (p_node_id != INVALID) {
-            TNode& tnode = _nodes[p_node_id];
+            TNode<MAX_CHILDREN, BoundingBox, Point>& tnode = _nodes[p_node_id];
             node_update_aabb(tnode);
             p_node_id = tnode.parent_id;
         }
@@ -2255,7 +2293,7 @@ public:
                 VERBOSE_PRINT("REBALANCED!");
             }
 
-            TNode& tnode = _nodes[p_node_id];
+            TNode<MAX_CHILDREN, BoundingBox, Point>& tnode = _nodes[p_node_id];
 
             // Update overall AABB from the children.
             node_update_aabb(tnode);
@@ -2265,7 +2303,7 @@ public:
     }
 
     void refit_downward(uint32_t p_node_id) {
-        TNode& tnode = _nodes[p_node_id];
+        TNode<MAX_CHILDREN, BoundingBox, Point>& tnode = _nodes[p_node_id];
 
         // Do children first.
         if (!tnode.is_leaf()) {
@@ -2296,7 +2334,7 @@ public:
 
         // Loop while there are still more nodes on the stack.
         while (ii.pop(rp)) {
-            TNode& tnode = _nodes[rp.node_id];
+            TNode<MAX_CHILDREN, BoundingBox, Point>& tnode = _nodes[rp.node_id];
 
             // Do children first.
             if (!tnode.is_leaf()) {
@@ -2309,7 +2347,8 @@ public:
                 }
             } else {
                 // Only refit upward if leaf is dirty.
-                TLeaf& leaf = _node_get_leaf(tnode);
+                TLeaf<MAX_ITEMS, BoundingBox, Point>& leaf =
+                    _node_get_leaf(tnode);
                 if (leaf.is_dirty()) {
                     leaf.set_dirty(false);
                     refit_upward(p_node_id);
@@ -2319,8 +2358,8 @@ public:
     }
 
     void _split_inform_references(uint32_t p_node_id) {
-        TNode& node = _nodes[p_node_id];
-        TLeaf& leaf = _node_get_leaf(node);
+        TNode<MAX_CHILDREN, BoundingBox, Point>& node = _nodes[p_node_id];
+        TLeaf<MAX_ITEMS, BoundingBox, Point>& leaf    = _node_get_leaf(node);
 
         for (int n = 0; n < leaf.num_items; n++) {
             uint32_t ref_id = leaf.get_item_ref_id(n);
@@ -2547,7 +2586,8 @@ public:
 
         for (int n = 0; n < MAX_CHILDREN; n++) {
             // Create node children.
-            TNode* child_node = _nodes.request(child_ids[n]);
+            TNode<MAX_CHILDREN, BoundingBox, Point>* child_node =
+                _nodes.request(child_ids[n]);
 
             child_node->clear();
 
@@ -2559,9 +2599,10 @@ public:
         }
 
         // Don't get any leaves or nodes untill after the split.
-        TNode& tnode           = _nodes[p_node_id];
-        uint32_t orig_leaf_id  = tnode.get_leaf_id();
-        const TLeaf& orig_leaf = _node_get_leaf(tnode);
+        TNode<MAX_CHILDREN, BoundingBox, Point>& tnode = _nodes[p_node_id];
+        uint32_t orig_leaf_id                          = tnode.get_leaf_id();
+        const TLeaf<MAX_ITEMS, BoundingBox, Point>& orig_leaf =
+            _node_get_leaf(tnode);
 
         // Store the final child ids.
         for (int n = 0; n < MAX_CHILDREN; n++) {
