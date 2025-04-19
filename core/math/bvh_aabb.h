@@ -7,6 +7,10 @@
 #ifndef BVH_AABB_H
 #define BVH_AABB_H
 
+#include "core/math/aabb.h"
+#include "core/math/plane.h"
+#include "core/math/vector3.h"
+
 namespace BVH {
 
 enum class IntersectResult {
