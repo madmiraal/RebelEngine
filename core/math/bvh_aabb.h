@@ -7,6 +7,8 @@
 #ifndef BVH_AABB_H
 #define BVH_AABB_H
 
+namespace BVH {
+
 // Optimized version of axis aligned bounding box.
 template <class BOUNDS = AABB, class POINT = Vector3>
 struct BVH_AABB {
@@ -267,5 +269,7 @@ struct BVH_AABB {
         return false;
     }
 };
+
+} // namespace BVH
 
 #endif // BVH_AABB_H
