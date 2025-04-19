@@ -14,6 +14,8 @@
 #define BVH_LOCKED_FUNCTION                                                    \
     BVHLockedFunction(&_mutex, BVH_THREAD_SAFE&& _thread_safe);
 
+namespace BVH {
+
 // BVH Manager provides a wrapper around BVH tree, which contains most of the
 // functionality for a dynamic BVH with templated leaf size.
 // BVH Manager also adds facilities for pairing. Pairing is a collision pairing
@@ -893,5 +895,7 @@ public:
 };
 
 #undef BVHTREE_CLASS
+
+} // namespace BVH
 
 #endif // BVH_H

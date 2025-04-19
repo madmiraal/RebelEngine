@@ -47,6 +47,8 @@
 #define VERBOSE_PRINT(a)
 #endif
 
+namespace BVH {
+
 // Really just a namespace.
 struct BVHCommon {
     // These could possibly also be the same constant,
@@ -2660,5 +2662,7 @@ public:
 };
 
 #undef VERBOSE_PRINT
+
+} // namespace BVH
 
 #endif // BVH_TREE_H
