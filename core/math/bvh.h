@@ -10,7 +10,7 @@
 #include "bvh_tree.h"
 #include "core/os/mutex.h"
 
-#define BVHTREE_CLASS Tree<T, 2, MAX_ITEMS, use_pairs, BoundingBox, Point>
+#define BVHTREE_CLASS Tree<T, 2, MAX_ITEMS, BoundingBox, Point>
 #define BVH_LOCKED_FUNCTION                                                    \
     BVHLockedFunction(&_mutex, thread_safe&& _thread_safe);
 
@@ -32,11 +32,9 @@ namespace BVH {
 
 template <
     class T,
-    bool use_pairs    = false,
     int MAX_ITEMS     = 32,
     class BoundingBox = ::AABB,
-    class Point       = Vector3,
-    bool thread_safe  = true>
+    class Point       = Vector3>
 class Manager {
 public:
     // Use uint32_t instead of Handle to maintain compatibility with octree.
@@ -881,9 +879,13 @@ private:
 
     // Toggle for turning thread safety on and off in project settings.
     bool _thread_safe;
+    const bool use_pairs;
+    const bool thread_safe;
 
 public:
-    Manager() {
+    Manager(bool use_pairs = true, bool thread_safe = true) :
+        use_pairs(use_pairs),
+        thread_safe(thread_safe) {
         // Start from 1. so items with 0 indicate never updated.
         _tick                    = 1;
         pair_callback            = nullptr;
