@@ -20,7 +20,7 @@ enum class IntersectResult {
 };
 
 // Optimized version of axis aligned bounding box.
-template <class BOUNDS = ::AABB, class POINT = Vector3>
+template <typename BoundingBox = ::AABB, typename Point = Vector3>
 struct AABB {
     struct ConvexHull {
         const Plane* planes;
@@ -30,13 +30,13 @@ struct AABB {
     };
 
     struct Segment {
-        POINT from;
-        POINT to;
+        Point from;
+        Point to;
     };
 
     // Minimums are stored with a negative value to test them with SIMD.
-    POINT min;
-    POINT neg_max;
+    Point min;
+    Point neg_max;
 
     bool operator==(const AABB& o) const {
         return (min == o.min) && (neg_max == o.neg_max);
@@ -46,41 +46,41 @@ struct AABB {
         return (*this == o) == false;
     }
 
-    void set(const POINT& _min, const POINT& _max) {
+    void set(const Point& _min, const Point& _max) {
         min     = _min;
         neg_max = -_max;
     }
 
     // To and from standard AABB.
-    void from(const BOUNDS& p_aabb) {
+    void from(const BoundingBox& p_aabb) {
         min     = p_aabb.position;
         neg_max = -(p_aabb.position + p_aabb.size);
     }
 
-    void to(BOUNDS& r_aabb) const {
+    void to(BoundingBox& r_aabb) const {
         r_aabb.position = min;
         r_aabb.size     = calculate_size();
     }
 
     void merge(const AABB& p_o) {
-        for (int axis = 0; axis < POINT::AXIS_COUNT; ++axis) {
+        for (int axis = 0; axis < Point::AXIS_COUNT; ++axis) {
             neg_max[axis] = MIN(neg_max[axis], p_o.neg_max[axis]);
             min[axis]     = MIN(min[axis], p_o.min[axis]);
         }
     }
 
-    POINT calculate_size() const {
+    Point calculate_size() const {
         return -neg_max - min;
     }
 
-    POINT calculate_centre() const {
-        return POINT((calculate_size() * 0.5) + min);
+    Point calculate_centre() const {
+        return Point((calculate_size() * 0.5) + min);
     }
 
     real_t get_proximity_to(const AABB& p_b) const {
-        const POINT d    = (min - neg_max) - (p_b.min - p_b.neg_max);
+        const Point d    = (min - neg_max) - (p_b.min - p_b.neg_max);
         real_t proximity = 0.0;
-        for (int axis = 0; axis < POINT::AXIS_COUNT; ++axis) {
+        for (int axis = 0; axis < Point::AXIS_COUNT; ++axis) {
             proximity += Math::abs(d[axis]);
         }
         return proximity;
@@ -157,7 +157,7 @@ struct AABB {
     }
 
     bool intersects_convex_partial(const ConvexHull& p_hull) const {
-        BOUNDS bb;
+        BoundingBox bb;
         to(bb);
         return bb.intersects_convex_shape(
             p_hull.planes,
@@ -182,7 +182,7 @@ struct AABB {
 
     bool is_within_convex(const ConvexHull& p_hull) const {
         // Use half extents routine.
-        BOUNDS bb;
+        BoundingBox bb;
         to(bb);
         return bb.inside_convex_shape(p_hull.planes, p_hull.num_planes);
     }
@@ -198,12 +198,12 @@ struct AABB {
     }
 
     bool intersects_segment(const Segment& p_s) const {
-        BOUNDS bb;
+        BoundingBox bb;
         to(bb);
         return bb.intersects_segment(p_s.from, p_s.to);
     }
 
-    bool intersects_point(const POINT& p_pt) const {
+    bool intersects_point(const Point& p_pt) const {
         if (_any_lessthan(-p_pt, neg_max)) {
             return false;
         }
@@ -233,20 +233,20 @@ struct AABB {
         return true;
     }
 
-    void grow(const POINT& p_change) {
+    void grow(const Point& p_change) {
         neg_max -= p_change;
         min     -= p_change;
     }
 
     void expand(real_t p_change) {
-        POINT change;
+        Point change;
         change.set_all(p_change);
         grow(change);
     }
 
     // Surface area metric.
     float get_area() const {
-        POINT d = calculate_size();
+        Point d = calculate_size();
         return 2.0f * (d.x * d.y + d.y * d.z + d.z * d.x);
     }
 
@@ -255,8 +255,8 @@ struct AABB {
         min = neg_max;
     }
 
-    bool _any_morethan(const POINT& p_a, const POINT& p_b) const {
-        for (int axis = 0; axis < POINT::AXIS_COUNT; ++axis) {
+    bool _any_morethan(const Point& p_a, const Point& p_b) const {
+        for (int axis = 0; axis < Point::AXIS_COUNT; ++axis) {
             if (p_a[axis] > p_b[axis]) {
                 return true;
             }
@@ -264,8 +264,8 @@ struct AABB {
         return false;
     }
 
-    bool _any_lessthan(const POINT& p_a, const POINT& p_b) const {
-        for (int axis = 0; axis < POINT::AXIS_COUNT; ++axis) {
+    bool _any_lessthan(const Point& p_a, const Point& p_b) const {
+        for (int axis = 0; axis < Point::AXIS_COUNT; ++axis) {
             if (p_a[axis] < p_b[axis]) {
                 return true;
             }
