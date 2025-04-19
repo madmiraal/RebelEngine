@@ -9,6 +9,12 @@
 
 namespace BVH {
 
+enum class IntersectResult {
+    MISS,
+    PARTIAL,
+    FULL,
+};
+
 // Optimized version of axis aligned bounding box.
 template <class BOUNDS = ::AABB, class POINT = Vector3>
 struct AABB {
@@ -22,12 +28,6 @@ struct AABB {
     struct Segment {
         POINT from;
         POINT to;
-    };
-
-    enum IntersectResult {
-        IR_MISS = 0,
-        IR_PARTIAL,
-        IR_FULL,
     };
 
     // Minimums are stored with a negative value to test them with SIMD.
@@ -167,13 +167,13 @@ struct AABB {
         if (intersects_convex_partial(p_hull)) {
             // Fully within is very important for tree checks.
             if (is_within_convex(p_hull)) {
-                return IR_FULL;
+                return IntersectResult::FULL;
             }
 
-            return IR_PARTIAL;
+            return IntersectResult::PARTIAL;
         }
 
-        return IR_MISS;
+        return IntersectResult::MISS;
     }
 
     bool is_within_convex(const ConvexHull& p_hull) const {
