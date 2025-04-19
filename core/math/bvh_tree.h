@@ -155,7 +155,6 @@ template <
     class T,
     int MAX_CHILDREN,
     int MAX_ITEMS,
-    bool use_pairs    = false,
     class BoundingBox = ::AABB,
     class Point       = Vector3>
 class Tree {
@@ -441,7 +440,7 @@ public:
     real_t _aabb_shrinkage_threshold = 0.0;
 
 public:
-    Tree() {
+    Tree(bool use_pairs = true) : use_pairs(use_pairs) {
         for (int n = 0; n < NUM_TREES; n++) {
             _root_node_id[n] = INVALID;
         }
@@ -458,6 +457,8 @@ public:
     }
 
 private:
+    const bool use_pairs;
+
     bool node_add_child(uint32_t p_node_id, uint32_t p_child_node_id) {
         TNode& tnode = _nodes[p_node_id];
         if (tnode.is_full_of_children()) {

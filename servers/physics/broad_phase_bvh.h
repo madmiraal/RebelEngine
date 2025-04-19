@@ -11,7 +11,7 @@
 #include "core/math/bvh.h"
 
 class BroadPhaseBVH : public BroadPhaseSW {
-    BVH::Manager<CollisionObjectSW, true, 128> bvh;
+    BVH::Manager<CollisionObjectSW, 128> bvh;
 
     static void* _pair_callback(
         void* p_self,

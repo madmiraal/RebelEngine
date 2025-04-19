@@ -240,7 +240,7 @@ public:
     class SpatialPartitioningScene_BVH : public SpatialPartitioningScene {
         // Note that SpatialPartitionIDs are +1 based when stored in visual
         // server, to enable 0 to indicate invalid ID.
-        BVH::Manager<Instance, true, 256> _bvh;
+        BVH::Manager<Instance, 256> _bvh;
 
     public:
         SpatialPartitioningScene_BVH();
