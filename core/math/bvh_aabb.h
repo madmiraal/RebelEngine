@@ -4,12 +4,12 @@
 //
 // SPDX-License-Identifier: MIT
 
-#ifndef BVH_ABB_H
-#define BVH_ABB_H
+#ifndef BVH_AABB_H
+#define BVH_AABB_H
 
 // Optimized version of axis aligned bounding box.
 template <class BOUNDS = AABB, class POINT = Vector3>
-struct BVH_ABB {
+struct BVH_AABB {
     struct ConvexHull {
         const Plane* planes;
         int num_planes;
@@ -32,11 +32,11 @@ struct BVH_ABB {
     POINT min;
     POINT neg_max;
 
-    bool operator==(const BVH_ABB& o) const {
+    bool operator==(const BVH_AABB& o) const {
         return (min == o.min) && (neg_max == o.neg_max);
     }
 
-    bool operator!=(const BVH_ABB& o) const {
+    bool operator!=(const BVH_AABB& o) const {
         return (*this == o) == false;
     }
 
@@ -56,7 +56,7 @@ struct BVH_ABB {
         r_aabb.size     = calculate_size();
     }
 
-    void merge(const BVH_ABB& p_o) {
+    void merge(const BVH_AABB& p_o) {
         for (int axis = 0; axis < POINT::AXIS_COUNT; ++axis) {
             neg_max[axis] = MIN(neg_max[axis], p_o.neg_max[axis]);
             min[axis]     = MIN(min[axis], p_o.min[axis]);
@@ -71,7 +71,7 @@ struct BVH_ABB {
         return POINT((calculate_size() * 0.5) + min);
     }
 
-    real_t get_proximity_to(const BVH_ABB& p_b) const {
+    real_t get_proximity_to(const BVH_AABB& p_b) const {
         const POINT d    = (min - neg_max) - (p_b.min - p_b.neg_max);
         real_t proximity = 0.0;
         for (int axis = 0; axis < POINT::AXIS_COUNT; ++axis) {
@@ -80,12 +80,12 @@ struct BVH_ABB {
         return proximity;
     }
 
-    int select_by_proximity(const BVH_ABB& p_a, const BVH_ABB& p_b) const {
+    int select_by_proximity(const BVH_AABB& p_a, const BVH_AABB& p_b) const {
         return (get_proximity_to(p_a) < get_proximity_to(p_b) ? 0 : 1);
     }
 
     uint32_t find_cutting_planes(
-        const typename BVH_ABB::ConvexHull& p_hull,
+        const typename BVH_AABB::ConvexHull& p_hull,
         uint32_t* p_plane_ids
     ) const {
         uint32_t count = 0;
@@ -207,7 +207,7 @@ struct BVH_ABB {
         return true;
     }
 
-    bool intersects(const BVH_ABB& p_o) const {
+    bool intersects(const BVH_AABB& p_o) const {
         if (_any_morethan(p_o.min, -neg_max)) {
             return false;
         }
@@ -217,7 +217,7 @@ struct BVH_ABB {
         return true;
     }
 
-    bool is_other_within(const BVH_ABB& p_o) const {
+    bool is_other_within(const BVH_AABB& p_o) const {
         if (_any_lessthan(p_o.neg_max, neg_max)) {
             return false;
         }
@@ -268,4 +268,4 @@ struct BVH_ABB {
     }
 };
 
-#endif // BVH_ABB_H
+#endif // BVH_AABB_H

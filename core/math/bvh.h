@@ -370,7 +370,7 @@ public:
         params.mask                 = p_mask;
         params.pairable_type        = 0;
         params.test_pairable_only   = false;
-        params.abb.from(p_aabb);
+        params.bvh_aabb.from(p_aabb);
 
         tree.cull_aabb(params);
 
@@ -484,18 +484,18 @@ private:
 
             // Use the expanded aabb for pairing.
             const BOUNDS& expanded_aabb = tree._pairs[h.id()].expanded_aabb;
-            BVHABB_CLASS abb;
-            abb.from(expanded_aabb);
+            BVHAABB_CLASS bvh_aabb;
+            bvh_aabb.from(expanded_aabb);
 
             // Send callbacks to pairs that are no longer paired.
-            _find_leavers(h, abb, p_full_check);
+            _find_leavers(h, bvh_aabb, p_full_check);
 
             uint32_t changed_item_ref_id = h.id();
 
             // Use this item for mask and test for non-pairable tree.
             tree.item_fill_cullparams(h, params);
 
-            params.abb = abb;
+            params.bvh_aabb = bvh_aabb;
 
             // TODO: Is this needed?
             params.result_count_overall = 0;
@@ -518,9 +518,9 @@ private:
 
 public:
     void item_get_AABB(BVHHandle p_handle, BOUNDS& r_aabb) {
-        BVHABB_CLASS abb;
-        tree.item_get_ABB(p_handle, abb);
-        abb.to(r_aabb);
+        BVHAABB_CLASS bvh_aabb;
+        tree.item_get_bvh_aabb(p_handle, bvh_aabb);
+        bvh_aabb.to(r_aabb);
     }
 
 private:
@@ -603,16 +603,16 @@ private:
     // Returns true if unpaired.
     bool _find_leavers_process_pair(
         typename BVHTREE_CLASS::ItemPairs& p_pairs_from,
-        const BVHABB_CLASS& p_abb_from,
+        const BVHAABB_CLASS& p_abb_from,
         BVHHandle p_from,
         BVHHandle p_to,
         bool p_full_check
     ) {
-        BVHABB_CLASS abb_to;
-        tree.item_get_ABB(p_to, abb_to);
+        BVHAABB_CLASS bvh_aabb_to;
+        tree.item_get_bvh_aabb(p_to, bvh_aabb_to);
 
         // Test for overlap.
-        if (p_abb_from.intersects(abb_to)) {
+        if (p_abb_from.intersects(bvh_aabb_to)) {
             if (!p_full_check) {
                 return false;
             }
@@ -641,19 +641,19 @@ private:
     // Find all paired aabbs that are no longer paired, and send callbacks.
     void _find_leavers(
         BVHHandle p_handle,
-        const BVHABB_CLASS& expanded_abb_from,
+        const BVHAABB_CLASS& expanded_abb_from,
         bool p_full_check
     ) {
         typename BVHTREE_CLASS::ItemPairs& p_from = tree._pairs[p_handle.id()];
 
-        BVHABB_CLASS abb_from = expanded_abb_from;
+        BVHAABB_CLASS bvh_aabb_from = expanded_abb_from;
 
         // Remove every partner from pairing list.
         for (unsigned int n = 0; n < p_from.extended_pairs.size(); n++) {
             BVHHandle h_to = p_from.extended_pairs[n].handle;
             if (_find_leavers_process_pair(
                     p_from,
-                    abb_from,
+                    bvh_aabb_from,
                     p_handle,
                     h_to,
                     p_full_check
