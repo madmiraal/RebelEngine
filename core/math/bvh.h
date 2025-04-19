@@ -16,6 +16,34 @@
 
 namespace BVH {
 
+class BVHLockedFunction {
+public:
+    BVHLockedFunction(Mutex* p_mutex, bool p_thread_safe) {
+        // Should be compiled out if not set in template.
+        if (p_thread_safe) {
+            _mutex = p_mutex;
+
+            if (_mutex->try_lock() != OK) {
+                WARN_PRINT("Info : multithread BVH access detected (benign)");
+                _mutex->lock();
+            }
+
+        } else {
+            _mutex = nullptr;
+        }
+    }
+
+    ~BVHLockedFunction() {
+        // Should be compiled out if not set in template.
+        if (_mutex) {
+            _mutex->unlock();
+        }
+    }
+
+private:
+    Mutex* _mutex;
+};
+
 // BVH Manager provides a wrapper around BVH tree, which contains most of the
 // functionality for a dynamic BVH with templated leaf size.
 // BVH Manager also adds facilities for pairing. Pairing is a collision pairing
@@ -540,17 +568,16 @@ private:
     void _unpair(Handle p_from, Handle p_to) {
         tree._handle_sort(p_from, p_to);
 
-        typename BVHTREE_CLASS::ItemExtra& exa = tree._extra[p_from.id()];
-        typename BVHTREE_CLASS::ItemExtra& exb = tree._extra[p_to.id()];
+        ItemExtra<T>& exa = tree._extra[p_from.id()];
+        ItemExtra<T>& exb = tree._extra[p_to.id()];
 
         // If the userdata is the same, no collisions should occur.
         if ((exa.userdata == exb.userdata) && exa.userdata) {
             return;
         }
 
-        typename BVHTREE_CLASS::ItemPairs& pairs_from =
-            tree._pairs[p_from.id()];
-        typename BVHTREE_CLASS::ItemPairs& pairs_to = tree._pairs[p_to.id()];
+        ItemPairs<BoundingBox>& pairs_from = tree._pairs[p_from.id()];
+        ItemPairs<BoundingBox>& pairs_to   = tree._pairs[p_to.id()];
 
         void* ud_from = pairs_from.remove_pair_to(p_to);
         pairs_to.remove_pair_to(p_from);
@@ -577,8 +604,8 @@ private:
     void* _recheck_pair(Handle p_from, Handle p_to, void* p_pair_data) {
         tree._handle_sort(p_from, p_to);
 
-        typename BVHTREE_CLASS::ItemExtra& exa = tree._extra[p_from.id()];
-        typename BVHTREE_CLASS::ItemExtra& exb = tree._extra[p_to.id()];
+        ItemExtra<T>& exa = tree._extra[p_from.id()];
+        ItemExtra<T>& exb = tree._extra[p_to.id()];
 
         // If the userdata is the same, no collisions should occur.
         if ((exa.userdata == exb.userdata) && exa.userdata) {
@@ -603,7 +630,7 @@ private:
 
     // Returns true if unpaired.
     bool _find_leavers_process_pair(
-        typename BVHTREE_CLASS::ItemPairs& p_pairs_from,
+        ItemPairs<BoundingBox>& p_pairs_from,
         const BVHAABB_CLASS& p_abb_from,
         Handle p_from,
         Handle p_to,
@@ -618,8 +645,8 @@ private:
                 return false;
             }
 
-            const typename BVHTREE_CLASS::ItemExtra& exa = _get_extra(p_from);
-            const typename BVHTREE_CLASS::ItemExtra& exb = _get_extra(p_to);
+            const ItemExtra<T>& exa = _get_extra(p_from);
+            const ItemExtra<T>& exb = _get_extra(p_to);
 
             // To pair, one of the two must be pairable.
             if (exa.pairable || exb.pairable) {
@@ -645,7 +672,7 @@ private:
         const BVHAABB_CLASS& expanded_abb_from,
         bool p_full_check
     ) {
-        typename BVHTREE_CLASS::ItemPairs& p_from = tree._pairs[p_handle.id()];
+        ItemPairs<BoundingBox>& p_from = tree._pairs[p_handle.id()];
 
         BVHAABB_CLASS bvh_aabb_from = expanded_abb_from;
 
@@ -669,16 +696,16 @@ private:
         // We only need to do this oneway: lower ID then higher ID.
         tree._handle_sort(p_ha, p_hb);
 
-        const typename BVHTREE_CLASS::ItemExtra& exa = _get_extra(p_ha);
-        const typename BVHTREE_CLASS::ItemExtra& exb = _get_extra(p_hb);
+        const ItemExtra<T>& exa = _get_extra(p_ha);
+        const ItemExtra<T>& exb = _get_extra(p_hb);
 
         // If the userdata is the same, no collisions should occur.
         if ((exa.userdata == exb.userdata) && exa.userdata) {
             return;
         }
 
-        typename BVHTREE_CLASS::ItemPairs& p_from = tree._pairs[p_ha.id()];
-        typename BVHTREE_CLASS::ItemPairs& p_to   = tree._pairs[p_hb.id()];
+        ItemPairs<BoundingBox>& p_from = tree._pairs[p_ha.id()];
+        ItemPairs<BoundingBox>& p_to   = tree._pairs[p_hb.id()];
 
         // Only check the one with lower number of pairs for greater speed.
         if (p_from.num_pairs <= p_to.num_pairs) {
@@ -716,7 +743,7 @@ private:
 
     // If we remove an item, remove the pairs.
     void _remove_pairs_containing(Handle p_handle) {
-        typename BVHTREE_CLASS::ItemPairs& p_from = tree._pairs[p_handle.id()];
+        ItemPairs<BoundingBox>& p_from = tree._pairs[p_handle.id()];
 
         // Remove from pairing list for every partner.
         while (p_from.extended_pairs.size()) {
@@ -727,11 +754,11 @@ private:
 
     // Send pair callbacks again for all existing pairs for the given handle.
     void _recheck_pairs(Handle p_handle) {
-        typename BVHTREE_CLASS::ItemPairs& from = tree._pairs[p_handle.id()];
+        ItemPairs<BoundingBox>& from = tree._pairs[p_handle.id()];
 
         // Check pair for every partner.
         for (unsigned int n = 0; n < from.extended_pairs.size(); n++) {
-            typename BVHTREE_CLASS::ItemPairs::Link& pair =
+            typename ItemPairs<BoundingBox>::Link& pair =
                 from.extended_pairs[n];
             Handle h_to         = pair.handle;
             void* new_pair_data = _recheck_pair(p_handle, h_to, pair.userdata);
@@ -740,11 +767,11 @@ private:
                 pair.userdata = new_pair_data;
 
                 // Update pair data for the second item.
-                typename BVHTREE_CLASS::ItemPairs& to = tree._pairs[h_to.id()];
+                ItemPairs<BoundingBox>& to = tree._pairs[h_to.id()];
                 for (unsigned int to_index = 0;
                      to_index < to.extended_pairs.size();
                      to_index++) {
-                    typename BVHTREE_CLASS::ItemPairs::Link& to_pair =
+                    typename ItemPairs<BoundingBox>::Link& to_pair =
                         to.extended_pairs[to_index];
                     if (to_pair.handle == p_handle) {
                         to_pair.userdata = new_pair_data;
@@ -756,11 +783,11 @@ private:
     }
 
 private:
-    const typename BVHTREE_CLASS::ItemExtra& _get_extra(Handle p_handle) const {
+    const ItemExtra<T>& _get_extra(Handle p_handle) const {
         return tree._extra[p_handle.id()];
     }
 
-    const typename BVHTREE_CLASS::ItemRef& _get_ref(Handle p_handle) const {
+    const ItemRef& _get_ref(Handle p_handle) const {
         return tree._refs[p_handle.id()];
     }
 
@@ -845,35 +872,6 @@ private:
     // Maintain a list of all items moved to test for collision pairing.
     LocalVector<Handle, uint32_t, true> changed_items;
     uint32_t _tick;
-
-    class BVHLockedFunction {
-    public:
-        BVHLockedFunction(Mutex* p_mutex, bool p_thread_safe) {
-            // Should be compiled out if not set in template.
-            if (p_thread_safe) {
-                _mutex = p_mutex;
-
-                if (_mutex->try_lock() != OK) {
-                    WARN_PRINT("Info : multithread BVH access detected (benign)"
-                    );
-                    _mutex->lock();
-                }
-
-            } else {
-                _mutex = nullptr;
-            }
-        }
-
-        ~BVHLockedFunction() {
-            // Should be compiled out if not set in template.
-            if (_mutex) {
-                _mutex->unlock();
-            }
-        }
-
-    private:
-        Mutex* _mutex;
-    };
 
     Mutex _mutex;
 
