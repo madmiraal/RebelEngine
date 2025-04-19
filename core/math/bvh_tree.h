@@ -17,7 +17,7 @@
 
 #include <limits.h>
 
-#define BVHAABB_CLASS AABB<BOUNDS, POINT>
+#define BVHAABB_CLASS AABB<BoundingBox, Point>
 
 // TODO: Check if this is better.
 #define BVH_EXPAND_LEAF_AABBS
@@ -155,9 +155,9 @@ template <
     class T,
     int MAX_CHILDREN,
     int MAX_ITEMS,
-    bool USE_PAIRS = false,
-    class BOUNDS   = ::AABB,
-    class POINT    = Vector3>
+    bool use_pairs    = false,
+    class BoundingBox = ::AABB,
+    class Point       = Vector3>
 class Tree {
 public:
     // TODO: Check if this should be attached to another node structure.
@@ -175,10 +175,10 @@ public:
         void clear() {
             num_pairs = 0;
             extended_pairs.reset();
-            expanded_aabb = BOUNDS();
+            expanded_aabb = BoundingBox();
         }
 
-        BOUNDS expanded_aabb;
+        BoundingBox expanded_aabb;
 
         // TODO: Could use Vector size.
         int32_t num_pairs;
@@ -724,7 +724,7 @@ public:
         uint32_t pairable_type;
 
         // Optional components for different tests.
-        POINT point;
+        Point point;
         BVHAABB_CLASS bvh_aabb;
         typename BVHAABB_CLASS::ConvexHull hull;
         typename BVHAABB_CLASS::Segment segment;
@@ -874,7 +874,7 @@ public:
     void _cull_hit(uint32_t p_ref_id, CullParams& p) {
         // It would be more efficient to do before plane checks,
         // but done here to ease gettting started.
-        if (USE_PAIRS) {
+        if (use_pairs) {
             const ItemExtra& ex = _extra[p_ref_id];
 
             if (!_cull_pairing_mask_test_hit(
@@ -1272,12 +1272,12 @@ public:
     }
 
     String _debug_aabb_to_string(const BVHAABB_CLASS& aabb) const {
-        POINT size = aabb.calculate_size();
+        Point size = aabb.calculate_size();
 
         String sz;
         float vol = 0.0;
 
-        for (int i = 0; i < POINT::AXIS_COUNT; ++i) {
+        for (int i = 0; i < Point::AXIS_COUNT; ++i) {
             sz += "(";
             sz += itos(aabb.min[i]);
             sz += " ~ ";
@@ -1612,7 +1612,7 @@ public:
     }
 
     int _handle_get_tree_id(Handle p_handle) const {
-        if (USE_PAIRS) {
+        if (use_pairs) {
             int tree = 0;
             if (_extra[p_handle.id()].pairable) {
                 tree = 1;
@@ -1670,7 +1670,7 @@ public:
     Handle item_add(
         T* p_userdata,
         bool p_active,
-        const BOUNDS& p_aabb,
+        const BoundingBox& p_aabb,
         int32_t p_subindex,
         bool p_pairable,
         uint32_t p_pairable_type,
@@ -1706,7 +1706,7 @@ public:
         BVH_ASSERT(extra_id == ref_id);
 
         // Pairs info.
-        if (USE_PAIRS) {
+        if (use_pairs) {
             uint32_t pairs_id;
             ItemPairs* pairs = _pairs.request(pairs_id);
             pairs->clear();
@@ -1723,7 +1723,7 @@ public:
         extra->active_ref_id = _active_refs.size();
         _active_refs.push_back(ref_id);
 
-        if (USE_PAIRS) {
+        if (use_pairs) {
             extra->pairable_mask = p_pairable_mask;
             extra->pairable_type = p_pairable_type;
             extra->pairable      = p_pairable;
@@ -1795,7 +1795,7 @@ public:
     }
 
     // Return false if noop.
-    bool item_move(Handle p_handle, const BOUNDS& p_aabb) {
+    bool item_move(Handle p_handle, const BoundingBox& p_aabb) {
         uint32_t ref_id = p_handle.id();
 
         ItemRef& ref = _refs[ref_id];
@@ -1807,7 +1807,7 @@ public:
         bvh_aabb.from(p_aabb);
 
 #ifdef BVH_EXPAND_LEAF_AABBS
-        if (USE_PAIRS) {
+        if (use_pairs) {
             // Scale the pairing expansion by the number of pairs.
             bvh_aabb.expand(
                 _pairs[ref_id].scale_expansion_margin(_pairing_expansion)
@@ -1831,7 +1831,7 @@ public:
 
             // No change?
 #ifdef BVH_EXPAND_LEAF_AABBS
-            BOUNDS leaf_aabb;
+            BoundingBox leaf_aabb;
             leaf_bvh_aabb.to(leaf_aabb);
 
             // This test should pass in a lot of cases, and by returning false
@@ -1918,7 +1918,7 @@ public:
         // Remove the item reference.
         _refs.free(ref_id);
         _extra.free(ref_id);
-        if (USE_PAIRS) {
+        if (use_pairs) {
             _pairs.free(ref_id);
         }
 
@@ -1927,7 +1927,7 @@ public:
 #endif
     }
 
-    bool item_activate(Handle p_handle, const BOUNDS& p_aabb) {
+    bool item_activate(Handle p_handle, const BoundingBox& p_aabb) {
         uint32_t ref_id = p_handle.id();
         ItemRef& ref    = _refs[ref_id];
         if (ref.is_active()) {
@@ -2108,7 +2108,7 @@ public:
             }
 
             if (bound_valid) {
-                BOUNDS bb;
+                BoundingBox bb;
                 world_bound.to(bb);
                 real_t size = bb.get_longest_axis_size();
 
@@ -2143,13 +2143,13 @@ public:
         // Calculate shrinking threshold.
         const real_t fudge_factor = 1.1;
         _aabb_shrinkage_threshold =
-            _pairing_expansion * POINT::AXIS_COUNT * 2.0 * fudge_factor;
+            _pairing_expansion * Point::AXIS_COUNT * 2.0 * fudge_factor;
     }
 
     // Ålso checks for special case of shrinkage.
     bool expanded_aabb_encloses_not_shrink(
-        const BOUNDS& p_expanded_aabb,
-        const BOUNDS& p_aabb
+        const BoundingBox& p_expanded_aabb,
+        const BoundingBox& p_aabb
     ) const {
         if (!p_expanded_aabb.encloses(p_aabb)) {
             return false;
@@ -2158,13 +2158,13 @@ public:
         // Check for special case of shrinkage. If the AABB has shrunk
         // significantly, we want to create a new expanded bound, because
         // the previous expanded bound will have diverged significantly.
-        const POINT& exp_size = p_expanded_aabb.size;
-        const POINT& new_size = p_aabb.size;
+        const Point& exp_size = p_expanded_aabb.size;
+        const Point& new_size = p_aabb.size;
 
         real_t exp_l = 0.0;
         real_t new_l = 0.0;
 
-        for (int i = 0; i < POINT::AXIS_COUNT; ++i) {
+        for (int i = 0; i < Point::AXIS_COUNT; ++i) {
             exp_l += exp_size[i];
             new_l += new_size[i];
         }
@@ -2351,19 +2351,19 @@ public:
             return;
         }
 
-        POINT centre = full_bound.calculate_centre();
-        POINT size   = full_bound.calculate_size();
+        Point centre = full_bound.calculate_centre();
+        Point size   = full_bound.calculate_size();
 
-        int order[POINT::AXIS_COUNT];
+        int order[Point::AXIS_COUNT];
 
         order[0]                     = size.min_axis();
-        order[POINT::AXIS_COUNT - 1] = size.max_axis();
+        order[Point::AXIS_COUNT - 1] = size.max_axis();
 
         static_assert(
-            POINT::AXIS_COUNT <= 3,
-            "BVH POINT::AXIS_COUNT has unexpected size"
+            Point::AXIS_COUNT <= 3,
+            "BVH Point::AXIS_COUNT has unexpected size"
         );
-        if (POINT::AXIS_COUNT == 3) {
+        if (Point::AXIS_COUNT == 3) {
             order[1] = 3 - (order[0] + order[2]);
         }
 
@@ -2388,7 +2388,7 @@ public:
 
         // Detect when split on longest axis failed.
         int min_threshold = MAX_ITEMS / 4;
-        int min_group_size[POINT::AXIS_COUNT];
+        int min_group_size[Point::AXIS_COUNT];
         min_group_size[0] = MIN(num_a, num_b);
         if (min_group_size[0] < min_threshold) {
             // Slow but secure. First move everything back into a.
@@ -2398,7 +2398,7 @@ public:
             num_b = 0;
 
             // Calculate the best split.
-            for (int axis = 1; axis < POINT::AXIS_COUNT; axis++) {
+            for (int axis = 1; axis < Point::AXIS_COUNT; axis++) {
                 split_axis = order[axis];
                 int count  = 0;
 
@@ -2417,7 +2417,7 @@ public:
             // Best axis.
             int best_axis = 0;
             int best_min  = min_group_size[0];
-            for (int axis = 1; axis < POINT::AXIS_COUNT; axis++) {
+            for (int axis = 1; axis < Point::AXIS_COUNT; axis++) {
                 if (min_group_size[axis] > best_min) {
                     best_min  = min_group_size[axis];
                     best_axis = axis;

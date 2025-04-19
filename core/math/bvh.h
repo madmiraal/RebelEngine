@@ -10,9 +10,9 @@
 #include "bvh_tree.h"
 #include "core/os/mutex.h"
 
-#define BVHTREE_CLASS Tree<T, 2, MAX_ITEMS, USE_PAIRS, BOUNDS, POINT>
+#define BVHTREE_CLASS Tree<T, 2, MAX_ITEMS, use_pairs, BoundingBox, Point>
 #define BVH_LOCKED_FUNCTION                                                    \
-    BVHLockedFunction(&_mutex, BVH_THREAD_SAFE&& _thread_safe);
+    BVHLockedFunction(&_mutex, thread_safe&& _thread_safe);
 
 namespace BVH {
 
@@ -32,11 +32,11 @@ namespace BVH {
 
 template <
     class T,
-    bool USE_PAIRS       = false,
-    int MAX_ITEMS        = 32,
-    class BOUNDS         = ::AABB,
-    class POINT          = Vector3,
-    bool BVH_THREAD_SAFE = true>
+    bool use_pairs    = false,
+    int MAX_ITEMS     = 32,
+    class BoundingBox = ::AABB,
+    class Point       = Vector3,
+    bool thread_safe  = true>
 class Manager {
 public:
     // Use uint32_t instead of Handle to maintain compatibility with octree.
@@ -44,7 +44,7 @@ public:
     typedef void (*UnpairCallback)(void*, uint32_t, T*, int, uint32_t, T*, int, void*);
     typedef void* (*CheckPairCallback)(void*, uint32_t, T*, int, uint32_t, T*, int, void*);
 
-    // Toggles thread safety if BVH_THREAD_SAFE = true.
+    // Toggles thread safety if thread_safe = true.
     void params_set_thread_safe(bool p_enable) {
         _thread_safe = p_enable;
     }
@@ -89,24 +89,24 @@ public:
     Handle create(
         T* p_userdata,
         bool p_active,
-        const BOUNDS& p_aabb     = BOUNDS(),
-        int p_subindex           = 0,
-        bool p_pairable          = false,
-        uint32_t p_pairable_type = 0,
-        uint32_t p_pairable_mask = 1
+        const BoundingBox& p_aabb = BoundingBox(),
+        int p_subindex            = 0,
+        bool p_pairable           = false,
+        uint32_t p_pairable_type  = 0,
+        uint32_t p_pairable_mask  = 1
     ) {
         BVH_LOCKED_FUNCTION
 
-        if (USE_PAIRS) {
+        if (use_pairs) {
             // Uncomment if there are bugs.
             //_check_for_collisions();
         }
 
 #ifdef TOOLS_ENABLED
-        if (!USE_PAIRS) {
+        if (!use_pairs) {
             if (p_pairable) {
                 WARN_PRINT_ONCE(
-                    "creating pairable item in BVH with USE_PAIRS set to false"
+                    "creating pairable item in BVH with use_pairs set to false"
                 );
             }
         }
@@ -122,10 +122,10 @@ public:
             p_pairable_mask
         );
 
-        if (USE_PAIRS) {
+        if (use_pairs) {
             // For safety, initialize the expanded AABB.
-            BOUNDS& expanded_aabb = tree._pairs[h.id()].expanded_aabb;
-            expanded_aabb         = p_aabb;
+            BoundingBox& expanded_aabb = tree._pairs[h.id()].expanded_aabb;
+            expanded_aabb              = p_aabb;
             expanded_aabb.grow_by(tree._pairing_expansion);
 
             // Force a collision check no matter the AABB.
@@ -139,7 +139,7 @@ public:
     }
 
     // Wrapper versions that use uint32_t instead of Handle.
-    void move(uint32_t p_handle, const BOUNDS& p_aabb) {
+    void move(uint32_t p_handle, const BoundingBox& p_aabb) {
         Handle h;
         h.set(p_handle);
         move(h, p_aabb);
@@ -165,7 +165,7 @@ public:
 
     bool activate(
         uint32_t p_handle,
-        const BOUNDS& p_aabb,
+        const BoundingBox& p_aabb,
         bool p_delay_collision_check = false
     ) {
         Handle h;
@@ -217,10 +217,10 @@ public:
 
     ////////////////////////////////////////////////////
 
-    void move(Handle p_handle, const BOUNDS& p_aabb) {
+    void move(Handle p_handle, const BoundingBox& p_aabb) {
         BVH_LOCKED_FUNCTION
         if (tree.item_move(p_handle, p_aabb)) {
-            if (USE_PAIRS) {
+            if (use_pairs) {
                 _add_changed_item(p_handle, p_aabb);
             }
         }
@@ -228,7 +228,7 @@ public:
 
     void recheck_pairs(Handle p_handle) {
         BVH_LOCKED_FUNCTION
-        if (USE_PAIRS) {
+        if (use_pairs) {
             _recheck_pairs(p_handle);
         }
     }
@@ -236,7 +236,7 @@ public:
     void erase(Handle p_handle) {
         BVH_LOCKED_FUNCTION
         // Call unpair and remove all references before deleting from the tree.
-        if (USE_PAIRS) {
+        if (use_pairs) {
             _remove_changed_item(p_handle);
         }
 
@@ -250,8 +250,8 @@ public:
     // Deferred collision checks are a workaround for visual server.
     void force_collision_check(Handle p_handle) {
         BVH_LOCKED_FUNCTION
-        if (USE_PAIRS) {
-            BOUNDS aabb;
+        if (use_pairs) {
+            BoundingBox aabb;
             item_get_AABB(p_handle, aabb);
             _add_changed_item(p_handle, aabb, false);
             _check_for_collisions(true);
@@ -261,14 +261,14 @@ public:
     // Should be read as set_visible for render trees.
     bool activate(
         Handle p_handle,
-        const BOUNDS& p_aabb,
+        const BoundingBox& p_aabb,
         bool p_delay_collision_check = false
     ) {
         BVH_LOCKED_FUNCTION
         // Sending the AABB here prevents the need for the BVH to maintain a
         // redundant copy of the aabb.
         if (tree.item_activate(p_handle, p_aabb)) {
-            if (USE_PAIRS) {
+            if (use_pairs) {
                 // In the special case of the render tree, when setting
                 // visibility, we are using the combination of activate then
                 // set_pairable. This causes 2 sets of collision checks.
@@ -289,7 +289,7 @@ public:
         BVH_LOCKED_FUNCTION
         if (tree.item_deactivate(p_handle)) {
             // Call unpair and remove all references before deleting.
-            if (USE_PAIRS) {
+            if (use_pairs) {
                 _remove_changed_item(p_handle);
                 _check_for_collisions(true);
             }
@@ -335,7 +335,7 @@ public:
             p_pairable_mask
         );
 
-        if (USE_PAIRS) {
+        if (use_pairs) {
             // Uncomment if there are bugs.
             //_check_for_collisions();
 
@@ -344,7 +344,7 @@ public:
                 // We force a collision check when the pairable state changes,
                 // because newly pairable items may be in collision, and
                 // unpairable items might move out of collision.
-                BOUNDS aabb;
+                BoundingBox aabb;
                 item_get_AABB(p_handle, aabb);
 
                 // Passing false disables the optimization that prevents
@@ -356,7 +356,7 @@ public:
     }
 
     int cull_aabb(
-        const BOUNDS& p_aabb,
+        const BoundingBox& p_aabb,
         T** p_result_array,
         int p_result_max,
         int* p_subindex_array = nullptr,
@@ -380,8 +380,8 @@ public:
     }
 
     int cull_segment(
-        const POINT& p_from,
-        const POINT& p_to,
+        const Point& p_from,
+        const Point& p_to,
         T** p_result_array,
         int p_result_max,
         int* p_subindex_array = nullptr,
@@ -406,7 +406,7 @@ public:
     }
 
     int cull_point(
-        const POINT& p_point,
+        const Point& p_point,
         T** p_result_array,
         int p_result_max,
         int* p_subindex_array = nullptr,
@@ -470,7 +470,7 @@ private:
             return;
         }
 
-        BOUNDS bb;
+        BoundingBox bb;
 
         typename BVHTREE_CLASS::CullParams params;
 
@@ -485,7 +485,8 @@ private:
             const Handle& h = changed_items[n];
 
             // Use the expanded aabb for pairing.
-            const BOUNDS& expanded_aabb = tree._pairs[h.id()].expanded_aabb;
+            const BoundingBox& expanded_aabb =
+                tree._pairs[h.id()].expanded_aabb;
             BVHAABB_CLASS bvh_aabb;
             bvh_aabb.from(expanded_aabb);
 
@@ -519,7 +520,7 @@ private:
     }
 
 public:
-    void item_get_AABB(Handle p_handle, BOUNDS& r_aabb) {
+    void item_get_AABB(Handle p_handle, BoundingBox& r_aabb) {
         BVHAABB_CLASS bvh_aabb;
         tree.item_get_bvh_aabb(p_handle, bvh_aabb);
         bvh_aabb.to(r_aabb);
@@ -772,7 +773,7 @@ private:
 
     void _add_changed_item(
         Handle p_handle,
-        const BOUNDS& aabb,
+        const BoundingBox& aabb,
         bool p_check_aabb = true
     ) {
         // Pairable items can pair with non-pairable items.
@@ -780,13 +781,13 @@ private:
 
 #ifdef BVH_EXPAND_LEAF_AABBS
         // Redundancy check already done, if using expanded AABB in the leaf.
-        BOUNDS& expanded_aabb = tree._pairs[p_handle.id()].expanded_aabb;
+        BoundingBox& expanded_aabb = tree._pairs[p_handle.id()].expanded_aabb;
         item_get_AABB(p_handle, expanded_aabb);
 #else
         // AABB check with expanded AABB.
         // Greatly decreases processing using less accurate pairing checks.
         // Note: This pairing AABB is separate from the AABB in the actual tree.
-        BOUNDS& expanded_aabb = tree._pairs[p_handle.id()].expanded_aabb;
+        BoundingBox& expanded_aabb = tree._pairs[p_handle.id()].expanded_aabb;
 
         // If p_check_aabb is true, we check collisions if the AABB has changed.
         // Used when calling set_pairable has been called, but the position has
@@ -889,7 +890,7 @@ public:
         unpair_callback          = nullptr;
         pair_callback_userdata   = nullptr;
         unpair_callback_userdata = nullptr;
-        _thread_safe             = BVH_THREAD_SAFE;
+        _thread_safe             = thread_safe;
     }
 };
 
