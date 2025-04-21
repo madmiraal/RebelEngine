@@ -10,10 +10,6 @@
 #include "bvh_tree.h"
 #include "core/os/mutex.h"
 
-#define BVHTREE_CLASS Tree<T, 2, MAX_ITEMS, BoundingBox, Point>
-#define BVH_LOCKED_FUNCTION                                                    \
-    BVHLockedFunction(&_mutex, thread_safe&& _thread_safe);
-
 namespace BVH {
 
 class BVHLockedFunction {
@@ -179,7 +175,7 @@ private:
     // Returns true if unpaired.
     bool _find_leavers_process_pair(
         ItemPairs<BoundingBox>& p_pairs_from,
-        const BVHAABB_CLASS& p_abb_from,
+        const AABB<BoundingBox, Point>& p_abb_from,
         Handle p_from,
         Handle p_to,
         bool p_full_check
@@ -187,7 +183,7 @@ private:
     // Find all paired aabbs that are no longer paired, and send callbacks.
     void _find_leavers(
         Handle p_handle,
-        const BVHAABB_CLASS& expanded_abb_from,
+        const AABB<BoundingBox, Point>& expanded_abb_from,
         bool p_full_check
     );
     void _collide(Handle p_ha, Handle p_hb);
@@ -212,7 +208,7 @@ private:
     void* unpair_callback_userdata;
     void* check_pair_callback_userdata;
 
-    BVHTREE_CLASS tree;
+    Tree<T, 2, MAX_ITEMS, BoundingBox, Point> tree;
 
     // Maintain a list of all items moved to test for collision pairing.
     LocalVector<Handle, uint32_t, true> changed_items;
@@ -239,7 +235,7 @@ template <class T, int MAX_ITEMS, class BoundingBox, class Point>
 void Manager<T, MAX_ITEMS, BoundingBox, Point>::params_set_node_expansion(
     real_t p_value
 ) {
-    BVH_LOCKED_FUNCTION
+    BVHLockedFunction(&_mutex, thread_safe && _thread_safe);
     if (p_value >= 0.0) {
         tree._node_expansion      = p_value;
         tree._auto_node_expansion = false;
@@ -252,7 +248,7 @@ template <class T, int MAX_ITEMS, class BoundingBox, class Point>
 void Manager<T, MAX_ITEMS, BoundingBox, Point>::params_set_pairing_expansion(
     real_t p_value
 ) {
-    BVH_LOCKED_FUNCTION
+    BVHLockedFunction(&_mutex, thread_safe && _thread_safe);
     tree.params_set_pairing_expansion(p_value);
 }
 
@@ -261,7 +257,7 @@ void Manager<T, MAX_ITEMS, BoundingBox, Point>::set_pair_callback(
     PairCallback p_callback,
     void* p_userdata
 ) {
-    BVH_LOCKED_FUNCTION
+    BVHLockedFunction(&_mutex, thread_safe && _thread_safe);
     pair_callback          = p_callback;
     pair_callback_userdata = p_userdata;
 }
@@ -271,7 +267,7 @@ void Manager<T, MAX_ITEMS, BoundingBox, Point>::set_unpair_callback(
     UnpairCallback p_callback,
     void* p_userdata
 ) {
-    BVH_LOCKED_FUNCTION
+    BVHLockedFunction(&_mutex, thread_safe && _thread_safe);
     unpair_callback          = p_callback;
     unpair_callback_userdata = p_userdata;
 }
@@ -281,7 +277,7 @@ void Manager<T, MAX_ITEMS, BoundingBox, Point>::set_check_pair_callback(
     CheckPairCallback p_callback,
     void* p_userdata
 ) {
-    BVH_LOCKED_FUNCTION
+    BVHLockedFunction(&_mutex, thread_safe && _thread_safe);
     check_pair_callback          = p_callback;
     check_pair_callback_userdata = p_userdata;
 }
@@ -296,7 +292,7 @@ Handle Manager<T, MAX_ITEMS, BoundingBox, Point>::create(
     uint32_t p_pairable_type,
     uint32_t p_pairable_mask
 ) {
-    BVH_LOCKED_FUNCTION
+    BVHLockedFunction(&_mutex, thread_safe && _thread_safe);
 
     if (use_pairs) {
         // Uncomment if there are bugs.
@@ -438,7 +434,7 @@ void Manager<T, MAX_ITEMS, BoundingBox, Point>::move(
     Handle p_handle,
     const BoundingBox& p_aabb
 ) {
-    BVH_LOCKED_FUNCTION
+    BVHLockedFunction(&_mutex, thread_safe && _thread_safe);
     if (tree.item_move(p_handle, p_aabb)) {
         if (use_pairs) {
             _add_changed_item(p_handle, p_aabb);
@@ -448,7 +444,7 @@ void Manager<T, MAX_ITEMS, BoundingBox, Point>::move(
 
 template <class T, int MAX_ITEMS, class BoundingBox, class Point>
 void Manager<T, MAX_ITEMS, BoundingBox, Point>::recheck_pairs(Handle p_handle) {
-    BVH_LOCKED_FUNCTION
+    BVHLockedFunction(&_mutex, thread_safe && _thread_safe);
     if (use_pairs) {
         _recheck_pairs(p_handle);
     }
@@ -456,7 +452,7 @@ void Manager<T, MAX_ITEMS, BoundingBox, Point>::recheck_pairs(Handle p_handle) {
 
 template <class T, int MAX_ITEMS, class BoundingBox, class Point>
 void Manager<T, MAX_ITEMS, BoundingBox, Point>::erase(Handle p_handle) {
-    BVH_LOCKED_FUNCTION
+    BVHLockedFunction(&_mutex, thread_safe && _thread_safe);
     // Call unpair and remove all references before deleting from the tree.
     if (use_pairs) {
         _remove_changed_item(p_handle);
@@ -471,7 +467,7 @@ template <class T, int MAX_ITEMS, class BoundingBox, class Point>
 void Manager<T, MAX_ITEMS, BoundingBox, Point>::force_collision_check(
     Handle p_handle
 ) {
-    BVH_LOCKED_FUNCTION
+    BVHLockedFunction(&_mutex, thread_safe && _thread_safe);
     if (use_pairs) {
         BoundingBox aabb;
         item_get_AABB(p_handle, aabb);
@@ -486,7 +482,7 @@ bool Manager<T, MAX_ITEMS, BoundingBox, Point>::activate(
     const BoundingBox& p_aabb,
     bool p_delay_collision_check
 ) {
-    BVH_LOCKED_FUNCTION
+    BVHLockedFunction(&_mutex, thread_safe && _thread_safe);
     // Sending the AABB here prevents the need for the BVH to maintain a
     // redundant copy of the aabb.
     if (tree.item_activate(p_handle, p_aabb)) {
@@ -509,7 +505,7 @@ bool Manager<T, MAX_ITEMS, BoundingBox, Point>::activate(
 
 template <class T, int MAX_ITEMS, class BoundingBox, class Point>
 bool Manager<T, MAX_ITEMS, BoundingBox, Point>::deactivate(Handle p_handle) {
-    BVH_LOCKED_FUNCTION
+    BVHLockedFunction(&_mutex, thread_safe && _thread_safe);
     if (tree.item_deactivate(p_handle)) {
         // Call unpair and remove all references before deleting.
         if (use_pairs) {
@@ -523,13 +519,13 @@ bool Manager<T, MAX_ITEMS, BoundingBox, Point>::deactivate(Handle p_handle) {
 
 template <class T, int MAX_ITEMS, class BoundingBox, class Point>
 bool Manager<T, MAX_ITEMS, BoundingBox, Point>::get_active(Handle p_handle) {
-    BVH_LOCKED_FUNCTION
+    BVHLockedFunction(&_mutex, thread_safe && _thread_safe);
     return tree.item_get_active(p_handle);
 }
 
 template <class T, int MAX_ITEMS, class BoundingBox, class Point>
 void Manager<T, MAX_ITEMS, BoundingBox, Point>::update() {
-    BVH_LOCKED_FUNCTION
+    BVHLockedFunction(&_mutex, thread_safe && _thread_safe);
     tree.update();
     _check_for_collisions();
 #ifdef BVH_INTEGRITY_CHECKS
@@ -539,7 +535,7 @@ void Manager<T, MAX_ITEMS, BoundingBox, Point>::update() {
 
 template <class T, int MAX_ITEMS, class BoundingBox, class Point>
 void Manager<T, MAX_ITEMS, BoundingBox, Point>::update_collisions() {
-    BVH_LOCKED_FUNCTION
+    BVHLockedFunction(&_mutex, thread_safe && _thread_safe);
     _check_for_collisions();
 }
 
@@ -551,7 +547,7 @@ void Manager<T, MAX_ITEMS, BoundingBox, Point>::set_pairable(
     uint32_t p_pairable_mask,
     bool p_force_collision_check
 ) {
-    BVH_LOCKED_FUNCTION
+    BVHLockedFunction(&_mutex, thread_safe && _thread_safe);
     // Returns true if the pairing state has changed.
     bool state_changed = tree.item_set_pairable(
         p_handle,
@@ -588,8 +584,8 @@ int Manager<T, MAX_ITEMS, BoundingBox, Point>::cull_aabb(
     int* p_subindex_array,
     uint32_t p_mask
 ) {
-    BVH_LOCKED_FUNCTION
-    typename BVHTREE_CLASS::CullParams params;
+    BVHLockedFunction(&_mutex, thread_safe && _thread_safe);
+    typename Tree<T, 2, MAX_ITEMS, BoundingBox, Point>::CullParams params;
 
     params.result_count_overall = 0;
     params.result_max           = p_result_max;
@@ -614,8 +610,8 @@ int Manager<T, MAX_ITEMS, BoundingBox, Point>::cull_segment(
     int* p_subindex_array,
     uint32_t p_mask
 ) {
-    BVH_LOCKED_FUNCTION
-    typename BVHTREE_CLASS::CullParams params;
+    BVHLockedFunction(&_mutex, thread_safe && _thread_safe);
+    typename Tree<T, 2, MAX_ITEMS, BoundingBox, Point>::CullParams params;
 
     params.result_count_overall = 0;
     params.result_max           = p_result_max;
@@ -640,8 +636,8 @@ int Manager<T, MAX_ITEMS, BoundingBox, Point>::cull_point(
     int* p_subindex_array,
     uint32_t p_mask
 ) {
-    BVH_LOCKED_FUNCTION
-    typename BVHTREE_CLASS::CullParams params;
+    BVHLockedFunction(&_mutex, thread_safe && _thread_safe);
+    typename Tree<T, 2, MAX_ITEMS, BoundingBox, Point>::CullParams params;
 
     params.result_count_overall = 0;
     params.result_max           = p_result_max;
@@ -663,7 +659,7 @@ int Manager<T, MAX_ITEMS, BoundingBox, Point>::cull_convex(
     int p_result_max,
     uint32_t p_mask
 ) {
-    BVH_LOCKED_FUNCTION
+    BVHLockedFunction(&_mutex, thread_safe && _thread_safe);
     if (!p_convex.size()) {
         return 0;
     }
@@ -674,7 +670,7 @@ int Manager<T, MAX_ITEMS, BoundingBox, Point>::cull_convex(
         return 0;
     }
 
-    typename BVHTREE_CLASS::CullParams params;
+    typename Tree<T, 2, MAX_ITEMS, BoundingBox, Point>::CullParams params;
     params.result_count_overall = 0;
     params.result_max           = p_result_max;
     params.result_array         = p_result_array;
@@ -703,7 +699,7 @@ void Manager<T, MAX_ITEMS, BoundingBox, Point>::_check_for_collisions(
 
     BoundingBox bb;
 
-    typename BVHTREE_CLASS::CullParams params;
+    typename Tree<T, 2, MAX_ITEMS, BoundingBox, Point>::CullParams params;
 
     params.result_count_overall = 0;
     params.result_max           = INT_MAX;
@@ -717,7 +713,7 @@ void Manager<T, MAX_ITEMS, BoundingBox, Point>::_check_for_collisions(
 
         // Use the expanded aabb for pairing.
         const BoundingBox& expanded_aabb = tree._pairs[h.id()].expanded_aabb;
-        BVHAABB_CLASS bvh_aabb;
+        AABB<BoundingBox, Point> bvh_aabb;
         bvh_aabb.from(expanded_aabb);
 
         // Send callbacks to pairs that are no longer paired.
@@ -754,7 +750,7 @@ void Manager<T, MAX_ITEMS, BoundingBox, Point>::item_get_AABB(
     Handle p_handle,
     BoundingBox& r_aabb
 ) {
-    BVHAABB_CLASS bvh_aabb;
+    AABB<BoundingBox, Point> bvh_aabb;
     tree.item_get_bvh_aabb(p_handle, bvh_aabb);
     bvh_aabb.to(r_aabb);
 }
@@ -852,12 +848,12 @@ void* Manager<T, MAX_ITEMS, BoundingBox, Point>::_recheck_pair(
 template <class T, int MAX_ITEMS, class BoundingBox, class Point>
 bool Manager<T, MAX_ITEMS, BoundingBox, Point>::_find_leavers_process_pair(
     ItemPairs<BoundingBox>& p_pairs_from,
-    const BVHAABB_CLASS& p_abb_from,
+    const AABB<BoundingBox, Point>& p_abb_from,
     Handle p_from,
     Handle p_to,
     bool p_full_check
 ) {
-    BVHAABB_CLASS bvh_aabb_to;
+    AABB<BoundingBox, Point> bvh_aabb_to;
     tree.item_get_bvh_aabb(p_to, bvh_aabb_to);
 
     // Test for overlap.
@@ -890,12 +886,12 @@ bool Manager<T, MAX_ITEMS, BoundingBox, Point>::_find_leavers_process_pair(
 template <class T, int MAX_ITEMS, class BoundingBox, class Point>
 void Manager<T, MAX_ITEMS, BoundingBox, Point>::_find_leavers(
     Handle p_handle,
-    const BVHAABB_CLASS& expanded_abb_from,
+    const AABB<BoundingBox, Point>& expanded_abb_from,
     bool p_full_check
 ) {
     ItemPairs<BoundingBox>& p_from = tree._pairs[p_handle.id()];
 
-    BVHAABB_CLASS bvh_aabb_from = expanded_abb_from;
+    AABB<BoundingBox, Point> bvh_aabb_from = expanded_abb_from;
 
     // Remove every partner from pairing list.
     for (unsigned int n = 0; n < p_from.extended_pairs.size(); n++) {
@@ -1110,8 +1106,6 @@ Manager<T, MAX_ITEMS, BoundingBox, Point>::Manager(
     unpair_callback_userdata = nullptr;
     _thread_safe             = thread_safe;
 }
-
-#undef BVHTREE_CLASS
 
 } // namespace BVH
 
