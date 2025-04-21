@@ -17,8 +17,6 @@
 
 #include <limits.h>
 
-#define BVHAABB_CLASS AABB<BoundingBox, Point>
-
 // TODO: Check if this is better.
 #define BVH_EXPAND_LEAF_AABBS
 
@@ -254,14 +252,14 @@ private:
     uint16_t dirty;
     // separate data orientated lists for faster SIMD traversal
     uint32_t item_ref_ids[MAX_ITEMS];
-    BVHAABB_CLASS aabbs[MAX_ITEMS];
+    AABB<BoundingBox, Point> aabbs[MAX_ITEMS];
 
 public:
-    BVHAABB_CLASS& get_aabb(uint32_t p_id) {
+    AABB<BoundingBox, Point>& get_aabb(uint32_t p_id) {
         return aabbs[p_id];
     }
 
-    const BVHAABB_CLASS& get_aabb(uint32_t p_id) const {
+    const AABB<BoundingBox, Point>& get_aabb(uint32_t p_id) const {
         return aabbs[p_id];
     }
 
@@ -307,7 +305,7 @@ public:
 
 template <int MAX_CHILDREN, class BoundingBox, class Point>
 struct TNode {
-    BVHAABB_CLASS aabb;
+    AABB<BoundingBox, Point> aabb;
 
     // Either number of children is positive or leaf id if negative.
     // Leaf id = 0 is disallowed.
@@ -466,18 +464,18 @@ private:
     void node_remove_item(
         uint32_t p_ref_id,
         uint32_t p_tree_id,
-        BVHAABB_CLASS* r_old_aabb = nullptr
+        AABB<BoundingBox, Point>* r_old_aabb = nullptr
     );
     // Return true if parent tree needs a refit.
     // The node AABB is calculated within this routine.
     bool _node_add_item(
         uint32_t p_node_id,
         uint32_t p_ref_id,
-        const BVHAABB_CLASS& p_aabb
+        const AABB<BoundingBox, Point>& p_aabb
     );
     uint32_t _node_create_another_child(
         uint32_t p_node_id,
-        const BVHAABB_CLASS& p_aabb
+        const AABB<BoundingBox, Point>& p_aabb
     );
 
 public:
@@ -494,9 +492,9 @@ public:
 
         // Optional components for different tests.
         Point point;
-        BVHAABB_CLASS bvh_aabb;
-        typename BVHAABB_CLASS::ConvexHull hull;
-        typename BVHAABB_CLASS::Segment segment;
+        AABB<BoundingBox, Point> bvh_aabb;
+        typename AABB<BoundingBox, Point>::ConvexHull hull;
+        typename AABB<BoundingBox, Point>::Segment segment;
 
         // When collision testing, non pairable moving items only need to be
         // tested against the pairable tree.
@@ -536,7 +534,7 @@ public:
 
 #ifdef BVH_VERBOSE
     void _debug_recursive_print_tree(int p_tree_id) const;
-    String _debug_aabb_to_string(const BVHAABB_CLASS& aabb) const;
+    String _debug_aabb_to_string(const AABB<BoundingBox, Point>& aabb) const;
     void _debug_recursive_print_tree_node(uint32_t p_node_id, int depth = 0)
         const;
 #endif
@@ -547,15 +545,15 @@ public:
     // For slow incremental optimization, we periodically remove each item from
     // the tree and reinsert it to give it a chance to find a better position.
     void _logic_item_remove_and_reinsert(uint32_t p_ref_id);
-    BVHAABB_CLASS _logic_bvh_aabb_merge(
-        const BVHAABB_CLASS& a,
-        const BVHAABB_CLASS& b
+    AABB<BoundingBox, Point> _logic_bvh_aabb_merge(
+        const AABB<BoundingBox, Point>& a,
+        const AABB<BoundingBox, Point>& b
     );
     int32_t _logic_balance(int32_t iA, uint32_t p_tree_id);
     // Either choose an existing node to add item to, or create a new node.
     uint32_t _logic_choose_item_add_node(
         uint32_t p_node_id,
-        const BVHAABB_CLASS& p_aabb
+        const AABB<BoundingBox, Point>& p_aabb
     );
     int _handle_get_tree_id(Handle p_handle) const;
     void _handle_sort(Handle& p_ha, Handle& p_hb) const;
@@ -592,7 +590,10 @@ public:
     // During collision testing, we set the from item's mask and pairable.
     void item_fill_cullparams(Handle p_handle, CullParams& r_params) const;
     bool item_is_pairable(const Handle& p_handle);
-    void item_get_bvh_aabb(const Handle& p_handle, BVHAABB_CLASS& r_bvh_aabb);
+    void item_get_bvh_aabb(
+        const Handle& p_handle,
+        AABB<BoundingBox, Point>& r_bvh_aabb
+    );
     bool item_set_pairable(
         const Handle& p_handle,
         bool p_pairable,
@@ -621,24 +622,24 @@ public:
         int& num_b,
         uint16_t* group_a,
         uint16_t* group_b,
-        const BVHAABB_CLASS* temp_bounds,
-        const BVHAABB_CLASS full_bound
+        const AABB<BoundingBox, Point>* temp_bounds,
+        const AABB<BoundingBox, Point> full_bound
     );
     void _split_leaf_sort_groups(
         int& num_a,
         int& num_b,
         uint16_t* group_a,
         uint16_t* group_b,
-        const BVHAABB_CLASS* temp_bounds
+        const AABB<BoundingBox, Point>* temp_bounds
     );
     uint32_t split_leaf(
         uint32_t p_node_id,
-        const BVHAABB_CLASS& p_added_item_aabb
+        const AABB<BoundingBox, Point>& p_added_item_aabb
     );
     // AABB is the new inserted node.
     uint32_t split_leaf_complex(
         uint32_t p_node_id,
-        const BVHAABB_CLASS& p_added_item_aabb
+        const AABB<BoundingBox, Point>& p_added_item_aabb
     );
 };
 
@@ -840,7 +841,7 @@ template <
 void Tree<T, MAX_CHILDREN, MAX_ITEMS, BoundingBox, Point>::node_remove_item(
     uint32_t p_ref_id,
     uint32_t p_tree_id,
-    BVHAABB_CLASS* r_old_aabb
+    AABB<BoundingBox, Point>* r_old_aabb
 ) {
     ItemRef& ref           = _refs[p_ref_id];
     uint32_t owner_node_id = ref.tnode_id;
@@ -857,7 +858,7 @@ void Tree<T, MAX_CHILDREN, MAX_ITEMS, BoundingBox, Point>::node_remove_item(
 
     // If the AABB is not determining the corner size, don't refit,
     // because merging AABBs takes a lot of time.
-    const BVHAABB_CLASS& old_aabb = leaf.get_aabb(ref.item_id);
+    const AABB<BoundingBox, Point>& old_aabb = leaf.get_aabb(ref.item_id);
 
     // Shrink a little to prevent using corner AABBs.
     // To miss the corners, first we shrink by node_expansion, which is
@@ -865,7 +866,7 @@ void Tree<T, MAX_CHILDREN, MAX_ITEMS, BoundingBox, Point>::node_remove_item(
     // Second, we shrink by an epsilon, to miss the very corner AABBs,
     // which are important in determining the bound.
     // AABBs within this can be removed and not affect the overall bound.
-    BVHAABB_CLASS node_bound = tnode.aabb;
+    AABB<BoundingBox, Point> node_bound = tnode.aabb;
     node_bound.expand(-_node_expansion - 0.001f);
     bool refit = true;
 
@@ -921,7 +922,7 @@ template <
 bool Tree<T, MAX_CHILDREN, MAX_ITEMS, BoundingBox, Point>::_node_add_item(
     uint32_t p_node_id,
     uint32_t p_ref_id,
-    const BVHAABB_CLASS& p_aabb
+    const AABB<BoundingBox, Point>& p_aabb
 ) {
     ItemRef& ref = _refs[p_ref_id];
     ref.tnode_id = p_node_id;
@@ -933,7 +934,7 @@ bool Tree<T, MAX_CHILDREN, MAX_ITEMS, BoundingBox, Point>::_node_add_item(
     // We only need to refit if the added item is changing the node's AABB.
     bool needs_refit = true;
 
-    BVHAABB_CLASS expanded = p_aabb;
+    AABB<BoundingBox, Point> expanded = p_aabb;
     expanded.expand(_node_expansion);
 
     // The bound will only be valid if it contains an item already.
@@ -968,7 +969,7 @@ template <
 uint32_t Tree<T, MAX_CHILDREN, MAX_ITEMS, BoundingBox, Point>::
     _node_create_another_child(
         uint32_t p_node_id,
-        const BVHAABB_CLASS& p_aabb
+        const AABB<BoundingBox, Point>& p_aabb
     ) {
     uint32_t child_node_id;
     TNode<MAX_CHILDREN, BoundingBox, Point>* child_node =
@@ -1243,7 +1244,7 @@ bool Tree<T, MAX_CHILDREN, MAX_ITEMS, BoundingBox, Point>::
 
             // Test the children individually.
             for (int n = 0; n < leaf.num_items; n++) {
-                const BVHAABB_CLASS& aabb = leaf.get_aabb(n);
+                const AABB<BoundingBox, Point>& aabb = leaf.get_aabb(n);
 
                 if (aabb.intersects_segment(r_params.segment)) {
                     uint32_t child_id = leaf.get_item_ref_id(n);
@@ -1255,8 +1256,9 @@ bool Tree<T, MAX_CHILDREN, MAX_ITEMS, BoundingBox, Point>::
         } else {
             // Test the children individually.
             for (int n = 0; n < tnode.num_children; n++) {
-                uint32_t child_id                   = tnode.children[n];
-                const BVHAABB_CLASS& child_bvh_aabb = _nodes[child_id].aabb;
+                uint32_t child_id = tnode.children[n];
+                const AABB<BoundingBox, Point>& child_bvh_aabb =
+                    _nodes[child_id].aabb;
 
                 if (child_bvh_aabb.intersects_segment(r_params.segment)) {
                     // Add to the stack.
@@ -1388,7 +1390,7 @@ bool Tree<T, MAX_CHILDREN, MAX_ITEMS, BoundingBox, Point>::_cull_aabb_iterative(
                 }
             } else {
                 for (int n = 0; n < leaf.num_items; n++) {
-                    const BVHAABB_CLASS& aabb = leaf.get_aabb(n);
+                    const AABB<BoundingBox, Point>& aabb = leaf.get_aabb(n);
 
                     if (aabb.intersects(r_params.bvh_aabb)) {
                         uint32_t child_id = leaf.get_item_ref_id(n);
@@ -1402,8 +1404,9 @@ bool Tree<T, MAX_CHILDREN, MAX_ITEMS, BoundingBox, Point>::_cull_aabb_iterative(
             if (!cap.fully_within) {
                 // Test children individually.
                 for (int n = 0; n < tnode.num_children; n++) {
-                    uint32_t child_id                   = tnode.children[n];
-                    const BVHAABB_CLASS& child_bvh_aabb = _nodes[child_id].aabb;
+                    uint32_t child_id = tnode.children[n];
+                    const AABB<BoundingBox, Point>& child_bvh_aabb =
+                        _nodes[child_id].aabb;
 
                     if (child_bvh_aabb.intersects(r_params.bvh_aabb)) {
                         // Is the node totally within the aabb?
@@ -1531,7 +1534,7 @@ bool Tree<T, MAX_CHILDREN, MAX_ITEMS, BoundingBox, Point>::
 
                 // Test children individually.
                 for (int n = 0; n < leaf.num_items; n++) {
-                    const BVHAABB_CLASS& aabb = leaf.get_aabb(n);
+                    const AABB<BoundingBox, Point>& aabb = leaf.get_aabb(n);
 
                     if (aabb.intersects_convex_optimized(
                             r_params.hull,
@@ -1553,7 +1556,7 @@ bool Tree<T, MAX_CHILDREN, MAX_ITEMS, BoundingBox, Point>::
                 uint32_t test_count = 0;
 
                 for (int n = 0; n < leaf.num_items; n++) {
-                    const BVHAABB_CLASS& aabb = leaf.get_aabb(n);
+                    const AABB<BoundingBox, Point>& aabb = leaf.get_aabb(n);
 
                     if (aabb.intersects_convex_partial(r_params.hull)) {
                         uint32_t child_id = leaf.get_item_ref_id(n);
@@ -1568,7 +1571,7 @@ bool Tree<T, MAX_CHILDREN, MAX_ITEMS, BoundingBox, Point>::
 
                 // Test children individually.
                 for (int n = 0; n < leaf.num_items; n++) {
-                    const BVHAABB_CLASS& aabb = leaf.get_aabb(n);
+                    const AABB<BoundingBox, Point>& aabb = leaf.get_aabb(n);
 
                     if (aabb.intersects_convex_partial(r_params.hull)) {
                         uint32_t child_id = leaf.get_item_ref_id(n);
@@ -1622,7 +1625,7 @@ template <
     class BoundingBox,
     class Point>
 String Tree<T, MAX_CHILDREN, MAX_ITEMS, BoundingBox, Point>::
-    _debug_aabb_to_string(const BVHAABB_CLASS& aabb) const {
+    _debug_aabb_to_string(const AABB<BoundingBox, Point>& aabb) const {
     Point size = aabb.calculate_size();
 
     String sz;
@@ -1719,10 +1722,10 @@ void Tree<T, MAX_CHILDREN, MAX_ITEMS, BoundingBox, Point>::_integrity_check_up(
 ) {
     TNode<MAX_CHILDREN, BoundingBox, Point>& node = _nodes[p_node_id];
 
-    BVHAABB_CLASS bvh_aabb = node.aabb;
+    AABB<BoundingBox, Point> bvh_aabb = node.aabb;
     node_update_aabb(node);
 
-    BVHAABB_CLASS bvh_aabb2 = node.aabb;
+    AABB<BoundingBox, Point> bvh_aabb2 = node.aabb;
     bvh_aabb2.expand(-_node_expansion);
 
     CRASH_COND(!bvh_aabb.is_other_within(bvh_aabb2));
@@ -1780,7 +1783,7 @@ void Tree<T, MAX_CHILDREN, MAX_ITEMS, BoundingBox, Point>::
     uint32_t tree_id = _handle_get_tree_id(temp_handle);
 
     // Remove and reinsert.
-    BVHAABB_CLASS bvh_aabb;
+    AABB<BoundingBox, Point> bvh_aabb;
     node_remove_item(p_ref_id, tree_id, &bvh_aabb);
 
     // We must choose where to add it to the tree.
@@ -1822,9 +1825,12 @@ template <
     int MAX_ITEMS,
     class BoundingBox,
     class Point>
-BVHAABB_CLASS Tree<T, MAX_CHILDREN, MAX_ITEMS, BoundingBox, Point>::
-    _logic_bvh_aabb_merge(const BVHAABB_CLASS& a, const BVHAABB_CLASS& b) {
-    BVHAABB_CLASS c = a;
+AABB<BoundingBox, Point> Tree<T, MAX_CHILDREN, MAX_ITEMS, BoundingBox, Point>::
+    _logic_bvh_aabb_merge(
+        const AABB<BoundingBox, Point>& a,
+        const AABB<BoundingBox, Point>& b
+    ) {
+    AABB<BoundingBox, Point> c = a;
     c.merge(b);
     return c;
 }
@@ -1978,7 +1984,7 @@ template <
 uint32_t Tree<T, MAX_CHILDREN, MAX_ITEMS, BoundingBox, Point>::
     _logic_choose_item_add_node(
         uint32_t p_node_id,
-        const BVHAABB_CLASS& p_aabb
+        const AABB<BoundingBox, Point>& p_aabb
     ) {
     while (true) {
         BVH_ASSERT(p_node_id != INVALID);
@@ -2139,7 +2145,7 @@ Handle Tree<T, MAX_CHILDREN, MAX_ITEMS, BoundingBox, Point>::item_add(
     VERBOSE_PRINT("\n");
 #endif
 
-    BVHAABB_CLASS bvh_aabb;
+    AABB<BoundingBox, Point> bvh_aabb;
     bvh_aabb.from(p_aabb);
 
     // Note: We do not expand the AABB for the first create even if
@@ -2273,7 +2279,7 @@ bool Tree<T, MAX_CHILDREN, MAX_ITEMS, BoundingBox, Point>::item_move(
         return false;
     }
 
-    BVHAABB_CLASS bvh_aabb;
+    AABB<BoundingBox, Point> bvh_aabb;
     bvh_aabb.from(p_aabb);
 
 #ifdef BVH_EXPAND_LEAF_AABBS
@@ -2296,7 +2302,7 @@ bool Tree<T, MAX_CHILDREN, MAX_ITEMS, BoundingBox, Point>::item_move(
         // needed for accurate collision detection.
         TLeaf<MAX_ITEMS, BoundingBox, Point>& leaf = _node_get_leaf(tnode);
 
-        BVHAABB_CLASS& leaf_bvh_aabb = leaf.get_aabb(ref.item_id);
+        AABB<BoundingBox, Point>& leaf_bvh_aabb = leaf.get_aabb(ref.item_id);
 
         // No change?
 #ifdef BVH_EXPAND_LEAF_AABBS
@@ -2422,7 +2428,7 @@ bool Tree<T, MAX_CHILDREN, MAX_ITEMS, BoundingBox, Point>::item_activate(
     }
 
     // Add to the tree.
-    BVHAABB_CLASS bvh_aabb;
+    AABB<BoundingBox, Point> bvh_aabb;
     bvh_aabb.from(p_aabb);
 
     uint32_t tree_id = _handle_get_tree_id(p_handle);
@@ -2455,7 +2461,7 @@ bool Tree<T, MAX_CHILDREN, MAX_ITEMS, BoundingBox, Point>::item_deactivate(
     uint32_t tree_id = _handle_get_tree_id(p_handle);
 
     // Remove it from the tree.
-    BVHAABB_CLASS bvh_aabb;
+    AABB<BoundingBox, Point> bvh_aabb;
     node_remove_item(ref_id, tree_id, &bvh_aabb);
 
     // Mark as inactive.
@@ -2520,7 +2526,7 @@ template <
     class Point>
 void Tree<T, MAX_CHILDREN, MAX_ITEMS, BoundingBox, Point>::item_get_bvh_aabb(
     const Handle& p_handle,
-    BVHAABB_CLASS& r_bvh_aabb
+    AABB<BoundingBox, Point>& r_bvh_aabb
 ) {
     uint32_t ref_id    = p_handle.id();
     const ItemRef& ref = _refs[ref_id];
@@ -2561,7 +2567,7 @@ bool Tree<T, MAX_CHILDREN, MAX_ITEMS, BoundingBox, Point>::item_set_pairable(
         // Record AABB
         TNode<MAX_CHILDREN, BoundingBox, Point>& tnode = _nodes[ref.tnode_id];
         TLeaf<MAX_ITEMS, BoundingBox, Point>& leaf     = _node_get_leaf(tnode);
-        BVHAABB_CLASS bvh_aabb = leaf.get_aabb(ref.item_id);
+        AABB<BoundingBox, Point> bvh_aabb = leaf.get_aabb(ref.item_id);
 
         // Make sure the current tree is correct prior to changing.
         uint32_t tree_id = _handle_get_tree_id(p_handle);
@@ -2642,7 +2648,7 @@ void Tree<T, MAX_CHILDREN, MAX_ITEMS, BoundingBox, Point>::update() {
 // #define BVH_ALLOW_AUTO_EXPANSION
 #ifdef BVH_ALLOW_AUTO_EXPANSION
     if (_auto_node_expansion || _auto_pairing_expansion) {
-        BVHAABB_CLASS world_bound;
+        AABB<BoundingBox, Point> world_bound;
         world_bound.set_to_max_opposite_extents();
 
         bool bound_valid = false;
@@ -2748,11 +2754,11 @@ template <
 void Tree<T, MAX_CHILDREN, MAX_ITEMS, BoundingBox, Point>::
     _debug_node_verify_bound(uint32_t p_node_id) {
     TNode<MAX_CHILDREN, BoundingBox, Point>& node = _nodes[p_node_id];
-    BVHAABB_CLASS bvh_aabb_before                 = node.aabb;
+    AABB<BoundingBox, Point> bvh_aabb_before      = node.aabb;
 
     node_update_aabb(node);
 
-    BVHAABB_CLASS bvh_aabb_after = node.aabb;
+    AABB<BoundingBox, Point> bvh_aabb_after = node.aabb;
     CRASH_COND(bvh_aabb_before != bvh_aabb_after);
 }
 
@@ -2965,8 +2971,8 @@ void Tree<T, MAX_CHILDREN, MAX_ITEMS, BoundingBox, Point>::
         int& num_b,
         uint16_t* group_a,
         uint16_t* group_b,
-        const BVHAABB_CLASS* temp_bounds,
-        const BVHAABB_CLASS full_bound
+        const AABB<BoundingBox, Point>* temp_bounds,
+        const AABB<BoundingBox, Point> full_bound
     ) {
     // Special case for low leaf sizes.
     if (MAX_ITEMS < 4) {
@@ -3111,17 +3117,17 @@ void Tree<T, MAX_CHILDREN, MAX_ITEMS, BoundingBox, Point>::
         int& num_b,
         uint16_t* group_a,
         uint16_t* group_b,
-        const BVHAABB_CLASS* temp_bounds
+        const AABB<BoundingBox, Point>* temp_bounds
     ) {
-    BVHAABB_CLASS groupb_aabb;
+    AABB<BoundingBox, Point> groupb_aabb;
     groupb_aabb.set_to_max_opposite_extents();
     for (int n = 0; n < num_b; n++) {
         int which = group_b[n];
         groupb_aabb.merge(temp_bounds[which]);
     }
-    BVHAABB_CLASS groupb_aabb_new;
+    AABB<BoundingBox, Point> groupb_aabb_new;
 
-    BVHAABB_CLASS rest_aabb;
+    AABB<BoundingBox, Point> rest_aabb;
 
     float best_size    = FLT_MAX;
     int best_candidate = -1;
@@ -3165,7 +3171,7 @@ template <
     class Point>
 uint32_t Tree<T, MAX_CHILDREN, MAX_ITEMS, BoundingBox, Point>::split_leaf(
     uint32_t p_node_id,
-    const BVHAABB_CLASS& p_added_item_aabb
+    const AABB<BoundingBox, Point>& p_added_item_aabb
 ) {
     return split_leaf_complex(p_node_id, p_added_item_aabb);
 }
@@ -3179,7 +3185,7 @@ template <
 uint32_t Tree<T, MAX_CHILDREN, MAX_ITEMS, BoundingBox, Point>::
     split_leaf_complex(
         uint32_t p_node_id,
-        const BVHAABB_CLASS& p_added_item_aabb
+        const AABB<BoundingBox, Point>& p_added_item_aabb
     ) {
     VERBOSE_PRINT("split_leaf");
 
@@ -3227,8 +3233,9 @@ uint32_t Tree<T, MAX_CHILDREN, MAX_ITEMS, BoundingBox, Point>::
     uint16_t* group_b = (uint16_t*)alloca(sizeof(uint16_t) * max_children);
 
     // We are copying the AABBs, because we need one for the inserted item.
-    BVHAABB_CLASS* temp_bounds =
-        (BVHAABB_CLASS*)alloca(sizeof(BVHAABB_CLASS) * max_children);
+    AABB<BoundingBox, Point>* temp_bounds = (AABB<BoundingBox, Point>*)alloca(
+        sizeof(AABB<BoundingBox, Point>) * max_children
+    );
 
     int num_a = max_children;
     int num_b = 0;
@@ -3260,7 +3267,8 @@ uint32_t Tree<T, MAX_CHILDREN, MAX_ITEMS, BoundingBox, Point>::
         int which = group_a[n];
 
         if (which != wildcard) {
-            const BVHAABB_CLASS& source_item_aabb = orig_leaf.get_aabb(which);
+            const AABB<BoundingBox, Point>& source_item_aabb =
+                orig_leaf.get_aabb(which);
             uint32_t source_item_ref_id = orig_leaf.get_item_ref_id(which);
             _node_add_item(
                 tnode.children[0],
@@ -3275,7 +3283,8 @@ uint32_t Tree<T, MAX_CHILDREN, MAX_ITEMS, BoundingBox, Point>::
         int which = group_b[n];
 
         if (which != wildcard) {
-            const BVHAABB_CLASS& source_item_aabb = orig_leaf.get_aabb(which);
+            const AABB<BoundingBox, Point>& source_item_aabb =
+                orig_leaf.get_aabb(which);
             uint32_t source_item_ref_id = orig_leaf.get_item_ref_id(which);
             _node_add_item(
                 tnode.children[1],
