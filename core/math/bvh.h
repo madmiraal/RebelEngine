@@ -213,20 +213,22 @@ private:
     Tree<T, 2, MAX_ITEMS, BoundingBox, Point> tree;
     Mutex _mutex;
 
-    PairCallback pair_callback;
-    UnpairCallback unpair_callback;
-    CheckPairCallback check_pair_callback;
-    void* pair_callback_userdata;
-    void* unpair_callback_userdata;
-    void* check_pair_callback_userdata;
+    PairCallback pair_callback            = nullptr;
+    UnpairCallback unpair_callback        = nullptr;
+    CheckPairCallback check_pair_callback = nullptr;
+    void* pair_callback_userdata          = nullptr;
+    void* unpair_callback_userdata        = nullptr;
+    void* check_pair_callback_userdata    = nullptr;
 
     LocalVector<Handle, uint32_t, true> changed_items;
-    uint32_t _tick;
 
-    // Toggle for turning thread safety on and off in project settings.
-    bool _thread_safe;
+    // Start from 1. so items with 0 indicate never updated.
+    uint32_t _tick = 1;
+
     const bool use_pairs;
     const bool thread_safe;
+    // Toggle for turning thread safety on and off in project settings.
+    bool _thread_safe;
 };
 
 // Definitions
@@ -237,15 +239,8 @@ Manager<T, MAX_ITEMS, BoundingBox, Point>::Manager(
     bool thread_safe
 ) :
     use_pairs(use_pairs),
-    thread_safe(thread_safe) {
-    // Start from 1. so items with 0 indicate never updated.
-    _tick                    = 1;
-    pair_callback            = nullptr;
-    unpair_callback          = nullptr;
-    pair_callback_userdata   = nullptr;
-    unpair_callback_userdata = nullptr;
-    _thread_safe             = thread_safe;
-}
+    thread_safe(thread_safe),
+    _thread_safe(thread_safe) {}
 
 template <class T, int MAX_ITEMS, class BoundingBox, class Point>
 void Manager<T, MAX_ITEMS, BoundingBox, Point>::params_set_node_expansion(
