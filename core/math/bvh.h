@@ -61,22 +61,25 @@ template <
     class Point       = Vector3>
 class Manager {
 public:
+    Manager(bool use_pairs = true, bool thread_safe = true);
+
+    // Used for for fine tuning.
+    void params_set_node_expansion(real_t p_value);
+    void params_set_pairing_expansion(real_t p_value);
+    // Toggles thread safety if thread_safe = true.
+    void params_set_thread_safe(bool p_enable);
+
     // Use uint32_t instead of Handle to maintain compatibility with octree.
     typedef void* (*PairCallback)(void*, uint32_t, T*, int, uint32_t, T*, int);
     typedef void (*UnpairCallback)(void*, uint32_t, T*, int, uint32_t, T*, int, void*);
     typedef void* (*CheckPairCallback)(void*, uint32_t, T*, int, uint32_t, T*, int, void*);
-
-    // Toggles thread safety if thread_safe = true.
-    void params_set_thread_safe(bool p_enable);
-    // Used for for fine tuning.
-    void params_set_node_expansion(real_t p_value);
-    void params_set_pairing_expansion(real_t p_value);
     void set_pair_callback(PairCallback p_callback, void* p_userdata);
     void set_unpair_callback(UnpairCallback p_callback, void* p_userdata);
     void set_check_pair_callback(
         CheckPairCallback p_callback,
         void* p_userdata
     );
+
     Handle create(
         T* p_userdata,
         bool p_active,
@@ -86,17 +89,38 @@ public:
         uint32_t p_pairable_type  = 0,
         uint32_t p_pairable_mask  = 1
     );
-    // Wrapper versions that use uint32_t instead of Handle.
+
+    void move(Handle p_handle, const BoundingBox& p_aabb);
     void move(uint32_t p_handle, const BoundingBox& p_aabb);
+    void recheck_pairs(Handle p_handle);
     void recheck_pairs(uint32_t p_handle);
+    void erase(Handle p_handle);
     void erase(uint32_t p_handle);
+    // Use in conjunction with activate if collision checks were deferred,
+    // and set pairable was never called.
+    // Deferred collision checks are a workaround for visual server.
+    void force_collision_check(Handle p_handle);
     void force_collision_check(uint32_t p_handle);
+    // Equivalent to set_visible for render trees.
+    bool activate(
+        Handle p_handle,
+        const BoundingBox& p_aabb,
+        bool p_delay_collision_check = false
+    );
     bool activate(
         uint32_t p_handle,
         const BoundingBox& p_aabb,
         bool p_delay_collision_check = false
     );
+    bool deactivate(Handle p_handle);
     bool deactivate(uint32_t p_handle);
+    void set_pairable(
+        const Handle& p_handle,
+        bool p_pairable,
+        uint32_t p_pairable_type,
+        uint32_t p_pairable_mask,
+        bool p_force_collision_check = true
+    );
     void set_pairable(
         uint32_t p_handle,
         bool p_pairable,
@@ -105,34 +129,17 @@ public:
         bool p_force_collision_check = true
     );
     bool is_pairable(uint32_t p_handle) const;
+
     int get_subindex(uint32_t p_handle) const;
     T* get(uint32_t p_handle) const;
-    void move(Handle p_handle, const BoundingBox& p_aabb);
-    void recheck_pairs(Handle p_handle);
-    void erase(Handle p_handle);
-    // Use in conjunction with activate if collision checks were deferred,
-    // and set pairable was never called.
-    // Deferred collision checks are a workaround for visual server.
-    void force_collision_check(Handle p_handle);
-    // Should be read as set_visible for render trees.
-    bool activate(
-        Handle p_handle,
-        const BoundingBox& p_aabb,
-        bool p_delay_collision_check = false
-    );
-    bool deactivate(Handle p_handle);
+
     bool get_active(Handle p_handle);
+
     // Called once per frame.
     void update();
     // Can be called more frequently than once per frame if necessary.
     void update_collisions();
-    void set_pairable(
-        const Handle& p_handle,
-        bool p_pairable,
-        uint32_t p_pairable_type,
-        uint32_t p_pairable_mask,
-        bool p_force_collision_check = true
-    );
+
     int cull_aabb(
         const BoundingBox& p_aabb,
         T** p_result_array,
@@ -161,17 +168,23 @@ public:
         int p_result_max,
         uint32_t p_mask = 0xFFFFFFFF
     );
-    void item_get_AABB(Handle p_handle, BoundingBox& r_aabb);
 
-    Manager(bool use_pairs = true, bool thread_safe = true);
+    void item_get_AABB(Handle p_handle, BoundingBox& r_aabb);
 
 private:
     void _check_for_collisions(bool p_full_check = false);
     bool item_is_pairable(Handle p_handle) const;
     T* item_get_userdata(Handle p_handle) const;
     int item_get_subindex(Handle p_handle) const;
-    void _unpair(Handle p_from, Handle p_to);
+
+    void _recheck_pairs(Handle p_handle);
     void* _recheck_pair(Handle p_from, Handle p_to, void* p_pair_data);
+    // Find all paired aabbs that are no longer paired, and send callbacks.
+    void _find_leavers(
+        Handle p_handle,
+        const AABB<BoundingBox, Point>& expanded_abb_from,
+        bool p_full_check
+    );
     // Returns true if unpaired.
     bool _find_leavers_process_pair(
         ItemPairs<BoundingBox>& p_pairs_from,
@@ -180,26 +193,25 @@ private:
         Handle p_to,
         bool p_full_check
     );
-    // Find all paired aabbs that are no longer paired, and send callbacks.
-    void _find_leavers(
-        Handle p_handle,
-        const AABB<BoundingBox, Point>& expanded_abb_from,
-        bool p_full_check
-    );
-    void _collide(Handle p_ha, Handle p_hb);
     // If we remove an item, remove the pairs.
     void _remove_pairs_containing(Handle p_handle);
+    void _unpair(Handle p_from, Handle p_to);
+
+    void _collide(Handle p_ha, Handle p_hb);
     // Send pair callbacks again for all existing pairs for the given handle.
-    void _recheck_pairs(Handle p_handle);
     const ItemExtra<T>& _get_extra(Handle p_handle) const;
     const ItemRef& _get_ref(Handle p_handle) const;
     void _reset();
+
     void _add_changed_item(
         Handle p_handle,
         const BoundingBox& aabb,
         bool p_check_aabb = true
     );
     void _remove_changed_item(Handle p_handle);
+
+    Tree<T, 2, MAX_ITEMS, BoundingBox, Point> tree;
+    Mutex _mutex;
 
     PairCallback pair_callback;
     UnpairCallback unpair_callback;
@@ -208,13 +220,8 @@ private:
     void* unpair_callback_userdata;
     void* check_pair_callback_userdata;
 
-    Tree<T, 2, MAX_ITEMS, BoundingBox, Point> tree;
-
-    // Maintain a list of all items moved to test for collision pairing.
     LocalVector<Handle, uint32_t, true> changed_items;
     uint32_t _tick;
-
-    Mutex _mutex;
 
     // Toggle for turning thread safety on and off in project settings.
     bool _thread_safe;
@@ -225,10 +232,19 @@ private:
 // Definitions
 
 template <class T, int MAX_ITEMS, class BoundingBox, class Point>
-void Manager<T, MAX_ITEMS, BoundingBox, Point>::params_set_thread_safe(
-    bool p_enable
-) {
-    _thread_safe = p_enable;
+Manager<T, MAX_ITEMS, BoundingBox, Point>::Manager(
+    bool use_pairs,
+    bool thread_safe
+) :
+    use_pairs(use_pairs),
+    thread_safe(thread_safe) {
+    // Start from 1. so items with 0 indicate never updated.
+    _tick                    = 1;
+    pair_callback            = nullptr;
+    unpair_callback          = nullptr;
+    pair_callback_userdata   = nullptr;
+    unpair_callback_userdata = nullptr;
+    _thread_safe             = thread_safe;
 }
 
 template <class T, int MAX_ITEMS, class BoundingBox, class Point>
@@ -250,6 +266,13 @@ void Manager<T, MAX_ITEMS, BoundingBox, Point>::params_set_pairing_expansion(
 ) {
     MutexLock(&_mutex, thread_safe && _thread_safe);
     tree.params_set_pairing_expansion(p_value);
+}
+
+template <class T, int MAX_ITEMS, class BoundingBox, class Point>
+void Manager<T, MAX_ITEMS, BoundingBox, Point>::params_set_thread_safe(
+    bool p_enable
+) {
+    _thread_safe = p_enable;
 }
 
 template <class T, int MAX_ITEMS, class BoundingBox, class Point>
@@ -1089,22 +1112,6 @@ void Manager<T, MAX_ITEMS, BoundingBox, Point>::_remove_changed_item(
 
     // TODO: Check if this is needed.
     tree._extra[p_handle.id()].last_updated_tick = 0;
-}
-
-template <class T, int MAX_ITEMS, class BoundingBox, class Point>
-Manager<T, MAX_ITEMS, BoundingBox, Point>::Manager(
-    bool use_pairs,
-    bool thread_safe
-) :
-    use_pairs(use_pairs),
-    thread_safe(thread_safe) {
-    // Start from 1. so items with 0 indicate never updated.
-    _tick                    = 1;
-    pair_callback            = nullptr;
-    unpair_callback          = nullptr;
-    pair_callback_userdata   = nullptr;
-    unpair_callback_userdata = nullptr;
-    _thread_safe             = thread_safe;
 }
 
 } // namespace BVH
