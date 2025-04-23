@@ -266,7 +266,7 @@ public:
     }
 };
 
-template <int MAX_CHILDREN, class BoundingBox, class Point>
+template <class BoundingBox, class Point>
 struct TNode {
     AABB<BoundingBox, Point> aabb;
 
@@ -279,7 +279,7 @@ struct TNode {
 
     // Set to -1 if there is no parent.
     uint32_t parent_id;
-    uint16_t children[MAX_CHILDREN];
+    uint16_t children[2];
 
     // Height in the tree, where leaves are 0, and all above are +1.
     int32_t height;
@@ -307,7 +307,7 @@ struct TNode {
     }
 
     bool is_full_of_children() const {
-        return num_children >= MAX_CHILDREN;
+        return num_children >= 2;
     }
 
     void remove_child_internal(uint32_t child_num) {
@@ -334,11 +334,9 @@ struct TNode {
 // in leaf nodes. This can make it far more efficient in certain circumstances.
 // It also means that the splitting logic etc have to be completely different
 // to a simpler tree.
-// Note: MAX_CHILDREN should be fixed at 2 for now.
 
 template <
     class T,
-    int MAX_CHILDREN,
     int MAX_ITEMS,
     class BoundingBox = ::AABB,
     class Point       = Vector3>
@@ -349,7 +347,7 @@ public:
     PooledList<ItemExtra<T>, true> _extra;
     PooledList<ItemPairs<BoundingBox>> _pairs;
 
-    PooledList<TNode<MAX_CHILDREN, BoundingBox, Point>, true> _nodes;
+    PooledList<TNode<BoundingBox, Point>, true> _nodes;
     PooledList<TLeaf<MAX_ITEMS, BoundingBox, Point>, true> _leaves;
 
     // We can maintain an un-ordered list of which references are active.
@@ -523,15 +521,14 @@ public:
 
 private:
     void create_root_node(int p_tree);
-    bool node_is_leaf_full(TNode<MAX_CHILDREN, BoundingBox, Point>& tnode
-    ) const;
+    bool node_is_leaf_full(TNode<BoundingBox, Point>& tnode) const;
 
 public:
     TLeaf<MAX_ITEMS, BoundingBox, Point>& _node_get_leaf(
-        TNode<MAX_CHILDREN, BoundingBox, Point>& tnode
+        TNode<BoundingBox, Point>& tnode
     );
     const TLeaf<MAX_ITEMS, BoundingBox, Point>& _node_get_leaf(
-        const TNode<MAX_CHILDREN, BoundingBox, Point>& tnode
+        const TNode<BoundingBox, Point>& tnode
     ) const;
     ItemID item_add(
         T* p_userdata,
@@ -572,7 +569,7 @@ public:
         const BoundingBox& p_aabb
     ) const;
     void _debug_node_verify_bound(uint32_t p_node_id);
-    void node_update_aabb(TNode<MAX_CHILDREN, BoundingBox, Point>& tnode);
+    void node_update_aabb(TNode<BoundingBox, Point>& tnode);
     void refit_all(int p_tree_id);
     void refit_upward(uint32_t p_node_id);
     void refit_upward_and_balance(uint32_t p_node_id, uint32_t p_tree_id);
@@ -608,13 +605,8 @@ public:
 
 // Definitions
 
-template <
-    class T,
-    int MAX_CHILDREN,
-    int MAX_ITEMS,
-    class BoundingBox,
-    class Point>
-Tree<T, MAX_CHILDREN, MAX_ITEMS, BoundingBox, Point>::Tree(bool use_pairs) :
+template <class T, int MAX_ITEMS, class BoundingBox, class Point>
+Tree<T, MAX_ITEMS, BoundingBox, Point>::Tree(bool use_pairs) :
     use_pairs(use_pairs) {
     for (int n = 0; n < NUM_TREES; n++) {
         _root_node_id[n] = INVALID;
@@ -631,17 +623,12 @@ Tree<T, MAX_CHILDREN, MAX_ITEMS, BoundingBox, Point>::Tree(bool use_pairs) :
     params_set_pairing_expansion(0.1);
 }
 
-template <
-    class T,
-    int MAX_CHILDREN,
-    int MAX_ITEMS,
-    class BoundingBox,
-    class Point>
-bool Tree<T, MAX_CHILDREN, MAX_ITEMS, BoundingBox, Point>::node_add_child(
+template <class T, int MAX_ITEMS, class BoundingBox, class Point>
+bool Tree<T, MAX_ITEMS, BoundingBox, Point>::node_add_child(
     uint32_t p_node_id,
     uint32_t p_child_node_id
 ) {
-    TNode<MAX_CHILDREN, BoundingBox, Point>& tnode = _nodes[p_node_id];
+    TNode<BoundingBox, Point>& tnode = _nodes[p_node_id];
     if (tnode.is_full_of_children()) {
         return false;
     }
@@ -650,48 +637,37 @@ bool Tree<T, MAX_CHILDREN, MAX_ITEMS, BoundingBox, Point>::node_add_child(
     tnode.num_children                 += 1;
 
     // Back link from the child to the parent.
-    TNode<MAX_CHILDREN, BoundingBox, Point>& tnode_child =
-        _nodes[p_child_node_id];
-    tnode_child.parent_id = p_node_id;
+    TNode<BoundingBox, Point>& tnode_child = _nodes[p_child_node_id];
+    tnode_child.parent_id                  = p_node_id;
 
     return true;
 }
 
-template <
-    class T,
-    int MAX_CHILDREN,
-    int MAX_ITEMS,
-    class BoundingBox,
-    class Point>
-void Tree<T, MAX_CHILDREN, MAX_ITEMS, BoundingBox, Point>::node_replace_child(
+template <class T, int MAX_ITEMS, class BoundingBox, class Point>
+void Tree<T, MAX_ITEMS, BoundingBox, Point>::node_replace_child(
     uint32_t p_parent_id,
     uint32_t p_old_child_id,
     uint32_t p_new_child_id
 ) {
-    TNode<MAX_CHILDREN, BoundingBox, Point>& parent = _nodes[p_parent_id];
+    TNode<BoundingBox, Point>& parent = _nodes[p_parent_id];
     BVH_ASSERT(!parent.is_leaf());
 
     int child_num = parent.find_child(p_old_child_id);
     BVH_ASSERT(child_num != INVALID);
     parent.children[child_num] = p_new_child_id;
 
-    TNode<MAX_CHILDREN, BoundingBox, Point>& new_child = _nodes[p_new_child_id];
-    new_child.parent_id                                = p_parent_id;
+    TNode<BoundingBox, Point>& new_child = _nodes[p_new_child_id];
+    new_child.parent_id                  = p_parent_id;
 }
 
-template <
-    class T,
-    int MAX_CHILDREN,
-    int MAX_ITEMS,
-    class BoundingBox,
-    class Point>
-void Tree<T, MAX_CHILDREN, MAX_ITEMS, BoundingBox, Point>::node_remove_child(
+template <class T, int MAX_ITEMS, class BoundingBox, class Point>
+void Tree<T, MAX_ITEMS, BoundingBox, Point>::node_remove_child(
     uint32_t p_parent_id,
     uint32_t p_child_id,
     uint32_t p_tree_id,
     bool p_prevent_sibling
 ) {
-    TNode<MAX_CHILDREN, BoundingBox, Point>& parent = _nodes[p_parent_id];
+    TNode<BoundingBox, Point>& parent = _nodes[p_parent_id];
     BVH_ASSERT(!parent.is_leaf());
 
     int child_num = parent.find_child(p_child_id);
@@ -741,15 +717,11 @@ void Tree<T, MAX_CHILDREN, MAX_ITEMS, BoundingBox, Point>::node_remove_child(
     node_free_node_and_leaf(p_parent_id);
 }
 
-template <
-    class T,
-    int MAX_CHILDREN,
-    int MAX_ITEMS,
-    class BoundingBox,
-    class Point>
-void Tree<T, MAX_CHILDREN, MAX_ITEMS, BoundingBox, Point>::
-    node_free_node_and_leaf(uint32_t p_node_id) {
-    TNode<MAX_CHILDREN, BoundingBox, Point>& node = _nodes[p_node_id];
+template <class T, int MAX_ITEMS, class BoundingBox, class Point>
+void Tree<T, MAX_ITEMS, BoundingBox, Point>::node_free_node_and_leaf(
+    uint32_t p_node_id
+) {
+    TNode<BoundingBox, Point>& node = _nodes[p_node_id];
     if (node.is_leaf()) {
         int leaf_id = node.get_leaf_id();
         _leaves.free(leaf_id);
@@ -758,31 +730,20 @@ void Tree<T, MAX_CHILDREN, MAX_ITEMS, BoundingBox, Point>::
     _nodes.free(p_node_id);
 }
 
-template <
-    class T,
-    int MAX_CHILDREN,
-    int MAX_ITEMS,
-    class BoundingBox,
-    class Point>
-void Tree<T, MAX_CHILDREN, MAX_ITEMS, BoundingBox, Point>::change_root_node(
+template <class T, int MAX_ITEMS, class BoundingBox, class Point>
+void Tree<T, MAX_ITEMS, BoundingBox, Point>::change_root_node(
     uint32_t p_new_root_id,
     uint32_t p_tree_id
 ) {
-    _root_node_id[p_tree_id]                      = p_new_root_id;
-    TNode<MAX_CHILDREN, BoundingBox, Point>& root = _nodes[p_new_root_id];
+    _root_node_id[p_tree_id]        = p_new_root_id;
+    TNode<BoundingBox, Point>& root = _nodes[p_new_root_id];
 
     // A root node has no parent.
     root.parent_id = INVALID;
 }
 
-template <
-    class T,
-    int MAX_CHILDREN,
-    int MAX_ITEMS,
-    class BoundingBox,
-    class Point>
-void Tree<T, MAX_CHILDREN, MAX_ITEMS, BoundingBox, Point>::node_make_leaf(
-    uint32_t p_node_id
+template <class T, int MAX_ITEMS, class BoundingBox, class Point>
+void Tree<T, MAX_ITEMS, BoundingBox, Point>::node_make_leaf(uint32_t p_node_id
 ) {
     uint32_t child_leaf_id;
     TLeaf<MAX_ITEMS, BoundingBox, Point>* child_leaf =
@@ -791,17 +752,12 @@ void Tree<T, MAX_CHILDREN, MAX_ITEMS, BoundingBox, Point>::node_make_leaf(
 
     BVH_ASSERT(child_leaf_id != 0);
 
-    TNode<MAX_CHILDREN, BoundingBox, Point>& node = _nodes[p_node_id];
-    node.neg_leaf_id                              = -(int)child_leaf_id;
+    TNode<BoundingBox, Point>& node = _nodes[p_node_id];
+    node.neg_leaf_id                = -(int)child_leaf_id;
 }
 
-template <
-    class T,
-    int MAX_CHILDREN,
-    int MAX_ITEMS,
-    class BoundingBox,
-    class Point>
-void Tree<T, MAX_CHILDREN, MAX_ITEMS, BoundingBox, Point>::node_remove_item(
+template <class T, int MAX_ITEMS, class BoundingBox, class Point>
+void Tree<T, MAX_ITEMS, BoundingBox, Point>::node_remove_item(
     uint32_t p_ref_id,
     uint32_t p_tree_id,
     AABB<BoundingBox, Point>* r_old_aabb
@@ -814,7 +770,7 @@ void Tree<T, MAX_CHILDREN, MAX_ITEMS, BoundingBox, Point>::node_remove_item(
         return;
     }
 
-    TNode<MAX_CHILDREN, BoundingBox, Point>& tnode = _nodes[owner_node_id];
+    TNode<BoundingBox, Point>& tnode = _nodes[owner_node_id];
     CRASH_COND(!tnode.is_leaf());
 
     TLeaf<MAX_ITEMS, BoundingBox, Point>& leaf = _node_get_leaf(tnode);
@@ -876,13 +832,8 @@ void Tree<T, MAX_CHILDREN, MAX_ITEMS, BoundingBox, Point>::node_remove_item(
     ref.item_id  = INVALID;
 }
 
-template <
-    class T,
-    int MAX_CHILDREN,
-    int MAX_ITEMS,
-    class BoundingBox,
-    class Point>
-bool Tree<T, MAX_CHILDREN, MAX_ITEMS, BoundingBox, Point>::_node_add_item(
+template <class T, int MAX_ITEMS, class BoundingBox, class Point>
+bool Tree<T, MAX_ITEMS, BoundingBox, Point>::_node_add_item(
     uint32_t p_node_id,
     uint32_t p_ref_id,
     const AABB<BoundingBox, Point>& p_aabb
@@ -890,7 +841,7 @@ bool Tree<T, MAX_CHILDREN, MAX_ITEMS, BoundingBox, Point>::_node_add_item(
     ItemRef& ref = _refs[p_ref_id];
     ref.tnode_id = p_node_id;
 
-    TNode<MAX_CHILDREN, BoundingBox, Point>& node = _nodes[p_node_id];
+    TNode<BoundingBox, Point>& node = _nodes[p_node_id];
     BVH_ASSERT(node.is_leaf());
     TLeaf<MAX_ITEMS, BoundingBox, Point>& leaf = _node_get_leaf(node);
 
@@ -923,20 +874,13 @@ bool Tree<T, MAX_CHILDREN, MAX_ITEMS, BoundingBox, Point>::_node_add_item(
     return needs_refit;
 }
 
-template <
-    class T,
-    int MAX_CHILDREN,
-    int MAX_ITEMS,
-    class BoundingBox,
-    class Point>
-uint32_t Tree<T, MAX_CHILDREN, MAX_ITEMS, BoundingBox, Point>::
-    _node_create_another_child(
-        uint32_t p_node_id,
-        const AABB<BoundingBox, Point>& p_aabb
-    ) {
+template <class T, int MAX_ITEMS, class BoundingBox, class Point>
+uint32_t Tree<T, MAX_ITEMS, BoundingBox, Point>::_node_create_another_child(
+    uint32_t p_node_id,
+    const AABB<BoundingBox, Point>& p_aabb
+) {
     uint32_t child_node_id;
-    TNode<MAX_CHILDREN, BoundingBox, Point>* child_node =
-        _nodes.request(child_node_id);
+    TNode<BoundingBox, Point>* child_node = _nodes.request(child_node_id);
     child_node->clear();
 
     // TODO: Check if necessary.
@@ -947,14 +891,8 @@ uint32_t Tree<T, MAX_CHILDREN, MAX_ITEMS, BoundingBox, Point>::
     return child_node_id;
 }
 
-template <
-    class T,
-    int MAX_CHILDREN,
-    int MAX_ITEMS,
-    class BoundingBox,
-    class Point>
-void Tree<T, MAX_CHILDREN, MAX_ITEMS, BoundingBox, Point>::_cull_translate_hits(
-    CullParams& p
+template <class T, int MAX_ITEMS, class BoundingBox, class Point>
+void Tree<T, MAX_ITEMS, BoundingBox, Point>::_cull_translate_hits(CullParams& p
 ) {
     int num_hits = _cull_hits.size();
     int left     = p.result_max - p.result_count_overall;
@@ -982,13 +920,8 @@ void Tree<T, MAX_CHILDREN, MAX_ITEMS, BoundingBox, Point>::_cull_translate_hits(
     p.result_count_overall += num_hits;
 }
 
-template <
-    class T,
-    int MAX_CHILDREN,
-    int MAX_ITEMS,
-    class BoundingBox,
-    class Point>
-int Tree<T, MAX_CHILDREN, MAX_ITEMS, BoundingBox, Point>::cull_convex(
+template <class T, int MAX_ITEMS, class BoundingBox, class Point>
+int Tree<T, MAX_ITEMS, BoundingBox, Point>::cull_convex(
     CullParams& r_params,
     bool p_translate_hits
 ) {
@@ -1010,13 +943,8 @@ int Tree<T, MAX_CHILDREN, MAX_ITEMS, BoundingBox, Point>::cull_convex(
     return r_params.result_count;
 }
 
-template <
-    class T,
-    int MAX_CHILDREN,
-    int MAX_ITEMS,
-    class BoundingBox,
-    class Point>
-int Tree<T, MAX_CHILDREN, MAX_ITEMS, BoundingBox, Point>::cull_segment(
+template <class T, int MAX_ITEMS, class BoundingBox, class Point>
+int Tree<T, MAX_ITEMS, BoundingBox, Point>::cull_segment(
     CullParams& r_params,
     bool p_translate_hits
 ) {
@@ -1038,13 +966,8 @@ int Tree<T, MAX_CHILDREN, MAX_ITEMS, BoundingBox, Point>::cull_segment(
     return r_params.result_count;
 }
 
-template <
-    class T,
-    int MAX_CHILDREN,
-    int MAX_ITEMS,
-    class BoundingBox,
-    class Point>
-int Tree<T, MAX_CHILDREN, MAX_ITEMS, BoundingBox, Point>::cull_point(
+template <class T, int MAX_ITEMS, class BoundingBox, class Point>
+int Tree<T, MAX_ITEMS, BoundingBox, Point>::cull_point(
     CullParams& r_params,
     bool p_translate_hits
 ) {
@@ -1066,13 +989,8 @@ int Tree<T, MAX_CHILDREN, MAX_ITEMS, BoundingBox, Point>::cull_point(
     return r_params.result_count;
 }
 
-template <
-    class T,
-    int MAX_CHILDREN,
-    int MAX_ITEMS,
-    class BoundingBox,
-    class Point>
-int Tree<T, MAX_CHILDREN, MAX_ITEMS, BoundingBox, Point>::cull_aabb(
+template <class T, int MAX_ITEMS, class BoundingBox, class Point>
+int Tree<T, MAX_ITEMS, BoundingBox, Point>::cull_aabb(
     CullParams& r_params,
     bool p_translate_hits
 ) {
@@ -1098,14 +1016,8 @@ int Tree<T, MAX_CHILDREN, MAX_ITEMS, BoundingBox, Point>::cull_aabb(
     return r_params.result_count;
 }
 
-template <
-    class T,
-    int MAX_CHILDREN,
-    int MAX_ITEMS,
-    class BoundingBox,
-    class Point>
-bool Tree<T, MAX_CHILDREN, MAX_ITEMS, BoundingBox, Point>::_cull_hits_full(
-    const CullParams& p
+template <class T, int MAX_ITEMS, class BoundingBox, class Point>
+bool Tree<T, MAX_ITEMS, BoundingBox, Point>::_cull_hits_full(const CullParams& p
 ) {
     // Instead of checking every hit, do a lazy check for this condition.
     // It isn't a problem if we write too many _cull_hits, because
@@ -1114,19 +1026,13 @@ bool Tree<T, MAX_CHILDREN, MAX_ITEMS, BoundingBox, Point>::_cull_hits_full(
     return (int)_cull_hits.size() >= p.result_max;
 }
 
-template <
-    class T,
-    int MAX_CHILDREN,
-    int MAX_ITEMS,
-    class BoundingBox,
-    class Point>
-bool Tree<T, MAX_CHILDREN, MAX_ITEMS, BoundingBox, Point>::
-    _cull_pairing_mask_test_hit(
-        uint32_t p_maskA,
-        uint32_t p_typeA,
-        uint32_t p_maskB,
-        uint32_t p_typeB
-    ) const {
+template <class T, int MAX_ITEMS, class BoundingBox, class Point>
+bool Tree<T, MAX_ITEMS, BoundingBox, Point>::_cull_pairing_mask_test_hit(
+    uint32_t p_maskA,
+    uint32_t p_typeA,
+    uint32_t p_maskB,
+    uint32_t p_typeB
+) const {
     // TODO: Check for a possible source of bugs.
     bool A_match_B = p_maskA & p_typeB;
 
@@ -1140,13 +1046,8 @@ bool Tree<T, MAX_CHILDREN, MAX_ITEMS, BoundingBox, Point>::
     return true;
 }
 
-template <
-    class T,
-    int MAX_CHILDREN,
-    int MAX_ITEMS,
-    class BoundingBox,
-    class Point>
-void Tree<T, MAX_CHILDREN, MAX_ITEMS, BoundingBox, Point>::_cull_hit(
+template <class T, int MAX_ITEMS, class BoundingBox, class Point>
+void Tree<T, MAX_ITEMS, BoundingBox, Point>::_cull_hit(
     uint32_t p_ref_id,
     CullParams& p
 ) {
@@ -1168,14 +1069,11 @@ void Tree<T, MAX_CHILDREN, MAX_ITEMS, BoundingBox, Point>::_cull_hit(
     _cull_hits.push_back(p_ref_id);
 }
 
-template <
-    class T,
-    int MAX_CHILDREN,
-    int MAX_ITEMS,
-    class BoundingBox,
-    class Point>
-bool Tree<T, MAX_CHILDREN, MAX_ITEMS, BoundingBox, Point>::
-    _cull_segment_iterative(uint32_t p_node_id, CullParams& r_params) {
+template <class T, int MAX_ITEMS, class BoundingBox, class Point>
+bool Tree<T, MAX_ITEMS, BoundingBox, Point>::_cull_segment_iterative(
+    uint32_t p_node_id,
+    CullParams& r_params
+) {
     // Our function parameters to keep on a stack.
     struct CullSegParams {
         uint32_t node_id;
@@ -1195,7 +1093,7 @@ bool Tree<T, MAX_CHILDREN, MAX_ITEMS, BoundingBox, Point>::
 
     // Loop while there are still more nodes on the stack.
     while (ii.pop(csp)) {
-        TNode<MAX_CHILDREN, BoundingBox, Point>& tnode = _nodes[csp.node_id];
+        TNode<BoundingBox, Point>& tnode = _nodes[csp.node_id];
 
         if (tnode.is_leaf()) {
             // Lazy check for hits full condition.
@@ -1237,14 +1135,11 @@ bool Tree<T, MAX_CHILDREN, MAX_ITEMS, BoundingBox, Point>::
     return true;
 }
 
-template <
-    class T,
-    int MAX_CHILDREN,
-    int MAX_ITEMS,
-    class BoundingBox,
-    class Point>
-bool Tree<T, MAX_CHILDREN, MAX_ITEMS, BoundingBox, Point>::
-    _cull_point_iterative(uint32_t p_node_id, CullParams& r_params) {
+template <class T, int MAX_ITEMS, class BoundingBox, class Point>
+bool Tree<T, MAX_ITEMS, BoundingBox, Point>::_cull_point_iterative(
+    uint32_t p_node_id,
+    CullParams& r_params
+) {
     // Function parameters are kept on the stack.
     struct CullPointParams {
         uint32_t node_id;
@@ -1263,7 +1158,7 @@ bool Tree<T, MAX_CHILDREN, MAX_ITEMS, BoundingBox, Point>::
 
     // Loop while there are still more nodes on the stack.
     while (ii.pop(cpp)) {
-        TNode<MAX_CHILDREN, BoundingBox, Point>& tnode = _nodes[cpp.node_id];
+        TNode<BoundingBox, Point>& tnode = _nodes[cpp.node_id];
         // Check for hit.
         if (!tnode.aabb.intersects_point(r_params.point)) {
             continue;
@@ -1303,13 +1198,8 @@ bool Tree<T, MAX_CHILDREN, MAX_ITEMS, BoundingBox, Point>::
     return true;
 }
 
-template <
-    class T,
-    int MAX_CHILDREN,
-    int MAX_ITEMS,
-    class BoundingBox,
-    class Point>
-bool Tree<T, MAX_CHILDREN, MAX_ITEMS, BoundingBox, Point>::_cull_aabb_iterative(
+template <class T, int MAX_ITEMS, class BoundingBox, class Point>
+bool Tree<T, MAX_ITEMS, BoundingBox, Point>::_cull_aabb_iterative(
     uint32_t p_node_id,
     CullParams& r_params,
     bool p_fully_within
@@ -1333,7 +1223,7 @@ bool Tree<T, MAX_CHILDREN, MAX_ITEMS, BoundingBox, Point>::_cull_aabb_iterative(
 
     // Loop while there are still more nodes on the stack.
     while (ii.pop(cap)) {
-        TNode<MAX_CHILDREN, BoundingBox, Point>& tnode = _nodes[cap.node_id];
+        TNode<BoundingBox, Point>& tnode = _nodes[cap.node_id];
 
         if (tnode.is_leaf()) {
             // Lazy check for hits full condition.
@@ -1404,18 +1294,12 @@ bool Tree<T, MAX_CHILDREN, MAX_ITEMS, BoundingBox, Point>::_cull_aabb_iterative(
     return true;
 }
 
-template <
-    class T,
-    int MAX_CHILDREN,
-    int MAX_ITEMS,
-    class BoundingBox,
-    class Point>
-bool Tree<T, MAX_CHILDREN, MAX_ITEMS, BoundingBox, Point>::
-    _cull_convex_iterative(
-        uint32_t p_node_id,
-        CullParams& r_params,
-        bool p_fully_within
-    ) {
+template <class T, int MAX_ITEMS, class BoundingBox, class Point>
+bool Tree<T, MAX_ITEMS, BoundingBox, Point>::_cull_convex_iterative(
+    uint32_t p_node_id,
+    CullParams& r_params,
+    bool p_fully_within
+) {
     // Our function parameters are kept on the stack.
     struct CullConvexParams {
         uint32_t node_id;
@@ -1440,8 +1324,7 @@ bool Tree<T, MAX_CHILDREN, MAX_ITEMS, BoundingBox, Point>::
 
     // Loop while there are still more nodes on the stack.
     while (ii.pop(ccp)) {
-        const TNode<MAX_CHILDREN, BoundingBox, Point>& tnode =
-            _nodes[ccp.node_id];
+        const TNode<BoundingBox, Point>& tnode = _nodes[ccp.node_id];
 
         if (!ccp.fully_within) {
             IntersectResult result =
@@ -1568,27 +1451,19 @@ bool Tree<T, MAX_CHILDREN, MAX_ITEMS, BoundingBox, Point>::
 }
 
 #ifdef BVH_VERBOSE
-template <
-    class T,
-    int MAX_CHILDREN,
-    int MAX_ITEMS,
-    class BoundingBox,
-    class Point>
-void Tree<T, MAX_CHILDREN, MAX_ITEMS, BoundingBox, Point>::
-    _debug_recursive_print_tree(int p_tree_id) const {
+template <class T, int MAX_ITEMS, class BoundingBox, class Point>
+void Tree<T, MAX_ITEMS, BoundingBox, Point>::_debug_recursive_print_tree(
+    int p_tree_id
+) const {
     if (_root_node_id[p_tree_id] != INVALID) {
         _debug_recursive_print_tree_node(_root_node_id[p_tree_id]);
     }
 }
 
-template <
-    class T,
-    int MAX_CHILDREN,
-    int MAX_ITEMS,
-    class BoundingBox,
-    class Point>
-String Tree<T, MAX_CHILDREN, MAX_ITEMS, BoundingBox, Point>::
-    _debug_aabb_to_string(const AABB<BoundingBox, Point>& aabb) const {
+template <class T, int MAX_ITEMS, class BoundingBox, class Point>
+String Tree<T, MAX_ITEMS, BoundingBox, Point>::_debug_aabb_to_string(
+    const AABB<BoundingBox, Point>& aabb
+) const {
     Point size = aabb.calculate_size();
 
     String sz;
@@ -1609,15 +1484,12 @@ String Tree<T, MAX_CHILDREN, MAX_ITEMS, BoundingBox, Point>::
     return sz;
 }
 
-template <
-    class T,
-    int MAX_CHILDREN,
-    int MAX_ITEMS,
-    class BoundingBox,
-    class Point>
-void Tree<T, MAX_CHILDREN, MAX_ITEMS, BoundingBox, Point>::
-    _debug_recursive_print_tree_node(uint32_t p_node_id, int depth = 0) const {
-    const TNode<MAX_CHILDREN, BoundingBox, Point>& tnode = _nodes[p_node_id];
+template <class T, int MAX_ITEMS, class BoundingBox, class Point>
+void Tree<T, MAX_ITEMS, BoundingBox, Point>::_debug_recursive_print_tree_node(
+    uint32_t p_node_id,
+    int depth = 0
+) const {
+    const TNode<BoundingBox, Point>& tnode = _nodes[p_node_id];
 
     String sz = "";
     for (int n = 0; n < depth; n++) {
@@ -1656,14 +1528,8 @@ void Tree<T, MAX_CHILDREN, MAX_ITEMS, BoundingBox, Point>::
 }
 #endif
 
-template <
-    class T,
-    int MAX_CHILDREN,
-    int MAX_ITEMS,
-    class BoundingBox,
-    class Point>
-void Tree<T, MAX_CHILDREN, MAX_ITEMS, BoundingBox, Point>::_integrity_check_all(
-) {
+template <class T, int MAX_ITEMS, class BoundingBox, class Point>
+void Tree<T, MAX_ITEMS, BoundingBox, Point>::_integrity_check_all() {
 #ifdef BVH_INTEGRITY_CHECKS
     for (int n = 0; n < NUM_TREES; n++) {
         uint32_t root = _root_node_id[n];
@@ -1674,16 +1540,11 @@ void Tree<T, MAX_CHILDREN, MAX_ITEMS, BoundingBox, Point>::_integrity_check_all(
 #endif
 }
 
-template <
-    class T,
-    int MAX_CHILDREN,
-    int MAX_ITEMS,
-    class BoundingBox,
-    class Point>
-void Tree<T, MAX_CHILDREN, MAX_ITEMS, BoundingBox, Point>::_integrity_check_up(
+template <class T, int MAX_ITEMS, class BoundingBox, class Point>
+void Tree<T, MAX_ITEMS, BoundingBox, Point>::_integrity_check_up(
     uint32_t p_node_id
 ) {
-    TNode<MAX_CHILDREN, BoundingBox, Point>& node = _nodes[p_node_id];
+    TNode<BoundingBox, Point>& node = _nodes[p_node_id];
 
     AABB<BoundingBox, Point> bvh_aabb = node.aabb;
     node_update_aabb(node);
@@ -1694,15 +1555,11 @@ void Tree<T, MAX_CHILDREN, MAX_ITEMS, BoundingBox, Point>::_integrity_check_up(
     CRASH_COND(!bvh_aabb.is_other_within(bvh_aabb2));
 }
 
-template <
-    class T,
-    int MAX_CHILDREN,
-    int MAX_ITEMS,
-    class BoundingBox,
-    class Point>
-void Tree<T, MAX_CHILDREN, MAX_ITEMS, BoundingBox, Point>::
-    _integrity_check_down(uint32_t p_node_id) {
-    const TNode<MAX_CHILDREN, BoundingBox, Point>& node = _nodes[p_node_id];
+template <class T, int MAX_ITEMS, class BoundingBox, class Point>
+void Tree<T, MAX_ITEMS, BoundingBox, Point>::_integrity_check_down(
+    uint32_t p_node_id
+) {
+    const TNode<BoundingBox, Point>& node = _nodes[p_node_id];
 
     if (node.is_leaf()) {
         _integrity_check_up(p_node_id);
@@ -1713,7 +1570,7 @@ void Tree<T, MAX_CHILDREN, MAX_ITEMS, BoundingBox, Point>::
             uint32_t child_id = node.children[n];
 
             // Check that the children's parent pointers are correct.
-            TNode<MAX_CHILDREN, BoundingBox, Point>& child = _nodes[child_id];
+            TNode<BoundingBox, Point>& child = _nodes[child_id];
             CRASH_COND(child.parent_id != p_node_id);
 
             _integrity_check_down(child_id);
@@ -1721,14 +1578,10 @@ void Tree<T, MAX_CHILDREN, MAX_ITEMS, BoundingBox, Point>::
     }
 }
 
-template <
-    class T,
-    int MAX_CHILDREN,
-    int MAX_ITEMS,
-    class BoundingBox,
-    class Point>
-void Tree<T, MAX_CHILDREN, MAX_ITEMS, BoundingBox, Point>::
-    _logic_item_remove_and_reinsert(uint32_t p_ref_id) {
+template <class T, int MAX_ITEMS, class BoundingBox, class Point>
+void Tree<T, MAX_ITEMS, BoundingBox, Point>::_logic_item_remove_and_reinsert(
+    uint32_t p_ref_id
+) {
     ItemRef& ref = _refs[p_ref_id];
 
     if (!ref.is_active()) {
@@ -1780,13 +1633,8 @@ void Tree<T, MAX_CHILDREN, MAX_ITEMS, BoundingBox, Point>::
  */
 //--------------------------------------------------------------------------------------------------
 
-template <
-    class T,
-    int MAX_CHILDREN,
-    int MAX_ITEMS,
-    class BoundingBox,
-    class Point>
-AABB<BoundingBox, Point> Tree<T, MAX_CHILDREN, MAX_ITEMS, BoundingBox, Point>::
+template <class T, int MAX_ITEMS, class BoundingBox, class Point>
+AABB<BoundingBox, Point> Tree<T, MAX_ITEMS, BoundingBox, Point>::
     _logic_bvh_aabb_merge(
         const AABB<BoundingBox, Point>& a,
         const AABB<BoundingBox, Point>& b
@@ -1796,20 +1644,15 @@ AABB<BoundingBox, Point> Tree<T, MAX_CHILDREN, MAX_ITEMS, BoundingBox, Point>::
     return c;
 }
 
-template <
-    class T,
-    int MAX_CHILDREN,
-    int MAX_ITEMS,
-    class BoundingBox,
-    class Point>
-int32_t Tree<T, MAX_CHILDREN, MAX_ITEMS, BoundingBox, Point>::_logic_balance(
+template <class T, int MAX_ITEMS, class BoundingBox, class Point>
+int32_t Tree<T, MAX_ITEMS, BoundingBox, Point>::_logic_balance(
     int32_t iA,
     uint32_t p_tree_id
 ) {
     // Uncomment to bypass balance.
     // return iA;
 
-    TNode<MAX_CHILDREN, BoundingBox, Point>* A = &_nodes[iA];
+    TNode<BoundingBox, Point>* A = &_nodes[iA];
 
     if (A->is_leaf() || A->height == 1) {
         return iA;
@@ -1823,19 +1666,19 @@ int32_t Tree<T, MAX_CHILDREN, MAX_ITEMS, BoundingBox, Point>::_logic_balance(
      */
 
     CRASH_COND(A->num_children != 2);
-    int32_t iB                                 = A->children[0];
-    int32_t iC                                 = A->children[1];
-    TNode<MAX_CHILDREN, BoundingBox, Point>* B = &_nodes[iB];
-    TNode<MAX_CHILDREN, BoundingBox, Point>* C = &_nodes[iC];
+    int32_t iB                   = A->children[0];
+    int32_t iC                   = A->children[1];
+    TNode<BoundingBox, Point>* B = &_nodes[iB];
+    TNode<BoundingBox, Point>* C = &_nodes[iC];
 
     int32_t balance = C->height - B->height;
 
     // If C is higher, promote C.
     if (balance > 1) {
-        int32_t iF                                 = C->children[0];
-        int32_t iG                                 = C->children[1];
-        TNode<MAX_CHILDREN, BoundingBox, Point>* F = &_nodes[iF];
-        TNode<MAX_CHILDREN, BoundingBox, Point>* G = &_nodes[iG];
+        int32_t iF                   = C->children[0];
+        int32_t iG                   = C->children[1];
+        TNode<BoundingBox, Point>* F = &_nodes[iF];
+        TNode<BoundingBox, Point>* G = &_nodes[iG];
 
         // Grandparent point to C.
         if (A->parent_id != INVALID) {
@@ -1883,10 +1726,10 @@ int32_t Tree<T, MAX_CHILDREN, MAX_ITEMS, BoundingBox, Point>::_logic_balance(
 
     // If B is higher, promote B.
     else if (balance < -1) {
-        int32_t iD                                 = B->children[0];
-        int32_t iE                                 = B->children[1];
-        TNode<MAX_CHILDREN, BoundingBox, Point>* D = &_nodes[iD];
-        TNode<MAX_CHILDREN, BoundingBox, Point>* E = &_nodes[iE];
+        int32_t iD                   = B->children[0];
+        int32_t iE                   = B->children[1];
+        TNode<BoundingBox, Point>* D = &_nodes[iD];
+        TNode<BoundingBox, Point>* E = &_nodes[iE];
 
         // Grandparent point to B.
         if (A->parent_id != INVALID) {
@@ -1936,20 +1779,14 @@ int32_t Tree<T, MAX_CHILDREN, MAX_ITEMS, BoundingBox, Point>::_logic_balance(
     return iA;
 }
 
-template <
-    class T,
-    int MAX_CHILDREN,
-    int MAX_ITEMS,
-    class BoundingBox,
-    class Point>
-uint32_t Tree<T, MAX_CHILDREN, MAX_ITEMS, BoundingBox, Point>::
-    _logic_choose_item_add_node(
-        uint32_t p_node_id,
-        const AABB<BoundingBox, Point>& p_aabb
-    ) {
+template <class T, int MAX_ITEMS, class BoundingBox, class Point>
+uint32_t Tree<T, MAX_ITEMS, BoundingBox, Point>::_logic_choose_item_add_node(
+    uint32_t p_node_id,
+    const AABB<BoundingBox, Point>& p_aabb
+) {
     while (true) {
         BVH_ASSERT(p_node_id != INVALID);
-        TNode<MAX_CHILDREN, BoundingBox, Point>& tnode = _nodes[p_node_id];
+        TNode<BoundingBox, Point>& tnode = _nodes[p_node_id];
 
         if (tnode.is_leaf()) {
             // If a leaf, and not full, use it.
@@ -1971,10 +1808,8 @@ uint32_t Tree<T, MAX_CHILDREN, MAX_ITEMS, BoundingBox, Point>::
             p_node_id = tnode.children[0];
         } else {
             BVH_ASSERT(tnode.num_children == 2);
-            TNode<MAX_CHILDREN, BoundingBox, Point>& childA =
-                _nodes[tnode.children[0]];
-            TNode<MAX_CHILDREN, BoundingBox, Point>& childB =
-                _nodes[tnode.children[1]];
+            TNode<BoundingBox, Point>& childA = _nodes[tnode.children[0]];
+            TNode<BoundingBox, Point>& childB = _nodes[tnode.children[1]];
             int which = p_aabb.select_by_proximity(childA.aabb, childB.aabb);
 
             p_node_id = tnode.children[which];
@@ -1982,14 +1817,8 @@ uint32_t Tree<T, MAX_CHILDREN, MAX_ITEMS, BoundingBox, Point>::
     }
 }
 
-template <
-    class T,
-    int MAX_CHILDREN,
-    int MAX_ITEMS,
-    class BoundingBox,
-    class Point>
-int Tree<T, MAX_CHILDREN, MAX_ITEMS, BoundingBox, Point>::_handle_get_tree_id(
-    ItemID item_id
+template <class T, int MAX_ITEMS, class BoundingBox, class Point>
+int Tree<T, MAX_ITEMS, BoundingBox, Point>::_handle_get_tree_id(ItemID item_id
 ) const {
     if (use_pairs) {
         int tree = 0;
@@ -2001,13 +1830,8 @@ int Tree<T, MAX_CHILDREN, MAX_ITEMS, BoundingBox, Point>::_handle_get_tree_id(
     return 0;
 }
 
-template <
-    class T,
-    int MAX_CHILDREN,
-    int MAX_ITEMS,
-    class BoundingBox,
-    class Point>
-void Tree<T, MAX_CHILDREN, MAX_ITEMS, BoundingBox, Point>::_handle_sort(
+template <class T, int MAX_ITEMS, class BoundingBox, class Point>
+void Tree<T, MAX_ITEMS, BoundingBox, Point>::_handle_sort(
     ItemID& p_ha,
     ItemID& p_hb
 ) const {
@@ -2018,20 +1842,12 @@ void Tree<T, MAX_CHILDREN, MAX_ITEMS, BoundingBox, Point>::_handle_sort(
     }
 }
 
-template <
-    class T,
-    int MAX_CHILDREN,
-    int MAX_ITEMS,
-    class BoundingBox,
-    class Point>
-void Tree<T, MAX_CHILDREN, MAX_ITEMS, BoundingBox, Point>::create_root_node(
-    int p_tree
-) {
+template <class T, int MAX_ITEMS, class BoundingBox, class Point>
+void Tree<T, MAX_ITEMS, BoundingBox, Point>::create_root_node(int p_tree) {
     // If there is no root node, create one.
     if (_root_node_id[p_tree] == INVALID) {
         uint32_t root_node_id;
-        TNode<MAX_CHILDREN, BoundingBox, Point>* node =
-            _nodes.request(root_node_id);
+        TNode<BoundingBox, Point>* node = _nodes.request(root_node_id);
         node->clear();
         _root_node_id[p_tree] = root_node_id;
 
@@ -2043,54 +1859,33 @@ void Tree<T, MAX_CHILDREN, MAX_ITEMS, BoundingBox, Point>::create_root_node(
     }
 }
 
-template <
-    class T,
-    int MAX_CHILDREN,
-    int MAX_ITEMS,
-    class BoundingBox,
-    class Point>
-bool Tree<T, MAX_CHILDREN, MAX_ITEMS, BoundingBox, Point>::node_is_leaf_full(
-    TNode<MAX_CHILDREN, BoundingBox, Point>& tnode
+template <class T, int MAX_ITEMS, class BoundingBox, class Point>
+bool Tree<T, MAX_ITEMS, BoundingBox, Point>::node_is_leaf_full(
+    TNode<BoundingBox, Point>& tnode
 ) const {
     const TLeaf<MAX_ITEMS, BoundingBox, Point>& leaf = _node_get_leaf(tnode);
     return leaf.is_full();
 }
 
-template <
-    class T,
-    int MAX_CHILDREN,
-    int MAX_ITEMS,
-    class BoundingBox,
-    class Point>
-TLeaf<MAX_ITEMS, BoundingBox, Point>&
-Tree<T, MAX_CHILDREN, MAX_ITEMS, BoundingBox, Point>::_node_get_leaf(
-    TNode<MAX_CHILDREN, BoundingBox, Point>& tnode
-) {
+template <class T, int MAX_ITEMS, class BoundingBox, class Point>
+TLeaf<MAX_ITEMS, BoundingBox, Point>& Tree<T, MAX_ITEMS, BoundingBox, Point>::
+    _node_get_leaf(TNode<BoundingBox, Point>& tnode) {
     BVH_ASSERT(tnode.is_leaf());
     return _leaves[tnode.get_leaf_id()];
 }
 
-template <
-    class T,
-    int MAX_CHILDREN,
-    int MAX_ITEMS,
-    class BoundingBox,
-    class Point>
-const TLeaf<MAX_ITEMS, BoundingBox, Point>&
-Tree<T, MAX_CHILDREN, MAX_ITEMS, BoundingBox, Point>::_node_get_leaf(
-    const TNode<MAX_CHILDREN, BoundingBox, Point>& tnode
-) const {
+template <class T, int MAX_ITEMS, class BoundingBox, class Point>
+const TLeaf<MAX_ITEMS, BoundingBox, Point>& Tree<
+    T,
+    MAX_ITEMS,
+    BoundingBox,
+    Point>::_node_get_leaf(const TNode<BoundingBox, Point>& tnode) const {
     BVH_ASSERT(tnode.is_leaf());
     return _leaves[tnode.get_leaf_id()];
 }
 
-template <
-    class T,
-    int MAX_CHILDREN,
-    int MAX_ITEMS,
-    class BoundingBox,
-    class Point>
-ItemID Tree<T, MAX_CHILDREN, MAX_ITEMS, BoundingBox, Point>::item_add(
+template <class T, int MAX_ITEMS, class BoundingBox, class Point>
+ItemID Tree<T, MAX_ITEMS, BoundingBox, Point>::item_add(
     T* p_userdata,
     bool p_active,
     const BoundingBox& p_aabb,
@@ -2172,8 +1967,7 @@ ItemID Tree<T, MAX_CHILDREN, MAX_ITEMS, BoundingBox, Point>::item_add(
 
         if (refit) {
             // Only need to refit from the parent.
-            const TNode<MAX_CHILDREN, BoundingBox, Point>& add_node =
-                _nodes[ref->tnode_id];
+            const TNode<BoundingBox, Point>& add_node = _nodes[ref->tnode_id];
             if (add_node.parent_id != INVALID) {
                 refit_upward_and_balance(add_node.parent_id, tree_id);
             }
@@ -2201,13 +1995,8 @@ ItemID Tree<T, MAX_CHILDREN, MAX_ITEMS, BoundingBox, Point>::item_add(
     return item_id;
 }
 
-template <
-    class T,
-    int MAX_CHILDREN,
-    int MAX_ITEMS,
-    class BoundingBox,
-    class Point>
-void Tree<T, MAX_CHILDREN, MAX_ITEMS, BoundingBox, Point>::_debug_print_refs() {
+template <class T, int MAX_ITEMS, class BoundingBox, class Point>
+void Tree<T, MAX_ITEMS, BoundingBox, Point>::_debug_print_refs() {
 #ifdef BVH_VERBOSE_TREE
     print_line("refs.....");
     for (int n = 0; n < _refs.size(); n++) {
@@ -2220,13 +2009,8 @@ void Tree<T, MAX_CHILDREN, MAX_ITEMS, BoundingBox, Point>::_debug_print_refs() {
 #endif
 }
 
-template <
-    class T,
-    int MAX_CHILDREN,
-    int MAX_ITEMS,
-    class BoundingBox,
-    class Point>
-bool Tree<T, MAX_CHILDREN, MAX_ITEMS, BoundingBox, Point>::item_move(
+template <class T, int MAX_ITEMS, class BoundingBox, class Point>
+bool Tree<T, MAX_ITEMS, BoundingBox, Point>::item_move(
     ItemID item_id,
     const BoundingBox& p_aabb
 ) {
@@ -2250,7 +2034,7 @@ bool Tree<T, MAX_CHILDREN, MAX_ITEMS, BoundingBox, Point>::item_move(
 #endif
 
     BVH_ASSERT(ref.tnode_id != INVALID);
-    TNode<MAX_CHILDREN, BoundingBox, Point>& tnode = _nodes[ref.tnode_id];
+    TNode<BoundingBox, Point>& tnode = _nodes[ref.tnode_id];
 
     // Does it fit within the current leaf AABB?
     if (tnode.aabb.is_other_within(bvh_aabb)) {
@@ -2312,8 +2096,7 @@ bool Tree<T, MAX_CHILDREN, MAX_ITEMS, BoundingBox, Point>::item_move(
 
     // Only need to refit from the parent.
     if (needs_refit) {
-        const TNode<MAX_CHILDREN, BoundingBox, Point>& add_node =
-            _nodes[ref.tnode_id];
+        const TNode<BoundingBox, Point>& add_node = _nodes[ref.tnode_id];
         if (add_node.parent_id != INVALID) {
             // TODO: We don't need to rebalance all the time.
             refit_upward(add_node.parent_id);
@@ -2323,15 +2106,8 @@ bool Tree<T, MAX_CHILDREN, MAX_ITEMS, BoundingBox, Point>::item_move(
     return true;
 }
 
-template <
-    class T,
-    int MAX_CHILDREN,
-    int MAX_ITEMS,
-    class BoundingBox,
-    class Point>
-void Tree<T, MAX_CHILDREN, MAX_ITEMS, BoundingBox, Point>::item_remove(
-    ItemID item_id
-) {
+template <class T, int MAX_ITEMS, class BoundingBox, class Point>
+void Tree<T, MAX_ITEMS, BoundingBox, Point>::item_remove(ItemID item_id) {
     uint32_t tree_id = _handle_get_tree_id(item_id);
 
     VERBOSE_PRINT("item_remove [" + itos(item_id) + "] ");
@@ -2366,13 +2142,8 @@ void Tree<T, MAX_CHILDREN, MAX_ITEMS, BoundingBox, Point>::item_remove(
 #endif
 }
 
-template <
-    class T,
-    int MAX_CHILDREN,
-    int MAX_ITEMS,
-    class BoundingBox,
-    class Point>
-bool Tree<T, MAX_CHILDREN, MAX_ITEMS, BoundingBox, Point>::item_activate(
+template <class T, int MAX_ITEMS, class BoundingBox, class Point>
+bool Tree<T, MAX_ITEMS, BoundingBox, Point>::item_activate(
     ItemID item_id,
     const BoundingBox& p_aabb
 ) {
@@ -2397,15 +2168,8 @@ bool Tree<T, MAX_CHILDREN, MAX_ITEMS, BoundingBox, Point>::item_activate(
     return true;
 }
 
-template <
-    class T,
-    int MAX_CHILDREN,
-    int MAX_ITEMS,
-    class BoundingBox,
-    class Point>
-bool Tree<T, MAX_CHILDREN, MAX_ITEMS, BoundingBox, Point>::item_deactivate(
-    ItemID item_id
-) {
+template <class T, int MAX_ITEMS, class BoundingBox, class Point>
+bool Tree<T, MAX_ITEMS, BoundingBox, Point>::item_deactivate(ItemID item_id) {
     ItemRef& ref = _refs[item_id];
     if (!ref.is_active()) {
         return false;
@@ -2422,26 +2186,15 @@ bool Tree<T, MAX_CHILDREN, MAX_ITEMS, BoundingBox, Point>::item_deactivate(
     return true;
 }
 
-template <
-    class T,
-    int MAX_CHILDREN,
-    int MAX_ITEMS,
-    class BoundingBox,
-    class Point>
-bool Tree<T, MAX_CHILDREN, MAX_ITEMS, BoundingBox, Point>::item_get_active(
-    ItemID item_id
+template <class T, int MAX_ITEMS, class BoundingBox, class Point>
+bool Tree<T, MAX_ITEMS, BoundingBox, Point>::item_get_active(ItemID item_id
 ) const {
     const ItemRef& ref = _refs[item_id];
     return ref.is_active();
 }
 
-template <
-    class T,
-    int MAX_CHILDREN,
-    int MAX_ITEMS,
-    class BoundingBox,
-    class Point>
-void Tree<T, MAX_CHILDREN, MAX_ITEMS, BoundingBox, Point>::item_fill_cullparams(
+template <class T, int MAX_ITEMS, class BoundingBox, class Point>
+void Tree<T, MAX_ITEMS, BoundingBox, Point>::item_fill_cullparams(
     ItemID item_id,
     CullParams& r_params
 ) const {
@@ -2455,44 +2208,29 @@ void Tree<T, MAX_CHILDREN, MAX_ITEMS, BoundingBox, Point>::item_fill_cullparams(
     r_params.pairable_type = extra.pairable_type;
 }
 
-template <
-    class T,
-    int MAX_CHILDREN,
-    int MAX_ITEMS,
-    class BoundingBox,
-    class Point>
-bool Tree<T, MAX_CHILDREN, MAX_ITEMS, BoundingBox, Point>::item_is_pairable(
+template <class T, int MAX_ITEMS, class BoundingBox, class Point>
+bool Tree<T, MAX_ITEMS, BoundingBox, Point>::item_is_pairable(
     const ItemID& item_id
 ) {
     const ItemExtra<T>& extra = _extra[item_id];
     return extra.pairable != 0;
 }
 
-template <
-    class T,
-    int MAX_CHILDREN,
-    int MAX_ITEMS,
-    class BoundingBox,
-    class Point>
-void Tree<T, MAX_CHILDREN, MAX_ITEMS, BoundingBox, Point>::item_get_bvh_aabb(
+template <class T, int MAX_ITEMS, class BoundingBox, class Point>
+void Tree<T, MAX_ITEMS, BoundingBox, Point>::item_get_bvh_aabb(
     const ItemID& item_id,
     AABB<BoundingBox, Point>& r_bvh_aabb
 ) {
     const ItemRef& ref = _refs[item_id];
 
-    TNode<MAX_CHILDREN, BoundingBox, Point>& tnode = _nodes[ref.tnode_id];
-    TLeaf<MAX_ITEMS, BoundingBox, Point>& leaf     = _node_get_leaf(tnode);
+    TNode<BoundingBox, Point>& tnode           = _nodes[ref.tnode_id];
+    TLeaf<MAX_ITEMS, BoundingBox, Point>& leaf = _node_get_leaf(tnode);
 
     r_bvh_aabb = leaf.get_aabb(ref.item_id);
 }
 
-template <
-    class T,
-    int MAX_CHILDREN,
-    int MAX_ITEMS,
-    class BoundingBox,
-    class Point>
-bool Tree<T, MAX_CHILDREN, MAX_ITEMS, BoundingBox, Point>::item_set_pairable(
+template <class T, int MAX_ITEMS, class BoundingBox, class Point>
+bool Tree<T, MAX_ITEMS, BoundingBox, Point>::item_set_pairable(
     const ItemID& item_id,
     bool p_pairable,
     uint32_t p_pairable_type,
@@ -2512,9 +2250,9 @@ bool Tree<T, MAX_CHILDREN, MAX_ITEMS, BoundingBox, Point>::item_set_pairable(
 
     if (active && pairable_changed) {
         // Record AABB
-        TNode<MAX_CHILDREN, BoundingBox, Point>& tnode = _nodes[ref.tnode_id];
-        TLeaf<MAX_ITEMS, BoundingBox, Point>& leaf     = _node_get_leaf(tnode);
-        AABB<BoundingBox, Point> bvh_aabb = leaf.get_aabb(ref.item_id);
+        TNode<BoundingBox, Point>& tnode           = _nodes[ref.tnode_id];
+        TLeaf<MAX_ITEMS, BoundingBox, Point>& leaf = _node_get_leaf(tnode);
+        AABB<BoundingBox, Point> bvh_aabb          = leaf.get_aabb(ref.item_id);
 
         // Make sure the current tree is correct prior to changing.
         uint32_t tree_id = _handle_get_tree_id(item_id);
@@ -2537,8 +2275,7 @@ bool Tree<T, MAX_CHILDREN, MAX_ITEMS, BoundingBox, Point>::item_set_pairable(
 
         // Only need to refit from the parent.
         if (needs_refit) {
-            const TNode<MAX_CHILDREN, BoundingBox, Point>& add_node =
-                _nodes[ref.tnode_id];
+            const TNode<BoundingBox, Point>& add_node = _nodes[ref.tnode_id];
             if (add_node.parent_id != INVALID) {
                 refit_upward_and_balance(add_node.parent_id, tree_id);
             }
@@ -2550,14 +2287,8 @@ bool Tree<T, MAX_CHILDREN, MAX_ITEMS, BoundingBox, Point>::item_set_pairable(
     return state_changed;
 }
 
-template <
-    class T,
-    int MAX_CHILDREN,
-    int MAX_ITEMS,
-    class BoundingBox,
-    class Point>
-void Tree<T, MAX_CHILDREN, MAX_ITEMS, BoundingBox, Point>::incremental_optimize(
-) {
+template <class T, int MAX_ITEMS, class BoundingBox, class Point>
+void Tree<T, MAX_ITEMS, BoundingBox, Point>::incremental_optimize() {
     // First update all AABBs as a one off step.
     // Cheaper than doing it on each move as each leaf may get touched
     // multiple times in a frame.
@@ -2582,13 +2313,8 @@ void Tree<T, MAX_CHILDREN, MAX_ITEMS, BoundingBox, Point>::incremental_optimize(
     _logic_item_remove_and_reinsert(ref_id);
 }
 
-template <
-    class T,
-    int MAX_CHILDREN,
-    int MAX_ITEMS,
-    class BoundingBox,
-    class Point>
-void Tree<T, MAX_CHILDREN, MAX_ITEMS, BoundingBox, Point>::update() {
+template <class T, int MAX_ITEMS, class BoundingBox, class Point>
+void Tree<T, MAX_ITEMS, BoundingBox, Point>::update() {
     incremental_optimize();
 
     // Keep the expansion values up to date with the world bound.
@@ -2628,14 +2354,10 @@ void Tree<T, MAX_CHILDREN, MAX_ITEMS, BoundingBox, Point>::update() {
 #endif
 }
 
-template <
-    class T,
-    int MAX_CHILDREN,
-    int MAX_ITEMS,
-    class BoundingBox,
-    class Point>
-void Tree<T, MAX_CHILDREN, MAX_ITEMS, BoundingBox, Point>::
-    params_set_pairing_expansion(real_t p_value) {
+template <class T, int MAX_ITEMS, class BoundingBox, class Point>
+void Tree<T, MAX_ITEMS, BoundingBox, Point>::params_set_pairing_expansion(
+    real_t p_value
+) {
     if (p_value < 0.0) {
 #ifdef BVH_ALLOW_AUTO_EXPANSION
         _auto_pairing_expansion = true;
@@ -2654,17 +2376,11 @@ void Tree<T, MAX_CHILDREN, MAX_ITEMS, BoundingBox, Point>::
         _pairing_expansion * Point::AXIS_COUNT * 2.0 * fudge_factor;
 }
 
-template <
-    class T,
-    int MAX_CHILDREN,
-    int MAX_ITEMS,
-    class BoundingBox,
-    class Point>
-bool Tree<T, MAX_CHILDREN, MAX_ITEMS, BoundingBox, Point>::
-    expanded_aabb_encloses_not_shrink(
-        const BoundingBox& p_expanded_aabb,
-        const BoundingBox& p_aabb
-    ) const {
+template <class T, int MAX_ITEMS, class BoundingBox, class Point>
+bool Tree<T, MAX_ITEMS, BoundingBox, Point>::expanded_aabb_encloses_not_shrink(
+    const BoundingBox& p_expanded_aabb,
+    const BoundingBox& p_aabb
+) const {
     if (!p_expanded_aabb.encloses(p_aabb)) {
         return false;
     }
@@ -2692,16 +2408,12 @@ bool Tree<T, MAX_CHILDREN, MAX_ITEMS, BoundingBox, Point>::
     return false;
 }
 
-template <
-    class T,
-    int MAX_CHILDREN,
-    int MAX_ITEMS,
-    class BoundingBox,
-    class Point>
-void Tree<T, MAX_CHILDREN, MAX_ITEMS, BoundingBox, Point>::
-    _debug_node_verify_bound(uint32_t p_node_id) {
-    TNode<MAX_CHILDREN, BoundingBox, Point>& node = _nodes[p_node_id];
-    AABB<BoundingBox, Point> bvh_aabb_before      = node.aabb;
+template <class T, int MAX_ITEMS, class BoundingBox, class Point>
+void Tree<T, MAX_ITEMS, BoundingBox, Point>::_debug_node_verify_bound(
+    uint32_t p_node_id
+) {
+    TNode<BoundingBox, Point>& node          = _nodes[p_node_id];
+    AABB<BoundingBox, Point> bvh_aabb_before = node.aabb;
 
     node_update_aabb(node);
 
@@ -2709,14 +2421,9 @@ void Tree<T, MAX_CHILDREN, MAX_ITEMS, BoundingBox, Point>::
     CRASH_COND(bvh_aabb_before != bvh_aabb_after);
 }
 
-template <
-    class T,
-    int MAX_CHILDREN,
-    int MAX_ITEMS,
-    class BoundingBox,
-    class Point>
-void Tree<T, MAX_CHILDREN, MAX_ITEMS, BoundingBox, Point>::node_update_aabb(
-    TNode<MAX_CHILDREN, BoundingBox, Point>& tnode
+template <class T, int MAX_ITEMS, class BoundingBox, class Point>
+void Tree<T, MAX_ITEMS, BoundingBox, Point>::node_update_aabb(
+    TNode<BoundingBox, Point>& tnode
 ) {
     tnode.aabb.set_to_max_opposite_extents();
     tnode.height = 0;
@@ -2726,8 +2433,7 @@ void Tree<T, MAX_CHILDREN, MAX_ITEMS, BoundingBox, Point>::node_update_aabb(
             uint32_t child_node_id = tnode.children[n];
 
             // Merge with child AABB.
-            const TNode<MAX_CHILDREN, BoundingBox, Point>& tchild =
-                _nodes[child_node_id];
+            const TNode<BoundingBox, Point>& tchild = _nodes[child_node_id];
             tnode.aabb.merge(tchild.aabb);
 
             // Do heights at the same time.
@@ -2764,42 +2470,25 @@ void Tree<T, MAX_CHILDREN, MAX_ITEMS, BoundingBox, Point>::node_update_aabb(
     }
 }
 
-template <
-    class T,
-    int MAX_CHILDREN,
-    int MAX_ITEMS,
-    class BoundingBox,
-    class Point>
-void Tree<T, MAX_CHILDREN, MAX_ITEMS, BoundingBox, Point>::refit_all(
-    int p_tree_id
-) {
+template <class T, int MAX_ITEMS, class BoundingBox, class Point>
+void Tree<T, MAX_ITEMS, BoundingBox, Point>::refit_all(int p_tree_id) {
     refit_downward(_root_node_id[p_tree_id]);
 }
 
-template <
-    class T,
-    int MAX_CHILDREN,
-    int MAX_ITEMS,
-    class BoundingBox,
-    class Point>
-void Tree<T, MAX_CHILDREN, MAX_ITEMS, BoundingBox, Point>::refit_upward(
-    uint32_t p_node_id
-) {
+template <class T, int MAX_ITEMS, class BoundingBox, class Point>
+void Tree<T, MAX_ITEMS, BoundingBox, Point>::refit_upward(uint32_t p_node_id) {
     while (p_node_id != INVALID) {
-        TNode<MAX_CHILDREN, BoundingBox, Point>& tnode = _nodes[p_node_id];
+        TNode<BoundingBox, Point>& tnode = _nodes[p_node_id];
         node_update_aabb(tnode);
         p_node_id = tnode.parent_id;
     }
 }
 
-template <
-    class T,
-    int MAX_CHILDREN,
-    int MAX_ITEMS,
-    class BoundingBox,
-    class Point>
-void Tree<T, MAX_CHILDREN, MAX_ITEMS, BoundingBox, Point>::
-    refit_upward_and_balance(uint32_t p_node_id, uint32_t p_tree_id) {
+template <class T, int MAX_ITEMS, class BoundingBox, class Point>
+void Tree<T, MAX_ITEMS, BoundingBox, Point>::refit_upward_and_balance(
+    uint32_t p_node_id,
+    uint32_t p_tree_id
+) {
     while (p_node_id != INVALID) {
         uint32_t before = p_node_id;
         p_node_id       = _logic_balance(p_node_id, p_tree_id);
@@ -2808,7 +2497,7 @@ void Tree<T, MAX_CHILDREN, MAX_ITEMS, BoundingBox, Point>::
             VERBOSE_PRINT("REBALANCED!");
         }
 
-        TNode<MAX_CHILDREN, BoundingBox, Point>& tnode = _nodes[p_node_id];
+        TNode<BoundingBox, Point>& tnode = _nodes[p_node_id];
 
         // Update overall AABB from the children.
         node_update_aabb(tnode);
@@ -2817,16 +2506,10 @@ void Tree<T, MAX_CHILDREN, MAX_ITEMS, BoundingBox, Point>::
     }
 }
 
-template <
-    class T,
-    int MAX_CHILDREN,
-    int MAX_ITEMS,
-    class BoundingBox,
-    class Point>
-void Tree<T, MAX_CHILDREN, MAX_ITEMS, BoundingBox, Point>::refit_downward(
-    uint32_t p_node_id
+template <class T, int MAX_ITEMS, class BoundingBox, class Point>
+void Tree<T, MAX_ITEMS, BoundingBox, Point>::refit_downward(uint32_t p_node_id
 ) {
-    TNode<MAX_CHILDREN, BoundingBox, Point>& tnode = _nodes[p_node_id];
+    TNode<BoundingBox, Point>& tnode = _nodes[p_node_id];
 
     // Do children first.
     if (!tnode.is_leaf()) {
@@ -2838,15 +2521,8 @@ void Tree<T, MAX_CHILDREN, MAX_ITEMS, BoundingBox, Point>::refit_downward(
     node_update_aabb(tnode);
 }
 
-template <
-    class T,
-    int MAX_CHILDREN,
-    int MAX_ITEMS,
-    class BoundingBox,
-    class Point>
-void Tree<T, MAX_CHILDREN, MAX_ITEMS, BoundingBox, Point>::refit_branch(
-    uint32_t p_node_id
-) {
+template <class T, int MAX_ITEMS, class BoundingBox, class Point>
+void Tree<T, MAX_ITEMS, BoundingBox, Point>::refit_branch(uint32_t p_node_id) {
     struct RefitParams {
         uint32_t node_id;
     };
@@ -2864,7 +2540,7 @@ void Tree<T, MAX_CHILDREN, MAX_ITEMS, BoundingBox, Point>::refit_branch(
 
     // Loop while there are still more nodes on the stack.
     while (ii.pop(rp)) {
-        TNode<MAX_CHILDREN, BoundingBox, Point>& tnode = _nodes[rp.node_id];
+        TNode<BoundingBox, Point>& tnode = _nodes[rp.node_id];
 
         // Do children first.
         if (!tnode.is_leaf()) {
@@ -2886,16 +2562,12 @@ void Tree<T, MAX_CHILDREN, MAX_ITEMS, BoundingBox, Point>::refit_branch(
     } // Loop while more nodes to pop.
 }
 
-template <
-    class T,
-    int MAX_CHILDREN,
-    int MAX_ITEMS,
-    class BoundingBox,
-    class Point>
-void Tree<T, MAX_CHILDREN, MAX_ITEMS, BoundingBox, Point>::
-    _split_inform_references(uint32_t p_node_id) {
-    TNode<MAX_CHILDREN, BoundingBox, Point>& node = _nodes[p_node_id];
-    TLeaf<MAX_ITEMS, BoundingBox, Point>& leaf    = _node_get_leaf(node);
+template <class T, int MAX_ITEMS, class BoundingBox, class Point>
+void Tree<T, MAX_ITEMS, BoundingBox, Point>::_split_inform_references(
+    uint32_t p_node_id
+) {
+    TNode<BoundingBox, Point>& node            = _nodes[p_node_id];
+    TLeaf<MAX_ITEMS, BoundingBox, Point>& leaf = _node_get_leaf(node);
 
     for (int n = 0; n < leaf.num_items; n++) {
         uint32_t ref_id = leaf.get_item_ref_id(n);
@@ -2906,21 +2578,15 @@ void Tree<T, MAX_CHILDREN, MAX_ITEMS, BoundingBox, Point>::
     }
 }
 
-template <
-    class T,
-    int MAX_CHILDREN,
-    int MAX_ITEMS,
-    class BoundingBox,
-    class Point>
-void Tree<T, MAX_CHILDREN, MAX_ITEMS, BoundingBox, Point>::
-    _split_leaf_sort_groups_simple(
-        int& num_a,
-        int& num_b,
-        uint16_t* group_a,
-        uint16_t* group_b,
-        const AABB<BoundingBox, Point>* temp_bounds,
-        const AABB<BoundingBox, Point> full_bound
-    ) {
+template <class T, int MAX_ITEMS, class BoundingBox, class Point>
+void Tree<T, MAX_ITEMS, BoundingBox, Point>::_split_leaf_sort_groups_simple(
+    int& num_a,
+    int& num_b,
+    uint16_t* group_a,
+    uint16_t* group_b,
+    const AABB<BoundingBox, Point>* temp_bounds,
+    const AABB<BoundingBox, Point> full_bound
+) {
     // Special case for low leaf sizes.
     if (MAX_ITEMS < 4) {
         uint32_t ind = group_a[0];
@@ -3052,20 +2718,14 @@ void Tree<T, MAX_CHILDREN, MAX_ITEMS, BoundingBox, Point>::
     }
 }
 
-template <
-    class T,
-    int MAX_CHILDREN,
-    int MAX_ITEMS,
-    class BoundingBox,
-    class Point>
-void Tree<T, MAX_CHILDREN, MAX_ITEMS, BoundingBox, Point>::
-    _split_leaf_sort_groups(
-        int& num_a,
-        int& num_b,
-        uint16_t* group_a,
-        uint16_t* group_b,
-        const AABB<BoundingBox, Point>* temp_bounds
-    ) {
+template <class T, int MAX_ITEMS, class BoundingBox, class Point>
+void Tree<T, MAX_ITEMS, BoundingBox, Point>::_split_leaf_sort_groups(
+    int& num_a,
+    int& num_b,
+    uint16_t* group_a,
+    uint16_t* group_b,
+    const AABB<BoundingBox, Point>* temp_bounds
+) {
     AABB<BoundingBox, Point> groupb_aabb;
     groupb_aabb.set_to_max_opposite_extents();
     for (int n = 0; n < num_b; n++) {
@@ -3110,30 +2770,19 @@ void Tree<T, MAX_CHILDREN, MAX_ITEMS, BoundingBox, Point>::
     group_a[best_candidate] = group_a[num_a];
 }
 
-template <
-    class T,
-    int MAX_CHILDREN,
-    int MAX_ITEMS,
-    class BoundingBox,
-    class Point>
-uint32_t Tree<T, MAX_CHILDREN, MAX_ITEMS, BoundingBox, Point>::split_leaf(
+template <class T, int MAX_ITEMS, class BoundingBox, class Point>
+uint32_t Tree<T, MAX_ITEMS, BoundingBox, Point>::split_leaf(
     uint32_t p_node_id,
     const AABB<BoundingBox, Point>& p_added_item_aabb
 ) {
     return split_leaf_complex(p_node_id, p_added_item_aabb);
 }
 
-template <
-    class T,
-    int MAX_CHILDREN,
-    int MAX_ITEMS,
-    class BoundingBox,
-    class Point>
-uint32_t Tree<T, MAX_CHILDREN, MAX_ITEMS, BoundingBox, Point>::
-    split_leaf_complex(
-        uint32_t p_node_id,
-        const AABB<BoundingBox, Point>& p_added_item_aabb
-    ) {
+template <class T, int MAX_ITEMS, class BoundingBox, class Point>
+uint32_t Tree<T, MAX_ITEMS, BoundingBox, Point>::split_leaf_complex(
+    uint32_t p_node_id,
+    const AABB<BoundingBox, Point>& p_added_item_aabb
+) {
     VERBOSE_PRINT("split_leaf");
 
     // Note: The tnode before and after splitting may be a different address
@@ -3142,12 +2791,11 @@ uint32_t Tree<T, MAX_CHILDREN, MAX_ITEMS, BoundingBox, Point>::
     BVH_ASSERT(_nodes[p_node_id].is_leaf());
 
     // Create child leaf nodes.
-    uint32_t* child_ids = (uint32_t*)alloca(sizeof(uint32_t) * MAX_CHILDREN);
+    uint32_t* child_ids = (uint32_t*)alloca(sizeof(uint32_t) * 2);
 
-    for (int n = 0; n < MAX_CHILDREN; n++) {
+    for (int n = 0; n < 2; n++) {
         // Create node children.
-        TNode<MAX_CHILDREN, BoundingBox, Point>* child_node =
-            _nodes.request(child_ids[n]);
+        TNode<BoundingBox, Point>* child_node = _nodes.request(child_ids[n]);
 
         child_node->clear();
 
@@ -3159,18 +2807,18 @@ uint32_t Tree<T, MAX_CHILDREN, MAX_ITEMS, BoundingBox, Point>::
     }
 
     // Don't get any leaves or nodes untill after the split.
-    TNode<MAX_CHILDREN, BoundingBox, Point>& tnode = _nodes[p_node_id];
-    uint32_t orig_leaf_id                          = tnode.get_leaf_id();
+    TNode<BoundingBox, Point>& tnode = _nodes[p_node_id];
+    uint32_t orig_leaf_id            = tnode.get_leaf_id();
     const TLeaf<MAX_ITEMS, BoundingBox, Point>& orig_leaf =
         _node_get_leaf(tnode);
 
     // Store the final child ids.
-    for (int n = 0; n < MAX_CHILDREN; n++) {
+    for (int n = 0; n < 2; n++) {
         tnode.children[n] = child_ids[n];
     }
 
     // Mark as no longer a leaf node.
-    tnode.num_children = MAX_CHILDREN;
+    tnode.num_children = 2;
 
     // Assign childeren to each group equally.
     // Plus 1 for the wildcard. The item being added.
@@ -3247,7 +2895,7 @@ uint32_t Tree<T, MAX_CHILDREN, MAX_ITEMS, BoundingBox, Point>::
     _leaves.free(orig_leaf_id);
 
     // Keep the references up to date.
-    for (int n = 0; n < MAX_CHILDREN; n++) {
+    for (int n = 0; n < 2; n++) {
         _split_inform_references(tnode.children[n]);
     }
 
