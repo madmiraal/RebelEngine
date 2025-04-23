@@ -192,7 +192,7 @@ private:
     );
     void _remove_changed_item(ItemID item_id);
 
-    Tree<T, 2, MAX_ITEMS, BoundingBox, Point> tree;
+    Tree<T, MAX_ITEMS, BoundingBox, Point> tree;
     Mutex _mutex;
 
     PairCallback pair_callback            = nullptr;
@@ -508,7 +508,7 @@ int Manager<T, MAX_ITEMS, BoundingBox, Point>::cull_aabb(
     uint32_t p_mask
 ) {
     MutexLock(&_mutex, thread_safe && _thread_safe);
-    typename Tree<T, 2, MAX_ITEMS, BoundingBox, Point>::CullParams params;
+    typename Tree<T, MAX_ITEMS, BoundingBox, Point>::CullParams params;
 
     params.result_count_overall = 0;
     params.result_max           = p_result_max;
@@ -534,7 +534,7 @@ int Manager<T, MAX_ITEMS, BoundingBox, Point>::cull_segment(
     uint32_t p_mask
 ) {
     MutexLock(&_mutex, thread_safe && _thread_safe);
-    typename Tree<T, 2, MAX_ITEMS, BoundingBox, Point>::CullParams params;
+    typename Tree<T, MAX_ITEMS, BoundingBox, Point>::CullParams params;
 
     params.result_count_overall = 0;
     params.result_max           = p_result_max;
@@ -560,7 +560,7 @@ int Manager<T, MAX_ITEMS, BoundingBox, Point>::cull_point(
     uint32_t p_mask
 ) {
     MutexLock(&_mutex, thread_safe && _thread_safe);
-    typename Tree<T, 2, MAX_ITEMS, BoundingBox, Point>::CullParams params;
+    typename Tree<T, MAX_ITEMS, BoundingBox, Point>::CullParams params;
 
     params.result_count_overall = 0;
     params.result_max           = p_result_max;
@@ -593,7 +593,7 @@ int Manager<T, MAX_ITEMS, BoundingBox, Point>::cull_convex(
         return 0;
     }
 
-    typename Tree<T, 2, MAX_ITEMS, BoundingBox, Point>::CullParams params;
+    typename Tree<T, MAX_ITEMS, BoundingBox, Point>::CullParams params;
     params.result_count_overall = 0;
     params.result_max           = p_result_max;
     params.result_array         = p_result_array;
@@ -622,7 +622,7 @@ void Manager<T, MAX_ITEMS, BoundingBox, Point>::_check_for_collisions(
 
     BoundingBox bb;
 
-    typename Tree<T, 2, MAX_ITEMS, BoundingBox, Point>::CullParams params;
+    typename Tree<T, MAX_ITEMS, BoundingBox, Point>::CullParams params;
 
     params.result_count_overall = 0;
     params.result_max           = INT_MAX;
