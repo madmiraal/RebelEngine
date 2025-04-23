@@ -69,10 +69,9 @@ public:
     // Toggles thread safety if thread_safe = true.
     void params_set_thread_safe(bool p_enable);
 
-    // Use uint32_t instead of Handle to maintain compatibility with octree.
-    typedef void* (*PairCallback)(void*, uint32_t, T*, int, uint32_t, T*, int);
-    typedef void (*UnpairCallback)(void*, uint32_t, T*, int, uint32_t, T*, int, void*);
-    typedef void* (*CheckPairCallback)(void*, uint32_t, T*, int, uint32_t, T*, int, void*);
+    typedef void* (*PairCallback)(void*, ItemID, T*, int, ItemID, T*, int);
+    typedef void (*UnpairCallback)(void*, ItemID, T*, int, ItemID, T*, int, void*);
+    typedef void* (*CheckPairCallback)(void*, ItemID, T*, int, ItemID, T*, int, void*);
     void set_pair_callback(PairCallback p_callback, void* p_userdata);
     void set_unpair_callback(UnpairCallback p_callback, void* p_userdata);
     void set_check_pair_callback(
@@ -80,7 +79,7 @@ public:
         void* p_userdata
     );
 
-    Handle create(
+    ItemID create(
         T* p_userdata,
         bool p_active,
         const BoundingBox& p_aabb = BoundingBox(),
@@ -90,50 +89,33 @@ public:
         uint32_t p_pairable_mask  = 1
     );
 
-    void move(Handle p_handle, const BoundingBox& p_aabb);
-    void move(uint32_t p_handle, const BoundingBox& p_aabb);
-    void recheck_pairs(Handle p_handle);
-    void recheck_pairs(uint32_t p_handle);
-    void erase(Handle p_handle);
-    void erase(uint32_t p_handle);
+    void move(ItemID item_id, const BoundingBox& p_aabb);
+    void recheck_pairs(ItemID item_id);
+    void erase(ItemID item_id);
     // Use in conjunction with activate if collision checks were deferred,
     // and set pairable was never called.
     // Deferred collision checks are a workaround for visual server.
-    void force_collision_check(Handle p_handle);
-    void force_collision_check(uint32_t p_handle);
+    void force_collision_check(ItemID item_id);
     // Equivalent to set_visible for render trees.
     bool activate(
-        Handle p_handle,
+        ItemID item_id,
         const BoundingBox& p_aabb,
         bool p_delay_collision_check = false
     );
-    bool activate(
-        uint32_t p_handle,
-        const BoundingBox& p_aabb,
-        bool p_delay_collision_check = false
-    );
-    bool deactivate(Handle p_handle);
-    bool deactivate(uint32_t p_handle);
+    bool deactivate(ItemID item_id);
     void set_pairable(
-        const Handle& p_handle,
+        const ItemID& item_id,
         bool p_pairable,
         uint32_t p_pairable_type,
         uint32_t p_pairable_mask,
         bool p_force_collision_check = true
     );
-    void set_pairable(
-        uint32_t p_handle,
-        bool p_pairable,
-        uint32_t p_pairable_type,
-        uint32_t p_pairable_mask,
-        bool p_force_collision_check = true
-    );
-    bool is_pairable(uint32_t p_handle) const;
+    bool is_pairable(ItemID item_id) const;
 
-    int get_subindex(uint32_t p_handle) const;
-    T* get(uint32_t p_handle) const;
+    int get_subindex(ItemID item_id) const;
+    T* get(ItemID item_id) const;
 
-    bool get_active(Handle p_handle);
+    bool get_active(ItemID item_id);
 
     // Called once per frame.
     void update();
@@ -169,19 +151,19 @@ public:
         uint32_t p_mask = 0xFFFFFFFF
     );
 
-    void item_get_AABB(Handle p_handle, BoundingBox& r_aabb);
+    void item_get_AABB(ItemID item_id, BoundingBox& r_aabb);
 
 private:
     void _check_for_collisions(bool p_full_check = false);
-    bool item_is_pairable(Handle p_handle) const;
-    T* item_get_userdata(Handle p_handle) const;
-    int item_get_subindex(Handle p_handle) const;
+    bool item_is_pairable(ItemID item_id) const;
+    T* item_get_userdata(ItemID item_id) const;
+    int item_get_subindex(ItemID item_id) const;
 
-    void _recheck_pairs(Handle p_handle);
-    void* _recheck_pair(Handle p_from, Handle p_to, void* p_pair_data);
+    void _recheck_pairs(ItemID item_id);
+    void* _recheck_pair(ItemID p_from, ItemID p_to, void* p_pair_data);
     // Find all paired aabbs that are no longer paired, and send callbacks.
     void _find_leavers(
-        Handle p_handle,
+        ItemID item_id,
         const AABB<BoundingBox, Point>& expanded_abb_from,
         bool p_full_check
     );
@@ -189,26 +171,26 @@ private:
     bool _find_leavers_process_pair(
         ItemPairs<BoundingBox>& p_pairs_from,
         const AABB<BoundingBox, Point>& p_abb_from,
-        Handle p_from,
-        Handle p_to,
+        ItemID p_from,
+        ItemID p_to,
         bool p_full_check
     );
     // If we remove an item, remove the pairs.
-    void _remove_pairs_containing(Handle p_handle);
-    void _unpair(Handle p_from, Handle p_to);
+    void _remove_pairs_containing(ItemID item_id);
+    void _unpair(ItemID p_from, ItemID p_to);
 
-    void _collide(Handle p_ha, Handle p_hb);
-    // Send pair callbacks again for all existing pairs for the given handle.
-    const ItemExtra<T>& _get_extra(Handle p_handle) const;
-    const ItemRef& _get_ref(Handle p_handle) const;
+    void _collide(ItemID p_ha, ItemID p_hb);
+    // Send pair callbacks again for all existing pairs for the given item.
+    const ItemExtra<T>& _get_extra(ItemID item_id) const;
+    const ItemRef& _get_ref(ItemID item_id) const;
     void _reset();
 
     void _add_changed_item(
-        Handle p_handle,
+        ItemID item_id,
         const BoundingBox& aabb,
         bool p_check_aabb = true
     );
-    void _remove_changed_item(Handle p_handle);
+    void _remove_changed_item(ItemID item_id);
 
     Tree<T, 2, MAX_ITEMS, BoundingBox, Point> tree;
     Mutex _mutex;
@@ -220,7 +202,7 @@ private:
     void* unpair_callback_userdata        = nullptr;
     void* check_pair_callback_userdata    = nullptr;
 
-    LocalVector<Handle, uint32_t, true> changed_items;
+    LocalVector<ItemID, uint32_t, true> changed_items;
 
     // Start from 1. so items with 0 indicate never updated.
     uint32_t _tick = 1;
@@ -301,7 +283,7 @@ void Manager<T, MAX_ITEMS, BoundingBox, Point>::set_check_pair_callback(
 }
 
 template <class T, int MAX_ITEMS, class BoundingBox, class Point>
-Handle Manager<T, MAX_ITEMS, BoundingBox, Point>::create(
+ItemID Manager<T, MAX_ITEMS, BoundingBox, Point>::create(
     T* p_userdata,
     bool p_active,
     const BoundingBox& p_aabb,
@@ -327,7 +309,7 @@ Handle Manager<T, MAX_ITEMS, BoundingBox, Point>::create(
     }
 #endif
 
-    Handle h = tree.item_add(
+    ItemID item_id = tree.item_add(
         p_userdata,
         p_active,
         p_aabb,
@@ -339,171 +321,94 @@ Handle Manager<T, MAX_ITEMS, BoundingBox, Point>::create(
 
     if (use_pairs) {
         // For safety, initialize the expanded AABB.
-        BoundingBox& expanded_aabb = tree._pairs[h.id()].expanded_aabb;
+        BoundingBox& expanded_aabb = tree._pairs[item_id].expanded_aabb;
         expanded_aabb              = p_aabb;
         expanded_aabb.grow_by(tree._pairing_expansion);
 
         // Force a collision check no matter the AABB.
         if (p_active) {
-            _add_changed_item(h, p_aabb, false);
+            _add_changed_item(item_id, p_aabb, false);
             _check_for_collisions(true);
         }
     }
 
-    return h;
+    return item_id;
+}
+
+template <class T, int MAX_ITEMS, class BoundingBox, class Point>
+bool Manager<T, MAX_ITEMS, BoundingBox, Point>::is_pairable(ItemID item_id
+) const {
+    return item_is_pairable(item_id);
+}
+
+template <class T, int MAX_ITEMS, class BoundingBox, class Point>
+int Manager<T, MAX_ITEMS, BoundingBox, Point>::get_subindex(ItemID item_id
+) const {
+    return item_get_subindex(item_id);
+}
+
+template <class T, int MAX_ITEMS, class BoundingBox, class Point>
+T* Manager<T, MAX_ITEMS, BoundingBox, Point>::get(ItemID item_id) const {
+    return item_get_userdata(item_id);
 }
 
 template <class T, int MAX_ITEMS, class BoundingBox, class Point>
 void Manager<T, MAX_ITEMS, BoundingBox, Point>::move(
-    uint32_t p_handle,
-    const BoundingBox& p_aabb
-) {
-    Handle h;
-    h.set(p_handle);
-    move(h, p_aabb);
-}
-
-template <class T, int MAX_ITEMS, class BoundingBox, class Point>
-void Manager<T, MAX_ITEMS, BoundingBox, Point>::recheck_pairs(uint32_t p_handle
-) {
-    Handle h;
-    h.set(p_handle);
-    recheck_pairs(h);
-}
-
-template <class T, int MAX_ITEMS, class BoundingBox, class Point>
-void Manager<T, MAX_ITEMS, BoundingBox, Point>::erase(uint32_t p_handle) {
-    Handle h;
-    h.set(p_handle);
-    erase(h);
-}
-
-template <class T, int MAX_ITEMS, class BoundingBox, class Point>
-void Manager<T, MAX_ITEMS, BoundingBox, Point>::force_collision_check(
-    uint32_t p_handle
-) {
-    Handle h;
-    h.set(p_handle);
-    force_collision_check(h);
-}
-
-template <class T, int MAX_ITEMS, class BoundingBox, class Point>
-bool Manager<T, MAX_ITEMS, BoundingBox, Point>::activate(
-    uint32_t p_handle,
-    const BoundingBox& p_aabb,
-    bool p_delay_collision_check
-) {
-    Handle h;
-    h.set(p_handle);
-    return activate(h, p_aabb, p_delay_collision_check);
-}
-
-template <class T, int MAX_ITEMS, class BoundingBox, class Point>
-bool Manager<T, MAX_ITEMS, BoundingBox, Point>::deactivate(uint32_t p_handle) {
-    Handle h;
-    h.set(p_handle);
-    return deactivate(h);
-}
-
-template <class T, int MAX_ITEMS, class BoundingBox, class Point>
-void Manager<T, MAX_ITEMS, BoundingBox, Point>::set_pairable(
-    uint32_t p_handle,
-    bool p_pairable,
-    uint32_t p_pairable_type,
-    uint32_t p_pairable_mask,
-    bool p_force_collision_check
-) {
-    Handle h;
-    h.set(p_handle);
-    set_pairable(
-        h,
-        p_pairable,
-        p_pairable_type,
-        p_pairable_mask,
-        p_force_collision_check
-    );
-}
-
-template <class T, int MAX_ITEMS, class BoundingBox, class Point>
-bool Manager<T, MAX_ITEMS, BoundingBox, Point>::is_pairable(uint32_t p_handle
-) const {
-    Handle h;
-    h.set(p_handle);
-    return item_is_pairable(h);
-}
-
-template <class T, int MAX_ITEMS, class BoundingBox, class Point>
-int Manager<T, MAX_ITEMS, BoundingBox, Point>::get_subindex(uint32_t p_handle
-) const {
-    Handle h;
-    h.set(p_handle);
-    return item_get_subindex(h);
-}
-
-template <class T, int MAX_ITEMS, class BoundingBox, class Point>
-T* Manager<T, MAX_ITEMS, BoundingBox, Point>::get(uint32_t p_handle) const {
-    Handle h;
-    h.set(p_handle);
-    return item_get_userdata(h);
-}
-
-template <class T, int MAX_ITEMS, class BoundingBox, class Point>
-void Manager<T, MAX_ITEMS, BoundingBox, Point>::move(
-    Handle p_handle,
+    ItemID item_id,
     const BoundingBox& p_aabb
 ) {
     MutexLock(&_mutex, thread_safe && _thread_safe);
-    if (tree.item_move(p_handle, p_aabb)) {
+    if (tree.item_move(item_id, p_aabb)) {
         if (use_pairs) {
-            _add_changed_item(p_handle, p_aabb);
+            _add_changed_item(item_id, p_aabb);
         }
     }
 }
 
 template <class T, int MAX_ITEMS, class BoundingBox, class Point>
-void Manager<T, MAX_ITEMS, BoundingBox, Point>::recheck_pairs(Handle p_handle) {
+void Manager<T, MAX_ITEMS, BoundingBox, Point>::recheck_pairs(ItemID item_id) {
     MutexLock(&_mutex, thread_safe && _thread_safe);
     if (use_pairs) {
-        _recheck_pairs(p_handle);
+        _recheck_pairs(item_id);
     }
 }
 
 template <class T, int MAX_ITEMS, class BoundingBox, class Point>
-void Manager<T, MAX_ITEMS, BoundingBox, Point>::erase(Handle p_handle) {
+void Manager<T, MAX_ITEMS, BoundingBox, Point>::erase(ItemID item_id) {
     MutexLock(&_mutex, thread_safe && _thread_safe);
     // Call unpair and remove all references before deleting from the tree.
     if (use_pairs) {
-        _remove_changed_item(p_handle);
+        _remove_changed_item(item_id);
     }
 
-    tree.item_remove(p_handle);
+    tree.item_remove(item_id);
 
     _check_for_collisions(true);
 }
 
 template <class T, int MAX_ITEMS, class BoundingBox, class Point>
 void Manager<T, MAX_ITEMS, BoundingBox, Point>::force_collision_check(
-    Handle p_handle
+    ItemID item_id
 ) {
     MutexLock(&_mutex, thread_safe && _thread_safe);
     if (use_pairs) {
         BoundingBox aabb;
-        item_get_AABB(p_handle, aabb);
-        _add_changed_item(p_handle, aabb, false);
+        item_get_AABB(item_id, aabb);
+        _add_changed_item(item_id, aabb, false);
         _check_for_collisions(true);
     }
 }
 
 template <class T, int MAX_ITEMS, class BoundingBox, class Point>
 bool Manager<T, MAX_ITEMS, BoundingBox, Point>::activate(
-    Handle p_handle,
+    ItemID item_id,
     const BoundingBox& p_aabb,
     bool p_delay_collision_check
 ) {
     MutexLock(&_mutex, thread_safe && _thread_safe);
     // Sending the AABB here prevents the need for the BVH to maintain a
     // redundant copy of the aabb.
-    if (tree.item_activate(p_handle, p_aabb)) {
+    if (tree.item_activate(item_id, p_aabb)) {
         if (use_pairs) {
             // In the special case of the render tree, when setting
             // visibility, we are using the combination of activate then
@@ -512,7 +417,7 @@ bool Manager<T, MAX_ITEMS, BoundingBox, Point>::activate(
             // check at the set_pairable call.
             // May cause bugs if set_pairable is not called.
             if (!p_delay_collision_check) {
-                _add_changed_item(p_handle, p_aabb, false);
+                _add_changed_item(item_id, p_aabb, false);
                 _check_for_collisions(true);
             }
         }
@@ -522,12 +427,12 @@ bool Manager<T, MAX_ITEMS, BoundingBox, Point>::activate(
 }
 
 template <class T, int MAX_ITEMS, class BoundingBox, class Point>
-bool Manager<T, MAX_ITEMS, BoundingBox, Point>::deactivate(Handle p_handle) {
+bool Manager<T, MAX_ITEMS, BoundingBox, Point>::deactivate(ItemID item_id) {
     MutexLock(&_mutex, thread_safe && _thread_safe);
-    if (tree.item_deactivate(p_handle)) {
+    if (tree.item_deactivate(item_id)) {
         // Call unpair and remove all references before deleting.
         if (use_pairs) {
-            _remove_changed_item(p_handle);
+            _remove_changed_item(item_id);
             _check_for_collisions(true);
         }
         return true;
@@ -536,9 +441,9 @@ bool Manager<T, MAX_ITEMS, BoundingBox, Point>::deactivate(Handle p_handle) {
 }
 
 template <class T, int MAX_ITEMS, class BoundingBox, class Point>
-bool Manager<T, MAX_ITEMS, BoundingBox, Point>::get_active(Handle p_handle) {
+bool Manager<T, MAX_ITEMS, BoundingBox, Point>::get_active(ItemID item_id) {
     MutexLock(&_mutex, thread_safe && _thread_safe);
-    return tree.item_get_active(p_handle);
+    return tree.item_get_active(item_id);
 }
 
 template <class T, int MAX_ITEMS, class BoundingBox, class Point>
@@ -559,7 +464,7 @@ void Manager<T, MAX_ITEMS, BoundingBox, Point>::update_collisions() {
 
 template <class T, int MAX_ITEMS, class BoundingBox, class Point>
 void Manager<T, MAX_ITEMS, BoundingBox, Point>::set_pairable(
-    const Handle& p_handle,
+    const ItemID& item_id,
     bool p_pairable,
     uint32_t p_pairable_type,
     uint32_t p_pairable_mask,
@@ -568,7 +473,7 @@ void Manager<T, MAX_ITEMS, BoundingBox, Point>::set_pairable(
     MutexLock(&_mutex, thread_safe && _thread_safe);
     // Returns true if the pairing state has changed.
     bool state_changed = tree.item_set_pairable(
-        p_handle,
+        item_id,
         p_pairable,
         p_pairable_type,
         p_pairable_mask
@@ -579,16 +484,16 @@ void Manager<T, MAX_ITEMS, BoundingBox, Point>::set_pairable(
         //_check_for_collisions();
 
         if ((p_force_collision_check || state_changed)
-            && tree.item_get_active(p_handle)) {
+            && tree.item_get_active(item_id)) {
             // We force a collision check when the pairable state changes,
             // because newly pairable items may be in collision, and
             // unpairable items might move out of collision.
             BoundingBox aabb;
-            item_get_AABB(p_handle, aabb);
+            item_get_AABB(item_id, aabb);
 
             // Passing false disables the optimization that prevents
             // collision checks if the AABB hasn't changed.
-            _add_changed_item(p_handle, aabb, false);
+            _add_changed_item(item_id, aabb, false);
             _check_for_collisions(true);
         }
     }
@@ -727,20 +632,20 @@ void Manager<T, MAX_ITEMS, BoundingBox, Point>::_check_for_collisions(
     params.pairable_type        = 0;
 
     for (unsigned int n = 0; n < changed_items.size(); n++) {
-        const Handle& h = changed_items[n];
+        const ItemID& item_id = changed_items[n];
 
         // Use the expanded aabb for pairing.
-        const BoundingBox& expanded_aabb = tree._pairs[h.id()].expanded_aabb;
+        const BoundingBox& expanded_aabb = tree._pairs[item_id].expanded_aabb;
         AABB<BoundingBox, Point> bvh_aabb;
         bvh_aabb.from(expanded_aabb);
 
         // Send callbacks to pairs that are no longer paired.
-        _find_leavers(h, bvh_aabb, p_full_check);
+        _find_leavers(item_id, bvh_aabb, p_full_check);
 
-        uint32_t changed_item_ref_id = h.id();
+        uint32_t changed_item_ref_id = item_id;
 
         // Use this item for mask and test for non-pairable tree.
-        tree.item_fill_cullparams(h, params);
+        tree.item_fill_cullparams(item_id, params);
 
         params.bvh_aabb = bvh_aabb;
 
@@ -755,9 +660,7 @@ void Manager<T, MAX_ITEMS, BoundingBox, Point>::_check_for_collisions(
                 continue;
             }
 
-            Handle h_collidee;
-            h_collidee.set_id(ref_id);
-            _collide(h, h_collidee);
+            _collide(item_id, ref_id);
         }
     }
     _reset();
@@ -765,55 +668,55 @@ void Manager<T, MAX_ITEMS, BoundingBox, Point>::_check_for_collisions(
 
 template <class T, int MAX_ITEMS, class BoundingBox, class Point>
 void Manager<T, MAX_ITEMS, BoundingBox, Point>::item_get_AABB(
-    Handle p_handle,
+    ItemID item_id,
     BoundingBox& r_aabb
 ) {
     AABB<BoundingBox, Point> bvh_aabb;
-    tree.item_get_bvh_aabb(p_handle, bvh_aabb);
+    tree.item_get_bvh_aabb(item_id, bvh_aabb);
     bvh_aabb.to(r_aabb);
 }
 
 template <class T, int MAX_ITEMS, class BoundingBox, class Point>
-bool Manager<T, MAX_ITEMS, BoundingBox, Point>::item_is_pairable(Handle p_handle
+bool Manager<T, MAX_ITEMS, BoundingBox, Point>::item_is_pairable(ItemID item_id
 ) const {
-    return _get_extra(p_handle).pairable;
+    return _get_extra(item_id).pairable;
 }
 
 template <class T, int MAX_ITEMS, class BoundingBox, class Point>
-T* Manager<T, MAX_ITEMS, BoundingBox, Point>::item_get_userdata(Handle p_handle
+T* Manager<T, MAX_ITEMS, BoundingBox, Point>::item_get_userdata(ItemID item_id
 ) const {
-    return _get_extra(p_handle).userdata;
+    return _get_extra(item_id).userdata;
 }
 
 template <class T, int MAX_ITEMS, class BoundingBox, class Point>
-int Manager<T, MAX_ITEMS, BoundingBox, Point>::item_get_subindex(Handle p_handle
+int Manager<T, MAX_ITEMS, BoundingBox, Point>::item_get_subindex(ItemID item_id
 ) const {
-    return _get_extra(p_handle).subindex;
+    return _get_extra(item_id).subindex;
 }
 
 template <class T, int MAX_ITEMS, class BoundingBox, class Point>
 void Manager<T, MAX_ITEMS, BoundingBox, Point>::_unpair(
-    Handle p_from,
-    Handle p_to
+    ItemID p_from,
+    ItemID p_to
 ) {
     tree._handle_sort(p_from, p_to);
 
-    ItemExtra<T>& exa = tree._extra[p_from.id()];
-    ItemExtra<T>& exb = tree._extra[p_to.id()];
+    ItemExtra<T>& exa = tree._extra[p_from];
+    ItemExtra<T>& exb = tree._extra[p_to];
 
     // If the userdata is the same, no collisions should occur.
     if ((exa.userdata == exb.userdata) && exa.userdata) {
         return;
     }
 
-    ItemPairs<BoundingBox>& pairs_from = tree._pairs[p_from.id()];
-    ItemPairs<BoundingBox>& pairs_to   = tree._pairs[p_to.id()];
+    ItemPairs<BoundingBox>& pairs_from = tree._pairs[p_from];
+    ItemPairs<BoundingBox>& pairs_to   = tree._pairs[p_to];
 
     void* ud_from = pairs_from.remove_pair_to(p_to);
     pairs_to.remove_pair_to(p_from);
 
 #ifdef BVH_VERBOSE_PAIRING
-    print_line("_unpair " + itos(p_from.id()) + " from " + itos(p_to.id()));
+    print_line("_unpair " + itos(p_from) + " from " + itos(p_to));
 #endif
 
     // callback
@@ -833,14 +736,14 @@ void Manager<T, MAX_ITEMS, BoundingBox, Point>::_unpair(
 
 template <class T, int MAX_ITEMS, class BoundingBox, class Point>
 void* Manager<T, MAX_ITEMS, BoundingBox, Point>::_recheck_pair(
-    Handle p_from,
-    Handle p_to,
+    ItemID p_from,
+    ItemID p_to,
     void* p_pair_data
 ) {
     tree._handle_sort(p_from, p_to);
 
-    ItemExtra<T>& exa = tree._extra[p_from.id()];
-    ItemExtra<T>& exb = tree._extra[p_to.id()];
+    ItemExtra<T>& exa = tree._extra[p_from];
+    ItemExtra<T>& exb = tree._extra[p_to];
 
     // If the userdata is the same, no collisions should occur.
     if ((exa.userdata == exb.userdata) && exa.userdata) {
@@ -867,8 +770,8 @@ template <class T, int MAX_ITEMS, class BoundingBox, class Point>
 bool Manager<T, MAX_ITEMS, BoundingBox, Point>::_find_leavers_process_pair(
     ItemPairs<BoundingBox>& p_pairs_from,
     const AABB<BoundingBox, Point>& p_abb_from,
-    Handle p_from,
-    Handle p_to,
+    ItemID p_from,
+    ItemID p_to,
     bool p_full_check
 ) {
     AABB<BoundingBox, Point> bvh_aabb_to;
@@ -903,21 +806,21 @@ bool Manager<T, MAX_ITEMS, BoundingBox, Point>::_find_leavers_process_pair(
 
 template <class T, int MAX_ITEMS, class BoundingBox, class Point>
 void Manager<T, MAX_ITEMS, BoundingBox, Point>::_find_leavers(
-    Handle p_handle,
+    ItemID item_id,
     const AABB<BoundingBox, Point>& expanded_abb_from,
     bool p_full_check
 ) {
-    ItemPairs<BoundingBox>& p_from = tree._pairs[p_handle.id()];
+    ItemPairs<BoundingBox>& p_from = tree._pairs[item_id];
 
     AABB<BoundingBox, Point> bvh_aabb_from = expanded_abb_from;
 
     // Remove every partner from pairing list.
     for (unsigned int n = 0; n < p_from.extended_pairs.size(); n++) {
-        Handle h_to = p_from.extended_pairs[n].handle;
+        ItemID h_to = p_from.extended_pairs[n].item_id;
         if (_find_leavers_process_pair(
                 p_from,
                 bvh_aabb_from,
-                p_handle,
+                item_id,
                 h_to,
                 p_full_check
             )) {
@@ -929,8 +832,8 @@ void Manager<T, MAX_ITEMS, BoundingBox, Point>::_find_leavers(
 
 template <class T, int MAX_ITEMS, class BoundingBox, class Point>
 void Manager<T, MAX_ITEMS, BoundingBox, Point>::_collide(
-    Handle p_ha,
-    Handle p_hb
+    ItemID p_ha,
+    ItemID p_hb
 ) {
     // We only need to do this oneway: lower ID then higher ID.
     tree._handle_sort(p_ha, p_hb);
@@ -943,8 +846,8 @@ void Manager<T, MAX_ITEMS, BoundingBox, Point>::_collide(
         return;
     }
 
-    ItemPairs<BoundingBox>& p_from = tree._pairs[p_ha.id()];
-    ItemPairs<BoundingBox>& p_to   = tree._pairs[p_hb.id()];
+    ItemPairs<BoundingBox>& p_from = tree._pairs[p_ha];
+    ItemPairs<BoundingBox>& p_to   = tree._pairs[p_hb];
 
     // Only check the one with lower number of pairs for greater speed.
     if (p_from.num_pairs <= p_to.num_pairs) {
@@ -960,7 +863,7 @@ void Manager<T, MAX_ITEMS, BoundingBox, Point>::_collide(
     void* callback_userdata = nullptr;
 
 #ifdef BVH_VERBOSE_PAIRING
-    print_line("_pair " + itos(p_ha.id()) + " to " + itos(p_hb.id()));
+    print_line("_pair " + itos(p_ha) + " to " + itos(p_hb));
 #endif
 
     if (pair_callback) {
@@ -975,45 +878,44 @@ void Manager<T, MAX_ITEMS, BoundingBox, Point>::_collide(
         );
     }
 
-    // We actually only need to store the userdata on the lower handle.
+    // We actually only need to store the userdata on the lower item.
     p_from.add_pair_to(p_hb, callback_userdata);
     p_to.add_pair_to(p_ha, callback_userdata);
 }
 
 template <class T, int MAX_ITEMS, class BoundingBox, class Point>
 void Manager<T, MAX_ITEMS, BoundingBox, Point>::_remove_pairs_containing(
-    Handle p_handle
+    ItemID item_id
 ) {
-    ItemPairs<BoundingBox>& p_from = tree._pairs[p_handle.id()];
+    ItemPairs<BoundingBox>& p_from = tree._pairs[item_id];
 
     // Remove from pairing list for every partner.
     while (p_from.extended_pairs.size()) {
-        Handle h_to = p_from.extended_pairs[0].handle;
-        _unpair(p_handle, h_to);
+        ItemID h_to = p_from.extended_pairs[0].item_id;
+        _unpair(item_id, h_to);
     }
 }
 
 template <class T, int MAX_ITEMS, class BoundingBox, class Point>
-void Manager<T, MAX_ITEMS, BoundingBox, Point>::_recheck_pairs(Handle p_handle
-) {
-    ItemPairs<BoundingBox>& from = tree._pairs[p_handle.id()];
+void Manager<T, MAX_ITEMS, BoundingBox, Point>::_recheck_pairs(ItemID item_id) {
+    ItemPairs<BoundingBox>& from = tree._pairs[item_id];
 
     // Check pair for every partner.
     for (unsigned int n = 0; n < from.extended_pairs.size(); n++) {
         typename ItemPairs<BoundingBox>::Link& pair = from.extended_pairs[n];
-        Handle h_to                                 = pair.handle;
-        void* new_pair_data = _recheck_pair(p_handle, h_to, pair.userdata);
+        ItemID h_to                                 = pair.item_id;
+        void* new_pair_data = _recheck_pair(item_id, h_to, pair.userdata);
 
         if (new_pair_data != pair.userdata) {
             pair.userdata = new_pair_data;
 
             // Update pair data for the second item.
-            ItemPairs<BoundingBox>& to = tree._pairs[h_to.id()];
+            ItemPairs<BoundingBox>& to = tree._pairs[h_to];
             for (unsigned int to_index = 0; to_index < to.extended_pairs.size();
                  to_index++) {
                 typename ItemPairs<BoundingBox>::Link& to_pair =
                     to.extended_pairs[to_index];
-                if (to_pair.handle == p_handle) {
+                if (to_pair.item_id == item_id) {
                     to_pair.userdata = new_pair_data;
                     break;
                 }
@@ -1024,16 +926,16 @@ void Manager<T, MAX_ITEMS, BoundingBox, Point>::_recheck_pairs(Handle p_handle
 
 template <class T, int MAX_ITEMS, class BoundingBox, class Point>
 const ItemExtra<T>& Manager<T, MAX_ITEMS, BoundingBox, Point>::_get_extra(
-    Handle p_handle
+    ItemID item_id
 ) const {
-    return tree._extra[p_handle.id()];
+    return tree._extra[item_id];
 }
 
 template <class T, int MAX_ITEMS, class BoundingBox, class Point>
 const ItemRef& Manager<T, MAX_ITEMS, BoundingBox, Point>::_get_ref(
-    Handle p_handle
+    ItemID item_id
 ) const {
-    return tree._refs[p_handle.id()];
+    return tree._refs[item_id];
 }
 
 template <class T, int MAX_ITEMS, class BoundingBox, class Point>
@@ -1044,7 +946,7 @@ void Manager<T, MAX_ITEMS, BoundingBox, Point>::_reset() {
 
 template <class T, int MAX_ITEMS, class BoundingBox, class Point>
 void Manager<T, MAX_ITEMS, BoundingBox, Point>::_add_changed_item(
-    Handle p_handle,
+    ItemID item_id,
     const BoundingBox& aabb,
     bool p_check_aabb
 ) {
@@ -1053,13 +955,13 @@ void Manager<T, MAX_ITEMS, BoundingBox, Point>::_add_changed_item(
 
 #ifdef BVH_EXPAND_LEAF_AABBS
     // Redundancy check already done, if using expanded AABB in the leaf.
-    BoundingBox& expanded_aabb = tree._pairs[p_handle.id()].expanded_aabb;
-    item_get_AABB(p_handle, expanded_aabb);
+    BoundingBox& expanded_aabb = tree._pairs[item_id].expanded_aabb;
+    item_get_AABB(item_id, expanded_aabb);
 #else
     // AABB check with expanded AABB.
     // Greatly decreases processing using less accurate pairing checks.
     // Note: This pairing AABB is separate from the AABB in the actual tree.
-    BoundingBox& expanded_aabb = tree._pairs[p_handle.id()].expanded_aabb;
+    BoundingBox& expanded_aabb = tree._pairs[item_id].expanded_aabb;
 
     // If p_check_aabb is true, we check collisions if the AABB has changed.
     // Used when calling set_pairable has been called, but the position has
@@ -1075,29 +977,29 @@ void Manager<T, MAX_ITEMS, BoundingBox, Point>::_add_changed_item(
 #endif
 
     // Ensure changed items only appear once on the updated list.
-    uint32_t& last_updated_tick = tree._extra[p_handle.id()].last_updated_tick;
+    uint32_t& last_updated_tick = tree._extra[item_id].last_updated_tick;
     if (last_updated_tick == _tick) {
         return;
     }
 
     last_updated_tick = _tick;
-    changed_items.push_back(p_handle);
+    changed_items.push_back(item_id);
 }
 
 template <class T, int MAX_ITEMS, class BoundingBox, class Point>
 void Manager<T, MAX_ITEMS, BoundingBox, Point>::_remove_changed_item(
-    Handle p_handle
+    ItemID item_id
 ) {
     // Care must be taken for items that are deleted.
     // The ref ID could be reused on the same tick for new items.
     // This is probably rare but should be taken into consideration.
 
-    _remove_pairs_containing(p_handle);
+    _remove_pairs_containing(item_id);
 
     // Remove from changed items.
     // TODO: Make more efficient yet.
     for (int n = 0; n < (int)changed_items.size(); n++) {
-        if (changed_items[n] == p_handle) {
+        if (changed_items[n] == item_id) {
             changed_items.remove_unordered(n);
 
             // TODO: Check if this is needed.
@@ -1106,7 +1008,7 @@ void Manager<T, MAX_ITEMS, BoundingBox, Point>::_remove_changed_item(
     }
 
     // TODO: Check if this is needed.
-    tree._extra[p_handle.id()].last_updated_tick = 0;
+    tree._extra[item_id].last_updated_tick = 0;
 }
 
 } // namespace BVH
