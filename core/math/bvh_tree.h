@@ -53,44 +53,7 @@ namespace BVH {
 static const uint32_t INVALID  = (0xffffffff);
 static const uint32_t INACTIVE = (0xfffffffe);
 
-// Note: Zero is a valid reference for the BVH.
-// May need a plus one based ID for clients that expect 0 to be invalid.
-struct Handle {
-    // Conversion operator.
-    operator uint32_t() const {
-        return _data;
-    }
-
-    void set(uint32_t p_value) {
-        _data = p_value;
-    }
-
-    uint32_t _data;
-
-    void set_invalid() {
-        _data = INVALID;
-    }
-
-    bool is_invalid() const {
-        return _data == INVALID;
-    }
-
-    uint32_t id() const {
-        return _data;
-    }
-
-    void set_id(uint32_t p_id) {
-        _data = p_id;
-    }
-
-    bool operator==(const Handle& p_h) const {
-        return _data == p_h._data;
-    }
-
-    bool operator!=(const Handle& p_h) const {
-        return (*this == p_h) == false;
-    }
-};
+typedef uint32_t ItemID;
 
 template <class T>
 struct ItemExtra {
@@ -110,12 +73,12 @@ struct ItemExtra {
 template <class BoundingBox>
 struct ItemPairs {
     struct Link {
-        void set(Handle h, void* ud) {
-            handle   = h;
-            userdata = ud;
+        void set(ItemID new_item_id, void* new_userdata) {
+            item_id  = new_item_id;
+            userdata = new_userdata;
         }
 
-        Handle handle;
+        ItemID item_id;
         void* userdata;
     };
 
@@ -131,33 +94,33 @@ struct ItemPairs {
     int32_t num_pairs;
     LocalVector<Link> extended_pairs;
 
-    void add_pair_to(Handle h, void* p_userdata) {
+    void add_pair_to(ItemID item_id, void* p_userdata) {
         Link temp;
-        temp.set(h, p_userdata);
+        temp.set(item_id, p_userdata);
 
         extended_pairs.push_back(temp);
         num_pairs++;
     }
 
-    uint32_t find_pair_to(Handle h) const {
+    uint32_t find_pair_to(ItemID item_id) const {
         for (int n = 0; n < num_pairs; n++) {
-            if (extended_pairs[n].handle == h) {
+            if (extended_pairs[n].item_id == item_id) {
                 return n;
             }
         }
         return -1;
     }
 
-    bool contains_pair_to(Handle h) const {
-        return find_pair_to(h) != INVALID;
+    bool contains_pair_to(ItemID item_id) const {
+        return find_pair_to(item_id) != INVALID;
     }
 
     // Return success
-    void* remove_pair_to(Handle h) {
+    void* remove_pair_to(ItemID item_id) {
         void* userdata = nullptr;
 
         for (int n = 0; n < num_pairs; n++) {
-            if (extended_pairs[n].handle == h) {
+            if (extended_pairs[n].item_id == item_id) {
                 userdata = extended_pairs[n].userdata;
                 extended_pairs.remove_unordered(n);
                 num_pairs--;
@@ -555,8 +518,8 @@ public:
         uint32_t p_node_id,
         const AABB<BoundingBox, Point>& p_aabb
     );
-    int _handle_get_tree_id(Handle p_handle) const;
-    void _handle_sort(Handle& p_ha, Handle& p_hb) const;
+    int _handle_get_tree_id(ItemID item_id) const;
+    void _handle_sort(ItemID& p_ha, ItemID& p_hb) const;
 
 private:
     void create_root_node(int p_tree);
@@ -570,7 +533,7 @@ public:
     const TLeaf<MAX_ITEMS, BoundingBox, Point>& _node_get_leaf(
         const TNode<MAX_CHILDREN, BoundingBox, Point>& tnode
     ) const;
-    Handle item_add(
+    ItemID item_add(
         T* p_userdata,
         bool p_active,
         const BoundingBox& p_aabb,
@@ -582,20 +545,20 @@ public:
     );
     void _debug_print_refs();
     // Return false if noop.
-    bool item_move(Handle p_handle, const BoundingBox& p_aabb);
-    void item_remove(Handle p_handle);
-    bool item_activate(Handle p_handle, const BoundingBox& p_aabb);
-    bool item_deactivate(Handle p_handle);
-    bool item_get_active(Handle p_handle) const;
+    bool item_move(ItemID item_id, const BoundingBox& p_aabb);
+    void item_remove(ItemID item_id);
+    bool item_activate(ItemID item_id, const BoundingBox& p_aabb);
+    bool item_deactivate(ItemID item_id);
+    bool item_get_active(ItemID item_id) const;
     // During collision testing, we set the from item's mask and pairable.
-    void item_fill_cullparams(Handle p_handle, CullParams& r_params) const;
-    bool item_is_pairable(const Handle& p_handle);
+    void item_fill_cullparams(ItemID item_id, CullParams& r_params) const;
+    bool item_is_pairable(const ItemID& item_id);
     void item_get_bvh_aabb(
-        const Handle& p_handle,
+        const ItemID& item_id,
         AABB<BoundingBox, Point>& r_bvh_aabb
     );
     bool item_set_pairable(
-        const Handle& p_handle,
+        const ItemID& item_id,
         bool p_pairable,
         uint32_t p_pairable_type,
         uint32_t p_pairable_mask
@@ -1778,9 +1741,7 @@ void Tree<T, MAX_CHILDREN, MAX_ITEMS, BoundingBox, Point>::
 
     BVH_ASSERT(ref.tnode_id != INVALID);
 
-    Handle temp_handle;
-    temp_handle.set_id(p_ref_id);
-    uint32_t tree_id = _handle_get_tree_id(temp_handle);
+    uint32_t tree_id = _handle_get_tree_id(p_ref_id);
 
     // Remove and reinsert.
     AABB<BoundingBox, Point> bvh_aabb;
@@ -2028,11 +1989,11 @@ template <
     class BoundingBox,
     class Point>
 int Tree<T, MAX_CHILDREN, MAX_ITEMS, BoundingBox, Point>::_handle_get_tree_id(
-    Handle p_handle
+    ItemID item_id
 ) const {
     if (use_pairs) {
         int tree = 0;
-        if (_extra[p_handle.id()].pairable) {
+        if (_extra[item_id].pairable) {
             tree = 1;
         }
         return tree;
@@ -2047,11 +2008,11 @@ template <
     class BoundingBox,
     class Point>
 void Tree<T, MAX_CHILDREN, MAX_ITEMS, BoundingBox, Point>::_handle_sort(
-    Handle& p_ha,
-    Handle& p_hb
+    ItemID& p_ha,
+    ItemID& p_hb
 ) const {
-    if (p_ha.id() > p_hb.id()) {
-        Handle temp = p_hb;
+    if (p_ha > p_hb) {
+        ItemID temp = p_hb;
         p_hb        = p_ha;
         p_ha        = temp;
     }
@@ -2129,7 +2090,7 @@ template <
     int MAX_ITEMS,
     class BoundingBox,
     class Point>
-Handle Tree<T, MAX_CHILDREN, MAX_ITEMS, BoundingBox, Point>::item_add(
+ItemID Tree<T, MAX_CHILDREN, MAX_ITEMS, BoundingBox, Point>::item_add(
     T* p_userdata,
     bool p_active,
     const BoundingBox& p_aabb,
@@ -2155,10 +2116,7 @@ Handle Tree<T, MAX_CHILDREN, MAX_ITEMS, BoundingBox, Point>::item_add(
     // 2. We don't know how many objects will be paired.
     //    This is used to modify the expansion margin.
 
-    Handle handle;
-    // Ref id easier to pass around than handle.
     uint32_t ref_id;
-
     // This should never fail.
     ItemRef* ref = _refs.request(ref_id);
 
@@ -2195,8 +2153,8 @@ Handle Tree<T, MAX_CHILDREN, MAX_ITEMS, BoundingBox, Point>::item_add(
         p_pairable      = false;
     }
 
-    // Assign to handle to return.
-    handle.set_id(ref_id);
+    // Assign to ItemID to return.
+    ItemID item_id = ref_id;
 
     uint32_t tree_id = 0;
     if (p_pairable) {
@@ -2240,7 +2198,7 @@ Handle Tree<T, MAX_CHILDREN, MAX_ITEMS, BoundingBox, Point>::item_add(
 
 #endif
 
-    return handle;
+    return item_id;
 }
 
 template <
@@ -2269,12 +2227,10 @@ template <
     class BoundingBox,
     class Point>
 bool Tree<T, MAX_CHILDREN, MAX_ITEMS, BoundingBox, Point>::item_move(
-    Handle p_handle,
+    ItemID item_id,
     const BoundingBox& p_aabb
 ) {
-    uint32_t ref_id = p_handle.id();
-
-    ItemRef& ref = _refs[ref_id];
+    ItemRef& ref = _refs[item_id];
     if (!ref.is_active()) {
         return false;
     }
@@ -2285,8 +2241,9 @@ bool Tree<T, MAX_CHILDREN, MAX_ITEMS, BoundingBox, Point>::item_move(
 #ifdef BVH_EXPAND_LEAF_AABBS
     if (use_pairs) {
         // Scale the pairing expansion by the number of pairs.
-        bvh_aabb.expand(_pairs[ref_id].scale_expansion_margin(_pairing_expansion
-        ));
+        bvh_aabb.expand(
+            _pairs[item_id].scale_expansion_margin(_pairing_expansion)
+        );
     } else {
         bvh_aabb.expand(_pairing_expansion);
     }
@@ -2323,7 +2280,7 @@ bool Tree<T, MAX_CHILDREN, MAX_ITEMS, BoundingBox, Point>::item_move(
 
 #ifdef BVH_VERBOSE_MOVES
         print_line(
-            "item_move " + itos(p_handle.id())
+            "item_move " + itos(item_id.id())
             + "(within tnode aabb) : " + _debug_aabb_to_string(abb)
         );
 #endif
@@ -2336,22 +2293,22 @@ bool Tree<T, MAX_CHILDREN, MAX_ITEMS, BoundingBox, Point>::item_move(
 
 #ifdef BVH_VERBOSE_MOVES
     print_line(
-        "item_move " + itos(p_handle.id())
+        "item_move " + itos(item_id.id())
         + "(outside tnode aabb) : " + _debug_aabb_to_string(abb)
     );
 #endif
 
-    uint32_t tree_id = _handle_get_tree_id(p_handle);
+    uint32_t tree_id = _handle_get_tree_id(item_id);
 
     // Remove and reinsert.
-    node_remove_item(ref_id, tree_id);
+    node_remove_item(item_id, tree_id);
 
     // We must choose where to add it to the tree.
     ref.tnode_id =
         _logic_choose_item_add_node(_root_node_id[tree_id], bvh_aabb);
 
     // Add it to the tree.
-    bool needs_refit = _node_add_item(ref.tnode_id, ref_id, bvh_aabb);
+    bool needs_refit = _node_add_item(ref.tnode_id, item_id, bvh_aabb);
 
     // Only need to refit from the parent.
     if (needs_refit) {
@@ -2373,18 +2330,16 @@ template <
     class BoundingBox,
     class Point>
 void Tree<T, MAX_CHILDREN, MAX_ITEMS, BoundingBox, Point>::item_remove(
-    Handle p_handle
+    ItemID item_id
 ) {
-    uint32_t ref_id = p_handle.id();
+    uint32_t tree_id = _handle_get_tree_id(item_id);
 
-    uint32_t tree_id = _handle_get_tree_id(p_handle);
-
-    VERBOSE_PRINT("item_remove [" + itos(ref_id) + "] ");
+    VERBOSE_PRINT("item_remove [" + itos(item_id) + "] ");
 
     // Remove the active reference from the list for incremental optimize.
     // This list must be kept in sync with the references as they are added
     // or removed.
-    uint32_t active_ref_id     = _extra[ref_id].active_ref_id;
+    uint32_t active_ref_id     = _extra[item_id].active_ref_id;
     uint32_t ref_id_moved_back = _active_refs[_active_refs.size() - 1];
 
     // Swap back and decrement for fast, unordered remove.
@@ -2395,15 +2350,15 @@ void Tree<T, MAX_CHILDREN, MAX_ITEMS, BoundingBox, Point>::item_remove(
     _extra[ref_id_moved_back].active_ref_id = active_ref_id;
 
     // If active, remove the item from the node.
-    if (_refs[ref_id].is_active()) {
-        node_remove_item(ref_id, tree_id);
+    if (_refs[item_id].is_active()) {
+        node_remove_item(item_id, tree_id);
     }
 
     // Remove the item reference.
-    _refs.free(ref_id);
-    _extra.free(ref_id);
+    _refs.free(item_id);
+    _extra.free(item_id);
     if (use_pairs) {
-        _pairs.free(ref_id);
+        _pairs.free(item_id);
     }
 
 #ifdef BVH_VERBOSE_TREE
@@ -2418,11 +2373,10 @@ template <
     class BoundingBox,
     class Point>
 bool Tree<T, MAX_CHILDREN, MAX_ITEMS, BoundingBox, Point>::item_activate(
-    Handle p_handle,
+    ItemID item_id,
     const BoundingBox& p_aabb
 ) {
-    uint32_t ref_id = p_handle.id();
-    ItemRef& ref    = _refs[ref_id];
+    ItemRef& ref = _refs[item_id];
     if (ref.is_active()) {
         return false;
     }
@@ -2431,12 +2385,12 @@ bool Tree<T, MAX_CHILDREN, MAX_ITEMS, BoundingBox, Point>::item_activate(
     AABB<BoundingBox, Point> bvh_aabb;
     bvh_aabb.from(p_aabb);
 
-    uint32_t tree_id = _handle_get_tree_id(p_handle);
+    uint32_t tree_id = _handle_get_tree_id(item_id);
 
     // We must choose where to add it to the tree.
     ref.tnode_id =
         _logic_choose_item_add_node(_root_node_id[tree_id], bvh_aabb);
-    _node_add_item(ref.tnode_id, ref_id, bvh_aabb);
+    _node_add_item(ref.tnode_id, item_id, bvh_aabb);
 
     refit_upward_and_balance(ref.tnode_id, tree_id);
 
@@ -2450,19 +2404,18 @@ template <
     class BoundingBox,
     class Point>
 bool Tree<T, MAX_CHILDREN, MAX_ITEMS, BoundingBox, Point>::item_deactivate(
-    Handle p_handle
+    ItemID item_id
 ) {
-    uint32_t ref_id = p_handle.id();
-    ItemRef& ref    = _refs[ref_id];
+    ItemRef& ref = _refs[item_id];
     if (!ref.is_active()) {
         return false;
     }
 
-    uint32_t tree_id = _handle_get_tree_id(p_handle);
+    uint32_t tree_id = _handle_get_tree_id(item_id);
 
     // Remove it from the tree.
     AABB<BoundingBox, Point> bvh_aabb;
-    node_remove_item(ref_id, tree_id, &bvh_aabb);
+    node_remove_item(item_id, tree_id, &bvh_aabb);
 
     // Mark as inactive.
     ref.set_inactive();
@@ -2476,10 +2429,9 @@ template <
     class BoundingBox,
     class Point>
 bool Tree<T, MAX_CHILDREN, MAX_ITEMS, BoundingBox, Point>::item_get_active(
-    Handle p_handle
+    ItemID item_id
 ) const {
-    uint32_t ref_id    = p_handle.id();
-    const ItemRef& ref = _refs[ref_id];
+    const ItemRef& ref = _refs[item_id];
     return ref.is_active();
 }
 
@@ -2490,11 +2442,10 @@ template <
     class BoundingBox,
     class Point>
 void Tree<T, MAX_CHILDREN, MAX_ITEMS, BoundingBox, Point>::item_fill_cullparams(
-    Handle p_handle,
+    ItemID item_id,
     CullParams& r_params
 ) const {
-    uint32_t ref_id           = p_handle.id();
-    const ItemExtra<T>& extra = _extra[ref_id];
+    const ItemExtra<T>& extra = _extra[item_id];
 
     // Only test from pairable items.
     r_params.test_pairable_only = extra.pairable == 0;
@@ -2511,10 +2462,9 @@ template <
     class BoundingBox,
     class Point>
 bool Tree<T, MAX_CHILDREN, MAX_ITEMS, BoundingBox, Point>::item_is_pairable(
-    const Handle& p_handle
+    const ItemID& item_id
 ) {
-    uint32_t ref_id           = p_handle.id();
-    const ItemExtra<T>& extra = _extra[ref_id];
+    const ItemExtra<T>& extra = _extra[item_id];
     return extra.pairable != 0;
 }
 
@@ -2525,11 +2475,10 @@ template <
     class BoundingBox,
     class Point>
 void Tree<T, MAX_CHILDREN, MAX_ITEMS, BoundingBox, Point>::item_get_bvh_aabb(
-    const Handle& p_handle,
+    const ItemID& item_id,
     AABB<BoundingBox, Point>& r_bvh_aabb
 ) {
-    uint32_t ref_id    = p_handle.id();
-    const ItemRef& ref = _refs[ref_id];
+    const ItemRef& ref = _refs[item_id];
 
     TNode<MAX_CHILDREN, BoundingBox, Point>& tnode = _nodes[ref.tnode_id];
     TLeaf<MAX_ITEMS, BoundingBox, Point>& leaf     = _node_get_leaf(tnode);
@@ -2544,15 +2493,13 @@ template <
     class BoundingBox,
     class Point>
 bool Tree<T, MAX_CHILDREN, MAX_ITEMS, BoundingBox, Point>::item_set_pairable(
-    const Handle& p_handle,
+    const ItemID& item_id,
     bool p_pairable,
     uint32_t p_pairable_type,
     uint32_t p_pairable_mask
 ) {
-    uint32_t ref_id = p_handle.id();
-
-    ItemExtra<T>& ex = _extra[ref_id];
-    ItemRef& ref     = _refs[ref_id];
+    ItemExtra<T>& ex = _extra[item_id];
+    ItemRef& ref     = _refs[item_id];
 
     bool active           = ref.is_active();
     bool pairable_changed = (ex.pairable != 0) != p_pairable;
@@ -2570,23 +2517,23 @@ bool Tree<T, MAX_CHILDREN, MAX_ITEMS, BoundingBox, Point>::item_set_pairable(
         AABB<BoundingBox, Point> bvh_aabb = leaf.get_aabb(ref.item_id);
 
         // Make sure the current tree is correct prior to changing.
-        uint32_t tree_id = _handle_get_tree_id(p_handle);
+        uint32_t tree_id = _handle_get_tree_id(item_id);
 
         // Remove from the old tree.
-        node_remove_item(ref_id, tree_id);
+        node_remove_item(item_id, tree_id);
 
         // Set the pairable after getting the current tree,
         // because the pairable status determines which tree.
         ex.pairable = p_pairable;
 
         // Add to new tree.
-        tree_id = _handle_get_tree_id(p_handle);
+        tree_id = _handle_get_tree_id(item_id);
         create_root_node(tree_id);
 
         // We must choose where to add it to the tree.
         ref.tnode_id =
             _logic_choose_item_add_node(_root_node_id[tree_id], bvh_aabb);
-        bool needs_refit = _node_add_item(ref.tnode_id, ref_id, bvh_aabb);
+        bool needs_refit = _node_add_item(ref.tnode_id, item_id, bvh_aabb);
 
         // Only need to refit from the parent.
         if (needs_refit) {
