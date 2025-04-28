@@ -293,12 +293,6 @@ ItemID Manager<T, MAX_ITEMS, BoundingBox, Point>::create(
     uint32_t p_pairable_mask
 ) {
     MutexLock(&_mutex, thread_safe && _thread_safe);
-
-    if (use_pairs) {
-        // Uncomment if there are bugs.
-        //_check_for_collisions();
-    }
-
 #ifdef TOOLS_ENABLED
     if (!use_pairs) {
         if (p_pairable) {
@@ -308,7 +302,6 @@ ItemID Manager<T, MAX_ITEMS, BoundingBox, Point>::create(
         }
     }
 #endif
-
     ItemID item_id = tree.item_add(
         p_userdata,
         p_active,
@@ -380,9 +373,7 @@ void Manager<T, MAX_ITEMS, BoundingBox, Point>::erase(ItemID item_id) {
     if (use_pairs) {
         _remove_changed_item(item_id);
     }
-
     tree.item_remove(item_id);
-
     _check_for_collisions(true);
 }
 
@@ -480,9 +471,6 @@ void Manager<T, MAX_ITEMS, BoundingBox, Point>::set_pairable(
     );
 
     if (use_pairs) {
-        // Uncomment if there are bugs.
-        //_check_for_collisions();
-
         if ((p_force_collision_check || state_changed)
             && tree.item_get_active(item_id)) {
             // We force a collision check when the pairable state changes,
@@ -490,7 +478,6 @@ void Manager<T, MAX_ITEMS, BoundingBox, Point>::set_pairable(
             // unpairable items might move out of collision.
             BoundingBox aabb;
             item_get_AABB(item_id, aabb);
-
             // Passing false disables the optimization that prevents
             // collision checks if the AABB hasn't changed.
             _add_changed_item(item_id, aabb, false);
@@ -616,7 +603,6 @@ void Manager<T, MAX_ITEMS, BoundingBox, Point>::_check_for_collisions(
     bool p_full_check
 ) {
     if (!changed_items.size()) {
-        // noop
         return;
     }
 
