@@ -26,10 +26,10 @@ public:
     uint16_t num_items;
 
 private:
-    uint16_t dirty;
     // Separate data orientated lists for faster SIMD traversal.
     uint32_t item_ref_ids[MAX_ITEMS];
     AABB<BoundingBox, Point> aabbs[MAX_ITEMS];
+    bool dirty;
 };
 
 // Definitions
@@ -66,14 +66,14 @@ bool Leaf<MAX_ITEMS, BoundingBox, Point>::is_dirty() const {
 }
 
 template <int MAX_ITEMS, class BoundingBox, class Point>
-void Leaf<MAX_ITEMS, BoundingBox, Point>::set_dirty(bool p) {
-    dirty = p;
+void Leaf<MAX_ITEMS, BoundingBox, Point>::set_dirty(bool new_dirty) {
+    dirty = new_dirty;
 }
 
 template <int MAX_ITEMS, class BoundingBox, class Point>
 void Leaf<MAX_ITEMS, BoundingBox, Point>::clear() {
     num_items = 0;
-    set_dirty(true);
+    dirty     = true;
 }
 
 template <int MAX_ITEMS, class BoundingBox, class Point>
