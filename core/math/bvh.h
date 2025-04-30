@@ -642,8 +642,6 @@ void Manager<T, MAX_ITEMS, BoundingBox, Point>::_check_for_collisions(
         return;
     }
 
-    BoundingBox bb;
-
     typename Tree<T, MAX_ITEMS, BoundingBox, Point>::CullParams params;
 
     params.result_count_overall = 0;
