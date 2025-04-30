@@ -10,6 +10,8 @@
 #include "core/local_vector.h"
 #include "core/math/aabb.h"
 #include "core/math/bvh_aabb.h"
+#include "core/math/bvh_leaf.h"
+#include "core/math/bvh_node.h"
 #include "core/math/geometry.h"
 #include "core/math/vector3.h"
 #include "core/pooled_list.h"
@@ -144,16 +146,16 @@ struct ItemPairs {
 };
 
 struct ItemRef {
-    uint32_t tnode_id;
+    uint32_t node_id;
     uint32_t item_id;
 
     bool is_active() const {
-        return tnode_id != INACTIVE;
+        return node_id != INACTIVE;
     }
 
     void set_inactive() {
-        tnode_id = INACTIVE;
-        item_id  = INACTIVE;
+        node_id = INACTIVE;
+        item_id = INACTIVE;
     }
 };
 
@@ -207,128 +209,6 @@ public:
     }
 };
 
-template <int MAX_ITEMS, class BoundingBox, class Point>
-struct TLeaf {
-    uint16_t num_items;
-
-private:
-    uint16_t dirty;
-    // separate data orientated lists for faster SIMD traversal
-    uint32_t item_ref_ids[MAX_ITEMS];
-    AABB<BoundingBox, Point> aabbs[MAX_ITEMS];
-
-public:
-    AABB<BoundingBox, Point>& get_aabb(uint32_t p_id) {
-        return aabbs[p_id];
-    }
-
-    const AABB<BoundingBox, Point>& get_aabb(uint32_t p_id) const {
-        return aabbs[p_id];
-    }
-
-    uint32_t& get_item_ref_id(uint32_t p_id) {
-        return item_ref_ids[p_id];
-    }
-
-    const uint32_t& get_item_ref_id(uint32_t p_id) const {
-        return item_ref_ids[p_id];
-    }
-
-    bool is_dirty() const {
-        return dirty;
-    }
-
-    void set_dirty(bool p) {
-        dirty = p;
-    }
-
-    void clear() {
-        num_items = 0;
-        set_dirty(true);
-    }
-
-    bool is_full() const {
-        return num_items >= MAX_ITEMS;
-    }
-
-    void remove_item_unordered(uint32_t p_id) {
-        BVH_ASSERT(p_id < num_items);
-        num_items--;
-        aabbs[p_id]        = aabbs[num_items];
-        item_ref_ids[p_id] = item_ref_ids[num_items];
-    }
-
-    uint32_t request_item() {
-        CRASH_COND_MSG(num_items >= MAX_ITEMS, "BVH leaf is full");
-        uint32_t id = num_items;
-        num_items++;
-        return id;
-    }
-};
-
-template <class BoundingBox, class Point>
-struct TNode {
-    AABB<BoundingBox, Point> aabb;
-
-    // Either number of children is positive or leaf id if negative.
-    // Leaf id = 0 is disallowed.
-    union {
-        int32_t num_children;
-        int32_t neg_leaf_id;
-    };
-
-    // Set to -1 if there is no parent.
-    uint32_t parent_id;
-    uint16_t children[2];
-
-    // Height in the tree, where leaves are 0, and all above are +1.
-    int32_t height;
-
-    bool is_leaf() const {
-        return num_children < 0;
-    }
-
-    void set_leaf_id(int id) {
-        neg_leaf_id = -id;
-    }
-
-    int get_leaf_id() const {
-        return -neg_leaf_id;
-    }
-
-    void clear() {
-        num_children = 0;
-        parent_id    = INVALID;
-        // Set to -1 for testing.
-        height       = 0;
-
-        // For safety, set to improbable value.
-        aabb.set_to_max_opposite_extents();
-    }
-
-    bool is_full_of_children() const {
-        return num_children >= 2;
-    }
-
-    void remove_child_internal(uint32_t child_num) {
-        children[child_num] = children[num_children - 1];
-        num_children--;
-    }
-
-    int find_child(uint32_t p_child_node_id) {
-        BVH_ASSERT(!is_leaf());
-
-        for (int n = 0; n < num_children; n++) {
-            if (children[n] == p_child_node_id) {
-                return n;
-            }
-        }
-
-        // Not found.
-        return -1;
-    }
-};
-
 // BVH Tree is an implementation of a dynamic BVH with templated leaf size.
 // This differs from most dynamic BVH in that it can handle more than 1 object
 // in leaf nodes. This can make it far more efficient in certain circumstances.
@@ -347,8 +227,8 @@ public:
     PooledList<ItemExtra<T>, true> _extra;
     PooledList<ItemPairs<BoundingBox>> _pairs;
 
-    PooledList<TNode<BoundingBox, Point>, true> _nodes;
-    PooledList<TLeaf<MAX_ITEMS, BoundingBox, Point>, true> _leaves;
+    PooledList<Node<BoundingBox, Point>, true> _nodes;
+    PooledList<Leaf<MAX_ITEMS, BoundingBox, Point>, true> _leaves;
 
     // We can maintain an un-ordered list of which references are active.
     // Enables a slow incremental optimize of the tree over each frame.
@@ -521,14 +401,14 @@ public:
 
 private:
     void create_root_node(int p_tree);
-    bool node_is_leaf_full(TNode<BoundingBox, Point>& tnode) const;
+    bool node_is_leaf_full(Node<BoundingBox, Point>& node) const;
 
 public:
-    TLeaf<MAX_ITEMS, BoundingBox, Point>& _node_get_leaf(
-        TNode<BoundingBox, Point>& tnode
+    Leaf<MAX_ITEMS, BoundingBox, Point>& _node_get_leaf(
+        Node<BoundingBox, Point>& node
     );
-    const TLeaf<MAX_ITEMS, BoundingBox, Point>& _node_get_leaf(
-        const TNode<BoundingBox, Point>& tnode
+    const Leaf<MAX_ITEMS, BoundingBox, Point>& _node_get_leaf(
+        const Node<BoundingBox, Point>& node
     ) const;
     ItemID item_add(
         T* p_userdata,
@@ -569,7 +449,7 @@ public:
         const BoundingBox& p_aabb
     ) const;
     void _debug_node_verify_bound(uint32_t p_node_id);
-    void node_update_aabb(TNode<BoundingBox, Point>& tnode);
+    void node_update_aabb(Node<BoundingBox, Point>& node);
     void refit_all(int p_tree_id);
     void refit_upward(uint32_t p_node_id);
     void refit_upward_and_balance(uint32_t p_node_id, uint32_t p_tree_id);
@@ -628,17 +508,17 @@ bool Tree<T, MAX_ITEMS, BoundingBox, Point>::node_add_child(
     uint32_t p_node_id,
     uint32_t p_child_node_id
 ) {
-    TNode<BoundingBox, Point>& tnode = _nodes[p_node_id];
-    if (tnode.is_full_of_children()) {
+    Node<BoundingBox, Point>& node = _nodes[p_node_id];
+    if (node.is_full_of_children()) {
         return false;
     }
 
-    tnode.children[tnode.num_children]  = p_child_node_id;
-    tnode.num_children                 += 1;
+    node.children[node.num_children]  = p_child_node_id;
+    node.num_children                += 1;
 
     // Back link from the child to the parent.
-    TNode<BoundingBox, Point>& tnode_child = _nodes[p_child_node_id];
-    tnode_child.parent_id                  = p_node_id;
+    Node<BoundingBox, Point>& node_child = _nodes[p_child_node_id];
+    node_child.parent_id                 = p_node_id;
 
     return true;
 }
@@ -649,15 +529,15 @@ void Tree<T, MAX_ITEMS, BoundingBox, Point>::node_replace_child(
     uint32_t p_old_child_id,
     uint32_t p_new_child_id
 ) {
-    TNode<BoundingBox, Point>& parent = _nodes[p_parent_id];
+    Node<BoundingBox, Point>& parent = _nodes[p_parent_id];
     BVH_ASSERT(!parent.is_leaf());
 
     int child_num = parent.find_child(p_old_child_id);
     BVH_ASSERT(child_num != INVALID);
     parent.children[child_num] = p_new_child_id;
 
-    TNode<BoundingBox, Point>& new_child = _nodes[p_new_child_id];
-    new_child.parent_id                  = p_parent_id;
+    Node<BoundingBox, Point>& new_child = _nodes[p_new_child_id];
+    new_child.parent_id                 = p_parent_id;
 }
 
 template <class T, int MAX_ITEMS, class BoundingBox, class Point>
@@ -667,7 +547,7 @@ void Tree<T, MAX_ITEMS, BoundingBox, Point>::node_remove_child(
     uint32_t p_tree_id,
     bool p_prevent_sibling
 ) {
-    TNode<BoundingBox, Point>& parent = _nodes[p_parent_id];
+    Node<BoundingBox, Point>& parent = _nodes[p_parent_id];
     BVH_ASSERT(!parent.is_leaf());
 
     int child_num = parent.find_child(p_child_id);
@@ -677,7 +557,7 @@ void Tree<T, MAX_ITEMS, BoundingBox, Point>::node_remove_child(
 
     // Currently, there is no need to keep back references for children.
 
-    // Always a node id, as tnode is never a leaf.
+    // Always a node id, as node is never a leaf.
     uint32_t sibling_id;
     bool sibling_present = false;
 
@@ -721,7 +601,7 @@ template <class T, int MAX_ITEMS, class BoundingBox, class Point>
 void Tree<T, MAX_ITEMS, BoundingBox, Point>::node_free_node_and_leaf(
     uint32_t p_node_id
 ) {
-    TNode<BoundingBox, Point>& node = _nodes[p_node_id];
+    Node<BoundingBox, Point>& node = _nodes[p_node_id];
     if (node.is_leaf()) {
         int leaf_id = node.get_leaf_id();
         _leaves.free(leaf_id);
@@ -735,8 +615,8 @@ void Tree<T, MAX_ITEMS, BoundingBox, Point>::change_root_node(
     uint32_t p_new_root_id,
     uint32_t p_tree_id
 ) {
-    _root_node_id[p_tree_id]        = p_new_root_id;
-    TNode<BoundingBox, Point>& root = _nodes[p_new_root_id];
+    _root_node_id[p_tree_id]       = p_new_root_id;
+    Node<BoundingBox, Point>& root = _nodes[p_new_root_id];
 
     // A root node has no parent.
     root.parent_id = INVALID;
@@ -746,14 +626,14 @@ template <class T, int MAX_ITEMS, class BoundingBox, class Point>
 void Tree<T, MAX_ITEMS, BoundingBox, Point>::node_make_leaf(uint32_t p_node_id
 ) {
     uint32_t child_leaf_id;
-    TLeaf<MAX_ITEMS, BoundingBox, Point>* child_leaf =
+    Leaf<MAX_ITEMS, BoundingBox, Point>* child_leaf =
         _leaves.request(child_leaf_id);
     child_leaf->clear();
 
     BVH_ASSERT(child_leaf_id != 0);
 
-    TNode<BoundingBox, Point>& node = _nodes[p_node_id];
-    node.neg_leaf_id                = -(int)child_leaf_id;
+    Node<BoundingBox, Point>& node = _nodes[p_node_id];
+    node.neg_leaf_id               = -(int)child_leaf_id;
 }
 
 template <class T, int MAX_ITEMS, class BoundingBox, class Point>
@@ -763,17 +643,17 @@ void Tree<T, MAX_ITEMS, BoundingBox, Point>::node_remove_item(
     AABB<BoundingBox, Point>* r_old_aabb
 ) {
     ItemRef& ref           = _refs[p_ref_id];
-    uint32_t owner_node_id = ref.tnode_id;
+    uint32_t owner_node_id = ref.node_id;
 
     // TODO: Check if this is needed.
     if (owner_node_id == INVALID) {
         return;
     }
 
-    TNode<BoundingBox, Point>& tnode = _nodes[owner_node_id];
-    CRASH_COND(!tnode.is_leaf());
+    Node<BoundingBox, Point>& node = _nodes[owner_node_id];
+    CRASH_COND(!node.is_leaf());
 
-    TLeaf<MAX_ITEMS, BoundingBox, Point>& leaf = _node_get_leaf(tnode);
+    Leaf<MAX_ITEMS, BoundingBox, Point>& leaf = _node_get_leaf(node);
 
     // If the AABB is not determining the corner size, don't refit,
     // because merging AABBs takes a lot of time.
@@ -785,7 +665,7 @@ void Tree<T, MAX_ITEMS, BoundingBox, Point>::node_remove_item(
     // Second, we shrink by an epsilon, to miss the very corner AABBs,
     // which are important in determining the bound.
     // AABBs within this can be removed and not affect the overall bound.
-    AABB<BoundingBox, Point> node_bound = tnode.aabb;
+    AABB<BoundingBox, Point> node_bound = node.aabb;
     node_bound.expand(-_node_expansion - 0.001f);
     bool refit = true;
 
@@ -816,9 +696,9 @@ void Tree<T, MAX_ITEMS, BoundingBox, Point>::node_remove_item(
         }
     } else {
         // Remove node if it is empty, and remove the link from parent.
-        if (tnode.parent_id != INVALID) {
+        if (node.parent_id != INVALID) {
             // Check if the root noode only has one child.
-            uint32_t parent_id = tnode.parent_id;
+            uint32_t parent_id = node.parent_id;
 
             node_remove_child(parent_id, owner_node_id, p_tree_id);
             refit_upward(parent_id);
@@ -828,8 +708,8 @@ void Tree<T, MAX_ITEMS, BoundingBox, Point>::node_remove_item(
         }
     }
 
-    ref.tnode_id = INVALID;
-    ref.item_id  = INVALID;
+    ref.node_id = INVALID;
+    ref.item_id = INVALID;
 }
 
 template <class T, int MAX_ITEMS, class BoundingBox, class Point>
@@ -839,11 +719,11 @@ bool Tree<T, MAX_ITEMS, BoundingBox, Point>::_node_add_item(
     const AABB<BoundingBox, Point>& p_aabb
 ) {
     ItemRef& ref = _refs[p_ref_id];
-    ref.tnode_id = p_node_id;
+    ref.node_id  = p_node_id;
 
-    TNode<BoundingBox, Point>& node = _nodes[p_node_id];
+    Node<BoundingBox, Point>& node = _nodes[p_node_id];
     BVH_ASSERT(node.is_leaf());
-    TLeaf<MAX_ITEMS, BoundingBox, Point>& leaf = _node_get_leaf(node);
+    Leaf<MAX_ITEMS, BoundingBox, Point>& leaf = _node_get_leaf(node);
 
     // We only need to refit if the added item is changing the node's AABB.
     bool needs_refit = true;
@@ -880,7 +760,7 @@ uint32_t Tree<T, MAX_ITEMS, BoundingBox, Point>::_node_create_another_child(
     const AABB<BoundingBox, Point>& p_aabb
 ) {
     uint32_t child_node_id;
-    TNode<BoundingBox, Point>* child_node = _nodes.request(child_node_id);
+    Node<BoundingBox, Point>* child_node = _nodes.request(child_node_id);
     child_node->clear();
 
     // TODO: Check if necessary.
@@ -1093,15 +973,15 @@ bool Tree<T, MAX_ITEMS, BoundingBox, Point>::_cull_segment_iterative(
 
     // Loop while there are still more nodes on the stack.
     while (ii.pop(csp)) {
-        TNode<BoundingBox, Point>& tnode = _nodes[csp.node_id];
+        Node<BoundingBox, Point>& node = _nodes[csp.node_id];
 
-        if (tnode.is_leaf()) {
+        if (node.is_leaf()) {
             // Lazy check for hits full condition.
             if (_cull_hits_full(r_params)) {
                 return false;
             }
 
-            TLeaf<MAX_ITEMS, BoundingBox, Point>& leaf = _node_get_leaf(tnode);
+            Leaf<MAX_ITEMS, BoundingBox, Point>& leaf = _node_get_leaf(node);
 
             // Test the children individually.
             for (int n = 0; n < leaf.num_items; n++) {
@@ -1116,8 +996,8 @@ bool Tree<T, MAX_ITEMS, BoundingBox, Point>::_cull_segment_iterative(
             }
         } else {
             // Test the children individually.
-            for (int n = 0; n < tnode.num_children; n++) {
-                uint32_t child_id = tnode.children[n];
+            for (int n = 0; n < node.num_children; n++) {
+                uint32_t child_id = node.children[n];
                 const AABB<BoundingBox, Point>& child_bvh_aabb =
                     _nodes[child_id].aabb;
 
@@ -1158,19 +1038,19 @@ bool Tree<T, MAX_ITEMS, BoundingBox, Point>::_cull_point_iterative(
 
     // Loop while there are still more nodes on the stack.
     while (ii.pop(cpp)) {
-        TNode<BoundingBox, Point>& tnode = _nodes[cpp.node_id];
+        Node<BoundingBox, Point>& node = _nodes[cpp.node_id];
         // Check for hit.
-        if (!tnode.aabb.intersects_point(r_params.point)) {
+        if (!node.aabb.intersects_point(r_params.point)) {
             continue;
         }
 
-        if (tnode.is_leaf()) {
+        if (node.is_leaf()) {
             // Lazy check for hits full condition.
             if (_cull_hits_full(r_params)) {
                 return false;
             }
 
-            TLeaf<MAX_ITEMS, BoundingBox, Point>& leaf = _node_get_leaf(tnode);
+            Leaf<MAX_ITEMS, BoundingBox, Point>& leaf = _node_get_leaf(node);
 
             // Test the children individually.
             for (int n = 0; n < leaf.num_items; n++) {
@@ -1183,8 +1063,8 @@ bool Tree<T, MAX_ITEMS, BoundingBox, Point>::_cull_point_iterative(
             }
         } else {
             // Test the children individually.
-            for (int n = 0; n < tnode.num_children; n++) {
-                uint32_t child_id = tnode.children[n];
+            for (int n = 0; n < node.num_children; n++) {
+                uint32_t child_id = node.children[n];
 
                 // Add to the stack.
                 CullPointParams* child = ii.request();
@@ -1223,15 +1103,15 @@ bool Tree<T, MAX_ITEMS, BoundingBox, Point>::_cull_aabb_iterative(
 
     // Loop while there are still more nodes on the stack.
     while (ii.pop(cap)) {
-        TNode<BoundingBox, Point>& tnode = _nodes[cap.node_id];
+        Node<BoundingBox, Point>& node = _nodes[cap.node_id];
 
-        if (tnode.is_leaf()) {
+        if (node.is_leaf()) {
             // Lazy check for hits full condition.
             if (_cull_hits_full(r_params)) {
                 return false;
             }
 
-            TLeaf<MAX_ITEMS, BoundingBox, Point>& leaf = _node_get_leaf(tnode);
+            Leaf<MAX_ITEMS, BoundingBox, Point>& leaf = _node_get_leaf(node);
 
             // If fully within, we add all items that pass mask checks.
             if (cap.fully_within) {
@@ -1256,8 +1136,8 @@ bool Tree<T, MAX_ITEMS, BoundingBox, Point>::_cull_aabb_iterative(
         } else {
             if (!cap.fully_within) {
                 // Test children individually.
-                for (int n = 0; n < tnode.num_children; n++) {
-                    uint32_t child_id = tnode.children[n];
+                for (int n = 0; n < node.num_children; n++) {
+                    uint32_t child_id = node.children[n];
                     const AABB<BoundingBox, Point>& child_bvh_aabb =
                         _nodes[child_id].aabb;
 
@@ -1275,8 +1155,8 @@ bool Tree<T, MAX_ITEMS, BoundingBox, Point>::_cull_aabb_iterative(
                     }
                 }
             } else {
-                for (int n = 0; n < tnode.num_children; n++) {
-                    uint32_t child_id = tnode.children[n];
+                for (int n = 0; n < node.num_children; n++) {
+                    uint32_t child_id = node.children[n];
 
                     // Add to the stack.
                     CullAABBParams* child = ii.request();
@@ -1324,11 +1204,10 @@ bool Tree<T, MAX_ITEMS, BoundingBox, Point>::_cull_convex_iterative(
 
     // Loop while there are still more nodes on the stack.
     while (ii.pop(ccp)) {
-        const TNode<BoundingBox, Point>& tnode = _nodes[ccp.node_id];
+        const Node<BoundingBox, Point>& node = _nodes[ccp.node_id];
 
         if (!ccp.fully_within) {
-            IntersectResult result =
-                tnode.aabb.intersects_convex(r_params.hull);
+            IntersectResult result = node.aabb.intersects_convex(r_params.hull);
 
             switch (result) {
                 case IntersectResult::MISS: {
@@ -1342,14 +1221,14 @@ bool Tree<T, MAX_ITEMS, BoundingBox, Point>::_cull_convex_iterative(
             }
         }
 
-        if (tnode.is_leaf()) {
+        if (node.is_leaf()) {
             // Lazy check for hits full condition.
             if (_cull_hits_full(r_params)) {
                 return false;
             }
 
-            const TLeaf<MAX_ITEMS, BoundingBox, Point>& leaf =
-                _node_get_leaf(tnode);
+            const Leaf<MAX_ITEMS, BoundingBox, Point>& leaf =
+                _node_get_leaf(node);
 
             // If fully within, add all items taking masks into account.
             if (ccp.fully_within) {
@@ -1369,7 +1248,7 @@ bool Tree<T, MAX_ITEMS, BoundingBox, Point>::_cull_convex_iterative(
 #ifdef BVH_CONVEX_CULL_OPTIMIZED
                 // First find which planes cut the AABB.
                 uint32_t num_planes =
-                    tnode.aabb.find_cutting_planes(r_params.hull, plane_ids);
+                    node.aabb.find_cutting_planes(r_params.hull, plane_ids);
                 BVH_ASSERT(num_planes <= max_planes);
 
 // #define BVH_CONVEX_CULL_OPTIMIZED_RIGOR_CHECK
@@ -1432,8 +1311,8 @@ bool Tree<T, MAX_ITEMS, BoundingBox, Point>::_cull_convex_iterative(
             }
         } else {
             // Not fully within.
-            for (int n = 0; n < tnode.num_children; n++) {
-                uint32_t child_id = tnode.children[n];
+            for (int n = 0; n < node.num_children; n++) {
+                uint32_t child_id = node.children[n];
 
                 // Add to the stack.
                 CullConvexParams* child = ii.request();
@@ -1489,7 +1368,7 @@ void Tree<T, MAX_ITEMS, BoundingBox, Point>::_debug_recursive_print_tree_node(
     uint32_t p_node_id,
     int depth = 0
 ) const {
-    const TNode<BoundingBox, Point>& tnode = _nodes[p_node_id];
+    const Node<BoundingBox, Point>& node = _nodes[p_node_id];
 
     String sz = "";
     for (int n = 0; n < depth; n++) {
@@ -1497,11 +1376,10 @@ void Tree<T, MAX_ITEMS, BoundingBox, Point>::_debug_recursive_print_tree_node(
     }
     sz += itos(p_node_id);
 
-    if (tnode.is_leaf()) {
+    if (node.is_leaf()) {
         sz += " L";
-        sz += itos(tnode.height) + " ";
-        const TLeaf<MAX_ITEMS, BoundingBox, Point>& leaf =
-            _node_get_leaf(tnode);
+        sz += itos(node.height) + " ";
+        const Leaf<MAX_ITEMS, BoundingBox, Point>& leaf = _node_get_leaf(node);
 
         sz += "[";
         for (int n = 0; n < leaf.num_items; n++) {
@@ -1514,15 +1392,15 @@ void Tree<T, MAX_ITEMS, BoundingBox, Point>::_debug_recursive_print_tree_node(
         sz += "]  ";
     } else {
         sz += " N";
-        sz += itos(tnode.height) + " ";
+        sz += itos(node.height) + " ";
     }
 
-    sz += _debug_aabb_to_string(tnode.aabb);
+    sz += _debug_aabb_to_string(node.aabb);
     print_line(sz);
 
-    if (!tnode.is_leaf()) {
-        for (int n = 0; n < tnode.num_children; n++) {
-            _debug_recursive_print_tree_node(tnode.children[n], depth + 1);
+    if (!node.is_leaf()) {
+        for (int n = 0; n < node.num_children; n++) {
+            _debug_recursive_print_tree_node(node.children[n], depth + 1);
         }
     }
 }
@@ -1544,7 +1422,7 @@ template <class T, int MAX_ITEMS, class BoundingBox, class Point>
 void Tree<T, MAX_ITEMS, BoundingBox, Point>::_integrity_check_up(
     uint32_t p_node_id
 ) {
-    TNode<BoundingBox, Point>& node = _nodes[p_node_id];
+    Node<BoundingBox, Point>& node = _nodes[p_node_id];
 
     AABB<BoundingBox, Point> bvh_aabb = node.aabb;
     node_update_aabb(node);
@@ -1559,7 +1437,7 @@ template <class T, int MAX_ITEMS, class BoundingBox, class Point>
 void Tree<T, MAX_ITEMS, BoundingBox, Point>::_integrity_check_down(
     uint32_t p_node_id
 ) {
-    const TNode<BoundingBox, Point>& node = _nodes[p_node_id];
+    const Node<BoundingBox, Point>& node = _nodes[p_node_id];
 
     if (node.is_leaf()) {
         _integrity_check_up(p_node_id);
@@ -1570,7 +1448,7 @@ void Tree<T, MAX_ITEMS, BoundingBox, Point>::_integrity_check_down(
             uint32_t child_id = node.children[n];
 
             // Check that the children's parent pointers are correct.
-            TNode<BoundingBox, Point>& child = _nodes[child_id];
+            Node<BoundingBox, Point>& child = _nodes[child_id];
             CRASH_COND(child.parent_id != p_node_id);
 
             _integrity_check_down(child_id);
@@ -1592,7 +1470,7 @@ void Tree<T, MAX_ITEMS, BoundingBox, Point>::_logic_item_remove_and_reinsert(
         return;
     }
 
-    BVH_ASSERT(ref.tnode_id != INVALID);
+    BVH_ASSERT(ref.node_id != INVALID);
 
     uint32_t tree_id = _handle_get_tree_id(p_ref_id);
 
@@ -1601,11 +1479,10 @@ void Tree<T, MAX_ITEMS, BoundingBox, Point>::_logic_item_remove_and_reinsert(
     node_remove_item(p_ref_id, tree_id, &bvh_aabb);
 
     // We must choose where to add it to the tree.
-    ref.tnode_id =
-        _logic_choose_item_add_node(_root_node_id[tree_id], bvh_aabb);
-    _node_add_item(ref.tnode_id, p_ref_id, bvh_aabb);
+    ref.node_id = _logic_choose_item_add_node(_root_node_id[tree_id], bvh_aabb);
+    _node_add_item(ref.node_id, p_ref_id, bvh_aabb);
 
-    refit_upward_and_balance(ref.tnode_id, tree_id);
+    refit_upward_and_balance(ref.node_id, tree_id);
 }
 
 // _logic_bvh_aabb_merge and _logic balance are based on the 'Balance'
@@ -1652,7 +1529,7 @@ int32_t Tree<T, MAX_ITEMS, BoundingBox, Point>::_logic_balance(
     // Uncomment to bypass balance.
     // return iA;
 
-    TNode<BoundingBox, Point>* A = &_nodes[iA];
+    Node<BoundingBox, Point>* A = &_nodes[iA];
 
     if (A->is_leaf() || A->height == 1) {
         return iA;
@@ -1666,19 +1543,19 @@ int32_t Tree<T, MAX_ITEMS, BoundingBox, Point>::_logic_balance(
      */
 
     CRASH_COND(A->num_children != 2);
-    int32_t iB                   = A->children[0];
-    int32_t iC                   = A->children[1];
-    TNode<BoundingBox, Point>* B = &_nodes[iB];
-    TNode<BoundingBox, Point>* C = &_nodes[iC];
+    int32_t iB                  = A->children[0];
+    int32_t iC                  = A->children[1];
+    Node<BoundingBox, Point>* B = &_nodes[iB];
+    Node<BoundingBox, Point>* C = &_nodes[iC];
 
     int32_t balance = C->height - B->height;
 
     // If C is higher, promote C.
     if (balance > 1) {
-        int32_t iF                   = C->children[0];
-        int32_t iG                   = C->children[1];
-        TNode<BoundingBox, Point>* F = &_nodes[iF];
-        TNode<BoundingBox, Point>* G = &_nodes[iG];
+        int32_t iF                  = C->children[0];
+        int32_t iG                  = C->children[1];
+        Node<BoundingBox, Point>* F = &_nodes[iF];
+        Node<BoundingBox, Point>* G = &_nodes[iG];
 
         // Grandparent point to C.
         if (A->parent_id != INVALID) {
@@ -1726,10 +1603,10 @@ int32_t Tree<T, MAX_ITEMS, BoundingBox, Point>::_logic_balance(
 
     // If B is higher, promote B.
     else if (balance < -1) {
-        int32_t iD                   = B->children[0];
-        int32_t iE                   = B->children[1];
-        TNode<BoundingBox, Point>* D = &_nodes[iD];
-        TNode<BoundingBox, Point>* E = &_nodes[iE];
+        int32_t iD                  = B->children[0];
+        int32_t iE                  = B->children[1];
+        Node<BoundingBox, Point>* D = &_nodes[iD];
+        Node<BoundingBox, Point>* E = &_nodes[iE];
 
         // Grandparent point to B.
         if (A->parent_id != INVALID) {
@@ -1786,11 +1663,11 @@ uint32_t Tree<T, MAX_ITEMS, BoundingBox, Point>::_logic_choose_item_add_node(
 ) {
     while (true) {
         BVH_ASSERT(p_node_id != INVALID);
-        TNode<BoundingBox, Point>& tnode = _nodes[p_node_id];
+        Node<BoundingBox, Point>& node = _nodes[p_node_id];
 
-        if (tnode.is_leaf()) {
+        if (node.is_leaf()) {
             // If a leaf, and not full, use it.
-            if (!node_is_leaf_full(tnode)) {
+            if (!node_is_leaf_full(node)) {
                 return p_node_id;
             }
             // Else split the leaf, and use one of the children.
@@ -1800,19 +1677,19 @@ uint32_t Tree<T, MAX_ITEMS, BoundingBox, Point>::_logic_choose_item_add_node(
         // TODO: This should not happen.
         // It is not serious, but it would be nice to prevent.
         // May only happen with the root node.
-        if (tnode.num_children == 1) {
+        if (node.num_children == 1) {
             WARN_PRINT_ONCE(
                 "BVH::recursive_choose_item_add_node, node with 1 child, "
                 "recovering"
             );
-            p_node_id = tnode.children[0];
+            p_node_id = node.children[0];
         } else {
-            BVH_ASSERT(tnode.num_children == 2);
-            TNode<BoundingBox, Point>& childA = _nodes[tnode.children[0]];
-            TNode<BoundingBox, Point>& childB = _nodes[tnode.children[1]];
+            BVH_ASSERT(node.num_children == 2);
+            Node<BoundingBox, Point>& childA = _nodes[node.children[0]];
+            Node<BoundingBox, Point>& childB = _nodes[node.children[1]];
             int which = p_aabb.select_by_proximity(childA.aabb, childB.aabb);
 
-            p_node_id = tnode.children[which];
+            p_node_id = node.children[which];
         }
     }
 }
@@ -1847,13 +1724,13 @@ void Tree<T, MAX_ITEMS, BoundingBox, Point>::create_root_node(int p_tree) {
     // If there is no root node, create one.
     if (_root_node_id[p_tree] == INVALID) {
         uint32_t root_node_id;
-        TNode<BoundingBox, Point>* node = _nodes.request(root_node_id);
+        Node<BoundingBox, Point>* node = _nodes.request(root_node_id);
         node->clear();
         _root_node_id[p_tree] = root_node_id;
 
         // Make the root node a leaf.
         uint32_t leaf_id;
-        TLeaf<MAX_ITEMS, BoundingBox, Point>* leaf = _leaves.request(leaf_id);
+        Leaf<MAX_ITEMS, BoundingBox, Point>* leaf = _leaves.request(leaf_id);
         leaf->clear();
         node->neg_leaf_id = -(int)leaf_id;
     }
@@ -1861,27 +1738,27 @@ void Tree<T, MAX_ITEMS, BoundingBox, Point>::create_root_node(int p_tree) {
 
 template <class T, int MAX_ITEMS, class BoundingBox, class Point>
 bool Tree<T, MAX_ITEMS, BoundingBox, Point>::node_is_leaf_full(
-    TNode<BoundingBox, Point>& tnode
+    Node<BoundingBox, Point>& node
 ) const {
-    const TLeaf<MAX_ITEMS, BoundingBox, Point>& leaf = _node_get_leaf(tnode);
+    const Leaf<MAX_ITEMS, BoundingBox, Point>& leaf = _node_get_leaf(node);
     return leaf.is_full();
 }
 
 template <class T, int MAX_ITEMS, class BoundingBox, class Point>
-TLeaf<MAX_ITEMS, BoundingBox, Point>& Tree<T, MAX_ITEMS, BoundingBox, Point>::
-    _node_get_leaf(TNode<BoundingBox, Point>& tnode) {
-    BVH_ASSERT(tnode.is_leaf());
-    return _leaves[tnode.get_leaf_id()];
+Leaf<MAX_ITEMS, BoundingBox, Point>& Tree<T, MAX_ITEMS, BoundingBox, Point>::
+    _node_get_leaf(Node<BoundingBox, Point>& node) {
+    BVH_ASSERT(node.is_leaf());
+    return _leaves[node.get_leaf_id()];
 }
 
 template <class T, int MAX_ITEMS, class BoundingBox, class Point>
-const TLeaf<MAX_ITEMS, BoundingBox, Point>& Tree<
+const Leaf<MAX_ITEMS, BoundingBox, Point>& Tree<
     T,
     MAX_ITEMS,
     BoundingBox,
-    Point>::_node_get_leaf(const TNode<BoundingBox, Point>& tnode) const {
-    BVH_ASSERT(tnode.is_leaf());
-    return _leaves[tnode.get_leaf_id()];
+    Point>::_node_get_leaf(const Node<BoundingBox, Point>& node) const {
+    BVH_ASSERT(node.is_leaf());
+    return _leaves[node.get_leaf_id()];
 }
 
 template <class T, int MAX_ITEMS, class BoundingBox, class Point>
@@ -1960,14 +1837,14 @@ ItemID Tree<T, MAX_ITEMS, BoundingBox, Point>::item_add(
 
     // We must choose where to add it to the tree.
     if (p_active) {
-        ref->tnode_id =
+        ref->node_id =
             _logic_choose_item_add_node(_root_node_id[tree_id], bvh_aabb);
 
-        bool refit = _node_add_item(ref->tnode_id, ref_id, bvh_aabb);
+        bool refit = _node_add_item(ref->node_id, ref_id, bvh_aabb);
 
         if (refit) {
             // Only need to refit from the parent.
-            const TNode<BoundingBox, Point>& add_node = _nodes[ref->tnode_id];
+            const Node<BoundingBox, Point>& add_node = _nodes[ref->node_id];
             if (add_node.parent_id != INVALID) {
                 refit_upward_and_balance(add_node.parent_id, tree_id);
             }
@@ -2002,7 +1879,7 @@ void Tree<T, MAX_ITEMS, BoundingBox, Point>::_debug_print_refs() {
     for (int n = 0; n < _refs.size(); n++) {
         const ItemRef& ref = _refs[n];
         print_line(
-            "tnode_id " + itos(ref.tnode_id) + ", item_id " + itos(ref.item_id)
+            "node_id " + itos(ref.node_id) + ", item_id " + itos(ref.item_id)
         );
     }
 
@@ -2033,15 +1910,15 @@ bool Tree<T, MAX_ITEMS, BoundingBox, Point>::item_move(
     }
 #endif
 
-    BVH_ASSERT(ref.tnode_id != INVALID);
-    TNode<BoundingBox, Point>& tnode = _nodes[ref.tnode_id];
+    BVH_ASSERT(ref.node_id != INVALID);
+    Node<BoundingBox, Point>& node = _nodes[ref.node_id];
 
     // Does it fit within the current leaf AABB?
-    if (tnode.aabb.is_other_within(bvh_aabb)) {
+    if (node.aabb.is_other_within(bvh_aabb)) {
         // It has not moved enough to require a refit: Do nothing.
         // However, we update the exact AABB in the leaf, as this will be
         // needed for accurate collision detection.
-        TLeaf<MAX_ITEMS, BoundingBox, Point>& leaf = _node_get_leaf(tnode);
+        Leaf<MAX_ITEMS, BoundingBox, Point>& leaf = _node_get_leaf(node);
 
         AABB<BoundingBox, Point>& leaf_bvh_aabb = leaf.get_aabb(ref.item_id);
 
@@ -2065,7 +1942,7 @@ bool Tree<T, MAX_ITEMS, BoundingBox, Point>::item_move(
 #ifdef BVH_VERBOSE_MOVES
         print_line(
             "item_move " + itos(item_id.id())
-            + "(within tnode aabb) : " + _debug_aabb_to_string(abb)
+            + "(within node aabb) : " + _debug_aabb_to_string(abb)
         );
 #endif
 
@@ -2078,7 +1955,7 @@ bool Tree<T, MAX_ITEMS, BoundingBox, Point>::item_move(
 #ifdef BVH_VERBOSE_MOVES
     print_line(
         "item_move " + itos(item_id.id())
-        + "(outside tnode aabb) : " + _debug_aabb_to_string(abb)
+        + "(outside node aabb) : " + _debug_aabb_to_string(abb)
     );
 #endif
 
@@ -2088,15 +1965,14 @@ bool Tree<T, MAX_ITEMS, BoundingBox, Point>::item_move(
     node_remove_item(item_id, tree_id);
 
     // We must choose where to add it to the tree.
-    ref.tnode_id =
-        _logic_choose_item_add_node(_root_node_id[tree_id], bvh_aabb);
+    ref.node_id = _logic_choose_item_add_node(_root_node_id[tree_id], bvh_aabb);
 
     // Add it to the tree.
-    bool needs_refit = _node_add_item(ref.tnode_id, item_id, bvh_aabb);
+    bool needs_refit = _node_add_item(ref.node_id, item_id, bvh_aabb);
 
     // Only need to refit from the parent.
     if (needs_refit) {
-        const TNode<BoundingBox, Point>& add_node = _nodes[ref.tnode_id];
+        const Node<BoundingBox, Point>& add_node = _nodes[ref.node_id];
         if (add_node.parent_id != INVALID) {
             // TODO: We don't need to rebalance all the time.
             refit_upward(add_node.parent_id);
@@ -2159,11 +2035,10 @@ bool Tree<T, MAX_ITEMS, BoundingBox, Point>::item_activate(
     uint32_t tree_id = _handle_get_tree_id(item_id);
 
     // We must choose where to add it to the tree.
-    ref.tnode_id =
-        _logic_choose_item_add_node(_root_node_id[tree_id], bvh_aabb);
-    _node_add_item(ref.tnode_id, item_id, bvh_aabb);
+    ref.node_id = _logic_choose_item_add_node(_root_node_id[tree_id], bvh_aabb);
+    _node_add_item(ref.node_id, item_id, bvh_aabb);
 
-    refit_upward_and_balance(ref.tnode_id, tree_id);
+    refit_upward_and_balance(ref.node_id, tree_id);
 
     return true;
 }
@@ -2223,8 +2098,8 @@ void Tree<T, MAX_ITEMS, BoundingBox, Point>::item_get_bvh_aabb(
 ) {
     const ItemRef& ref = _refs[item_id];
 
-    TNode<BoundingBox, Point>& tnode           = _nodes[ref.tnode_id];
-    TLeaf<MAX_ITEMS, BoundingBox, Point>& leaf = _node_get_leaf(tnode);
+    Node<BoundingBox, Point>& node            = _nodes[ref.node_id];
+    Leaf<MAX_ITEMS, BoundingBox, Point>& leaf = _node_get_leaf(node);
 
     r_bvh_aabb = leaf.get_aabb(ref.item_id);
 }
@@ -2250,9 +2125,9 @@ bool Tree<T, MAX_ITEMS, BoundingBox, Point>::item_set_pairable(
 
     if (active && pairable_changed) {
         // Record AABB
-        TNode<BoundingBox, Point>& tnode           = _nodes[ref.tnode_id];
-        TLeaf<MAX_ITEMS, BoundingBox, Point>& leaf = _node_get_leaf(tnode);
-        AABB<BoundingBox, Point> bvh_aabb          = leaf.get_aabb(ref.item_id);
+        Node<BoundingBox, Point>& node            = _nodes[ref.node_id];
+        Leaf<MAX_ITEMS, BoundingBox, Point>& leaf = _node_get_leaf(node);
+        AABB<BoundingBox, Point> bvh_aabb         = leaf.get_aabb(ref.item_id);
 
         // Make sure the current tree is correct prior to changing.
         uint32_t tree_id = _handle_get_tree_id(item_id);
@@ -2269,13 +2144,13 @@ bool Tree<T, MAX_ITEMS, BoundingBox, Point>::item_set_pairable(
         create_root_node(tree_id);
 
         // We must choose where to add it to the tree.
-        ref.tnode_id =
+        ref.node_id =
             _logic_choose_item_add_node(_root_node_id[tree_id], bvh_aabb);
-        bool needs_refit = _node_add_item(ref.tnode_id, item_id, bvh_aabb);
+        bool needs_refit = _node_add_item(ref.node_id, item_id, bvh_aabb);
 
         // Only need to refit from the parent.
         if (needs_refit) {
-            const TNode<BoundingBox, Point>& add_node = _nodes[ref.tnode_id];
+            const Node<BoundingBox, Point>& add_node = _nodes[ref.node_id];
             if (add_node.parent_id != INVALID) {
                 refit_upward_and_balance(add_node.parent_id, tree_id);
             }
@@ -2412,7 +2287,7 @@ template <class T, int MAX_ITEMS, class BoundingBox, class Point>
 void Tree<T, MAX_ITEMS, BoundingBox, Point>::_debug_node_verify_bound(
     uint32_t p_node_id
 ) {
-    TNode<BoundingBox, Point>& node          = _nodes[p_node_id];
+    Node<BoundingBox, Point>& node           = _nodes[p_node_id];
     AABB<BoundingBox, Point> bvh_aabb_before = node.aabb;
 
     node_update_aabb(node);
@@ -2423,48 +2298,47 @@ void Tree<T, MAX_ITEMS, BoundingBox, Point>::_debug_node_verify_bound(
 
 template <class T, int MAX_ITEMS, class BoundingBox, class Point>
 void Tree<T, MAX_ITEMS, BoundingBox, Point>::node_update_aabb(
-    TNode<BoundingBox, Point>& tnode
+    Node<BoundingBox, Point>& node
 ) {
-    tnode.aabb.set_to_max_opposite_extents();
-    tnode.height = 0;
+    node.aabb.set_to_max_opposite_extents();
+    node.height = 0;
 
-    if (!tnode.is_leaf()) {
-        for (int n = 0; n < tnode.num_children; n++) {
-            uint32_t child_node_id = tnode.children[n];
+    if (!node.is_leaf()) {
+        for (int n = 0; n < node.num_children; n++) {
+            uint32_t child_node_id = node.children[n];
 
             // Merge with child AABB.
-            const TNode<BoundingBox, Point>& tchild = _nodes[child_node_id];
-            tnode.aabb.merge(tchild.aabb);
+            const Node<BoundingBox, Point>& tchild = _nodes[child_node_id];
+            node.aabb.merge(tchild.aabb);
 
             // Do heights at the same time.
-            if (tchild.height > tnode.height) {
-                tnode.height = tchild.height;
+            if (tchild.height > node.height) {
+                node.height = tchild.height;
             }
         }
 
         // The height of a non leaf is always +1 the biggest child.
-        tnode.height++;
+        node.height++;
 
 #ifdef BVH_CHECKS
-        if (!tnode.num_children) {
+        if (!node.num_children) {
             // An empty AABB will break the parent AABBs.
-            WARN_PRINT("TNode has no children, AABB is undefined");
+            WARN_PRINT("Node has no children, AABB is undefined");
         }
 #endif
     } else {
-        const TLeaf<MAX_ITEMS, BoundingBox, Point>& leaf =
-            _node_get_leaf(tnode);
+        const Leaf<MAX_ITEMS, BoundingBox, Point>& leaf = _node_get_leaf(node);
 
         for (int n = 0; n < leaf.num_items; n++) {
-            tnode.aabb.merge(leaf.get_aabb(n));
+            node.aabb.merge(leaf.get_aabb(n));
         }
 
         // The leaf items are unexpanded. We expand only in the node AABBs.
-        tnode.aabb.expand(_node_expansion);
+        node.aabb.expand(_node_expansion);
 #ifdef BVH_CHECKS
         if (!leaf.num_items) {
             // An empty AABB will break the parent AABBs.
-            WARN_PRINT("TLeafhas no items, AABB is undefined");
+            WARN_PRINT("Leafhas no items, AABB is undefined");
         }
 #endif
     }
@@ -2478,9 +2352,9 @@ void Tree<T, MAX_ITEMS, BoundingBox, Point>::refit_all(int p_tree_id) {
 template <class T, int MAX_ITEMS, class BoundingBox, class Point>
 void Tree<T, MAX_ITEMS, BoundingBox, Point>::refit_upward(uint32_t p_node_id) {
     while (p_node_id != INVALID) {
-        TNode<BoundingBox, Point>& tnode = _nodes[p_node_id];
-        node_update_aabb(tnode);
-        p_node_id = tnode.parent_id;
+        Node<BoundingBox, Point>& node = _nodes[p_node_id];
+        node_update_aabb(node);
+        p_node_id = node.parent_id;
     }
 }
 
@@ -2497,28 +2371,28 @@ void Tree<T, MAX_ITEMS, BoundingBox, Point>::refit_upward_and_balance(
             VERBOSE_PRINT("REBALANCED!");
         }
 
-        TNode<BoundingBox, Point>& tnode = _nodes[p_node_id];
+        Node<BoundingBox, Point>& node = _nodes[p_node_id];
 
         // Update overall AABB from the children.
-        node_update_aabb(tnode);
+        node_update_aabb(node);
 
-        p_node_id = tnode.parent_id;
+        p_node_id = node.parent_id;
     }
 }
 
 template <class T, int MAX_ITEMS, class BoundingBox, class Point>
 void Tree<T, MAX_ITEMS, BoundingBox, Point>::refit_downward(uint32_t p_node_id
 ) {
-    TNode<BoundingBox, Point>& tnode = _nodes[p_node_id];
+    Node<BoundingBox, Point>& node = _nodes[p_node_id];
 
     // Do children first.
-    if (!tnode.is_leaf()) {
-        for (int n = 0; n < tnode.num_children; n++) {
-            refit_downward(tnode.children[n]);
+    if (!node.is_leaf()) {
+        for (int n = 0; n < node.num_children; n++) {
+            refit_downward(node.children[n]);
         }
     }
 
-    node_update_aabb(tnode);
+    node_update_aabb(node);
 }
 
 template <class T, int MAX_ITEMS, class BoundingBox, class Point>
@@ -2540,12 +2414,12 @@ void Tree<T, MAX_ITEMS, BoundingBox, Point>::refit_branch(uint32_t p_node_id) {
 
     // Loop while there are still more nodes on the stack.
     while (ii.pop(rp)) {
-        TNode<BoundingBox, Point>& tnode = _nodes[rp.node_id];
+        Node<BoundingBox, Point>& node = _nodes[rp.node_id];
 
         // Do children first.
-        if (!tnode.is_leaf()) {
-            for (int n = 0; n < tnode.num_children; n++) {
-                uint32_t child_id = tnode.children[n];
+        if (!node.is_leaf()) {
+            for (int n = 0; n < node.num_children; n++) {
+                uint32_t child_id = node.children[n];
 
                 // Add to the stack.
                 RefitParams* child = ii.request();
@@ -2553,7 +2427,7 @@ void Tree<T, MAX_ITEMS, BoundingBox, Point>::refit_branch(uint32_t p_node_id) {
             }
         } else {
             // Only refit upward if leaf is dirty.
-            TLeaf<MAX_ITEMS, BoundingBox, Point>& leaf = _node_get_leaf(tnode);
+            Leaf<MAX_ITEMS, BoundingBox, Point>& leaf = _node_get_leaf(node);
             if (leaf.is_dirty()) {
                 leaf.set_dirty(false);
                 refit_upward(p_node_id);
@@ -2566,14 +2440,14 @@ template <class T, int MAX_ITEMS, class BoundingBox, class Point>
 void Tree<T, MAX_ITEMS, BoundingBox, Point>::_split_inform_references(
     uint32_t p_node_id
 ) {
-    TNode<BoundingBox, Point>& node            = _nodes[p_node_id];
-    TLeaf<MAX_ITEMS, BoundingBox, Point>& leaf = _node_get_leaf(node);
+    Node<BoundingBox, Point>& node            = _nodes[p_node_id];
+    Leaf<MAX_ITEMS, BoundingBox, Point>& leaf = _node_get_leaf(node);
 
     for (int n = 0; n < leaf.num_items; n++) {
         uint32_t ref_id = leaf.get_item_ref_id(n);
 
         ItemRef& ref = _refs[ref_id];
-        ref.tnode_id = p_node_id;
+        ref.node_id  = p_node_id;
         ref.item_id  = n;
     }
 }
@@ -2785,9 +2659,9 @@ uint32_t Tree<T, MAX_ITEMS, BoundingBox, Point>::split_leaf_complex(
 ) {
     VERBOSE_PRINT("split_leaf");
 
-    // Note: The tnode before and after splitting may be a different address
+    // Note: The node before and after splitting may be a different address
     // in memory, because the vector could get relocated.
-    // We need to reget the tnode after the split.
+    // We need to reget the node after the split.
     BVH_ASSERT(_nodes[p_node_id].is_leaf());
 
     // Create child leaf nodes.
@@ -2795,7 +2669,7 @@ uint32_t Tree<T, MAX_ITEMS, BoundingBox, Point>::split_leaf_complex(
 
     for (int n = 0; n < 2; n++) {
         // Create node children.
-        TNode<BoundingBox, Point>* child_node = _nodes.request(child_ids[n]);
+        Node<BoundingBox, Point>* child_node = _nodes.request(child_ids[n]);
 
         child_node->clear();
 
@@ -2807,18 +2681,17 @@ uint32_t Tree<T, MAX_ITEMS, BoundingBox, Point>::split_leaf_complex(
     }
 
     // Don't get any leaves or nodes untill after the split.
-    TNode<BoundingBox, Point>& tnode = _nodes[p_node_id];
-    uint32_t orig_leaf_id            = tnode.get_leaf_id();
-    const TLeaf<MAX_ITEMS, BoundingBox, Point>& orig_leaf =
-        _node_get_leaf(tnode);
+    Node<BoundingBox, Point>& node                       = _nodes[p_node_id];
+    uint32_t orig_leaf_id                                = node.get_leaf_id();
+    const Leaf<MAX_ITEMS, BoundingBox, Point>& orig_leaf = _node_get_leaf(node);
 
     // Store the final child ids.
     for (int n = 0; n < 2; n++) {
-        tnode.children[n] = child_ids[n];
+        node.children[n] = child_ids[n];
     }
 
     // Mark as no longer a leaf node.
-    tnode.num_children = 2;
+    node.num_children = 2;
 
     // Assign childeren to each group equally.
     // Plus 1 for the wildcard. The item being added.
@@ -2852,7 +2725,7 @@ uint32_t Tree<T, MAX_ITEMS, BoundingBox, Point>::split_leaf_complex(
         group_a,
         group_b,
         temp_bounds,
-        tnode.aabb
+        node.aabb
     );
 
     uint32_t wildcard_node = INVALID;
@@ -2866,12 +2739,12 @@ uint32_t Tree<T, MAX_ITEMS, BoundingBox, Point>::split_leaf_complex(
                 orig_leaf.get_aabb(which);
             uint32_t source_item_ref_id = orig_leaf.get_item_ref_id(which);
             _node_add_item(
-                tnode.children[0],
+                node.children[0],
                 source_item_ref_id,
                 source_item_aabb
             );
         } else {
-            wildcard_node = tnode.children[0];
+            wildcard_node = node.children[0];
         }
     }
     for (int n = 0; n < num_b; n++) {
@@ -2882,12 +2755,12 @@ uint32_t Tree<T, MAX_ITEMS, BoundingBox, Point>::split_leaf_complex(
                 orig_leaf.get_aabb(which);
             uint32_t source_item_ref_id = orig_leaf.get_item_ref_id(which);
             _node_add_item(
-                tnode.children[1],
+                node.children[1],
                 source_item_ref_id,
                 source_item_aabb
             );
         } else {
-            wildcard_node = tnode.children[1];
+            wildcard_node = node.children[1];
         }
     }
 
@@ -2896,7 +2769,7 @@ uint32_t Tree<T, MAX_ITEMS, BoundingBox, Point>::split_leaf_complex(
 
     // Keep the references up to date.
     for (int n = 0; n < 2; n++) {
-        _split_inform_references(tnode.children[n]);
+        _split_inform_references(node.children[n]);
     }
 
     refit_upward(p_node_id);
