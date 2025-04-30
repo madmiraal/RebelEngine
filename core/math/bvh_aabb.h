@@ -38,9 +38,6 @@ struct AABB {
     Point min;
     Point neg_max;
 
-    bool operator==(const AABB& o) const;
-    bool operator!=(const AABB& o) const;
-    void set(const Point& _min, const Point& _max);
     // To and from standard AABB.
     void from(const BoundingBox& p_aabb);
     void to(BoundingBox& r_aabb) const;
@@ -78,22 +75,6 @@ struct AABB {
 };
 
 // Definitions
-
-template <typename BoundingBox, typename Point>
-bool AABB<BoundingBox, Point>::operator==(const AABB& o) const {
-    return (min == o.min) && (neg_max == o.neg_max);
-}
-
-template <typename BoundingBox, typename Point>
-bool AABB<BoundingBox, Point>::operator!=(const AABB& o) const {
-    return (*this == o) == false;
-}
-
-template <typename BoundingBox, typename Point>
-void AABB<BoundingBox, Point>::set(const Point& _min, const Point& _max) {
-    min     = _min;
-    neg_max = -_max;
-}
 
 template <typename BoundingBox, typename Point>
 void AABB<BoundingBox, Point>::from(const BoundingBox& p_aabb) {
