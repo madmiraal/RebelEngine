@@ -175,8 +175,6 @@ private:
     const ItemExtra<T>& _get_extra(ItemID item_id) const;
     const ItemRef& _get_ref(ItemID item_id) const;
     void item_get_AABB(ItemID item_id, BoundingBox& r_aabb);
-    int item_get_subindex(ItemID item_id) const;
-    T* item_get_userdata(ItemID item_id) const;
     bool item_is_pairable(ItemID item_id) const;
     void* _recheck_pair(ItemID p_from, ItemID p_to, void* p_pair_data);
     // Send pair callbacks again for all existing pairs for the given item.
@@ -457,13 +455,13 @@ void Manager<T, MAX_ITEMS, BoundingBox, Point>::recheck_pairs(ItemID item_id) {
 
 template <class T, int MAX_ITEMS, class BoundingBox, class Point>
 T* Manager<T, MAX_ITEMS, BoundingBox, Point>::get(ItemID item_id) const {
-    return item_get_userdata(item_id);
+    return _get_extra(item_id).userdata;
 }
 
 template <class T, int MAX_ITEMS, class BoundingBox, class Point>
 int Manager<T, MAX_ITEMS, BoundingBox, Point>::get_subindex(ItemID item_id
 ) const {
-    return item_get_subindex(item_id);
+    return _get_extra(item_id).subindex;
 }
 
 template <class T, int MAX_ITEMS, class BoundingBox, class Point>
@@ -829,18 +827,6 @@ void Manager<T, MAX_ITEMS, BoundingBox, Point>::item_get_AABB(
     AABB<BoundingBox, Point> bvh_aabb;
     tree.item_get_bvh_aabb(item_id, bvh_aabb);
     bvh_aabb.to(r_aabb);
-}
-
-template <class T, int MAX_ITEMS, class BoundingBox, class Point>
-int Manager<T, MAX_ITEMS, BoundingBox, Point>::item_get_subindex(ItemID item_id
-) const {
-    return _get_extra(item_id).subindex;
-}
-
-template <class T, int MAX_ITEMS, class BoundingBox, class Point>
-T* Manager<T, MAX_ITEMS, BoundingBox, Point>::item_get_userdata(ItemID item_id
-) const {
-    return _get_extra(item_id).userdata;
 }
 
 template <class T, int MAX_ITEMS, class BoundingBox, class Point>
