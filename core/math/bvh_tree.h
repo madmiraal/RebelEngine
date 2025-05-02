@@ -10,6 +10,7 @@
 #include "core/local_vector.h"
 #include "core/math/aabb.h"
 #include "core/math/bvh_aabb.h"
+#include "core/math/bvh_cull_parameters.h"
 #include "core/math/bvh_leaf.h"
 #include "core/math/bvh_node.h"
 #include "core/math/geometry.h"
@@ -318,58 +319,53 @@ private:
         uint32_t p_node_id,
         const AABB<BoundingBox, Point>& p_aabb
     );
+    void _cull_translate_hits(CullParameters<T, BoundingBox, Point>& p_params);
 
 public:
-    struct CullParams {
-        int result_count_overall; // both trees
-        int result_count;         // this tree only
-        int result_max;
-        T** result_array;
-        int* subindex_array;
-
-        // TODO: Understand how masks are intended to work.
-        uint32_t mask;
-        uint32_t pairable_type;
-
-        // Optional components for different tests.
-        Point point;
-        AABB<BoundingBox, Point> bvh_aabb;
-        ConvexHull hull;
-        Segment<Point> segment;
-
-        // When collision testing, non pairable moving items only need to be
-        // tested against the pairable tree.
-        // Collisions with other non pairable items are irrelevant.
-        bool test_pairable_only;
-    };
-
-private:
-    void _cull_translate_hits(CullParams& p);
-
-public:
-    int cull_convex(CullParams& r_params, bool p_translate_hits = true);
-    int cull_segment(CullParams& r_params, bool p_translate_hits = true);
-    int cull_point(CullParams& r_params, bool p_translate_hits = true);
-    int cull_aabb(CullParams& r_params, bool p_translate_hits = true);
-    bool _cull_hits_full(const CullParams& p);
+    int cull_convex(
+        CullParameters<T, BoundingBox, Point>& r_params,
+        bool p_translate_hits = true
+    );
+    int cull_segment(
+        CullParameters<T, BoundingBox, Point>& r_params,
+        bool p_translate_hits = true
+    );
+    int cull_point(
+        CullParameters<T, BoundingBox, Point>& r_params,
+        bool p_translate_hits = true
+    );
+    int cull_aabb(
+        CullParameters<T, BoundingBox, Point>& r_params,
+        bool p_translate_hits = true
+    );
+    bool _cull_hits_full(const CullParameters<T, BoundingBox, Point>& p_params);
     bool _cull_pairing_mask_test_hit(
         uint32_t p_maskA,
         uint32_t p_typeA,
         uint32_t p_maskB,
         uint32_t p_typeB
     ) const;
-    void _cull_hit(uint32_t p_ref_id, CullParams& p);
-    bool _cull_segment_iterative(uint32_t p_node_id, CullParams& r_params);
-    bool _cull_point_iterative(uint32_t p_node_id, CullParams& r_params);
+    void _cull_hit(
+        uint32_t p_ref_id,
+        CullParameters<T, BoundingBox, Point>& p_params
+    );
+    bool _cull_segment_iterative(
+        uint32_t p_node_id,
+        CullParameters<T, BoundingBox, Point>& r_params
+    );
+    bool _cull_point_iterative(
+        uint32_t p_node_id,
+        CullParameters<T, BoundingBox, Point>& r_params
+    );
     bool _cull_aabb_iterative(
         uint32_t p_node_id,
-        CullParams& r_params,
+        CullParameters<T, BoundingBox, Point>& r_params,
         bool p_fully_within = false
     );
     // Returns full with results.
     bool _cull_convex_iterative(
         uint32_t p_node_id,
-        CullParams& r_params,
+        CullParameters<T, BoundingBox, Point>& r_params,
         bool p_fully_within = false
     );
 
@@ -428,7 +424,10 @@ public:
     bool item_deactivate(ItemID item_id);
     bool item_get_active(ItemID item_id) const;
     // During collision testing, we set the from item's mask and pairable.
-    void item_fill_cullparams(ItemID item_id, CullParams& r_params) const;
+    void item_fill_cullparams(
+        ItemID item_id,
+        CullParameters<T, BoundingBox, Point>& r_params
+    ) const;
     bool item_is_pairable(const ItemID& item_id);
     void item_get_bvh_aabb(
         const ItemID& item_id,
@@ -772,37 +771,38 @@ uint32_t Tree<T, MAX_ITEMS, BoundingBox, Point>::_node_create_another_child(
 }
 
 template <class T, int MAX_ITEMS, class BoundingBox, class Point>
-void Tree<T, MAX_ITEMS, BoundingBox, Point>::_cull_translate_hits(CullParams& p
+void Tree<T, MAX_ITEMS, BoundingBox, Point>::_cull_translate_hits(
+    CullParameters<T, BoundingBox, Point>& p_params
 ) {
     int num_hits = _cull_hits.size();
-    int left     = p.result_max - p.result_count_overall;
+    int left     = p_params.result_max - p_params.result_count_overall;
 
     if (num_hits > left) {
         num_hits = left;
     }
 
-    int out_n = p.result_count_overall;
+    int out_n = p_params.result_count_overall;
 
     for (int n = 0; n < num_hits; n++) {
         uint32_t ref_id = _cull_hits[n];
 
-        const ItemExtra<T>& ex = _extra[ref_id];
-        p.result_array[out_n]  = ex.userdata;
+        const ItemExtra<T>& ex       = _extra[ref_id];
+        p_params.result_array[out_n] = ex.userdata;
 
-        if (p.subindex_array) {
-            p.subindex_array[out_n] = ex.subindex;
+        if (p_params.subindex_array) {
+            p_params.subindex_array[out_n] = ex.subindex;
         }
 
         out_n++;
     }
 
-    p.result_count          = num_hits;
-    p.result_count_overall += num_hits;
+    p_params.result_count          = num_hits;
+    p_params.result_count_overall += num_hits;
 }
 
 template <class T, int MAX_ITEMS, class BoundingBox, class Point>
 int Tree<T, MAX_ITEMS, BoundingBox, Point>::cull_convex(
-    CullParams& r_params,
+    CullParameters<T, BoundingBox, Point>& r_params,
     bool p_translate_hits
 ) {
     _cull_hits.clear();
@@ -825,7 +825,7 @@ int Tree<T, MAX_ITEMS, BoundingBox, Point>::cull_convex(
 
 template <class T, int MAX_ITEMS, class BoundingBox, class Point>
 int Tree<T, MAX_ITEMS, BoundingBox, Point>::cull_segment(
-    CullParams& r_params,
+    CullParameters<T, BoundingBox, Point>& r_params,
     bool p_translate_hits
 ) {
     _cull_hits.clear();
@@ -848,7 +848,7 @@ int Tree<T, MAX_ITEMS, BoundingBox, Point>::cull_segment(
 
 template <class T, int MAX_ITEMS, class BoundingBox, class Point>
 int Tree<T, MAX_ITEMS, BoundingBox, Point>::cull_point(
-    CullParams& r_params,
+    CullParameters<T, BoundingBox, Point>& r_params,
     bool p_translate_hits
 ) {
     _cull_hits.clear();
@@ -871,7 +871,7 @@ int Tree<T, MAX_ITEMS, BoundingBox, Point>::cull_point(
 
 template <class T, int MAX_ITEMS, class BoundingBox, class Point>
 int Tree<T, MAX_ITEMS, BoundingBox, Point>::cull_aabb(
-    CullParams& r_params,
+    CullParameters<T, BoundingBox, Point>& r_params,
     bool p_translate_hits
 ) {
     _cull_hits.clear();
@@ -897,13 +897,14 @@ int Tree<T, MAX_ITEMS, BoundingBox, Point>::cull_aabb(
 }
 
 template <class T, int MAX_ITEMS, class BoundingBox, class Point>
-bool Tree<T, MAX_ITEMS, BoundingBox, Point>::_cull_hits_full(const CullParams& p
+bool Tree<T, MAX_ITEMS, BoundingBox, Point>::_cull_hits_full(
+    const CullParameters<T, BoundingBox, Point>& p_params
 ) {
     // Instead of checking every hit, do a lazy check for this condition.
     // It isn't a problem if we write too many _cull_hits, because
     // we only the result_max amount will be translated and outputted.
     // We stop the cull checks after the maximum has been reached.
-    return (int)_cull_hits.size() >= p.result_max;
+    return (int)_cull_hits.size() >= p_params.result_max;
 }
 
 template <class T, int MAX_ITEMS, class BoundingBox, class Point>
@@ -929,7 +930,7 @@ bool Tree<T, MAX_ITEMS, BoundingBox, Point>::_cull_pairing_mask_test_hit(
 template <class T, int MAX_ITEMS, class BoundingBox, class Point>
 void Tree<T, MAX_ITEMS, BoundingBox, Point>::_cull_hit(
     uint32_t p_ref_id,
-    CullParams& p
+    CullParameters<T, BoundingBox, Point>& p_params
 ) {
     // It would be more efficient to do before plane checks,
     // but done here to ease gettting started.
@@ -937,8 +938,8 @@ void Tree<T, MAX_ITEMS, BoundingBox, Point>::_cull_hit(
         const ItemExtra<T>& ex = _extra[p_ref_id];
 
         if (!_cull_pairing_mask_test_hit(
-                p.mask,
-                p.pairable_type,
+                p_params.mask,
+                p_params.pairable_type,
                 ex.pairable_mask,
                 ex.pairable_type
             )) {
@@ -952,7 +953,7 @@ void Tree<T, MAX_ITEMS, BoundingBox, Point>::_cull_hit(
 template <class T, int MAX_ITEMS, class BoundingBox, class Point>
 bool Tree<T, MAX_ITEMS, BoundingBox, Point>::_cull_segment_iterative(
     uint32_t p_node_id,
-    CullParams& r_params
+    CullParameters<T, BoundingBox, Point>& r_params
 ) {
     // Our function parameters to keep on a stack.
     struct CullSegParams {
@@ -1018,7 +1019,7 @@ bool Tree<T, MAX_ITEMS, BoundingBox, Point>::_cull_segment_iterative(
 template <class T, int MAX_ITEMS, class BoundingBox, class Point>
 bool Tree<T, MAX_ITEMS, BoundingBox, Point>::_cull_point_iterative(
     uint32_t p_node_id,
-    CullParams& r_params
+    CullParameters<T, BoundingBox, Point>& r_params
 ) {
     // Function parameters are kept on the stack.
     struct CullPointParams {
@@ -1081,7 +1082,7 @@ bool Tree<T, MAX_ITEMS, BoundingBox, Point>::_cull_point_iterative(
 template <class T, int MAX_ITEMS, class BoundingBox, class Point>
 bool Tree<T, MAX_ITEMS, BoundingBox, Point>::_cull_aabb_iterative(
     uint32_t p_node_id,
-    CullParams& r_params,
+    CullParameters<T, BoundingBox, Point>& r_params,
     bool p_fully_within
 ) {
     struct CullAABBParams {
@@ -1177,7 +1178,7 @@ bool Tree<T, MAX_ITEMS, BoundingBox, Point>::_cull_aabb_iterative(
 template <class T, int MAX_ITEMS, class BoundingBox, class Point>
 bool Tree<T, MAX_ITEMS, BoundingBox, Point>::_cull_convex_iterative(
     uint32_t p_node_id,
-    CullParams& r_params,
+    CullParameters<T, BoundingBox, Point>& r_params,
     bool p_fully_within
 ) {
     // Our function parameters are kept on the stack.
@@ -2071,7 +2072,7 @@ bool Tree<T, MAX_ITEMS, BoundingBox, Point>::item_get_active(ItemID item_id
 template <class T, int MAX_ITEMS, class BoundingBox, class Point>
 void Tree<T, MAX_ITEMS, BoundingBox, Point>::item_fill_cullparams(
     ItemID item_id,
-    CullParams& r_params
+    CullParameters<T, BoundingBox, Point>& r_params
 ) const {
     const ItemExtra<T>& extra = _extra[item_id];
 
