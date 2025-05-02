@@ -334,8 +334,8 @@ public:
         // Optional components for different tests.
         Point point;
         AABB<BoundingBox, Point> bvh_aabb;
-        typename AABB<BoundingBox, Point>::ConvexHull hull;
-        typename AABB<BoundingBox, Point>::Segment segment;
+        ConvexHull hull;
+        Segment<Point> segment;
 
         // When collision testing, non pairable moving items only need to be
         // tested against the pairable tree.

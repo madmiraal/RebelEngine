@@ -19,21 +19,22 @@ enum class IntersectResult {
     FULL,
 };
 
+struct ConvexHull {
+    const Plane* planes;
+    int num_planes;
+    const Vector3* points;
+    int num_points;
+};
+
+template <class Point>
+struct Segment {
+    Point from;
+    Point to;
+};
+
 // Optimized version of axis aligned bounding box.
 template <typename BoundingBox = ::AABB, typename Point = Vector3>
 struct AABB {
-    struct ConvexHull {
-        const Plane* planes;
-        int num_planes;
-        const Vector3* points;
-        int num_points;
-    };
-
-    struct Segment {
-        Point from;
-        Point to;
-    };
-
     // Minimums are stored with a negative value to test them with SIMD.
     Point min;
     Point neg_max;
@@ -47,7 +48,7 @@ struct AABB {
     real_t get_proximity_to(const AABB& p_b) const;
     int select_by_proximity(const AABB& p_a, const AABB& p_b) const;
     uint32_t find_cutting_planes(
-        const typename AABB::ConvexHull& p_hull,
+        const ConvexHull& p_hull,
         uint32_t* p_plane_ids
     ) const;
     bool intersects_plane(const Plane& p_p) const;
@@ -61,7 +62,7 @@ struct AABB {
     bool is_within_convex(const ConvexHull& p_hull) const;
     bool is_point_within_hull(const ConvexHull& p_hull, const Vector3& p_pt)
         const;
-    bool intersects_segment(const Segment& p_s) const;
+    bool intersects_segment(const Segment<Point>& p_segment) const;
     bool intersects_point(const Point& p_pt) const;
     bool intersects(const AABB& p_o) const;
     bool is_other_within(const AABB& p_o) const;
@@ -126,7 +127,7 @@ int AABB<BoundingBox, Point>::select_by_proximity(
 
 template <typename BoundingBox, typename Point>
 uint32_t AABB<BoundingBox, Point>::find_cutting_planes(
-    const typename AABB::ConvexHull& p_hull,
+    const ConvexHull& p_hull,
     uint32_t* p_plane_ids
 ) const {
     uint32_t count = 0;
@@ -246,10 +247,12 @@ bool AABB<BoundingBox, Point>::is_point_within_hull(
 }
 
 template <typename BoundingBox, typename Point>
-bool AABB<BoundingBox, Point>::intersects_segment(const Segment& p_s) const {
+bool AABB<BoundingBox, Point>::intersects_segment(
+    const Segment<Point>& p_segment
+) const {
     BoundingBox bb;
     to(bb);
-    return bb.intersects_segment(p_s.from, p_s.to);
+    return bb.intersects_segment(p_segment.from, p_segment.to);
 }
 
 template <typename BoundingBox, typename Point>
