@@ -34,11 +34,8 @@ struct Segment {
 
 // Optimized version of axis aligned bounding box.
 template <typename BoundingBox = ::AABB, typename Point = Vector3>
-struct AABB {
-    // Minimums are stored with a negative value to test them with SIMD.
-    Point min;
-    Point neg_max;
-
+class AABB {
+public:
     // To and from standard AABB.
     void from(const BoundingBox& p_aabb);
     void to(BoundingBox& r_aabb) const;
@@ -73,6 +70,10 @@ struct AABB {
     void set_to_max_opposite_extents();
     bool _any_morethan(const Point& p_a, const Point& p_b) const;
     bool _any_lessthan(const Point& p_a, const Point& p_b) const;
+
+    // Minimums are stored with a negative value to test them with SIMD.
+    Point min;
+    Point neg_max;
 };
 
 // Definitions
