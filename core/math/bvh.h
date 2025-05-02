@@ -489,8 +489,7 @@ int Manager<T, MAX_ITEMS, BoundingBox, Point>::cull_aabb(
     uint32_t p_mask
 ) {
     MutexLock(&_mutex, thread_safe && _thread_safe);
-    typename Tree<T, MAX_ITEMS, BoundingBox, Point>::CullParams params;
-
+    CullParameters<T, BoundingBox, Point> params;
     params.result_count_overall = 0;
     params.result_max           = p_result_max;
     params.result_array         = p_result_array;
@@ -523,18 +522,17 @@ int Manager<T, MAX_ITEMS, BoundingBox, Point>::cull_convex(
         return 0;
     }
 
-    typename Tree<T, MAX_ITEMS, BoundingBox, Point>::CullParams params;
+    CullParameters<T, BoundingBox, Point> params;
     params.result_count_overall = 0;
     params.result_max           = p_result_max;
     params.result_array         = p_result_array;
     params.subindex_array       = nullptr;
     params.mask                 = p_mask;
     params.pairable_type        = 0;
-
-    params.hull.planes     = &p_convex[0];
-    params.hull.num_planes = p_convex.size();
-    params.hull.points     = &convex_points[0];
-    params.hull.num_points = convex_points.size();
+    params.hull.planes          = &p_convex[0];
+    params.hull.num_planes      = p_convex.size();
+    params.hull.points          = &convex_points[0];
+    params.hull.num_points      = convex_points.size();
 
     tree.cull_convex(params);
 
@@ -551,17 +549,15 @@ int Manager<T, MAX_ITEMS, BoundingBox, Point>::cull_segment(
     uint32_t p_mask
 ) {
     MutexLock(&_mutex, thread_safe && _thread_safe);
-    typename Tree<T, MAX_ITEMS, BoundingBox, Point>::CullParams params;
-
+    CullParameters<T, BoundingBox, Point> params;
     params.result_count_overall = 0;
     params.result_max           = p_result_max;
     params.result_array         = p_result_array;
     params.subindex_array       = p_subindex_array;
     params.mask                 = p_mask;
     params.pairable_type        = 0;
-
-    params.segment.from = p_from;
-    params.segment.to   = p_to;
+    params.segment.from         = p_from;
+    params.segment.to           = p_to;
 
     tree.cull_segment(params);
 
@@ -577,16 +573,14 @@ int Manager<T, MAX_ITEMS, BoundingBox, Point>::cull_point(
     uint32_t p_mask
 ) {
     MutexLock(&_mutex, thread_safe && _thread_safe);
-    typename Tree<T, MAX_ITEMS, BoundingBox, Point>::CullParams params;
-
+    CullParameters<T, BoundingBox, Point> params;
     params.result_count_overall = 0;
     params.result_max           = p_result_max;
     params.result_array         = p_result_array;
     params.subindex_array       = p_subindex_array;
     params.mask                 = p_mask;
     params.pairable_type        = 0;
-
-    params.point = p_point;
+    params.point                = p_point;
 
     tree.cull_point(params);
     return params.result_count_overall;
@@ -642,8 +636,7 @@ void Manager<T, MAX_ITEMS, BoundingBox, Point>::_check_for_collisions(
         return;
     }
 
-    typename Tree<T, MAX_ITEMS, BoundingBox, Point>::CullParams params;
-
+    CullParameters<T, BoundingBox, Point> params;
     params.result_count_overall = 0;
     params.result_max           = INT_MAX;
     params.result_array         = nullptr;
