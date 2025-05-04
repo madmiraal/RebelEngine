@@ -1351,9 +1351,9 @@ String Tree<T, MAX_ITEMS, BoundingBox, Point>::_debug_aabb_to_string(
 
     for (int i = 0; i < Point::AXIS_COUNT; ++i) {
         sz += "(";
-        sz += itos(aabb.min[i]);
+        sz += itos(aabb.minimum[i]);
         sz += " ~ ";
-        sz += itos(-aabb.neg_max[i]);
+        sz += itos(aabb.maximum[i]);
         sz += ") ";
 
         vol += size[i];
@@ -2491,7 +2491,8 @@ void Tree<T, MAX_ITEMS, BoundingBox, Point>::_split_leaf_sort_groups_simple(
     for (int a = 0; a < num_a; a++) {
         uint32_t ind = group_a[a];
 
-        if (temp_bounds[ind].min.coord[split_axis] > centre.coord[split_axis]) {
+        if (temp_bounds[ind].minimum.coord[split_axis]
+            > centre.coord[split_axis]) {
             // Add to b.
             group_b[num_b++] = ind;
 
@@ -2523,7 +2524,7 @@ void Tree<T, MAX_ITEMS, BoundingBox, Point>::_split_leaf_sort_groups_simple(
             for (int a = 0; a < num_a; a++) {
                 uint32_t ind = group_a[a];
 
-                if (temp_bounds[ind].min.coord[split_axis]
+                if (temp_bounds[ind].minimum.coord[split_axis]
                     > centre.coord[split_axis]) {
                     count++;
                 }
@@ -2549,7 +2550,7 @@ void Tree<T, MAX_ITEMS, BoundingBox, Point>::_split_leaf_sort_groups_simple(
             for (int a = 0; a < num_a; a++) {
                 uint32_t ind = group_a[a];
 
-                if (temp_bounds[ind].min.coord[split_axis]
+                if (temp_bounds[ind].minimum.coord[split_axis]
                     > centre.coord[split_axis]) {
                     // Add to b.
                     group_b[num_b++] = ind;
