@@ -36,9 +36,10 @@ struct Segment {
 template <typename BoundingBox = ::AABB, typename Point = Vector3>
 class AABB {
 public:
-    // To and from standard AABB.
-    void from(const BoundingBox& p_aabb);
-    void to(BoundingBox& r_aabb) const;
+    AABB() = default;
+    AABB(const BoundingBox& source);
+    operator BoundingBox() const;
+
     void merge(const AABB& p_o);
     Point calculate_size() const;
     Point calculate_centre() const;
@@ -79,15 +80,17 @@ public:
 // Definitions
 
 template <typename BoundingBox, typename Point>
-void AABB<BoundingBox, Point>::from(const BoundingBox& p_aabb) {
-    min     = p_aabb.position;
-    neg_max = -(p_aabb.position + p_aabb.size);
+AABB<BoundingBox, Point>::AABB(const BoundingBox& source) {
+    min     = source.position;
+    neg_max = -(source.position + source.size);
 }
 
 template <typename BoundingBox, typename Point>
-void AABB<BoundingBox, Point>::to(BoundingBox& r_aabb) const {
-    r_aabb.position = min;
-    r_aabb.size     = calculate_size();
+AABB<BoundingBox, Point>::operator BoundingBox() const {
+    BoundingBox bounding_box;
+    bounding_box.position = min;
+    bounding_box.size     = calculate_size();
+    return bounding_box;
 }
 
 template <typename BoundingBox, typename Point>
@@ -199,8 +202,7 @@ template <typename BoundingBox, typename Point>
 bool AABB<BoundingBox, Point>::intersects_convex_partial(
     const ConvexHull& p_hull
 ) const {
-    BoundingBox bb;
-    to(bb);
+    BoundingBox bb = *this;
     return bb.intersects_convex_shape(
         p_hull.planes,
         p_hull.num_planes,
@@ -229,8 +231,7 @@ template <typename BoundingBox, typename Point>
 bool AABB<BoundingBox, Point>::is_within_convex(const ConvexHull& p_hull
 ) const {
     // Use half extents routine.
-    BoundingBox bb;
-    to(bb);
+    BoundingBox bb = *this;
     return bb.inside_convex_shape(p_hull.planes, p_hull.num_planes);
 }
 
@@ -251,8 +252,7 @@ template <typename BoundingBox, typename Point>
 bool AABB<BoundingBox, Point>::intersects_segment(
     const Segment<Point>& p_segment
 ) const {
-    BoundingBox bb;
-    to(bb);
+    BoundingBox bb = *this;
     return bb.intersects_segment(p_segment.from, p_segment.to);
 }
 

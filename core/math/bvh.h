@@ -497,7 +497,7 @@ int Manager<T, MAX_ITEMS, BoundingBox, Point>::cull_aabb(
     params.mask                 = p_mask;
     params.pairable_type        = 0;
     params.test_pairable_only   = false;
-    params.bvh_aabb.from(p_aabb);
+    params.bvh_aabb             = p_aabb;
 
     tree.cull_aabb(params);
 
@@ -648,9 +648,7 @@ void Manager<T, MAX_ITEMS, BoundingBox, Point>::_check_for_collisions(
         const ItemID& item_id = changed_items[n];
 
         // Use the expanded aabb for pairing.
-        const BoundingBox& expanded_aabb = tree._pairs[item_id].expanded_aabb;
-        AABB<BoundingBox, Point> bvh_aabb;
-        bvh_aabb.from(expanded_aabb);
+        AABB<BoundingBox, Point> bvh_aabb = tree._pairs[item_id].expanded_aabb;
 
         // Send callbacks to pairs that are no longer paired.
         _find_leavers(item_id, bvh_aabb, p_full_check);
@@ -817,7 +815,7 @@ void Manager<T, MAX_ITEMS, BoundingBox, Point>::item_get_AABB(
 ) {
     AABB<BoundingBox, Point> bvh_aabb;
     tree.item_get_bvh_aabb(item_id, bvh_aabb);
-    bvh_aabb.to(r_aabb);
+    r_aabb = bvh_aabb;
 }
 
 template <class T, int MAX_ITEMS, class BoundingBox, class Point>

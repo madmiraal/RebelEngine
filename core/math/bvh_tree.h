@@ -1779,8 +1779,7 @@ ItemID Tree<T, MAX_ITEMS, BoundingBox, Point>::item_add(
     VERBOSE_PRINT("\n");
 #endif
 
-    AABB<BoundingBox, Point> bvh_aabb;
-    bvh_aabb.from(p_aabb);
+    AABB<BoundingBox, Point> bvh_aabb(p_aabb);
 
     // Note: We do not expand the AABB for the first create even if
     // leaf expansion is switched on, because:
@@ -1897,8 +1896,7 @@ bool Tree<T, MAX_ITEMS, BoundingBox, Point>::item_move(
         return false;
     }
 
-    AABB<BoundingBox, Point> bvh_aabb;
-    bvh_aabb.from(p_aabb);
+    AABB<BoundingBox, Point> bvh_aabb(p_aabb);
 
 #ifdef BVH_EXPAND_LEAF_AABBS
     if (use_pairs) {
@@ -1925,8 +1923,7 @@ bool Tree<T, MAX_ITEMS, BoundingBox, Point>::item_move(
 
         // No change?
 #ifdef BVH_EXPAND_LEAF_AABBS
-        BoundingBox leaf_aabb;
-        leaf_bvh_aabb.to(leaf_aabb);
+        BoundingBox leaf_aabb = leaf_bvh_aabb;
 
         // This test should pass in a lot of cases, and by returning false
         // we can avoid collision pairing checks later, which greatly
@@ -2030,8 +2027,7 @@ bool Tree<T, MAX_ITEMS, BoundingBox, Point>::item_activate(
     }
 
     // Add to the tree.
-    AABB<BoundingBox, Point> bvh_aabb;
-    bvh_aabb.from(p_aabb);
+    AABB<BoundingBox, Point> bvh_aabb(p_aabb);
 
     uint32_t tree_id = _handle_get_tree_id(item_id);
 
@@ -2211,9 +2207,8 @@ void Tree<T, MAX_ITEMS, BoundingBox, Point>::update() {
         }
 
         if (bound_valid) {
-            BoundingBox bb;
-            world_bound.to(bb);
-            real_t size = bb.get_longest_axis_size();
+            BoundingBox bb = world_bound;
+            real_t size    = bb.get_longest_axis_size();
 
             // Automatic AI decision for best parameters.
             // These can be overridden in project settings.
