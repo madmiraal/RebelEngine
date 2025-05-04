@@ -73,22 +73,21 @@ public:
     bool _any_lessthan(const Point& p_a, const Point& p_b) const;
 
     // Minimums are stored with a negative value to test them with SIMD.
-    Point min;
-    Point neg_max;
+    Point minimum;
+    Point maximum;
 };
 
 // Definitions
 
 template <typename BoundingBox, typename Point>
-AABB<BoundingBox, Point>::AABB(const BoundingBox& source) {
-    min     = source.position;
-    neg_max = -(source.position + source.size);
-}
+AABB<BoundingBox, Point>::AABB(const BoundingBox& source) :
+    minimum(source.position),
+    maximum(source.position + source.size) {}
 
 template <typename BoundingBox, typename Point>
 AABB<BoundingBox, Point>::operator BoundingBox() const {
     BoundingBox bounding_box;
-    bounding_box.position = min;
+    bounding_box.position = minimum;
     bounding_box.size     = calculate_size();
     return bounding_box;
 }
@@ -96,24 +95,24 @@ AABB<BoundingBox, Point>::operator BoundingBox() const {
 template <typename BoundingBox, typename Point>
 void AABB<BoundingBox, Point>::merge(const AABB& p_o) {
     for (int axis = 0; axis < Point::AXIS_COUNT; ++axis) {
-        neg_max[axis] = MIN(neg_max[axis], p_o.neg_max[axis]);
-        min[axis]     = MIN(min[axis], p_o.min[axis]);
+        minimum[axis] = MIN(minimum[axis], p_o.minimum[axis]);
+        maximum[axis] = MAX(maximum[axis], p_o.maximum[axis]);
     }
 }
 
 template <typename BoundingBox, typename Point>
 Point AABB<BoundingBox, Point>::calculate_size() const {
-    return -neg_max - min;
+    return maximum - minimum;
 }
 
 template <typename BoundingBox, typename Point>
 Point AABB<BoundingBox, Point>::calculate_centre() const {
-    return Point((calculate_size() * 0.5) + min);
+    return Point(minimum + (calculate_size() * 0.5));
 }
 
 template <typename BoundingBox, typename Point>
 real_t AABB<BoundingBox, Point>::get_proximity_to(const AABB& p_b) const {
-    const Point d    = (min - neg_max) - (p_b.min - p_b.neg_max);
+    const Point d    = (minimum - p_b.minimum) + (maximum - p_b.maximum);
     real_t proximity = 0.0;
     for (int axis = 0; axis < Point::AXIS_COUNT; ++axis) {
         proximity += Math::abs(d[axis]);
@@ -150,7 +149,7 @@ template <typename BoundingBox, typename Point>
 bool AABB<BoundingBox, Point>::intersects_plane(const Plane& p_p) const {
     Vector3 size         = calculate_size();
     Vector3 half_extents = size * 0.5;
-    Vector3 ofs          = min + half_extents;
+    Vector3 ofs          = minimum + half_extents;
 
     // Forward side of plane.
     Vector3 point_offset(
@@ -180,7 +179,7 @@ bool AABB<BoundingBox, Point>::intersects_convex_optimized(
 ) const {
     Vector3 size         = calculate_size();
     Vector3 half_extents = size * 0.5;
-    Vector3 ofs          = min + half_extents;
+    Vector3 ofs          = minimum + half_extents;
 
     for (unsigned int i = 0; i < p_num_planes; i++) {
         const Plane& p = p_hull.planes[p_plane_ids[i]];
@@ -258,10 +257,10 @@ bool AABB<BoundingBox, Point>::intersects_segment(
 
 template <typename BoundingBox, typename Point>
 bool AABB<BoundingBox, Point>::intersects_point(const Point& p_pt) const {
-    if (_any_lessthan(-p_pt, neg_max)) {
+    if (_any_lessthan(p_pt, minimum)) {
         return false;
     }
-    if (_any_lessthan(p_pt, min)) {
+    if (_any_morethan(p_pt, maximum)) {
         return false;
     }
     return true;
@@ -269,10 +268,10 @@ bool AABB<BoundingBox, Point>::intersects_point(const Point& p_pt) const {
 
 template <typename BoundingBox, typename Point>
 bool AABB<BoundingBox, Point>::intersects(const AABB& p_o) const {
-    if (_any_morethan(p_o.min, -neg_max)) {
+    if (_any_morethan(minimum, p_o.maximum)) {
         return false;
     }
-    if (_any_morethan(min, -p_o.neg_max)) {
+    if (_any_lessthan(maximum, p_o.minimum)) {
         return false;
     }
     return true;
@@ -280,10 +279,10 @@ bool AABB<BoundingBox, Point>::intersects(const AABB& p_o) const {
 
 template <typename BoundingBox, typename Point>
 bool AABB<BoundingBox, Point>::is_other_within(const AABB& p_o) const {
-    if (_any_lessthan(p_o.neg_max, neg_max)) {
+    if (_any_morethan(minimum, p_o.minimum)) {
         return false;
     }
-    if (_any_lessthan(p_o.min, min)) {
+    if (_any_lessthan(maximum, p_o.maximum)) {
         return false;
     }
     return true;
@@ -291,8 +290,8 @@ bool AABB<BoundingBox, Point>::is_other_within(const AABB& p_o) const {
 
 template <typename BoundingBox, typename Point>
 void AABB<BoundingBox, Point>::grow(const Point& p_change) {
-    neg_max -= p_change;
-    min     -= p_change;
+    minimum -= p_change;
+    maximum += p_change;
 }
 
 template <typename BoundingBox, typename Point>
@@ -310,8 +309,8 @@ float AABB<BoundingBox, Point>::get_area() const {
 
 template <typename BoundingBox, typename Point>
 void AABB<BoundingBox, Point>::set_to_max_opposite_extents() {
-    neg_max.set_all(FLT_MAX);
-    min = neg_max;
+    maximum.set_all(FLT_MAX);
+    minimum = -maximum;
 }
 
 template <typename BoundingBox, typename Point>
