@@ -1041,7 +1041,7 @@ bool Tree<T, MAX_ITEMS, BoundingBox, Point>::_cull_point_iterative(
     while (ii.pop(cpp)) {
         Node<BoundingBox, Point>& node = _nodes[cpp.node_id];
         // Check for hit.
-        if (!node.aabb.intersects_point(r_params.point)) {
+        if (!node.aabb.contains_point(r_params.point)) {
             continue;
         }
 
@@ -1055,7 +1055,7 @@ bool Tree<T, MAX_ITEMS, BoundingBox, Point>::_cull_point_iterative(
 
             // Test the children individually.
             for (int n = 0; n < leaf.num_items; n++) {
-                if (leaf.get_aabb(n).intersects_point(r_params.point)) {
+                if (leaf.get_aabb(n).contains_point(r_params.point)) {
                     uint32_t child_id = leaf.get_item_ref_id(n);
 
                     // Register a hit.
