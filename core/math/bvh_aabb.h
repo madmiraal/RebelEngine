@@ -61,7 +61,7 @@ public:
     bool is_point_within_hull(const ConvexHull& p_hull, const Vector3& p_pt)
         const;
     bool intersects_segment(const Segment<Point>& p_segment) const;
-    bool intersects_point(const Point& p_pt) const;
+    bool contains_point(const Point& p_pt) const;
     bool intersects(const AABB& p_o) const;
     bool is_other_within(const AABB& p_o) const;
     void grow(const Point& p_change);
@@ -256,12 +256,14 @@ bool AABB<BoundingBox, Point>::intersects_segment(
 }
 
 template <typename BoundingBox, typename Point>
-bool AABB<BoundingBox, Point>::intersects_point(const Point& p_pt) const {
-    if (_any_lessthan(p_pt, minimum)) {
-        return false;
-    }
-    if (_any_morethan(p_pt, maximum)) {
-        return false;
+bool AABB<BoundingBox, Point>::contains_point(const Point& point) const {
+    for (int axis = 0; axis < Point::AXIS_COUNT; axis++) {
+        if (point[axis] < minimum[axis]) {
+            return false;
+        }
+        if (point[axis] > maximum[axis]) {
+            return false;
+        }
     }
     return true;
 }
