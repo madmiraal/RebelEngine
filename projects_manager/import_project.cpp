@@ -5,8 +5,8 @@
 #include "import_project.h"
 
 #include "core/io/config_file.h"
-#include "core/list.h"
 #include "core/os/dir_access.h"
+#include "core/project_settings.h"
 
 namespace {
 bool create_rebel_project_from_godot_project(
@@ -54,32 +54,56 @@ bool create_rebel_project_from_godot_project(
     return true;
 }
 
+/*
 void convert_physics_engine(const String& project_file) {
+    print_line("Converting physics engine...");
     const String physics_section = "physics";
     ConfigFile config_file;
     config_file.load(project_file);
     if (!config_file.has_section(physics_section)) {
+        print_line("No physics section!");
         return;
     }
 
-    const String physics_2d_engine_key = "2d/physics_engine";
-    const String physics_3d_engine_key = "3d/physics_engine";
-    const String old_value             = "GodotPhysics";
-    const String new_value             = "RebelPhysics";
-    List<String> physics_keys;
-    config_file.get_section_keys(physics_section, &physics_keys);
-    auto physics_2d_engine = physics_keys.find(physics_2d_engine_key);
-    if (physics_2d_engine && physics_2d_engine->get() == old_value) {
+    const String engine_2d_key = "2d/physics_engine";
+    const String engine_3d_key = "3d/physics_engine";
+    const String old_value     = "GodotPhysics";
+    const String new_value     = "RebelPhysics";
+
+    if (config_file.has_section_key(physics_section, engine_2d_key) &&
+        config_file.get_value(physics_section, engine_2d_key) == old_value) {
+        print_line("Setting 2d engine...");
         config_file
-            .set_value(physics_section, physics_2d_engine_key, new_value);
+            .set_value(physics_section, engine_2d_key, new_value);
     }
-    auto physics_3d_engine = physics_keys.find(physics_3d_engine_key);
-    if (physics_3d_engine && physics_3d_engine->get() == old_value) {
+    if (config_file.has_section_key(physics_section, engine_3d_key) &&
+        config_file.get_value(physics_section, engine_3d_key) == old_value) {
+        print_line("Setting 3d engine...");
         config_file
-            .set_value(physics_section, physics_3d_engine_key, new_value);
+            .set_value(physics_section, engine_3d_key, new_value);
     }
 
     config_file.save(project_file);
+}
+*/
+
+void refresh_project_settings_file(const String& project_folder) {
+    const String physics_2d_engine = "physics/2d/physics_engine";
+    const String physics_3d_engine = "physics/3d/physics_engine";
+    const String old_value         = "GodotPhysics";
+    const String new_value         = "RebelPhysics";
+
+    ProjectSettings project_settings;
+    project_settings.setup(project_folder, "");
+    if (project_settings.has_setting(physics_2d_engine)
+        && project_settings.get_setting(physics_2d_engine) == old_value) {
+        project_settings.set_setting(physics_2d_engine, new_value);
+    }
+    if (project_settings.has_setting(physics_3d_engine)
+        && project_settings.get_setting(physics_3d_engine) == old_value) {
+        project_settings.set_setting(physics_3d_engine, new_value);
+    }
+    project_settings.save();
 }
 } // namespace
 
@@ -96,7 +120,8 @@ bool import_godot_project(
         false
     );
     const String project_file = destination_folder.plus_file("project.rebel");
-    convert_physics_engine(project_file);
+    // convert_physics_engine(project_file);
+    refresh_project_settings_file(destination_folder);
     return true;
 }
 } // namespace ImportProject
