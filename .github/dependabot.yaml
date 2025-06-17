@@ -3,22 +3,14 @@ updates:
   - package-ecosystem: "github-actions"
     directory: "/"
     schedule:
-      interval: "weekly"
-      day: "sunday"
-      time: "00:00"
-    labels:
-      - "PR Type: Maintenance"
+      interval: "daily"
     pull-request-branch-name:
       separator: "-"
 
   - package-ecosystem: "npm"
     directory: "/platforms/web/"
     schedule:
-      interval: "weekly"
-      day: "sunday"
-      time: "01:00"
-    labels:
-      - "PR Type: Maintenance"
+      interval: "daily"
     pull-request-branch-name:
       separator: "-"
     groups:
