@@ -9,14 +9,14 @@
  *
  * @typedef {Object} EngineConfig
  */
-const EngineConfig = {};
+const EngineConfig = {}; // eslint-disable-line no-unused-vars
 
 /**
  * @struct
  * @constructor
  * @ignore
  */
-const InternalConfig = function (initConfig) {
+const InternalConfig = function (initConfig) { // eslint-disable-line no-unused-vars
 	const cfg = /** @lends {InternalConfig.prototype} */ {
 		/**
 		 * Whether the unload the engine automatically after the instance is initialized.
@@ -188,7 +188,7 @@ const InternalConfig = function (initConfig) {
 		 * @type {?function(...*)}
 		 */
 		onPrint: function () {
-			console.log.apply(console, Array.from(arguments));
+			console.log.apply(console, Array.from(arguments)); // eslint-disable-line no-console
 		},
 		/**
 		 * A callback function for handling the standard error stream. This method should usually only be used in debug pages.
@@ -203,7 +203,7 @@ const InternalConfig = function (initConfig) {
 		 * @type {?function(...*)}
 		 */
 		onPrintError: function (var_args) {
-			console.error.apply(console, Array.from(arguments));
+			console.error.apply(console, Array.from(arguments)); // eslint-disable-line no-console
 		},
 	};
 
