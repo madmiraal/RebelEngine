@@ -45,7 +45,6 @@ public:
     static ProjectSettings* get_singleton();
 
     ProjectSettings();
-    ~ProjectSettings();
 
     bool has_setting(const String& name) const;
     Variant get_setting(const String& name) const;

@@ -539,7 +539,7 @@ Error Main::setup(
 
     MAIN_PRINT("Main: Initialize Globals");
 
-    globals   = memnew(ProjectSettings);
+    globals   = ProjectSettings::get_singleton();
     input_map = memnew(InputMap);
 
     register_core_settings(); // here globals is present

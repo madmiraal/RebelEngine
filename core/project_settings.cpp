@@ -29,12 +29,13 @@ bool operator<(const Setting& left, const Setting& right) {
 ProjectSettings* ProjectSettings::singleton = nullptr;
 
 ProjectSettings* ProjectSettings::get_singleton() {
+    if (!singleton) {
+        singleton = memnew(ProjectSettings);
+    }
     return singleton;
 }
 
 ProjectSettings::ProjectSettings() {
-    singleton = this;
-
     Array events;
     Dictionary action;
     Ref<InputEventKey> key;
@@ -355,10 +356,6 @@ ProjectSettings::ProjectSettings() {
         );
 
     GLOBAL_DEF("android/modules", "");
-}
-
-ProjectSettings::~ProjectSettings() {
-    singleton = nullptr;
 }
 
 bool ProjectSettings::has_setting(const String& name) const {
