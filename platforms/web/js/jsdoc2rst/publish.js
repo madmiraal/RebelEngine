@@ -1,3 +1,5 @@
+/* eslint-disable strict */
+
 'use strict';
 
 const fs = require('fs');
@@ -308,8 +310,8 @@ function generate(f, docs) {
 		if (d.memberof) {
 			const up = SYMBOLS[d.memberof];
 			if (up === undefined) {
-				console.log(d);
-				console.log(`Undefined symbol! ${d.memberof}`);
+				console.log(d); // eslint-disable-line no-console
+				console.log(`Undefined symbol! ${d.memberof}`); // eslint-disable-line no-console
 				throw new Error('Undefined symbol!');
 			}
 			SYMBOLS[d.memberof].add_member(d);
