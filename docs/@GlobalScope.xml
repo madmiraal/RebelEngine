@@ -84,6 +84,9 @@ SPDX-License-Identifier: MIT
         <member name="ResourceSaver" type="ResourceSaver" setter="" getter="">
             The [ResourceSaver] singleton.
         </member>
+        <member name="TestServer" type="TestServer" setter="" getter="">
+            The [TestServer] singleton.
+        </member>
         <member name="TranslationServer" type="TranslationServer" setter="" getter="">
             The [TranslationServer] singleton.
         </member>
