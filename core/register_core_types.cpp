@@ -44,6 +44,7 @@
 #include "core/packed_data_container.h"
 #include "core/path_remap.h"
 #include "core/project_settings.h"
+#include "core/test_server.h"
 #include "core/translation.h"
 #include "core/undo_redo.h"
 
@@ -250,9 +251,13 @@ void register_core_singletons() {
     ClassDB::register_class<InputMap>();
     ClassDB::register_class<_JSON>();
     ClassDB::register_class<Expression>();
+    ClassDB::register_class<TestServer>();
 
     Engine::get_singleton()->add_singleton(
         Engine::Singleton("ProjectSettings", ProjectSettings::get_singleton())
+    );
+    Engine::get_singleton()->add_singleton(
+        Engine::Singleton("TestServer", TestServer::get_singleton())
     );
     Engine::get_singleton()->add_singleton(
         Engine::Singleton("IP", IP::get_singleton())
