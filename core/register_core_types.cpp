@@ -257,7 +257,7 @@ void register_core_singletons() {
         Engine::Singleton("ProjectSettings", ProjectSettings::get_singleton())
     );
     Engine::get_singleton()->add_singleton(
-        Engine::Singleton("TestServer", TestServer::get_singleton())
+        Engine::Singleton("TestServer", &(Global::TestServer()))
     );
     Engine::get_singleton()->add_singleton(
         Engine::Singleton("IP", IP::get_singleton())
@@ -348,4 +348,8 @@ void unregister_core_types() {
     StringName::cleanup();
 
     MemoryPool::cleanup();
+}
+
+void unregister_core_singletons() {
+    ObjectDB::remove_instance(&(Global::TestServer()));
 }

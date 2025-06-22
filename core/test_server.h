@@ -7,18 +7,16 @@ class TestServer : public Object {
     GDCLASS(TestServer, Object);
 
 public:
-    TestServer();
-    ~TestServer();
-
-    static TestServer* get_singleton();
-
     int get_value() const;
 
 private:
-    static TestServer* singleton;
     static void _bind_methods();
 
     int value = 10;
 };
+
+namespace Global {
+::TestServer& TestServer();
+} // namespace Global
 
 #endif // TEST_SERVER_H
