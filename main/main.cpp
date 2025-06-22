@@ -21,7 +21,6 @@
 #include "core/register_core_types.h"
 #include "core/script_debugger_local.h"
 #include "core/script_language.h"
-#include "core/test_server.h"
 #include "core/translation.h"
 #include "core/version.h"
 #include "core/version_hash.gen.h"
@@ -85,7 +84,6 @@ static ARVRServer* arvr_server                        = nullptr;
 static PhysicsServer* physics_server                  = nullptr;
 static Physics2DServer* physics_2d_server             = nullptr;
 static VisualServerCallbacks* visual_server_callbacks = nullptr;
-static TestServer* test_server                        = nullptr;
 
 // We error out if setup2() doesn't turn this true
 static bool _start_success = false;
@@ -1757,10 +1755,6 @@ error:
         memdelete(file_access_network_client);
     }
 
-    if (test_server) {
-        memdelete(test_server);
-    }
-
     unregister_core_driver_types();
     unregister_core_types();
 
@@ -1825,8 +1819,6 @@ Error Main::setup2(Thread::ID p_main_tid_override) {
     // and finally setup this property under visual_server
     VisualServer::get_singleton()->set_render_loop_enabled(!disable_render_loop
     );
-
-    test_server = memnew(TestServer);
 
     register_core_singletons();
 
@@ -3210,6 +3202,7 @@ void Main::cleanup(bool p_force) {
     if (engine) {
         memdelete(engine);
     }
+    unregister_core_singletons();
 
     if (OS::get_singleton()->is_restart_on_exit_set()) {
         // attempt to restart with arguments
@@ -3230,10 +3223,6 @@ void Main::cleanup(bool p_force) {
 
     if (visual_server_callbacks) {
         memdelete(visual_server_callbacks);
-    }
-
-    if (test_server) {
-        memdelete(test_server);
     }
 
     unregister_core_driver_types();
