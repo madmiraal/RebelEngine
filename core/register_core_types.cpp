@@ -235,7 +235,7 @@ void register_core_settings() {
     );
 }
 
-void register_core_singletons() {
+void register_globals() {
     ClassDB::register_class<ProjectSettings>();
     ClassDB::register_virtual_class<IP>();
     ClassDB::register_class<_Geometry>();
@@ -344,3 +344,5 @@ void unregister_core_types() {
 
     MemoryPool::cleanup();
 }
+
+void unregister_globals() {}

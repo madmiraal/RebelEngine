@@ -822,6 +822,7 @@ class ObjectDB {
     static ObjectID add_instance(Object* p_object);
     static void remove_instance(Object* p_object);
     friend void register_core_types();
+    friend void unregister_globals();
 
 public:
     typedef void (*DebugFunc)(Object* p_obj);
