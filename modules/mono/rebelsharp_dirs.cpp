@@ -129,15 +129,13 @@ private:
         mono_solutions_dir = mono_user_dir.plus_file("solutions");
         build_logs_dir     = mono_user_dir.plus_file("build_logs");
 
-        String appname =
-            ProjectSettings::get_singleton()->get("application/config/name");
+        String appname      = GLOBAL_GET("application/config/name");
         String appname_safe = OS::get_singleton()->get_safe_dir_name(appname);
         if (appname_safe.empty()) {
             appname_safe = "UnnamedProject";
         }
 
-        String base_path =
-            ProjectSettings::get_singleton()->globalize_path("res://");
+        String base_path = Global::ProjectSettings().globalize_path("res://");
 
         sln_filepath    = base_path.plus_file(appname_safe + ".sln");
         csproj_filepath = base_path.plus_file(appname_safe + ".csproj");
@@ -186,8 +184,7 @@ private:
 
 #else
 
-        String appname =
-            ProjectSettings::get_singleton()->get("application/config/name");
+        String appname       = GLOBAL_GET("application/config/name");
         String appname_safe  = OS::get_singleton()->get_safe_dir_name(appname);
         String data_dir_root = exe_dir.plus_file("data_" + appname_safe);
         if (!DirAccess::exists(data_dir_root)) {

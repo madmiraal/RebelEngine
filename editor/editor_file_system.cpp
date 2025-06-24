@@ -217,7 +217,7 @@ void EditorFileSystem::_scan_filesystem() {
     sources_changed.clear();
     file_cache.clear();
 
-    String project = ProjectSettings::get_singleton()->get_resource_path();
+    String project = Global::ProjectSettings().get_resource_path();
 
     String fscache =
         EditorSettings::get_singleton()->get_project_settings_dir().plus_file(
@@ -1332,7 +1332,7 @@ bool EditorFileSystem::_find_file(
         return false;
     }
 
-    String f = ProjectSettings::get_singleton()->localize_path(p_file);
+    String f = Global::ProjectSettings().localize_path(p_file);
 
     if (!f.begins_with("res://")) {
         return false;
@@ -1442,7 +1442,7 @@ EditorFileSystemDirectory* EditorFileSystem::get_filesystem_path(
         return nullptr;
     }
 
-    String f = ProjectSettings::get_singleton()->localize_path(p_path);
+    String f = Global::ProjectSettings().localize_path(p_path);
 
     if (!f.begins_with("res://")) {
         return nullptr;
@@ -2000,13 +2000,12 @@ void EditorFileSystem::_reimport_file(const String& p_file) {
     }
 
     if (load_default
-        && ProjectSettings::get_singleton()->has_setting(
+        && Global::ProjectSettings().has_setting(
             "importer_defaults/" + importer->get_importer_name()
         )) {
         // use defaults if exist
-        Dictionary d = ProjectSettings::get_singleton()->get(
-            "importer_defaults/" + importer->get_importer_name()
-        );
+        Dictionary d =
+            GLOBAL_GET("importer_defaults/" + importer->get_importer_name());
         List<Variant> v;
         d.get_key_list(&v);
 
@@ -2192,7 +2191,7 @@ void EditorFileSystem::_create_project_data_dir_if_necessary() {
     // Check that the project data directory exists
     DirAccess* da = DirAccess::create(DirAccess::ACCESS_RESOURCES);
     String project_data_path =
-        ProjectSettings::get_singleton()->get_project_data_path();
+        Global::ProjectSettings().get_project_data_path();
     if (da->change_dir(project_data_path) != OK) {
         Error err = da->make_dir(project_data_path);
         if (err) {
@@ -2306,7 +2305,7 @@ Error EditorFileSystem::_resource_import(const String& p_path) {
 
 bool EditorFileSystem::_should_skip_directory(const String& p_path) {
     String project_data_path =
-        ProjectSettings::get_singleton()->get_project_data_path();
+        Global::ProjectSettings().get_project_data_path();
     if (p_path == project_data_path
         || p_path.begins_with(project_data_path + "/")) {
         return true;

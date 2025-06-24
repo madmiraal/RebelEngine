@@ -52,9 +52,9 @@ void GDNativeLibrarySingletonEditor::_discover_singletons() {
 
     bool changed = false;
     Array current_files;
-    if (ProjectSettings::get_singleton()->has_setting("gdnative/singletons")) {
-        current_files =
-            ProjectSettings::get_singleton()->get("gdnative/singletons");
+    ProjectSettings& settings = Global::ProjectSettings();
+    if (settings.has_setting("gdnative/singletons")) {
+        current_files = settings.get("gdnative/singletons");
     }
     Array files;
     for (Set<String>::Element* E = file_paths.front(); E; E = E->next()) {
@@ -76,9 +76,9 @@ void GDNativeLibrarySingletonEditor::_discover_singletons() {
     }
 
     if (changed) {
-        ProjectSettings::get_singleton()->set("gdnative/singletons", files);
+        settings.set("gdnative/singletons", files);
         _update_libraries(); // So singleton options (i.e. disabled) updates too
-        ProjectSettings::get_singleton()->save();
+        settings.save();
     }
 }
 
@@ -88,17 +88,13 @@ void GDNativeLibrarySingletonEditor::_update_libraries() {
     libraries->create_item(); // root item
 
     Array singletons;
-    if (ProjectSettings::get_singleton()->has_setting("gdnative/singletons")) {
-        singletons =
-            ProjectSettings::get_singleton()->get("gdnative/singletons");
+    ProjectSettings& settings = Global::ProjectSettings();
+    if (settings.has_setting("gdnative/singletons")) {
+        singletons = settings.get("gdnative/singletons");
     }
     Array singletons_disabled;
-    if (ProjectSettings::get_singleton()->has_setting(
-            "gdnative/singletons_disabled"
-        )) {
-        singletons_disabled =
-            ProjectSettings::get_singleton()->get("gdnative/singletons_disabled"
-            );
+    if (settings.has_setting("gdnative/singletons_disabled")) {
+        singletons_disabled = settings.get("gdnative/singletons_disabled");
     }
 
     Array updated_disabled;
@@ -122,10 +118,7 @@ void GDNativeLibrarySingletonEditor::_update_libraries() {
 
     // The singletons list changed, we must update the settings
     if (updated_disabled.size() != singletons_disabled.size()) {
-        ProjectSettings::get_singleton()->set(
-            "gdnative/singletons_disabled",
-            updated_disabled
-        );
+        settings.set("gdnative/singletons_disabled", updated_disabled);
     }
 
     updating = false;
@@ -146,12 +139,9 @@ void GDNativeLibrarySingletonEditor::_item_edited() {
 
     Array disabled_paths;
     Array undo_paths;
-    if (ProjectSettings::get_singleton()->has_setting(
-            "gdnative/singletons_disabled"
-        )) {
-        disabled_paths =
-            ProjectSettings::get_singleton()->get("gdnative/singletons_disabled"
-            );
+    ProjectSettings& settings = Global::ProjectSettings();
+    if (settings.has_setting("gdnative/singletons_disabled")) {
+        disabled_paths = settings.get("gdnative/singletons_disabled");
         // Duplicate so redo works (not a reference)
         disabled_paths = disabled_paths.duplicate();
         // For undo, so we can reset the property.
@@ -171,13 +161,13 @@ void GDNativeLibrarySingletonEditor::_item_edited() {
                 : TTR("Disabled GDNative Singleton")
     );
     undo_redo->add_do_property(
-        ProjectSettings::get_singleton(),
+        &(Global::ProjectSettings()),
         "gdnative/singletons_disabled",
         disabled_paths
     );
     undo_redo->add_do_method(this, "_update_libraries");
     undo_redo->add_undo_property(
-        ProjectSettings::get_singleton(),
+        &(Global::ProjectSettings()),
         "gdnative/singletons_disabled",
         undo_paths
     );

@@ -123,9 +123,8 @@ static inline String resolve_local_dependency_path(
         return dependency_path;
     }
 
-    String res_path =
-        ProjectSettings::get_singleton()->globalize_path("res://");
-    absolute_path = plugin_config_dir.plus_file(dependency_path);
+    String res_path = Global::ProjectSettings().globalize_path("res://");
+    absolute_path   = plugin_config_dir.plus_file(dependency_path);
 
     return absolute_path.replace(res_path, "res://");
 }

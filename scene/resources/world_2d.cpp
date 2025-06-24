@@ -413,7 +413,7 @@ World2D::World2D() {
         Physics2DServer::AREA_PARAM_LINEAR_DAMP,
         GLOBAL_DEF("physics/2d/default_linear_damp", 0.1)
     );
-    ProjectSettings::get_singleton()->set_custom_property_info(
+    Global::ProjectSettings().set_custom_property_info(
         "physics/2d/default_linear_damp",
         PropertyInfo(
             Variant::REAL,
@@ -427,7 +427,7 @@ World2D::World2D() {
         Physics2DServer::AREA_PARAM_ANGULAR_DAMP,
         GLOBAL_DEF("physics/2d/default_angular_damp", 1.0)
     );
-    ProjectSettings::get_singleton()->set_custom_property_info(
+    Global::ProjectSettings().set_custom_property_info(
         "physics/2d/default_angular_damp",
         PropertyInfo(
             Variant::REAL,

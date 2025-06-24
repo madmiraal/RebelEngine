@@ -468,7 +468,7 @@ Error FileAccessNetwork::_set_unix_permissions(
 
 void FileAccessNetwork::configure() {
     GLOBAL_DEF("network/remote_fs/page_size", 65536);
-    ProjectSettings::get_singleton()->set_custom_property_info(
+    Global::ProjectSettings().set_custom_property_info(
         "network/remote_fs/page_size",
         PropertyInfo(
             Variant::INT,
@@ -478,7 +478,7 @@ void FileAccessNetwork::configure() {
         )
     ); // is used as denominator and can't be zero
     GLOBAL_DEF("network/remote_fs/page_read_ahead", 4);
-    ProjectSettings::get_singleton()->set_custom_property_info(
+    Global::ProjectSettings().set_custom_property_info(
         "network/remote_fs/page_read_ahead",
         PropertyInfo(
             Variant::INT,

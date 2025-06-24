@@ -65,7 +65,6 @@
 
 // Initialized in setup()
 static Engine* engine                        = nullptr;
-static ProjectSettings* globals              = nullptr;
 static InputMap* input_map                   = nullptr;
 static TranslationServer* translation_server = nullptr;
 static Performance* performance              = nullptr;
@@ -159,7 +158,7 @@ void initialize_physics() {
     // otherwise it won't always show up in the project settings page.
     GLOBAL_DEF("physics/3d/rebel_physics/use_bvh", true);
     GLOBAL_DEF("physics/3d/rebel_physics/bvh_collision_margin", 0.1);
-    ProjectSettings::get_singleton()->set_custom_property_info(
+    Global::ProjectSettings().set_custom_property_info(
         "physics/3d/rebel_physics/bvh_collision_margin",
         PropertyInfo(
             Variant::REAL,
@@ -170,10 +169,9 @@ void initialize_physics() {
     );
 
     /// 3D Physics Server
-    physics_server =
-        PhysicsServerManager::new_server(ProjectSettings::get_singleton()->get(
-            PhysicsServerManager::setting_property_name
-        ));
+    physics_server = PhysicsServerManager::new_server(
+        GLOBAL_GET(PhysicsServerManager::setting_property_name)
+    );
     if (!physics_server) {
         // Physics server not found, Use the default physics
         physics_server = PhysicsServerManager::new_default_server();
@@ -183,9 +181,7 @@ void initialize_physics() {
 
     /// 2D Physics server
     physics_2d_server = Physics2DServerManager::new_server(
-        ProjectSettings::get_singleton()->get(
-            Physics2DServerManager::setting_property_name
-        )
+        GLOBAL_GET(Physics2DServerManager::setting_property_name)
     );
     if (!physics_2d_server) {
         // Physics server not found, Use the default physics
@@ -539,10 +535,9 @@ Error Main::setup(
 
     MAIN_PRINT("Main: Initialize Globals");
 
-    globals   = memnew(ProjectSettings);
     input_map = memnew(InputMap);
 
-    register_core_settings(); // here globals is present
+    register_core_settings();
 
     translation_server = memnew(TranslationServer);
     performance        = memnew(Performance);
@@ -1138,9 +1133,9 @@ Error Main::setup(
     }
 #endif
 
-    // Network file system needs to be configured before globals, since globals
-    // are based on the 'project.rebel' file which will only be available
-    // through the network if this is enabled
+    // Network file system needs to be configured before GlobalProjectSettings,
+    // because GlobalProjectSettings are based on the 'project.rebel' file,
+    // which will only be available through the network if this is enabled.
     FileAccessNetwork::configure();
     if (remotefs != "") {
         file_access_network_client = memnew(FileAccessNetworkClient);
@@ -1167,7 +1162,8 @@ Error Main::setup(
         );
     }
 
-    if (globals->setup(project_path, main_pack, upwards) == OK) {
+    if (Global::ProjectSettings().setup(project_path, main_pack, upwards)
+        == OK) {
 #ifdef TOOLS_ENABLED
         found_project = true;
 #endif
@@ -1192,7 +1188,7 @@ Error Main::setup(
     OS::get_singleton()->ensure_user_data_dir();
 
     GLOBAL_DEF("memory/limits/multithreaded_server/rid_pool_prealloc", 60);
-    ProjectSettings::get_singleton()->set_custom_property_info(
+    Global::ProjectSettings().set_custom_property_info(
         "memory/limits/multithreaded_server/rid_pool_prealloc",
         PropertyInfo(
             Variant::INT,
@@ -1202,7 +1198,7 @@ Error Main::setup(
         )
     ); // No negative and limit to 500 due to crashes
     GLOBAL_DEF("network/limits/debugger_stdout/max_chars_per_second", 2048);
-    ProjectSettings::get_singleton()->set_custom_property_info(
+    Global::ProjectSettings().set_custom_property_info(
         "network/limits/debugger_stdout/max_chars_per_second",
         PropertyInfo(
             Variant::INT,
@@ -1212,7 +1208,7 @@ Error Main::setup(
         )
     );
     GLOBAL_DEF("network/limits/debugger_stdout/max_messages_per_frame", 10);
-    ProjectSettings::get_singleton()->set_custom_property_info(
+    Global::ProjectSettings().set_custom_property_info(
         "network/limits/debugger_stdout/max_messages_per_frame",
         PropertyInfo(
             Variant::INT,
@@ -1222,7 +1218,7 @@ Error Main::setup(
         )
     );
     GLOBAL_DEF("network/limits/debugger_stdout/max_errors_per_second", 100);
-    ProjectSettings::get_singleton()->set_custom_property_info(
+    Global::ProjectSettings().set_custom_property_info(
         "network/limits/debugger_stdout/max_errors_per_second",
         PropertyInfo(
             Variant::INT,
@@ -1232,7 +1228,7 @@ Error Main::setup(
         )
     );
     GLOBAL_DEF("network/limits/debugger_stdout/max_warnings_per_second", 100);
-    ProjectSettings::get_singleton()->set_custom_property_info(
+    Global::ProjectSettings().set_custom_property_info(
         "network/limits/debugger_stdout/max_warnings_per_second",
         PropertyInfo(
             Variant::INT,
@@ -1286,7 +1282,7 @@ Error Main::setup(
 #ifdef TOOLS_ENABLED
     if (editor) {
         packed_data->set_disabled(true);
-        globals->set_disable_feature_overrides(true);
+        Global::ProjectSettings().set_disable_feature_overrides(true);
     }
 
 #endif
@@ -1321,7 +1317,7 @@ Error Main::setup(
     GLOBAL_DEF("logging/file_logging/enable_file_logging.pc", true);
     GLOBAL_DEF("logging/file_logging/log_path", "user://logs/rebel.log");
     GLOBAL_DEF("logging/file_logging/max_log_files", 5);
-    ProjectSettings::get_singleton()->set_custom_property_info(
+    Global::ProjectSettings().set_custom_property_info(
         "logging/file_logging/max_log_files",
         PropertyInfo(
             Variant::INT,
@@ -1366,14 +1362,10 @@ Error Main::setup(
         input_map->load_from_globals(); // keys for game
     }
 
-    if (bool(ProjectSettings::get_singleton()->get(
-            "application/run/disable_stdout"
-        ))) {
+    if (bool(GLOBAL_GET("application/run/disable_stdout"))) {
         quiet_stdout = true;
     }
-    if (bool(ProjectSettings::get_singleton()->get(
-            "application/run/disable_stderr"
-        ))) {
+    if (bool(GLOBAL_GET("application/run/disable_stderr"))) {
         _print_error_enabled = false;
     };
 
@@ -1381,14 +1373,14 @@ Error Main::setup(
         _print_line_enabled = false;
     }
 
-    Logger::set_flush_stdout_on_print(ProjectSettings::get_singleton()->get(
-        "application/run/flush_stdout_on_print"
-    ));
+    Logger::set_flush_stdout_on_print(
+        GLOBAL_GET("application/run/flush_stdout_on_print")
+    );
 
     OS::get_singleton()->set_cmdline(execpath, main_args);
 
     GLOBAL_DEF("rendering/quality/driver/driver_name", "GLES3");
-    ProjectSettings::get_singleton()->set_custom_property_info(
+    Global::ProjectSettings().set_custom_property_info(
         "rendering/quality/driver/driver_name",
         PropertyInfo(
             Variant::STRING,
@@ -1410,7 +1402,7 @@ Error Main::setup(
     );
 
     GLOBAL_DEF("display/window/size/width", 1024);
-    ProjectSettings::get_singleton()->set_custom_property_info(
+    Global::ProjectSettings().set_custom_property_info(
         "display/window/size/width",
         PropertyInfo(
             Variant::INT,
@@ -1420,7 +1412,7 @@ Error Main::setup(
         )
     ); // 8K resolution
     GLOBAL_DEF("display/window/size/height", 600);
-    ProjectSettings::get_singleton()->set_custom_property_info(
+    Global::ProjectSettings().set_custom_property_info(
         "display/window/size/height",
         PropertyInfo(
             Variant::INT,
@@ -1434,7 +1426,7 @@ Error Main::setup(
     GLOBAL_DEF("display/window/size/fullscreen", false);
     GLOBAL_DEF("display/window/size/always_on_top", false);
     GLOBAL_DEF("display/window/size/test_width", 0);
-    ProjectSettings::get_singleton()->set_custom_property_info(
+    Global::ProjectSettings().set_custom_property_info(
         "display/window/size/test_width",
         PropertyInfo(
             Variant::INT,
@@ -1444,7 +1436,7 @@ Error Main::setup(
         )
     ); // 8K resolution
     GLOBAL_DEF("display/window/size/test_height", 0);
-    ProjectSettings::get_singleton()->set_custom_property_info(
+    Global::ProjectSettings().set_custom_property_info(
         "display/window/size/test_height",
         PropertyInfo(
             Variant::INT,
@@ -1459,13 +1451,14 @@ Error Main::setup(
             video_mode.width  = GLOBAL_GET("display/window/size/width");
             video_mode.height = GLOBAL_GET("display/window/size/height");
 
-            if (globals->has_setting("display/window/size/test_width")
-                && globals->has_setting("display/window/size/test_height")) {
-                int tw = globals->get("display/window/size/test_width");
+            const ProjectSettings& settings = Global::ProjectSettings();
+            if (settings.has_setting("display/window/size/test_width")
+                && settings.has_setting("display/window/size/test_height")) {
+                int tw = settings.get("display/window/size/test_width");
                 if (tw > 0) {
                     video_mode.width = tw;
                 }
-                int th = globals->get("display/window/size/test_height");
+                int th = settings.get("display/window/size/test_height");
                 if (th > 0) {
                     video_mode.height = th;
                 }
@@ -1631,7 +1624,7 @@ Error Main::setup(
     Engine::get_singleton()->set_iterations_per_second(
         GLOBAL_DEF("physics/common/physics_fps", 60)
     );
-    ProjectSettings::get_singleton()->set_custom_property_info(
+    Global::ProjectSettings().set_custom_property_info(
         "physics/common/physics_fps",
         PropertyInfo(
             Variant::INT,
@@ -1646,7 +1639,7 @@ Error Main::setup(
     Engine::get_singleton()->set_target_fps(
         GLOBAL_DEF("debug/settings/fps/force_fps", 0)
     );
-    ProjectSettings::get_singleton()->set_custom_property_info(
+    Global::ProjectSettings().set_custom_property_info(
         "debug/settings/fps/force_fps",
         PropertyInfo(
             Variant::INT,
@@ -1667,7 +1660,7 @@ Error Main::setup(
 
     if (frame_delay == 0) {
         frame_delay = GLOBAL_DEF("application/run/frame_delay_msec", 0);
-        ProjectSettings::get_singleton()->set_custom_property_info(
+        Global::ProjectSettings().set_custom_property_info(
             "application/run/frame_delay_msec",
             PropertyInfo(
                 Variant::INT,
@@ -1684,7 +1677,7 @@ Error Main::setup(
     OS::get_singleton()->set_low_processor_usage_mode_sleep_usec(
         GLOBAL_DEF("application/run/low_processor_mode_sleep_usec", 6900)
     ); // Roughly 144 FPS
-    ProjectSettings::get_singleton()->set_custom_property_info(
+    Global::ProjectSettings().set_custom_property_info(
         "application/run/low_processor_mode_sleep_usec",
         PropertyInfo(
             Variant::INT,
@@ -1738,9 +1731,6 @@ error:
     }
     if (translation_server) {
         memdelete(translation_server);
-    }
-    if (globals) {
-        memdelete(globals);
     }
     if (engine) {
         memdelete(engine);
@@ -1861,7 +1851,7 @@ Error Main::setup2(Thread::ID p_main_tid_override) {
             GLOBAL_DEF("application/boot_splash/fullsize", true);
         bool boot_logo_filter =
             GLOBAL_DEF("application/boot_splash/use_filter", true);
-        ProjectSettings::get_singleton()->set_custom_property_info(
+        Global::ProjectSettings().set_custom_property_info(
             "application/boot_splash/image",
             PropertyInfo(
                 Variant::STRING,
@@ -1943,7 +1933,7 @@ Error Main::setup2(Thread::ID p_main_tid_override) {
     ));
 
     GLOBAL_DEF("application/config/icon", String());
-    ProjectSettings::get_singleton()->set_custom_property_info(
+    Global::ProjectSettings().set_custom_property_info(
         "application/config/icon",
         PropertyInfo(
             Variant::STRING,
@@ -1954,7 +1944,7 @@ Error Main::setup2(Thread::ID p_main_tid_override) {
     );
 
     GLOBAL_DEF("application/config/macos_native_icon", String());
-    ProjectSettings::get_singleton()->set_custom_property_info(
+    Global::ProjectSettings().set_custom_property_info(
         "application/config/macos_native_icon",
         PropertyInfo(
             Variant::STRING,
@@ -1965,7 +1955,7 @@ Error Main::setup2(Thread::ID p_main_tid_override) {
     );
 
     GLOBAL_DEF("application/config/windows_native_icon", String());
-    ProjectSettings::get_singleton()->set_custom_property_info(
+    Global::ProjectSettings().set_custom_property_info(
         "application/config/windows_native_icon",
         PropertyInfo(
             Variant::STRING,
@@ -2031,7 +2021,7 @@ Error Main::setup2(Thread::ID p_main_tid_override) {
     GLOBAL_DEF("display/mouse_cursor/custom_image", String());
     GLOBAL_DEF("display/mouse_cursor/custom_image_hotspot", Vector2());
     GLOBAL_DEF("display/mouse_cursor/tooltip_position_offset", Point2(10, 10));
-    ProjectSettings::get_singleton()->set_custom_property_info(
+    Global::ProjectSettings().set_custom_property_info(
         "display/mouse_cursor/custom_image",
         PropertyInfo(
             Variant::STRING,
@@ -2041,18 +2031,13 @@ Error Main::setup2(Thread::ID p_main_tid_override) {
         )
     );
 
-    if (String(ProjectSettings::get_singleton()->get(
-            "display/mouse_cursor/custom_image"
-        ))
-        != String()) {
+    if (String(GLOBAL_GET("display/mouse_cursor/custom_image")) != String()) {
         Ref<Texture> cursor =
-            ResourceLoader::load(ProjectSettings::get_singleton()->get(
-                "display/mouse_cursor/custom_image"
-            ));
-        if (cursor.is_valid()) {
-            Vector2 hotspot = ProjectSettings::get_singleton()->get(
-                "display/mouse_cursor/custom_image_hotspot"
+            ResourceLoader::load(GLOBAL_GET("display/mouse_cursor/custom_image")
             );
+        if (cursor.is_valid()) {
+            Vector2 hotspot =
+                GLOBAL_GET("display/mouse_cursor/custom_image_hotspot");
             Input::get_singleton()
                 ->set_custom_mouse_cursor(cursor, Input::CURSOR_ARROW, hotspot);
         }
@@ -2404,7 +2389,7 @@ bool Main::start() {
 
                 // autoload
                 List<PropertyInfo> props;
-                ProjectSettings::get_singleton()->get_property_list(&props);
+                Global::ProjectSettings().get_property_list(&props);
 
                 // first pass, add the constants so they exist before any script
                 // is loaded
@@ -2415,7 +2400,7 @@ bool Main::start() {
                         continue;
                     }
                     String name     = s.get_slicec('/', 1);
-                    String path     = ProjectSettings::get_singleton()->get(s);
+                    String path     = GLOBAL_GET(s);
                     bool global_var = false;
                     if (path.begins_with("*")) {
                         global_var = true;
@@ -2441,7 +2426,7 @@ bool Main::start() {
                         continue;
                     }
                     String name     = s.get_slicec('/', 1);
-                    String path     = ProjectSettings::get_singleton()->get(s);
+                    String path     = GLOBAL_GET(s);
                     bool global_var = false;
                     if (path.begins_with("*")) {
                         global_var = true;
@@ -2569,9 +2554,7 @@ bool Main::start() {
             sml->set_quit_on_go_back(
                 GLOBAL_DEF("application/config/quit_on_go_back", true)
             );
-            String appname =
-                ProjectSettings::get_singleton()->get("application/config/name"
-                );
+            String appname = GLOBAL_GET("application/config/name");
             appname = TranslationServer::get_singleton()->translate(appname);
 #ifdef DEBUG_ENABLED
             // Append a suffix to the window title to denote that the project is
@@ -2633,7 +2616,7 @@ bool Main::start() {
 
         } else {
             GLOBAL_DEF("display/window/stretch/mode", "disabled");
-            ProjectSettings::get_singleton()->set_custom_property_info(
+            Global::ProjectSettings().set_custom_property_info(
                 "display/window/stretch/mode",
                 PropertyInfo(
                     Variant::STRING,
@@ -2643,7 +2626,7 @@ bool Main::start() {
                 )
             );
             GLOBAL_DEF("display/window/stretch/aspect", "ignore");
-            ProjectSettings::get_singleton()->set_custom_property_info(
+            Global::ProjectSettings().set_custom_property_info(
                 "display/window/stretch/aspect",
                 PropertyInfo(
                     Variant::STRING,
@@ -2653,7 +2636,7 @@ bool Main::start() {
                 )
             );
             GLOBAL_DEF("display/window/stretch/shrink", 1.0);
-            ProjectSettings::get_singleton()->set_custom_property_info(
+            Global::ProjectSettings().set_custom_property_info(
                 "display/window/stretch/shrink",
                 PropertyInfo(
                     Variant::REAL,
@@ -2685,7 +2668,7 @@ bool Main::start() {
                     && (local_game_path[0] == '/' || local_game_path[1] == ':');
 
                 if (!absolute) {
-                    if (ProjectSettings::get_singleton()->is_using_datapack()) {
+                    if (Global::ProjectSettings().is_using_datapack()) {
                         local_game_path = "res://" + local_game_path;
 
                     } else {
@@ -2717,8 +2700,7 @@ bool Main::start() {
             }
 
             local_game_path =
-                ProjectSettings::get_singleton()->localize_path(local_game_path
-                );
+                Global::ProjectSettings().localize_path(local_game_path);
 
 #ifdef TOOLS_ENABLED
             if (editor) {
@@ -3195,9 +3177,6 @@ void Main::cleanup(bool p_force) {
     }
     if (translation_server) {
         memdelete(translation_server);
-    }
-    if (globals) {
-        memdelete(globals);
     }
     if (engine) {
         memdelete(engine);

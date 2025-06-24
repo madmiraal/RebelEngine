@@ -6174,7 +6174,7 @@ void RasterizerSceneGLES2::initialize() {
             "rendering/limits/buffers/immediate_buffer_size_kb",
             2048
         );
-        ProjectSettings::get_singleton()->set_custom_property_info(
+        Global::ProjectSettings().set_custom_property_info(
             "rendering/limits/buffers/immediate_buffer_size_kb",
             PropertyInfo(
                 Variant::INT,

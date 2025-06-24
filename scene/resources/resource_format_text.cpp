@@ -152,7 +152,7 @@ Error ResourceInteractiveLoaderText::_parse_ext_resource(
         if (path.find("://") == -1 && path.is_rel_path()) {
             // path is relative to file being loaded, so convert to a resource
             // path
-            path = ProjectSettings::get_singleton()->localize_path(
+            path = Global::ProjectSettings().localize_path(
                 res_path.get_base_dir().plus_file(path)
             );
         }
@@ -451,7 +451,7 @@ Error ResourceInteractiveLoaderText::poll() {
         if (path.find("://") == -1 && path.is_rel_path()) {
             // path is relative to file being loaded, so convert to a resource
             // path
-            path = ProjectSettings::get_singleton()->localize_path(
+            path = Global::ProjectSettings().localize_path(
                 local_path.get_base_dir().plus_file(path)
             );
         }
@@ -750,7 +750,7 @@ void ResourceInteractiveLoaderText::get_dependencies(
         if (path.find("://") == -1 && path.is_rel_path()) {
             // path is relative to file being loaded, so convert to a resource
             // path
-            path = ProjectSettings::get_singleton()->localize_path(
+            path = Global::ProjectSettings().localize_path(
                 local_path.get_base_dir().plus_file(path)
             );
         }
@@ -1335,10 +1335,10 @@ Ref<ResourceInteractiveLoader> ResourceFormatLoaderText::load_interactive(
     Ref<ResourceInteractiveLoaderText> ria =
         memnew(ResourceInteractiveLoaderText);
     String path     = p_original_path != "" ? p_original_path : p_path;
-    ria->local_path = ProjectSettings::get_singleton()->localize_path(path);
+    ria->local_path = Global::ProjectSettings().localize_path(path);
     ria->res_path   = ria->local_path;
     // ria->set_local_path(
-    // ProjectSettings::get_singleton()->localize_path(p_path) );
+    // Global::ProjectSettings().localize_path(p_path) );
     ria->open(f);
 
     return ria;
@@ -1388,10 +1388,10 @@ String ResourceFormatLoaderText::get_resource_type(const String& p_path) const {
 
     Ref<ResourceInteractiveLoaderText> ria =
         memnew(ResourceInteractiveLoaderText);
-    ria->local_path = ProjectSettings::get_singleton()->localize_path(p_path);
+    ria->local_path = Global::ProjectSettings().localize_path(p_path);
     ria->res_path   = ria->local_path;
     // ria->set_local_path(
-    // ProjectSettings::get_singleton()->localize_path(p_path) );
+    // Global::ProjectSettings().localize_path(p_path) );
     String r        = ria->recognize(f);
     return r;
 }
@@ -1408,10 +1408,10 @@ void ResourceFormatLoaderText::get_dependencies(
 
     Ref<ResourceInteractiveLoaderText> ria =
         memnew(ResourceInteractiveLoaderText);
-    ria->local_path = ProjectSettings::get_singleton()->localize_path(p_path);
+    ria->local_path = Global::ProjectSettings().localize_path(p_path);
     ria->res_path   = ria->local_path;
     // ria->set_local_path(
-    // ProjectSettings::get_singleton()->localize_path(p_path) );
+    // Global::ProjectSettings().localize_path(p_path) );
     ria->get_dependencies(f, p_dependencies, p_add_types);
 }
 
@@ -1426,10 +1426,10 @@ Error ResourceFormatLoaderText::rename_dependencies(
 
     Ref<ResourceInteractiveLoaderText> ria =
         memnew(ResourceInteractiveLoaderText);
-    ria->local_path = ProjectSettings::get_singleton()->localize_path(p_path);
+    ria->local_path = Global::ProjectSettings().localize_path(p_path);
     ria->res_path   = ria->local_path;
     // ria->set_local_path(
-    // ProjectSettings::get_singleton()->localize_path(p_path) );
+    // Global::ProjectSettings().localize_path(p_path) );
     return ria->rename_dependencies(f, p_path, p_map);
 }
 
@@ -1451,10 +1451,10 @@ Error ResourceFormatLoaderText::convert_file_to_binary(
     Ref<ResourceInteractiveLoaderText> ria =
         memnew(ResourceInteractiveLoaderText);
     const String& path = p_src_path;
-    ria->local_path    = ProjectSettings::get_singleton()->localize_path(path);
+    ria->local_path    = Global::ProjectSettings().localize_path(path);
     ria->res_path      = ria->local_path;
     // ria->set_local_path(
-    // ProjectSettings::get_singleton()->localize_path(p_path) );
+    // Global::ProjectSettings().localize_path(p_path) );
     ria->open(f);
     return ria->save_as_binary(f, p_dst_path);
 }
@@ -1610,7 +1610,7 @@ Error ResourceFormatSaverTextInstance::save(
     );
     FileAccessRef _fref(f);
 
-    local_path = ProjectSettings::get_singleton()->localize_path(p_path);
+    local_path = Global::ProjectSettings().localize_path(p_path);
 
     relative_paths   = p_flags & ResourceSaver::FLAG_RELATIVE_PATHS;
     skip_editor      = p_flags & ResourceSaver::FLAG_OMIT_EDITOR_PROPERTIES;

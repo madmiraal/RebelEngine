@@ -194,7 +194,7 @@ void SceneTreeDock::_perform_instance_scenes(
         }
 
         instanced_scene->set_filename(
-            ProjectSettings::get_singleton()->localize_path(p_files[i])
+            Global::ProjectSettings().localize_path(p_files[i])
         );
 
         instances.push_back(instanced_scene);

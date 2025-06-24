@@ -4553,7 +4553,7 @@ void VisualScriptInputAction::_validate_property(PropertyInfo& property) const {
         String actions;
 
         List<PropertyInfo> pinfo;
-        ProjectSettings::get_singleton()->get_property_list(&pinfo);
+        Global::ProjectSettings().get_property_list(&pinfo);
         Vector<String> al;
 
         for (List<PropertyInfo>::Element* E = pinfo.front(); E; E = E->next()) {

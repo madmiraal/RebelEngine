@@ -598,10 +598,8 @@ void VideoStreamPlaybackTheora::play() {
         stop();
     }
 
-    playing            = true;
-    delay_compensation = ProjectSettings::get_singleton()->get(
-        "audio/video_delay_compensation_ms"
-    );
+    playing             = true;
+    delay_compensation  = GLOBAL_GET("audio/video_delay_compensation_ms");
     delay_compensation /= 1000.0;
 };
 

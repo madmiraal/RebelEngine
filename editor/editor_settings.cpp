@@ -1466,7 +1466,7 @@ void EditorSettings::create() {
 
         dir->change_dir("projects");
         String project_config_dir =
-            ProjectSettings::get_singleton()->get_resource_path();
+            Global::ProjectSettings().get_resource_path();
         if (project_config_dir.ends_with("/")) {
             project_config_dir =
                 config_path.substr(0, project_config_dir.size() - 1);
@@ -1785,9 +1785,7 @@ String EditorSettings::get_script_templates_dir() const {
 }
 
 String EditorSettings::get_project_script_templates_dir() const {
-    return ProjectSettings::get_singleton()->get(
-        "editor/script_templates_search_path"
-    );
+    return GLOBAL_GET("editor/script_templates_search_path");
 }
 
 // Cache directory

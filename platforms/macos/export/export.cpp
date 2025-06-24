@@ -1008,10 +1008,8 @@ Error MacOSEditorExportPlatform::export_project(
     String pkg_name;
     if (p_preset->get("application/name") != "") {
         pkg_name = p_preset->get("application/name"); // app_name
-    } else if (String(ProjectSettings::get_singleton()->get("application/config/name")) != "") {
-        pkg_name = String(
-            ProjectSettings::get_singleton()->get("application/config/name")
-        );
+    } else if (String(GLOBAL_GET("application/config/name")) != "") {
+        pkg_name = String(GLOBAL_GET("application/config/name"));
     } else {
         pkg_name = "Unnamed";
     }
@@ -1057,8 +1055,7 @@ Error MacOSEditorExportPlatform::export_project(
         );
     }
 
-    Vector<String> translations =
-        ProjectSettings::get_singleton()->get("locale/translations");
+    Vector<String> translations = GLOBAL_GET("locale/translations");
     if (translations.size() > 0) {
         {
             String fname = tmp_app_path_name + "/Contents/Resources/en.lproj";
@@ -1137,9 +1134,7 @@ Error MacOSEditorExportPlatform::export_project(
             if (p_preset->get("application/icon") != "") {
                 iconpath = p_preset->get("application/icon");
             } else {
-                iconpath = ProjectSettings::get_singleton()->get(
-                    "application/config/icon"
-                );
+                iconpath = GLOBAL_GET("application/config/icon");
             }
 
             if (iconpath != "") {
@@ -1499,10 +1494,9 @@ Error MacOSEditorExportPlatform::export_project(
         if (err == OK) {
             DirAccess* da = DirAccess::create(DirAccess::ACCESS_FILESYSTEM);
             for (int i = 0; i < shared_objects.size(); i++) {
-                String src_path =
-                    ProjectSettings::get_singleton()->globalize_path(
-                        shared_objects[i].path
-                    );
+                String src_path = Global::ProjectSettings().globalize_path(
+                    shared_objects[i].path
+                );
                 if (da->dir_exists(src_path)) {
 #ifndef UNIX_ENABLED
                     WARN_PRINT(

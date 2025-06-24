@@ -100,8 +100,7 @@ bool FileSystemDock::_create_tree(
 
     // Create all items for the files in the subdirectory.
     if (display_mode == DISPLAY_MODE_TREE_ONLY) {
-        String main_scene =
-            ProjectSettings::get_singleton()->get("application/run/main_scene");
+        String main_scene = GLOBAL_GET("application/run/main_scene");
 
         // Build the list of the files to display.
         List<FileInfo> file_list;
@@ -998,9 +997,8 @@ void FileSystemDock::_update_file_list(bool p_keep_selection) {
     _sort_file_info_list(file_list);
 
     // Fills the ItemList control node from the FileInfos.
-    String main_scene =
-        ProjectSettings::get_singleton()->get("application/run/main_scene");
-    String oi = "Object";
+    String main_scene = GLOBAL_GET("application/run/main_scene");
+    String oi         = "Object";
     for (List<FileInfo>::Element* E = file_list.front(); E; E = E->next()) {
         FileInfo* finfo = &(E->get());
         String fname    = finfo->name;
@@ -1531,13 +1529,13 @@ void FileSystemDock::_update_project_settings_after_move(
 ) const {
     // Find all project settings of type FILE and replace them if needed.
     const Map<StringName, PropertyInfo> prop_info =
-        ProjectSettings::get_singleton()->get_custom_property_info();
+        Global::ProjectSettings().get_custom_property_info();
     for (const Map<StringName, PropertyInfo>::Element* E = prop_info.front(); E;
          E                                               = E->next()) {
         if (E->get().hint == PROPERTY_HINT_FILE) {
             String old_path = GLOBAL_GET(E->key());
             if (p_renames.has(old_path)) {
-                ProjectSettings::get_singleton()->set_setting(
+                Global::ProjectSettings().set_setting(
                     E->key(),
                     p_renames[old_path]
                 );
@@ -1548,7 +1546,7 @@ void FileSystemDock::_update_project_settings_after_move(
     // Also search for the file in autoload, as they are stored differently from
     // normal files.
     List<PropertyInfo> property_list;
-    ProjectSettings::get_singleton()->get_property_list(&property_list);
+    Global::ProjectSettings().get_property_list(&property_list);
     for (const List<PropertyInfo>::Element* E = property_list.front(); E;
          E                                    = E->next()) {
         if (E->get().name.begins_with("autoload/")) {
@@ -1558,19 +1556,19 @@ void FileSystemDock::_update_project_settings_after_move(
             String autoload           = GLOBAL_GET(E->get().name);
             String autoload_singleton = autoload.substr(1, autoload.length());
             if (p_renames.has(autoload)) {
-                ProjectSettings::get_singleton()->set_setting(
+                Global::ProjectSettings().set_setting(
                     E->get().name,
                     p_renames[autoload]
                 );
             } else if (autoload.begins_with("*") && p_renames.has(autoload_singleton)) {
-                ProjectSettings::get_singleton()->set_setting(
+                Global::ProjectSettings().set_setting(
                     E->get().name,
                     "*" + p_renames[autoload_singleton]
                 );
             }
         }
     }
-    ProjectSettings::get_singleton()->save();
+    Global::ProjectSettings().save();
 }
 
 void FileSystemDock::_update_favorites_list_after_move(
@@ -2048,8 +2046,7 @@ void FileSystemDock::_file_option(
             if (!fpath.ends_with("/")) {
                 fpath = fpath.get_base_dir();
             }
-            String dir =
-                ProjectSettings::get_singleton()->globalize_path(fpath);
+            String dir = Global::ProjectSettings().globalize_path(fpath);
             OS::get_singleton()->shell_open(String("file://") + dir);
         } break;
 
@@ -2079,11 +2076,11 @@ void FileSystemDock::_file_option(
         case FILE_MAIN_SCENE: {
             // Set as main scene with selected scene file.
             if (p_selected.size() == 1) {
-                ProjectSettings::get_singleton()->set(
+                Global::ProjectSettings().set(
                     "application/run/main_scene",
                     p_selected[0]
                 );
-                ProjectSettings::get_singleton()->save();
+                Global::ProjectSettings().save();
                 _update_tree(_compute_uncollapsed_paths());
                 _update_file_list(true);
             }
@@ -2833,10 +2830,7 @@ void FileSystemDock::_file_and_folders_fill_popup(
                     TTR("New Inherited Scene"),
                     FILE_INHERIT
                 );
-                if (ProjectSettings::get_singleton()->get(
-                        "application/run/main_scene"
-                    )
-                    != filenames[0]) {
+                if (GLOBAL_GET("application/run/main_scene") != filenames[0]) {
                     p_popup->add_icon_item(
                         get_icon("PlayScene", "EditorIcons"),
                         TTR("Set As Main Scene"),

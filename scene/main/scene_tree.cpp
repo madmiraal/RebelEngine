@@ -667,9 +667,8 @@ bool SceneTree::idle(float p_time) {
 
     if (Engine::get_singleton()->is_editor_hint()) {
         // simple hack to reload fallback environment if it changed from editor
-        String env_path = ProjectSettings::get_singleton()->get(
-            "rendering/environment/default_environment"
-        );
+        String env_path =
+            GLOBAL_GET("rendering/environment/default_environment");
         env_path = env_path.strip_edges(); // user may have added a space or two
         String cpath;
         Ref<Environment> fallback =
@@ -682,7 +681,7 @@ bool SceneTree::idle(float p_time) {
                 fallback = ResourceLoader::load(env_path);
                 if (fallback.is_null()) {
                     // could not load fallback, set as empty
-                    ProjectSettings::get_singleton()->set(
+                    Global::ProjectSettings().set(
                         "rendering/environment/default_environment",
                         ""
                     );
@@ -2567,7 +2566,7 @@ SceneTree::SceneTree() {
     );
     collision_debug_contacts =
         GLOBAL_DEF("debug/shapes/collision/max_contacts_displayed", 10000);
-    ProjectSettings::get_singleton()->set_custom_property_info(
+    Global::ProjectSettings().set_custom_property_info(
         "debug/shapes/collision/max_contacts_displayed",
         PropertyInfo(
             Variant::INT,
@@ -2616,7 +2615,7 @@ SceneTree::SceneTree() {
 
     int ref_atlas_size =
         GLOBAL_DEF_RST("rendering/quality/reflections/atlas_size", 2048);
-    ProjectSettings::get_singleton()->set_custom_property_info(
+    Global::ProjectSettings().set_custom_property_info(
         "rendering/quality/reflections/atlas_size",
         PropertyInfo(
             Variant::INT,
@@ -2627,7 +2626,7 @@ SceneTree::SceneTree() {
     ); // next_power_of_2 will return a 0 as min value.
     int ref_atlas_subdiv =
         GLOBAL_DEF_RST("rendering/quality/reflections/atlas_subdiv", 8);
-    ProjectSettings::get_singleton()->set_custom_property_info(
+    Global::ProjectSettings().set_custom_property_info(
         "rendering/quality/reflections/atlas_subdiv",
         PropertyInfo(
             Variant::INT,
@@ -2637,7 +2636,7 @@ SceneTree::SceneTree() {
         )
     ); // next_power_of_2 will return a 0 as min value.
     int msaa_mode = GLOBAL_DEF("rendering/quality/filters/msaa", 0);
-    ProjectSettings::get_singleton()->set_custom_property_info(
+    Global::ProjectSettings().set_custom_property_info(
         "rendering/quality/filters/msaa",
         PropertyInfo(
             Variant::INT,
@@ -2690,7 +2689,7 @@ SceneTree::SceneTree() {
         String env_path =
             GLOBAL_DEF("rendering/environment/default_environment", "");
         // setup property
-        ProjectSettings::get_singleton()->set_custom_property_info(
+        Global::ProjectSettings().set_custom_property_info(
             "rendering/environment/default_environment",
             PropertyInfo(
                 Variant::STRING,
@@ -2707,7 +2706,7 @@ SceneTree::SceneTree() {
             } else {
                 if (Engine::get_singleton()->is_editor_hint()) {
                     // file was erased, clear the field.
-                    ProjectSettings::get_singleton()->set(
+                    Global::ProjectSettings().set(
                         "rendering/environment/default_environment",
                         ""
                     );

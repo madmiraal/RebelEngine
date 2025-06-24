@@ -171,7 +171,7 @@ String ScriptCreateDialog::_validate_path(
         return TTR("Filename is empty.");
     }
 
-    p = ProjectSettings::get_singleton()->localize_path(p);
+    p = Global::ProjectSettings().localize_path(p);
     if (!p.begins_with("res://")) {
         return TTR("Path is not local.");
     }
@@ -240,8 +240,8 @@ String ScriptCreateDialog::_get_class_name() const {
     if (has_named_classes) {
         return class_name->get_text();
     } else {
-        return ProjectSettings::get_singleton()
-            ->localize_path(file_path->get_text())
+        return Global::ProjectSettings()
+            .localize_path(file_path->get_text())
             .get_file()
             .get_basename();
     }
@@ -330,9 +330,8 @@ void ScriptCreateDialog::_create_new() {
     }
 
     if (!is_built_in) {
-        String lpath = ProjectSettings::get_singleton()->localize_path(
-            file_path->get_text()
-        );
+        String lpath =
+            Global::ProjectSettings().localize_path(file_path->get_text());
         scr->set_path(lpath);
         Error err =
             ResourceSaver::save(lpath, scr, ResourceSaver::FLAG_CHANGE_PATH);
@@ -594,7 +593,7 @@ void ScriptCreateDialog::_browse_path(bool browse_parent, bool p_save) {
 }
 
 void ScriptCreateDialog::_file_selected(const String& p_file) {
-    String p = ProjectSettings::get_singleton()->localize_path(p_file);
+    String p = Global::ProjectSettings().localize_path(p_file);
     if (is_browsing_parent) {
         parent_name->set_text("\"" + p + "\"");
         _parent_name_changed(parent_name->get_text());
@@ -637,8 +636,7 @@ void ScriptCreateDialog::_path_changed(const String& p_path) {
 
     /* Does file already exist */
     DirAccess* f = DirAccess::create(DirAccess::ACCESS_RESOURCES);
-    String p =
-        ProjectSettings::get_singleton()->localize_path(p_path.strip_edges());
+    String p = Global::ProjectSettings().localize_path(p_path.strip_edges());
     if (f->file_exists(p)) {
         is_new_script_created = false;
         _msg_path_valid(true, TTR("File exists, it will be reused."));

@@ -1022,26 +1022,23 @@ void EditorData::script_class_save_icon_paths() {
     }
 
     Dictionary old_paths;
-    ProjectSettings* settings = ProjectSettings::get_singleton();
-    if (settings->has_setting("_global_script_class_icons")) {
-        old_paths = settings->get("_global_script_class_icons");
+    ProjectSettings& settings = Global::ProjectSettings();
+    if (settings.has_setting("_global_script_class_icons")) {
+        old_paths = settings.get("_global_script_class_icons");
     }
 
     if (new_paths.hash() == old_paths.hash()) {
         return;
     }
-    settings->set("_global_script_class_icons", new_paths);
-    settings->save();
+    settings.set("_global_script_class_icons", new_paths);
+    settings.save();
 }
 
 void EditorData::script_class_load_icon_paths() {
     script_class_clear_icon_paths();
 
-    if (ProjectSettings::get_singleton()->has_setting(
-            "_global_script_class_icons"
-        )) {
-        Dictionary d =
-            ProjectSettings::get_singleton()->get("_global_script_class_icons");
+    if (Global::ProjectSettings().has_setting("_global_script_class_icons")) {
+        Dictionary d = GLOBAL_GET("_global_script_class_icons");
         List<Variant> keys;
         d.get_key_list(&keys);
 

@@ -283,7 +283,7 @@ void Collada::_parse_image(XMLParser& parser) {
         if (path.find("://") == -1 && path.is_rel_path()) {
             // path is relative to file being loaded, so convert to a resource
             // path
-            image.path = ProjectSettings::get_singleton()->localize_path(
+            image.path = Global::ProjectSettings().localize_path(
                 state.local_path.get_base_dir().plus_file(path.percent_decode())
             );
         }
@@ -300,15 +300,13 @@ void Collada::_parse_image(XMLParser& parser) {
                     if (path.find("://") == -1 && path.is_rel_path()) {
                         // path is relative to file being loaded, so convert to
                         // a resource path
-                        path = ProjectSettings::get_singleton()->localize_path(
+                        path = Global::ProjectSettings().localize_path(
                             state.local_path.get_base_dir().plus_file(path)
                         );
 
                     } else if (path.find("file:///") == 0) {
                         path = path.replace_first("file:///", "");
-                        path =
-                            ProjectSettings::get_singleton()->localize_path(path
-                            );
+                        path = Global::ProjectSettings().localize_path(path);
                     }
 
                     image.path = path;
@@ -2645,7 +2643,7 @@ Error Collada::load(const String& p_path, int p_flags) {
     Error err              = parser.open(p_path);
     ERR_FAIL_COND_V_MSG(err, err, "Cannot open Collada file '" + p_path + "'.");
 
-    state.local_path = ProjectSettings::get_singleton()->localize_path(p_path);
+    state.local_path   = Global::ProjectSettings().localize_path(p_path);
     state.import_flags = p_flags;
     /* Skip headers */
     while ((err = parser.read()) == OK) {

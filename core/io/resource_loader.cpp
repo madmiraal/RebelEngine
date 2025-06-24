@@ -449,7 +449,7 @@ RES ResourceLoader::load(
     if (p_path.is_rel_path()) {
         local_path = "res://" + p_path;
     } else {
-        local_path = ProjectSettings::get_singleton()->localize_path(p_path);
+        local_path = Global::ProjectSettings().localize_path(p_path);
     }
 
     if (!p_no_cache) {
@@ -540,7 +540,7 @@ bool ResourceLoader::exists(const String& p_path, const String& p_type_hint) {
     if (p_path.is_rel_path()) {
         local_path = "res://" + p_path;
     } else {
-        local_path = ProjectSettings::get_singleton()->localize_path(p_path);
+        local_path = Global::ProjectSettings().localize_path(p_path);
     }
 
     if (ResourceCache::has(local_path)) {
@@ -578,7 +578,7 @@ Ref<ResourceInteractiveLoader> ResourceLoader::load_interactive(
     if (p_path.is_rel_path()) {
         local_path = "res://" + p_path;
     } else {
-        local_path = ProjectSettings::get_singleton()->localize_path(p_path);
+        local_path = Global::ProjectSettings().localize_path(p_path);
     }
 
     if (!p_no_cache) {
@@ -705,7 +705,7 @@ int ResourceLoader::get_import_order(const String& p_path) {
     if (path.is_rel_path()) {
         local_path = "res://" + path;
     } else {
-        local_path = ProjectSettings::get_singleton()->localize_path(path);
+        local_path = Global::ProjectSettings().localize_path(path);
     }
 
     for (int i = 0; i < loader_count; i++) {
@@ -730,7 +730,7 @@ String ResourceLoader::get_import_group_file(const String& p_path) {
     if (path.is_rel_path()) {
         local_path = "res://" + path;
     } else {
-        local_path = ProjectSettings::get_singleton()->localize_path(path);
+        local_path = Global::ProjectSettings().localize_path(path);
     }
 
     for (int i = 0; i < loader_count; i++) {
@@ -755,7 +755,7 @@ bool ResourceLoader::is_import_valid(const String& p_path) {
     if (path.is_rel_path()) {
         local_path = "res://" + path;
     } else {
-        local_path = ProjectSettings::get_singleton()->localize_path(path);
+        local_path = Global::ProjectSettings().localize_path(path);
     }
 
     for (int i = 0; i < loader_count; i++) {
@@ -780,7 +780,7 @@ bool ResourceLoader::is_imported(const String& p_path) {
     if (path.is_rel_path()) {
         local_path = "res://" + path;
     } else {
-        local_path = ProjectSettings::get_singleton()->localize_path(path);
+        local_path = Global::ProjectSettings().localize_path(path);
     }
 
     for (int i = 0; i < loader_count; i++) {
@@ -809,7 +809,7 @@ void ResourceLoader::get_dependencies(
     if (path.is_rel_path()) {
         local_path = "res://" + path;
     } else {
-        local_path = ProjectSettings::get_singleton()->localize_path(path);
+        local_path = Global::ProjectSettings().localize_path(path);
     }
 
     for (int i = 0; i < loader_count; i++) {
@@ -835,7 +835,7 @@ Error ResourceLoader::rename_dependencies(
     if (path.is_rel_path()) {
         local_path = "res://" + path;
     } else {
-        local_path = ProjectSettings::get_singleton()->localize_path(path);
+        local_path = Global::ProjectSettings().localize_path(path);
     }
 
     for (int i = 0; i < loader_count; i++) {
@@ -858,7 +858,7 @@ String ResourceLoader::get_resource_type(const String& p_path) {
     if (p_path.is_rel_path()) {
         local_path = "res://" + p_path;
     } else {
-        local_path = ProjectSettings::get_singleton()->localize_path(p_path);
+        local_path = Global::ProjectSettings().localize_path(p_path);
     }
 
     for (int i = 0; i < loader_count; i++) {
@@ -1027,14 +1027,11 @@ void ResourceLoader::reload_translation_remaps() {
 }
 
 void ResourceLoader::load_translation_remaps() {
-    if (!ProjectSettings::get_singleton()->has_setting(
-            "locale/translation_remaps"
-        )) {
+    if (!Global::ProjectSettings().has_setting("locale/translation_remaps")) {
         return;
     }
 
-    Dictionary remaps =
-        ProjectSettings::get_singleton()->get("locale/translation_remaps");
+    Dictionary remaps = GLOBAL_GET("locale/translation_remaps");
     List<Variant> keys;
     remaps.get_key_list(&keys);
     for (List<Variant>::Element* E = keys.front(); E; E = E->next()) {
@@ -1057,15 +1054,12 @@ void ResourceLoader::clear_translation_remaps() {
 }
 
 void ResourceLoader::load_path_remaps() {
-    if (!ProjectSettings::get_singleton()->has_setting(
-            "path_remap/remapped_paths"
-        )) {
+    if (!Global::ProjectSettings().has_setting("path_remap/remapped_paths")) {
         return;
     }
 
-    PoolVector<String> remaps =
-        ProjectSettings::get_singleton()->get("path_remap/remapped_paths");
-    int rc = remaps.size();
+    PoolVector<String> remaps = GLOBAL_GET("path_remap/remapped_paths");
+    int rc                    = remaps.size();
     ERR_FAIL_COND(rc & 1); // must be even
     PoolVector<String>::Read r = remaps.read();
 

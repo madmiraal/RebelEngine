@@ -5561,8 +5561,8 @@ void CanvasItemEditor::_draw_axis() {
         );
 
         Size2 screen_size = Size2(
-            ProjectSettings::get_singleton()->get("display/window/size/width"),
-            ProjectSettings::get_singleton()->get("display/window/size/height")
+            GLOBAL_GET("display/window/size/width"),
+            GLOBAL_GET("display/window/size/height")
         );
 
         Vector2 screen_endpoints[4] = {
@@ -6528,8 +6528,8 @@ void CanvasItemEditor::_update_scrollbars() {
 
     // Get the visible frame.
     Size2 screen_rect = Size2(
-        ProjectSettings::get_singleton()->get("display/window/size/width"),
-        ProjectSettings::get_singleton()->get("display/window/size/height")
+        GLOBAL_GET("display/window/size/width"),
+        GLOBAL_GET("display/window/size/height")
     );
     Rect2 local_rect =
         Rect2(Point2(), viewport->get_size() - Size2(vmin.width, hmin.height));
@@ -9315,9 +9315,7 @@ void CanvasItemEditorViewport::_create_nodes(
     // Adjust casing according to project setting. The file name is expected to
     // be in snake_case, but will work for others.
     String name = path.get_file().get_basename();
-    switch (
-        ProjectSettings::get_singleton()->get("node/name_casing").operator int()
-    ) {
+    switch (GLOBAL_GET("node/name_casing").operator int()) {
         case NAME_CASING_PASCAL_CASE:
             name = name.capitalize().replace(" ", "");
             break;
@@ -9443,8 +9441,7 @@ bool CanvasItemEditorViewport::_create_instance(
         }
     }
 
-    instanced_scene->set_filename(
-        ProjectSettings::get_singleton()->localize_path(path)
+    instanced_scene->set_filename(Global::ProjectSettings().localize_path(path)
     );
 
     editor_data->get_undo_redo()

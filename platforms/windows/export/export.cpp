@@ -233,7 +233,7 @@ void EditorExportPlatformWindows::_rcedit_add_data(
     }
 #endif
 
-    String icon_path = ProjectSettings::get_singleton()->globalize_path(
+    String icon_path = Global::ProjectSettings().globalize_path(
         p_preset->get("application/icon")
     );
     String file_verion      = p_preset->get("application/file_version");

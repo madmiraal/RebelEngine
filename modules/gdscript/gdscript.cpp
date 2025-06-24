@@ -2499,7 +2499,7 @@ GDScriptLanguage::GDScriptLanguage() {
 
     _debug_call_stack_pos = 0;
     int dmcs = GLOBAL_DEF("debug/settings/gdscript/max_call_stack", 1024);
-    ProjectSettings::get_singleton()->set_custom_property_info(
+    Global::ProjectSettings().set_custom_property_info(
         "debug/settings/gdscript/max_call_stack",
         PropertyInfo(
             Variant::INT,

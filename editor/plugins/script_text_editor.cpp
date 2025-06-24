@@ -427,13 +427,13 @@ void ScriptTextEditor::_set_theme_for_script() {
 
     // colorize singleton autoloads (as types, just as engine singletons are)
     List<PropertyInfo> props;
-    ProjectSettings::get_singleton()->get_property_list(&props);
+    Global::ProjectSettings().get_property_list(&props);
     for (List<PropertyInfo>::Element* E = props.front(); E; E = E->next()) {
         String s = E->get().name;
         if (!s.begins_with("autoload/")) {
             continue;
         }
-        String path = ProjectSettings::get_singleton()->get(s);
+        String path = GLOBAL_GET(s);
         if (path.begins_with("*")) {
             text_edit->add_keyword_color(
                 s.get_slice("/", 1),
@@ -1226,12 +1226,9 @@ void ScriptTextEditor::_lookup_symbol(
                 );
             } break;
         }
-    } else if (ProjectSettings::get_singleton()->has_setting(
-                   "autoload/" + p_symbol
-               )) {
+    } else if (Global::ProjectSettings().has_setting("autoload/" + p_symbol)) {
         // check for Autoload scenes
-        String path =
-            ProjectSettings::get_singleton()->get("autoload/" + p_symbol);
+        String path = GLOBAL_GET("autoload/" + p_symbol);
         if (path.begins_with("*")) {
             path = path.substr(1, path.length());
             EditorNode::get_singleton()->load_scene(path);

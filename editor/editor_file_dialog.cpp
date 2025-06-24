@@ -586,8 +586,7 @@ void EditorFileDialog::_item_list_item_rmb_selected(
         }
         Dictionary item_meta = item_list->get_item_metadata(i);
         if (String(item_meta["path"])
-                .begins_with(
-                    ProjectSettings::get_singleton()->get_project_data_path()
+                .begins_with(Global::ProjectSettings().get_project_data_path()
                 )) {
             allow_delete = false;
             break;
@@ -687,16 +686,15 @@ void EditorFileDialog::_item_menu_id_pressed(int p_option) {
             int idx = item_list->get_current();
             if (idx == -1 || item_list->get_selected_items().size() == 0) {
                 // Folder background was clicked. Open this folder.
-                path = ProjectSettings::get_singleton()->globalize_path(
+                path = Global::ProjectSettings().globalize_path(
                     dir_access->get_current_dir()
                 );
             } else {
                 // Specific item was clicked. Open folders directly, or the
                 // folder containing a selected file.
                 Dictionary item_meta = item_list->get_item_metadata(idx);
-                path = ProjectSettings::get_singleton()->globalize_path(
-                    item_meta["path"]
-                );
+                path =
+                    Global::ProjectSettings().globalize_path(item_meta["path"]);
                 if (!item_meta["dir"]) {
                     path = path.get_base_dir();
                 }

@@ -42,11 +42,15 @@ public:
     static const int CUSTOM_SETTINGS_START = 1 << 16;
     static const int CONFIG_VERSION        = 4;
 
-    static ProjectSettings* get_singleton();
-
     ProjectSettings();
-    ~ProjectSettings();
 
+    Variant define_setting(
+        const String& name,
+        const Variant& default_value,
+        bool requires_restart  = false,
+        bool ignore_in_docs    = false,
+        const String& old_name = String()
+    );
     bool has_setting(const String& name) const;
     Variant get_setting(const String& name) const;
     void set_setting(const String& name, const Variant& value);
@@ -98,7 +102,6 @@ public:
     );
 
 private:
-    static ProjectSettings* singleton;
     static void _bind_methods();
 
     Map<StringName, Setting> settings;
@@ -156,26 +159,23 @@ private:
     Error _save_custom_bnd(const String& settings_file);
 };
 
-Variant _GLOBAL_DEF(
-    const String& name,
-    const Variant& default_value,
-    bool requires_restart = false,
-    bool ignore_in_docs   = false
-);
-Variant _GLOBAL_DEF_ALIAS(
-    const String& name,
-    const String& old_name,
-    const Variant& default_value,
-    bool requires_restart = false
-);
-#define GLOBAL_DEF(name, value)           _GLOBAL_DEF(name, value)
-#define GLOBAL_DEF_RST(name, value)       _GLOBAL_DEF(name, value, true)
-#define GLOBAL_DEF_NOVAL(name, value)     _GLOBAL_DEF(name, value, false, true)
-#define GLOBAL_DEF_RST_NOVAL(name, value) _GLOBAL_DEF(name, value, true, true)
+namespace Global {
+::ProjectSettings& ProjectSettings();
+} // namespace Global
+
+#define GLOBAL_DEF(name, value)                                                \
+    Global::ProjectSettings().define_setting(name, value)
+#define GLOBAL_DEF_RST(name, value)                                            \
+    Global::ProjectSettings().define_setting(name, value, true)
+#define GLOBAL_DEF_NOVAL(name, value)                                          \
+    Global::ProjectSettings().define_setting(name, value, false, true)
+#define GLOBAL_DEF_RST_NOVAL(name, value)                                      \
+    Global::ProjectSettings().define_setting(name, value, true, true)
 #define GLOBAL_DEF_ALIAS(name, old_name, value)                                \
-    _GLOBAL_DEF_ALIAS(name, old_name, value)
+    Global::ProjectSettings()                                                  \
+        .define_setting(name, value, false, false, old_name)
 #define GLOBAL_DEF_ALIAS_RST(name, old_name, value)                            \
-    _GLOBAL_DEF(name, old_name, value, true)
-#define GLOBAL_GET(name) ProjectSettings::get_singleton()->get(name)
+    Global::ProjectSettings().define_setting(name, value, true, false, old_name)
+#define GLOBAL_GET(name) Global::ProjectSettings().get_setting(name)
 
 #endif // PROJECT_SETTINGS_H

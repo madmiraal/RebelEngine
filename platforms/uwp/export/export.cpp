@@ -990,9 +990,7 @@ class EditorExportPlatformUWP : public EditorExportPlatform {
         result = result.replace(
             "$display_name$",
             String(p_preset->get("package/display_name")).empty()
-                ? (String)ProjectSettings::get_singleton()->get(
-                    "application/config/name"
-                )
+                ? (String)GLOBAL_GET("application/config/name")
                 : String(p_preset->get("package/display_name"))
         );
 

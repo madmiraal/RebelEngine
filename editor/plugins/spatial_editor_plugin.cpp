@@ -3133,21 +3133,15 @@ void SpatialEditorViewport::_notification(int p_what) {
 
         // update shadow atlas if changed
 
-        int shadowmap_size = ProjectSettings::get_singleton()->get(
-            "rendering/quality/shadow_atlas/size"
-        );
-        int atlas_q0 = ProjectSettings::get_singleton()->get(
-            "rendering/quality/shadow_atlas/quadrant_0_subdiv"
-        );
-        int atlas_q1 = ProjectSettings::get_singleton()->get(
-            "rendering/quality/shadow_atlas/quadrant_1_subdiv"
-        );
-        int atlas_q2 = ProjectSettings::get_singleton()->get(
-            "rendering/quality/shadow_atlas/quadrant_2_subdiv"
-        );
-        int atlas_q3 = ProjectSettings::get_singleton()->get(
-            "rendering/quality/shadow_atlas/quadrant_3_subdiv"
-        );
+        int shadowmap_size = GLOBAL_GET("rendering/quality/shadow_atlas/size");
+        int atlas_q0 =
+            GLOBAL_GET("rendering/quality/shadow_atlas/quadrant_0_subdiv");
+        int atlas_q1 =
+            GLOBAL_GET("rendering/quality/shadow_atlas/quadrant_1_subdiv");
+        int atlas_q2 =
+            GLOBAL_GET("rendering/quality/shadow_atlas/quadrant_2_subdiv");
+        int atlas_q3 =
+            GLOBAL_GET("rendering/quality/shadow_atlas/quadrant_3_subdiv");
 
         viewport->set_shadow_atlas_size(shadowmap_size);
         viewport->set_shadow_atlas_quadrant_subdiv(
@@ -3177,29 +3171,21 @@ void SpatialEditorViewport::_notification(int p_what) {
 
         // Update MSAA, FXAA, debanding and HDR if changed.
 
-        int msaa_mode = ProjectSettings::get_singleton()->get(
-            "rendering/quality/filters/msaa"
-        );
+        int msaa_mode = GLOBAL_GET("rendering/quality/filters/msaa");
         viewport->set_msaa(Viewport::MSAA(msaa_mode));
 
-        bool use_fxaa = ProjectSettings::get_singleton()->get(
-            "rendering/quality/filters/use_fxaa"
-        );
+        bool use_fxaa = GLOBAL_GET("rendering/quality/filters/use_fxaa");
         viewport->set_use_fxaa(use_fxaa);
 
-        bool use_debanding = ProjectSettings::get_singleton()->get(
-            "rendering/quality/filters/use_debanding"
-        );
+        bool use_debanding =
+            GLOBAL_GET("rendering/quality/filters/use_debanding");
         viewport->set_use_debanding(use_debanding);
 
-        float sharpen_intensity = ProjectSettings::get_singleton()->get(
-            "rendering/quality/filters/sharpen_intensity"
-        );
+        float sharpen_intensity =
+            GLOBAL_GET("rendering/quality/filters/sharpen_intensity");
         viewport->set_sharpen_intensity(sharpen_intensity);
 
-        bool hdr =
-            ProjectSettings::get_singleton()->get("rendering/quality/depth/hdr"
-            );
+        bool hdr = GLOBAL_GET("rendering/quality/depth/hdr");
         viewport->set_hdr(hdr);
 
         bool show_info = view_menu->get_popup()->is_item_checked(
@@ -3527,8 +3513,8 @@ void SpatialEditorViewport::_draw() {
     }
     if (previewing) {
         Size2 ss = Size2(
-            ProjectSettings::get_singleton()->get("display/window/size/width"),
-            ProjectSettings::get_singleton()->get("display/window/size/height")
+            GLOBAL_GET("display/window/size/width"),
+            GLOBAL_GET("display/window/size/height")
         );
         float aspect = ss.aspect();
         Size2 s      = get_size();
@@ -4954,7 +4940,7 @@ bool SpatialEditorViewport::_create_instance(
 
     if (scene != nullptr) {
         instanced_scene->set_filename(
-            ProjectSettings::get_singleton()->localize_path(path)
+            Global::ProjectSettings().localize_path(path)
         );
     }
 

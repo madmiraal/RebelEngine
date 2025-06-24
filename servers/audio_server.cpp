@@ -1004,7 +1004,7 @@ void AudioServer::init() {
     channel_disable_frames =
         float(GLOBAL_DEF_RST("audio/channel_disable_time", 2.0))
         * get_mix_rate();
-    ProjectSettings::get_singleton()->set_custom_property_info(
+    Global::ProjectSettings().set_custom_property_info(
         "audio/channel_disable_time",
         PropertyInfo(
             Variant::REAL,
@@ -1113,8 +1113,7 @@ void AudioServer::update() {
 }
 
 void AudioServer::load_default_bus_layout() {
-    String layout_path =
-        ProjectSettings::get_singleton()->get("audio/default_bus_layout");
+    String layout_path = GLOBAL_GET("audio/default_bus_layout");
 
     if (ResourceLoader::exists(layout_path)) {
         Ref<AudioBusLayout> default_layout = ResourceLoader::load(layout_path);

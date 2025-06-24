@@ -662,7 +662,7 @@ Error IosOS::native_video_play(
         } else {
             p_path = p_path.replace(
                 "res:/",
-                ProjectSettings::get_singleton()->get_resource_path()
+                Global::ProjectSettings().get_resource_path()
             );
         }
     } else if (p_path.begins_with("user://")) {
@@ -673,7 +673,7 @@ Error IosOS::native_video_play(
 
     printf("Playing video: %s\n", p_path.utf8().get_data());
 
-    String file_path = ProjectSettings::get_singleton()->globalize_path(p_path);
+    String file_path = Global::ProjectSettings().globalize_path(p_path);
 
     NSString* filePath =
         [[NSString alloc] initWithUTF8String:file_path.utf8().get_data()];

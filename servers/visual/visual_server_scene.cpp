@@ -5739,7 +5739,7 @@ VisualServerScene::VisualServerScene() {
         "rendering/quality/spatial_partitioning/bvh_collision_margin",
         0.1
     );
-    ProjectSettings::get_singleton()->set_custom_property_info(
+    Global::ProjectSettings().set_custom_property_info(
         "rendering/quality/spatial_partitioning/bvh_collision_margin",
         PropertyInfo(
             Variant::REAL,

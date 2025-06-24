@@ -23,7 +23,7 @@ bool create_project(
     const String& project_folder,
     const ProjectSettings::CustomSettings& project_settings
 ) {
-    Error error = ProjectSettings::get_singleton()->save_custom(
+    Error error = Global::ProjectSettings().save_custom(
         project_folder.plus_file("project.rebel"),
         project_settings,
         Vector<String>(),

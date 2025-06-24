@@ -753,7 +753,7 @@ void register_scene_types() {
 
 void initialize_theme() {
     bool default_theme_hidpi = GLOBAL_DEF("gui/theme/use_hidpi", false);
-    ProjectSettings::get_singleton()->set_custom_property_info(
+    Global::ProjectSettings().set_custom_property_info(
         "gui/theme/use_hidpi",
         PropertyInfo(
             Variant::BOOL,
@@ -764,7 +764,7 @@ void initialize_theme() {
         )
     );
     String theme_path = GLOBAL_DEF_RST("gui/theme/custom", "");
-    ProjectSettings::get_singleton()->set_custom_property_info(
+    Global::ProjectSettings().set_custom_property_info(
         "gui/theme/custom",
         PropertyInfo(
             Variant::STRING,
@@ -775,7 +775,7 @@ void initialize_theme() {
         )
     );
     String font_path = GLOBAL_DEF_RST("gui/theme/custom_font", "");
-    ProjectSettings::get_singleton()->set_custom_property_info(
+    Global::ProjectSettings().set_custom_property_info(
         "gui/theme/custom_font",
         PropertyInfo(
             Variant::STRING,

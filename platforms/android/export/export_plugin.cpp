@@ -424,8 +424,7 @@ String EditorExportPlatformAndroid::get_project_name(const String& p_name
     if (p_name != "") {
         aname = p_name;
     } else {
-        aname =
-            ProjectSettings::get_singleton()->get("application/config/name");
+        aname = GLOBAL_GET("application/config/name");
     }
 
     if (aname == "") {
@@ -437,10 +436,9 @@ String EditorExportPlatformAndroid::get_project_name(const String& p_name
 
 String EditorExportPlatformAndroid::get_package_name(const String& p_package
 ) const {
-    String pname = p_package;
-    String basename =
-        ProjectSettings::get_singleton()->get("application/config/name");
-    basename = basename.to_lower();
+    String pname    = p_package;
+    String basename = GLOBAL_GET("application/config/name");
+    basename        = basename.to_lower();
 
     String name;
     bool first = true;
@@ -682,7 +680,7 @@ Vector<AndroidPluginConfig> EditorExportPlatformAndroid::get_plugins() {
     Vector<AndroidPluginConfig> loaded_plugins;
 
     String plugins_dir =
-        ProjectSettings::get_singleton()->get_resource_path().plus_file(
+        Global::ProjectSettings().get_resource_path().plus_file(
             "android/plugins"
         );
 
@@ -966,12 +964,9 @@ void EditorExportPlatformAndroid::_fix_manifest(
         )
     );
 
-    bool min_gles3 = ProjectSettings::get_singleton()->get(
-                         "rendering/quality/driver/driver_name"
-                     ) == "GLES3"
-                  && !ProjectSettings::get_singleton()->get(
-                      "rendering/quality/driver/fallback_to_gles2"
-                  );
+    bool min_gles3 =
+        GLOBAL_GET("rendering/quality/driver/driver_name") == "GLES3"
+        && !GLOBAL_GET("rendering/quality/driver/fallback_to_gles2");
     bool screen_support_small  = p_preset->get("screen/support_small");
     bool screen_support_normal = p_preset->get("screen/support_normal");
     bool screen_support_large  = p_preset->get("screen/support_large");
@@ -1858,8 +1853,8 @@ void EditorExportPlatformAndroid::_fix_resources(
                 String lang = str.substr(str.find_last("-") + 1, str.length())
                                   .replace("-", "_");
                 String prop = "application/config/name_" + lang;
-                if (ProjectSettings::get_singleton()->has_setting(prop)) {
-                    str = ProjectSettings::get_singleton()->get(prop);
+                if (Global::ProjectSettings().has_setting(prop)) {
+                    str = GLOBAL_GET(prop);
                 } else {
                     str = get_project_name(package_name);
                 }
@@ -1969,14 +1964,9 @@ String EditorExportPlatformAndroid::load_splash_refs(
     Ref<Image>& splash_image,
     Ref<Image>& splash_bg_color_image
 ) {
-    bool scale_splash =
-        ProjectSettings::get_singleton()->get("application/boot_splash/fullsize"
-        );
-    bool apply_filter = ProjectSettings::get_singleton()->get(
-        "application/boot_splash/use_filter"
-    );
-    String project_splash_path =
-        ProjectSettings::get_singleton()->get("application/boot_splash/image");
+    bool scale_splash = GLOBAL_GET("application/boot_splash/fullsize");
+    bool apply_filter = GLOBAL_GET("application/boot_splash/use_filter");
+    String project_splash_path = GLOBAL_GET("application/boot_splash/image");
 
     if (!project_splash_path.empty()) {
         splash_image.instance();
@@ -2002,8 +1992,8 @@ String EditorExportPlatformAndroid::load_splash_refs(
 
     if (scale_splash) {
         Size2 screen_size = Size2(
-            ProjectSettings::get_singleton()->get("display/window/size/width"),
-            ProjectSettings::get_singleton()->get("display/window/size/height")
+            GLOBAL_GET("display/window/size/width"),
+            GLOBAL_GET("display/window/size/height")
         );
         int width, height;
         if (screen_size.width > screen_size.height) {
@@ -2022,7 +2012,7 @@ String EditorExportPlatformAndroid::load_splash_refs(
 
     // Setup the splash bg color
     bool bg_color_valid;
-    Color bg_color = ProjectSettings::get_singleton()->get(
+    Color bg_color = Global::ProjectSettings().get(
         "application/boot_splash/bg_color",
         &bg_color_valid
     );
@@ -2051,8 +2041,7 @@ void EditorExportPlatformAndroid::load_icon_refs(
     Ref<Image>& foreground,
     Ref<Image>& background
 ) {
-    String project_icon_path =
-        ProjectSettings::get_singleton()->get("application/config/icon");
+    String project_icon_path = GLOBAL_GET("application/config/icon");
 
     icon.instance();
     foreground.instance();
@@ -2215,16 +2204,12 @@ void EditorExportPlatformAndroid::get_preset_features(
     const Ref<EditorExportPreset>& p_preset,
     List<String>* r_features
 ) {
-    String driver = ProjectSettings::get_singleton()->get(
-        "rendering/quality/driver/driver_name"
-    );
+    String driver = GLOBAL_GET("rendering/quality/driver/driver_name");
     if (driver == "GLES2") {
         r_features->push_back("etc");
     } else if (driver == "GLES3") {
         r_features->push_back("etc2");
-        if (ProjectSettings::get_singleton()->get(
-                "rendering/quality/driver/fallback_to_gles2"
-            )) {
+        if (GLOBAL_GET("rendering/quality/driver/fallback_to_gles2")) {
             r_features->push_back("etc");
         }
     }
@@ -3189,8 +3174,8 @@ void EditorExportPlatformAndroid::_update_custom_build_project() {
                         if (!directory_paths.has(key)) {
                             directory_paths[key] = List<String>();
                         }
-                        String path = ProjectSettings::get_singleton()
-                                          ->get_resource_path()
+                        String path = Global::ProjectSettings()
+                                          .get_resource_path()
                                           .plus_file("android")
                                           .plus_file(d)
                                           .plus_file(sd);
@@ -3283,9 +3268,8 @@ void EditorExportPlatformAndroid::get_command_line_flags(
         command_line_strings.push_back("--debug_opengl");
     }
 
-    bool translucent = ProjectSettings::get_singleton()->get(
-        "display/window/per_pixel_transparency/enabled"
-    );
+    bool translucent =
+        GLOBAL_GET("display/window/per_pixel_transparency/enabled");
     if (translucent) {
         command_line_strings.push_back("--translucent");
     }
@@ -3722,7 +3706,7 @@ Error EditorExportPlatformAndroid::export_project_helper(
 #endif
 
         String build_path =
-            ProjectSettings::get_singleton()->get_resource_path().plus_file(
+            Global::ProjectSettings().get_resource_path().plus_file(
                 "android/project"
             );
         build_command = build_path.plus_file(build_command);
@@ -3916,8 +3900,8 @@ Error EditorExportPlatformAndroid::export_project_helper(
             export_path =
                 OS::get_singleton()->get_resource_dir().plus_file(export_path);
         }
-        export_path = ProjectSettings::get_singleton()
-                          ->globalize_path(export_path)
+        export_path = Global::ProjectSettings()
+                          .globalize_path(export_path)
                           .simplify_path();
 
         copy_args.push_back("-Pexport_path=" + export_path);

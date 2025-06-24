@@ -375,5 +375,5 @@ GDScriptLanguageProtocol::GDScriptLanguageProtocol() {
     set_scope("textDocument", text_document.ptr());
     set_scope("completionItem", text_document.ptr());
     set_scope("workspace", workspace.ptr());
-    workspace->root = ProjectSettings::get_singleton()->get_resource_path();
+    workspace->root = Global::ProjectSettings().get_resource_path();
 }

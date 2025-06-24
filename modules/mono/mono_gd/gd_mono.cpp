@@ -159,7 +159,7 @@ void gd_mono_debug_init() {
     int da_timeout = GLOBAL_DEF("mono/debugger_agent/wait_timeout", 3000);
 
     if (Engine::get_singleton()->is_editor_hint()
-        || ProjectSettings::get_singleton()->get_resource_path().empty()
+        || Global::ProjectSettings().get_resource_path().empty()
         || Main::is_projects_manager()) {
         if (da_args.size() == 0) {
             return;
@@ -589,7 +589,7 @@ void GDMono::_init_exception_policy() {
     );
     unhandled_exception_policy = (UnhandledExceptionPolicy)(int
     )GLOBAL_DEF(exc_policy_prop.name, (int)POLICY_TERMINATE_APP);
-    ProjectSettings::get_singleton()->set_custom_property_info(
+    Global::ProjectSettings().set_custom_property_info(
         exc_policy_prop.name,
         exc_policy_prop
     );
@@ -1314,8 +1314,7 @@ bool GDMono::_load_project_assembly() {
         return true;
     }
 
-    String appname =
-        ProjectSettings::get_singleton()->get("application/config/name");
+    String appname      = GLOBAL_GET("application/config/name");
     String appname_safe = OS::get_singleton()->get_safe_dir_name(appname);
     if (appname_safe.empty()) {
         appname_safe = "UnnamedProject";

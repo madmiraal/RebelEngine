@@ -997,9 +997,8 @@ void ScriptEditor::_file_dialog_action(String p_file) {
             ScriptEditorBase* current = _get_current_editor();
             if (current) {
                 RES resource = current->get_edited_resource();
-                String path =
-                    ProjectSettings::get_singleton()->localize_path(p_file);
-                Error err = _save_text_file(resource, path);
+                String path  = Global::ProjectSettings().localize_path(p_file);
+                Error err    = _save_text_file(resource, path);
 
                 if (err != OK) {
                     editor->show_accept(TTR("Error saving file!"), TTR("OK"));
@@ -2236,7 +2235,7 @@ Ref<TextFile> ScriptEditor::_load_text_file(
         *r_error = ERR_FILE_CANT_OPEN;
     }
 
-    String local_path = ProjectSettings::get_singleton()->localize_path(p_path);
+    String local_path = Global::ProjectSettings().localize_path(p_path);
     String path       = ResourceLoader::path_remap(local_path);
 
     TextFile* text_file = memnew(TextFile);
@@ -2352,13 +2351,11 @@ bool ScriptEditor::edit(
 
         List<String> args;
         bool has_file_flag = false;
-        String script_path = ProjectSettings::get_singleton()->globalize_path(
-            p_resource->get_path()
-        );
+        String script_path =
+            Global::ProjectSettings().globalize_path(p_resource->get_path());
 
         if (flags.size()) {
-            String project_path =
-                ProjectSettings::get_singleton()->get_resource_path();
+            String project_path = Global::ProjectSettings().get_resource_path();
 
             flags = flags.replacen("{line}", itos(p_line > 0 ? p_line : 0));
             flags = flags.replacen("{col}", itos(p_col));

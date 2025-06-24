@@ -1536,7 +1536,7 @@ void RasterizerCanvasBaseGLES2::initialize() {
             "rendering/limits/buffers/canvas_polygon_buffer_size_kb",
             128
         );
-        ProjectSettings::get_singleton()->set_custom_property_info(
+        Global::ProjectSettings().set_custom_property_info(
             "rendering/limits/buffers/canvas_polygon_buffer_size_kb",
             PropertyInfo(
                 Variant::INT,
@@ -1560,7 +1560,7 @@ void RasterizerCanvasBaseGLES2::initialize() {
             "rendering/limits/buffers/canvas_polygon_index_buffer_size_kb",
             128
         );
-        ProjectSettings::get_singleton()->set_custom_property_info(
+        Global::ProjectSettings().set_custom_property_info(
             "rendering/limits/buffers/canvas_polygon_index_buffer_size_kb",
             PropertyInfo(
                 Variant::INT,

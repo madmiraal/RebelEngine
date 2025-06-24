@@ -579,12 +579,10 @@ void WebEditorExportPlatform::_fix_html(
     const String str_config          = JSON::print(config);
     const String custom_head_include = p_preset->get("html/head_include");
     Map<String, String> replaces;
-    replaces["$GAME_URL"] = p_name + ".js";
-    replaces["$REBEL_PROJECT_NAME"] =
-        ProjectSettings::get_singleton()->get_setting("application/config/name"
-        );
-    replaces["$HEAD_INCLUDE"] = head_include + custom_head_include;
-    replaces["$GAME_CONFIG"]  = str_config;
+    replaces["$GAME_URL"]           = p_name + ".js";
+    replaces["$REBEL_PROJECT_NAME"] = GLOBAL_GET("application/config/name");
+    replaces["$HEAD_INCLUDE"]       = head_include + custom_head_include;
+    replaces["$GAME_CONFIG"]        = str_config;
     _replace_strings(replaces, p_html);
 }
 
@@ -698,7 +696,7 @@ Error WebEditorExportPlatform::_build_pwa(
         DirAccess* da = DirAccess::create(DirAccess::ACCESS_FILESYSTEM);
         const String offline_dest = dir.plus_file(name + ".offline.html");
         err                       = da->copy(
-            ProjectSettings::get_singleton()->globalize_path(offline_page),
+            Global::ProjectSettings().globalize_path(offline_page),
             offline_dest
         );
         if (err != OK) {
@@ -719,9 +717,7 @@ Error WebEditorExportPlatform::_build_pwa(
         CLAMP(int(p_preset->get("progressive_web_app/orientation")), 0, 3);
 
     Dictionary manifest;
-    String proj_name =
-        ProjectSettings::get_singleton()->get_setting("application/config/name"
-        );
+    String proj_name = GLOBAL_GET("application/config/name");
     if (proj_name.empty()) {
         proj_name = "Rebel Game";
     }
@@ -779,16 +775,12 @@ void WebEditorExportPlatform::get_preset_features(
     }
 
     if (p_preset->get("vram_texture_compression/for_mobile")) {
-        String driver = ProjectSettings::get_singleton()->get(
-            "rendering/quality/driver/driver_name"
-        );
+        String driver = GLOBAL_GET("rendering/quality/driver/driver_name");
         if (driver == "GLES2") {
             r_features->push_back("etc");
         } else if (driver == "GLES3") {
             r_features->push_back("etc2");
-            if (ProjectSettings::get_singleton()->get(
-                    "rendering/quality/driver/fallback_to_gles2"
-                )) {
+            if (GLOBAL_GET("rendering/quality/driver/fallback_to_gles2")) {
                 r_features->push_back("etc");
             }
         }

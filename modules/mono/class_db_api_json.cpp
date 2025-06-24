@@ -229,7 +229,7 @@ void class_db_api_to_json(const String& p_output_file, ClassDB::APIType p_api) {
 
     print_line(
         String() + "ClassDB API JSON written to: "
-        + ProjectSettings::get_singleton()->globalize_path(p_output_file)
+        + Global::ProjectSettings().globalize_path(p_output_file)
     );
 }
 

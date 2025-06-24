@@ -1216,9 +1216,8 @@ StringName TranslationServer::translate(const StringName& p_message) const {
 TranslationServer* TranslationServer::singleton = nullptr;
 
 bool TranslationServer::_load_translations(const String& p_from) {
-    if (ProjectSettings::get_singleton()->has_setting(p_from)) {
-        PoolVector<String> translations =
-            ProjectSettings::get_singleton()->get(p_from);
+    if (Global::ProjectSettings().has_setting(p_from)) {
+        PoolVector<String> translations = GLOBAL_GET(p_from);
 
         int tcount = translations.size();
 
@@ -1258,7 +1257,7 @@ void TranslationServer::setup() {
             options += locale_list[idx];
             idx++;
         }
-        ProjectSettings::get_singleton()->set_custom_property_info(
+        Global::ProjectSettings().set_custom_property_info(
             "locale/fallback",
             PropertyInfo(
                 Variant::STRING,

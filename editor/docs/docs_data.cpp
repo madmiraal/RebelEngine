@@ -284,7 +284,7 @@ void DocsData::generate(bool p_basic_types) {
         List<PropertyInfo> own_properties;
         if (name == "ProjectSettings") {
             // special case for project settings, so settings can be documented
-            ProjectSettings::get_singleton()->get_property_list(&properties);
+            Global::ProjectSettings().get_property_list(&properties);
             own_properties = properties;
         } else {
             ClassDB::get_property_list(name, &properties);
@@ -318,17 +318,16 @@ void DocsData::generate(bool p_basic_types) {
             if (name == "ProjectSettings") {
                 // Special case for project settings, so that settings are not
                 // taken from the current project's settings
+                ProjectSettings& settings = Global::ProjectSettings();
                 if (E->get().name == "script"
-                    || ProjectSettings::get_singleton()->get_order(E->get().name
-                       ) >= ProjectSettings::CUSTOM_SETTINGS_START) {
+                    || settings.get_order(E->get().name)
+                           >= ProjectSettings::CUSTOM_SETTINGS_START) {
                     continue;
                 }
                 if (E->get().usage & PROPERTY_USAGE_EDITOR) {
-                    if (!ProjectSettings::get_singleton()
-                             ->get_ignore_value_in_docs(E->get().name)) {
+                    if (!settings.get_ignore_value_in_docs(E->get().name)) {
                         default_value =
-                            ProjectSettings::get_singleton()
-                                ->property_get_revert(E->get().name);
+                            settings.property_get_revert(E->get().name);
                         default_value_valid = true;
                     }
                 }

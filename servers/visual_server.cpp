@@ -4613,7 +4613,7 @@ VisualServer::VisualServer() {
 
     GLOBAL_DEF("rendering/misc/lossless_compression/force_png", false);
     GLOBAL_DEF("rendering/misc/lossless_compression/webp_compression_level", 2);
-    ProjectSettings::get_singleton()->set_custom_property_info(
+    Global::ProjectSettings().set_custom_property_info(
         "rendering/misc/lossless_compression/webp_compression_level",
         PropertyInfo(
             Variant::INT,
@@ -4624,7 +4624,7 @@ VisualServer::VisualServer() {
     );
 
     GLOBAL_DEF("rendering/limits/time/time_rollover_secs", 3600);
-    ProjectSettings::get_singleton()->set_custom_property_info(
+    Global::ProjectSettings().set_custom_property_info(
         "rendering/limits/time/time_rollover_secs",
         PropertyInfo(
             Variant::REAL,
@@ -4636,7 +4636,7 @@ VisualServer::VisualServer() {
 
     GLOBAL_DEF_RST("rendering/quality/directional_shadow/size", 4096);
     GLOBAL_DEF("rendering/quality/directional_shadow/size.mobile", 2048);
-    ProjectSettings::get_singleton()->set_custom_property_info(
+    Global::ProjectSettings().set_custom_property_info(
         "rendering/quality/directional_shadow/size",
         PropertyInfo(
             Variant::INT,
@@ -4647,7 +4647,7 @@ VisualServer::VisualServer() {
     );
     GLOBAL_DEF_RST("rendering/quality/shadow_atlas/size", 4096);
     GLOBAL_DEF("rendering/quality/shadow_atlas/size.mobile", 2048);
-    ProjectSettings::get_singleton()->set_custom_property_info(
+    Global::ProjectSettings().set_custom_property_info(
         "rendering/quality/shadow_atlas/size",
         PropertyInfo(
             Variant::INT,
@@ -4657,7 +4657,7 @@ VisualServer::VisualServer() {
         )
     );
     GLOBAL_DEF_RST("rendering/quality/shadow_atlas/cubemap_size", 512);
-    ProjectSettings::get_singleton()->set_custom_property_info(
+    Global::ProjectSettings().set_custom_property_info(
         "rendering/quality/shadow_atlas/cubemap_size",
         PropertyInfo(
             Variant::INT,
@@ -4670,7 +4670,7 @@ VisualServer::VisualServer() {
     GLOBAL_DEF("rendering/quality/shadow_atlas/quadrant_1_subdiv", 2);
     GLOBAL_DEF("rendering/quality/shadow_atlas/quadrant_2_subdiv", 3);
     GLOBAL_DEF("rendering/quality/shadow_atlas/quadrant_3_subdiv", 4);
-    ProjectSettings::get_singleton()->set_custom_property_info(
+    Global::ProjectSettings().set_custom_property_info(
         "rendering/quality/shadow_atlas/quadrant_0_subdiv",
         PropertyInfo(
             Variant::INT,
@@ -4680,7 +4680,7 @@ VisualServer::VisualServer() {
             "Shadows,1024 Shadows"
         )
     );
-    ProjectSettings::get_singleton()->set_custom_property_info(
+    Global::ProjectSettings().set_custom_property_info(
         "rendering/quality/shadow_atlas/quadrant_1_subdiv",
         PropertyInfo(
             Variant::INT,
@@ -4690,7 +4690,7 @@ VisualServer::VisualServer() {
             "Shadows,1024 Shadows"
         )
     );
-    ProjectSettings::get_singleton()->set_custom_property_info(
+    Global::ProjectSettings().set_custom_property_info(
         "rendering/quality/shadow_atlas/quadrant_2_subdiv",
         PropertyInfo(
             Variant::INT,
@@ -4700,7 +4700,7 @@ VisualServer::VisualServer() {
             "Shadows,1024 Shadows"
         )
     );
-    ProjectSettings::get_singleton()->set_custom_property_info(
+    Global::ProjectSettings().set_custom_property_info(
         "rendering/quality/shadow_atlas/quadrant_3_subdiv",
         PropertyInfo(
             Variant::INT,
@@ -4713,7 +4713,7 @@ VisualServer::VisualServer() {
 
     GLOBAL_DEF("rendering/quality/shadows/filter_mode", 1);
     GLOBAL_DEF("rendering/quality/shadows/filter_mode.mobile", 0);
-    ProjectSettings::get_singleton()->set_custom_property_info(
+    Global::ProjectSettings().set_custom_property_info(
         "rendering/quality/shadows/filter_mode",
         PropertyInfo(
             Variant::INT,
@@ -4731,7 +4731,7 @@ VisualServer::VisualServer() {
     GLOBAL_DEF("rendering/quality/reflections/high_quality_ggx", true);
     GLOBAL_DEF("rendering/quality/reflections/high_quality_ggx.mobile", false);
     GLOBAL_DEF("rendering/quality/reflections/irradiance_max_size", 128);
-    ProjectSettings::get_singleton()->set_custom_property_info(
+    Global::ProjectSettings().set_custom_property_info(
         "rendering/quality/reflections/irradiance_max_size",
         PropertyInfo(
             Variant::INT,
@@ -4765,7 +4765,7 @@ VisualServer::VisualServer() {
     );
 
     GLOBAL_DEF("rendering/quality/filters/anisotropic_filter_level", 4);
-    ProjectSettings::get_singleton()->set_custom_property_info(
+    Global::ProjectSettings().set_custom_property_info(
         "rendering/quality/filters/anisotropic_filter_level",
         PropertyInfo(
             Variant::INT,
@@ -4782,7 +4782,7 @@ VisualServer::VisualServer() {
     const char* sz_balance_render_tree =
         "rendering/quality/spatial_partitioning/render_tree_balance";
     GLOBAL_DEF(sz_balance_render_tree, 0.0f);
-    ProjectSettings::get_singleton()->set_custom_property_info(
+    Global::ProjectSettings().set_custom_property_info(
         sz_balance_render_tree,
         PropertyInfo(
             Variant::REAL,
@@ -4794,7 +4794,7 @@ VisualServer::VisualServer() {
 
     GLOBAL_DEF_RST("rendering/2d/options/use_software_skinning", true);
     GLOBAL_DEF_RST("rendering/2d/options/ninepatch_mode", 1);
-    ProjectSettings::get_singleton()->set_custom_property_info(
+    Global::ProjectSettings().set_custom_property_info(
         "rendering/2d/options/ninepatch_mode",
         PropertyInfo(
             Variant::INT,
@@ -4805,7 +4805,7 @@ VisualServer::VisualServer() {
     );
 
     GLOBAL_DEF_RST("rendering/2d/opengl/batching_send_null", 0);
-    ProjectSettings::get_singleton()->set_custom_property_info(
+    Global::ProjectSettings().set_custom_property_info(
         "rendering/2d/opengl/batching_send_null",
         PropertyInfo(
             Variant::INT,
@@ -4815,7 +4815,7 @@ VisualServer::VisualServer() {
         )
     );
     GLOBAL_DEF_RST("rendering/2d/opengl/batching_stream", 0);
-    ProjectSettings::get_singleton()->set_custom_property_info(
+    Global::ProjectSettings().set_custom_property_info(
         "rendering/2d/opengl/batching_stream",
         PropertyInfo(
             Variant::INT,
@@ -4825,7 +4825,7 @@ VisualServer::VisualServer() {
         )
     );
     GLOBAL_DEF_RST("rendering/2d/opengl/legacy_orphan_buffers", 0);
-    ProjectSettings::get_singleton()->set_custom_property_info(
+    Global::ProjectSettings().set_custom_property_info(
         "rendering/2d/opengl/legacy_orphan_buffers",
         PropertyInfo(
             Variant::INT,
@@ -4835,7 +4835,7 @@ VisualServer::VisualServer() {
         )
     );
     GLOBAL_DEF_RST("rendering/2d/opengl/legacy_stream", 0);
-    ProjectSettings::get_singleton()->set_custom_property_info(
+    Global::ProjectSettings().set_custom_property_info(
         "rendering/2d/opengl/legacy_stream",
         PropertyInfo(
             Variant::INT,
@@ -4868,7 +4868,7 @@ VisualServer::VisualServer() {
     GLOBAL_DEF("rendering/batching/precision/uv_contract", false);
     GLOBAL_DEF("rendering/batching/precision/uv_contract_amount", 100);
 
-    ProjectSettings::get_singleton()->set_custom_property_info(
+    Global::ProjectSettings().set_custom_property_info(
         "rendering/batching/parameters/max_join_item_commands",
         PropertyInfo(
             Variant::INT,
@@ -4877,7 +4877,7 @@ VisualServer::VisualServer() {
             "0,65535"
         )
     );
-    ProjectSettings::get_singleton()->set_custom_property_info(
+    Global::ProjectSettings().set_custom_property_info(
         "rendering/batching/parameters/colored_vertex_format_threshold",
         PropertyInfo(
             Variant::REAL,
@@ -4886,7 +4886,7 @@ VisualServer::VisualServer() {
             "0.0,1.0,0.01"
         )
     );
-    ProjectSettings::get_singleton()->set_custom_property_info(
+    Global::ProjectSettings().set_custom_property_info(
         "rendering/batching/parameters/batch_buffer_size",
         PropertyInfo(
             Variant::INT,
@@ -4895,7 +4895,7 @@ VisualServer::VisualServer() {
             "1024,65535,1024"
         )
     );
-    ProjectSettings::get_singleton()->set_custom_property_info(
+    Global::ProjectSettings().set_custom_property_info(
         "rendering/batching/lights/scissor_area_threshold",
         PropertyInfo(
             Variant::REAL,
@@ -4904,7 +4904,7 @@ VisualServer::VisualServer() {
             "0.0,1.0"
         )
     );
-    ProjectSettings::get_singleton()->set_custom_property_info(
+    Global::ProjectSettings().set_custom_property_info(
         "rendering/batching/lights/max_join_items",
         PropertyInfo(
             Variant::INT,
@@ -4913,7 +4913,7 @@ VisualServer::VisualServer() {
             "0,512"
         )
     );
-    ProjectSettings::get_singleton()->set_custom_property_info(
+    Global::ProjectSettings().set_custom_property_info(
         "rendering/batching/parameters/item_reordering_lookahead",
         PropertyInfo(
             Variant::INT,
@@ -4922,7 +4922,7 @@ VisualServer::VisualServer() {
             "0,256"
         )
     );
-    ProjectSettings::get_singleton()->set_custom_property_info(
+    Global::ProjectSettings().set_custom_property_info(
         "rendering/batching/precision/uv_contract_amount",
         PropertyInfo(
             Variant::INT,
@@ -4942,7 +4942,7 @@ VisualServer::VisualServer() {
 
     // Occlusion culling
     GLOBAL_DEF("rendering/misc/occlusion_culling/max_active_spheres", 8);
-    ProjectSettings::get_singleton()->set_custom_property_info(
+    Global::ProjectSettings().set_custom_property_info(
         "rendering/misc/occlusion_culling/max_active_spheres",
         PropertyInfo(
             Variant::INT,

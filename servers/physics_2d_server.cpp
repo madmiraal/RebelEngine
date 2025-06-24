@@ -1612,7 +1612,7 @@ void Physics2DServerManager::on_servers_changed() {
     for (int i = get_servers_count() - 1; 0 <= i; --i) {
         physics_servers += "," + get_server_name(i);
     }
-    ProjectSettings::get_singleton()->set_custom_property_info(
+    Global::ProjectSettings().set_custom_property_info(
         setting_property_name,
         PropertyInfo(
             Variant::STRING,

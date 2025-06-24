@@ -231,7 +231,7 @@ void FindInFiles::_scan_dir(String path, PoolStringArray& out_folders) {
 
         // Ignore special dirs (such as .git and project data directory)
         String project_data_dir_name =
-            ProjectSettings::get_singleton()->get_project_data_dir_name();
+            Global::ProjectSettings().get_project_data_dir_name();
         if (file.begins_with(".") || file == project_data_dir_name) {
             continue;
         }
@@ -448,9 +448,7 @@ void FindInFilesDialog::_notification(int p_what) {
             for (int i = 0; i < _filters_container->get_child_count(); i++) {
                 _filters_container->get_child(i)->queue_delete();
             }
-            Array exts = ProjectSettings::get_singleton()->get(
-                "editor/search_in_file_extensions"
-            );
+            Array exts = GLOBAL_GET("editor/search_in_file_extensions");
             for (int i = 0; i < exts.size(); ++i) {
                 CheckBox* cb = memnew(CheckBox);
                 cb->set_text(exts[i]);

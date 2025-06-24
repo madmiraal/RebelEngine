@@ -341,7 +341,7 @@ void InputMap::load_from_globals() {
     input_map.clear();
 
     List<PropertyInfo> pinfo;
-    ProjectSettings::get_singleton()->get_property_list(&pinfo);
+    Global::ProjectSettings().get_property_list(&pinfo);
 
     for (List<PropertyInfo>::Element* E = pinfo.front(); E; E = E->next()) {
         const PropertyInfo& pi = E->get();
@@ -352,7 +352,7 @@ void InputMap::load_from_globals() {
 
         String name = pi.name.substr(pi.name.find("/") + 1, pi.name.length());
 
-        Dictionary action = ProjectSettings::get_singleton()->get(pi.name);
+        Dictionary action = GLOBAL_GET(pi.name);
         float deadzone =
             action.has("deadzone") ? (float)action["deadzone"] : 0.5f;
         Array events = action["events"];

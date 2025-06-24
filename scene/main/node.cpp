@@ -1137,10 +1137,7 @@ void Node::_generate_serial_child_name(const Node* p_child, StringName& name)
         name = p_child->get_class();
         // Adjust casing according to project setting. The current type name is
         // expected to be in PascalCase.
-        switch (ProjectSettings::get_singleton()
-                    ->get("node/name_casing")
-                    .
-                    operator int()) {
+        switch (GLOBAL_GET("node/name_casing").operator int()) {
             case NAME_CASING_PASCAL_CASE:
                 break;
             case NAME_CASING_CAMEL_CASE: {
@@ -3018,7 +3015,7 @@ void Node::request_ready() {
 
 void Node::_bind_methods() {
     GLOBAL_DEF("node/name_num_separator", 0);
-    ProjectSettings::get_singleton()->set_custom_property_info(
+    Global::ProjectSettings().set_custom_property_info(
         "node/name_num_separator",
         PropertyInfo(
             Variant::INT,
@@ -3028,7 +3025,7 @@ void Node::_bind_methods() {
         )
     );
     GLOBAL_DEF("node/name_casing", NAME_CASING_PASCAL_CASE);
-    ProjectSettings::get_singleton()->set_custom_property_info(
+    Global::ProjectSettings().set_custom_property_info(
         "node/name_casing",
         PropertyInfo(
             Variant::INT,
@@ -3546,10 +3543,7 @@ void Node::_bind_methods() {
 }
 
 String Node::_get_name_num_separator() {
-    switch (ProjectSettings::get_singleton()
-                ->get("node/name_num_separator")
-                .
-                operator int()) {
+    switch (GLOBAL_GET("node/name_num_separator").operator int()) {
         case 0:
             return "";
         case 1:

@@ -26,44 +26,37 @@ bool operator<(const Setting& left, const Setting& right) {
     return left.position < right.position;
 }
 
-ProjectSettings* ProjectSettings::singleton = nullptr;
-
-ProjectSettings* ProjectSettings::get_singleton() {
-    return singleton;
-}
-
 ProjectSettings::ProjectSettings() {
-    singleton = this;
-
     Array events;
     Dictionary action;
     Ref<InputEventKey> key;
     Ref<InputEventJoypadButton> joyb;
 
-    GLOBAL_DEF("application/config/name", "");
-    GLOBAL_DEF("application/config/description", "");
+    define_setting("application/config/name", "");
+    define_setting("application/config/description", "");
     custom_property_info["application/config/description"] = PropertyInfo(
         Variant::STRING,
         "application/config/description",
         PROPERTY_HINT_MULTILINE_TEXT
     );
-    GLOBAL_DEF("application/run/main_scene", "");
+    define_setting("application/run/main_scene", "");
     custom_property_info["application/run/main_scene"] = PropertyInfo(
         Variant::STRING,
         "application/run/main_scene",
         PROPERTY_HINT_FILE,
         "*.tscn,*.scn,*.res"
     );
-    GLOBAL_DEF("application/run/disable_stdout", false);
-    GLOBAL_DEF("application/run/disable_stderr", false);
-    GLOBAL_DEF_RST(
+    define_setting("application/run/disable_stdout", false);
+    define_setting("application/run/disable_stderr", false);
+    define_setting(
         "application/config/use_hidden_project_data_directory",
+        true,
         true
     );
-    GLOBAL_DEF("application/config/use_custom_user_dir", false);
-    GLOBAL_DEF("application/config/custom_user_dir_name", "");
-    GLOBAL_DEF("application/config/project_settings_override", "");
-    GLOBAL_DEF("audio/default_bus_layout", "res://default_bus_layout.tres");
+    define_setting("application/config/use_custom_user_dir", false);
+    define_setting("application/config/custom_user_dir_name", "");
+    define_setting("application/config/project_settings_override", "");
+    define_setting("audio/default_bus_layout", "res://default_bus_layout.tres");
     custom_property_info["audio/default_bus_layout"] = PropertyInfo(
         Variant::STRING,
         "audio/default_bus_layout",
@@ -79,15 +72,18 @@ ProjectSettings::ProjectSettings() {
     extensions.push_back("gdshader");
     extensions.push_back("shader");
 
-    GLOBAL_DEF("editor/main_run_args", "");
+    define_setting("editor/main_run_args", "");
 
-    GLOBAL_DEF("editor/search_in_file_extensions", extensions);
+    define_setting("editor/search_in_file_extensions", extensions);
     custom_property_info["editor/search_in_file_extensions"] = PropertyInfo(
         Variant::POOL_STRING_ARRAY,
         "editor/search_in_file_extensions"
     );
 
-    GLOBAL_DEF("editor/script_templates_search_path", "res://script_templates");
+    define_setting(
+        "editor/script_templates_search_path",
+        "res://script_templates"
+    );
     custom_property_info["editor/script_templates_search_path"] = PropertyInfo(
         Variant::STRING,
         "editor/script_templates_search_path",
@@ -110,7 +106,7 @@ ProjectSettings::ProjectSettings() {
     joyb->set_button_index(JOY_BUTTON_0);
     events.push_back(joyb);
     action["events"] = events;
-    GLOBAL_DEF("input/ui_accept", action);
+    define_setting("input/ui_accept", action);
     input_presets.push_back("input/ui_accept");
 
     action             = Dictionary();
@@ -123,7 +119,7 @@ ProjectSettings::ProjectSettings() {
     joyb->set_button_index(JOY_BUTTON_3);
     events.push_back(joyb);
     action["events"] = events;
-    GLOBAL_DEF("input/ui_select", action);
+    define_setting("input/ui_select", action);
     input_presets.push_back("input/ui_select");
 
     action             = Dictionary();
@@ -136,7 +132,7 @@ ProjectSettings::ProjectSettings() {
     joyb->set_button_index(JOY_BUTTON_1);
     events.push_back(joyb);
     action["events"] = events;
-    GLOBAL_DEF("input/ui_cancel", action);
+    define_setting("input/ui_cancel", action);
     input_presets.push_back("input/ui_cancel");
 
     action             = Dictionary();
@@ -146,7 +142,7 @@ ProjectSettings::ProjectSettings() {
     key->set_scancode(KEY_TAB);
     events.push_back(key);
     action["events"] = events;
-    GLOBAL_DEF("input/ui_focus_next", action);
+    define_setting("input/ui_focus_next", action);
     input_presets.push_back("input/ui_focus_next");
 
     action             = Dictionary();
@@ -157,7 +153,7 @@ ProjectSettings::ProjectSettings() {
     key->set_shift(true);
     events.push_back(key);
     action["events"] = events;
-    GLOBAL_DEF("input/ui_focus_prev", action);
+    define_setting("input/ui_focus_prev", action);
     input_presets.push_back("input/ui_focus_prev");
 
     action             = Dictionary();
@@ -170,7 +166,7 @@ ProjectSettings::ProjectSettings() {
     joyb->set_button_index(JOY_DPAD_LEFT);
     events.push_back(joyb);
     action["events"] = events;
-    GLOBAL_DEF("input/ui_left", action);
+    define_setting("input/ui_left", action);
     input_presets.push_back("input/ui_left");
 
     action             = Dictionary();
@@ -183,7 +179,7 @@ ProjectSettings::ProjectSettings() {
     joyb->set_button_index(JOY_DPAD_RIGHT);
     events.push_back(joyb);
     action["events"] = events;
-    GLOBAL_DEF("input/ui_right", action);
+    define_setting("input/ui_right", action);
     input_presets.push_back("input/ui_right");
 
     action             = Dictionary();
@@ -196,7 +192,7 @@ ProjectSettings::ProjectSettings() {
     joyb->set_button_index(JOY_DPAD_UP);
     events.push_back(joyb);
     action["events"] = events;
-    GLOBAL_DEF("input/ui_up", action);
+    define_setting("input/ui_up", action);
     input_presets.push_back("input/ui_up");
 
     action             = Dictionary();
@@ -209,7 +205,7 @@ ProjectSettings::ProjectSettings() {
     joyb->set_button_index(JOY_DPAD_DOWN);
     events.push_back(joyb);
     action["events"] = events;
-    GLOBAL_DEF("input/ui_down", action);
+    define_setting("input/ui_down", action);
     input_presets.push_back("input/ui_down");
 
     action             = Dictionary();
@@ -219,7 +215,7 @@ ProjectSettings::ProjectSettings() {
     key->set_scancode(KEY_PAGEUP);
     events.push_back(key);
     action["events"] = events;
-    GLOBAL_DEF("input/ui_page_up", action);
+    define_setting("input/ui_page_up", action);
     input_presets.push_back("input/ui_page_up");
 
     action             = Dictionary();
@@ -229,7 +225,7 @@ ProjectSettings::ProjectSettings() {
     key->set_scancode(KEY_PAGEDOWN);
     events.push_back(key);
     action["events"] = events;
-    GLOBAL_DEF("input/ui_page_down", action);
+    define_setting("input/ui_page_down", action);
     input_presets.push_back("input/ui_page_down");
 
     action             = Dictionary();
@@ -239,7 +235,7 @@ ProjectSettings::ProjectSettings() {
     key->set_scancode(KEY_HOME);
     events.push_back(key);
     action["events"] = events;
-    GLOBAL_DEF("input/ui_home", action);
+    define_setting("input/ui_home", action);
     input_presets.push_back("input/ui_home");
 
     action             = Dictionary();
@@ -249,7 +245,7 @@ ProjectSettings::ProjectSettings() {
     key->set_scancode(KEY_END);
     events.push_back(key);
     action["events"] = events;
-    GLOBAL_DEF("input/ui_end", action);
+    define_setting("input/ui_end", action);
     input_presets.push_back("input/ui_end");
 
     custom_property_info["display/window/handheld/orientation"] = PropertyInfo(
@@ -280,7 +276,7 @@ ProjectSettings::ProjectSettings() {
                 "2D,2D Without Sampling,3D,3D Without Effects"
             );
 
-    GLOBAL_DEF("rendering/quality/filters/sharpen_intensity", 0.0);
+    define_setting("rendering/quality/filters/sharpen_intensity", 0.0);
     custom_property_info["rendering/quality/filters/sharpen_intensity"] =
         PropertyInfo(
             Variant::REAL,
@@ -289,7 +285,7 @@ ProjectSettings::ProjectSettings() {
             "0,1"
         );
 
-    GLOBAL_DEF("debug/settings/profiler/max_functions", 16384);
+    define_setting("debug/settings/profiler/max_functions", 16384);
     custom_property_info["debug/settings/profiler/max_functions"] =
         PropertyInfo(
             Variant::INT,
@@ -298,7 +294,7 @@ ProjectSettings::ProjectSettings() {
             "128,65535,1"
         );
 
-    GLOBAL_DEF(
+    define_setting(
         "compression/formats/zstd/long_distance_matching",
         Compression::zstd_long_distance_matching
     );
@@ -307,7 +303,7 @@ ProjectSettings::ProjectSettings() {
             Variant::BOOL,
             "compression/formats/zstd/long_distance_matching"
         );
-    GLOBAL_DEF(
+    define_setting(
         "compression/formats/zstd/compression_level",
         Compression::zstd_level
     );
@@ -318,7 +314,7 @@ ProjectSettings::ProjectSettings() {
             PROPERTY_HINT_RANGE,
             "1,22,1"
         );
-    GLOBAL_DEF(
+    define_setting(
         "compression/formats/zstd/window_log_size",
         Compression::zstd_window_log_size
     );
@@ -330,7 +326,7 @@ ProjectSettings::ProjectSettings() {
             "10,30,1"
         );
 
-    GLOBAL_DEF(
+    define_setting(
         "compression/formats/zlib/compression_level",
         Compression::zlib_level
     );
@@ -342,7 +338,7 @@ ProjectSettings::ProjectSettings() {
             "-1,9,1"
         );
 
-    GLOBAL_DEF(
+    define_setting(
         "compression/formats/gzip/compression_level",
         Compression::gzip_level
     );
@@ -354,11 +350,29 @@ ProjectSettings::ProjectSettings() {
             "-1,9,1"
         );
 
-    GLOBAL_DEF("android/modules", "");
+    define_setting("android/modules", "");
 }
 
-ProjectSettings::~ProjectSettings() {
-    singleton = nullptr;
+Variant ProjectSettings::define_setting(
+    const String& name,
+    const Variant& default_value,
+    bool requires_restart,
+    bool ignore_in_docs,
+    const String& old_name
+) {
+    if (!has_setting(name)) {
+        if (has_setting(old_name)) {
+            // Use the value of the old name.
+            set(name, get(old_name));
+        } else {
+            set(name, default_value);
+        }
+    }
+    set_initial_value(name, default_value);
+    set_builtin_order(name);
+    set_restart_if_changed(name, requires_restart);
+    set_ignore_value_in_docs(name, ignore_in_docs);
+    return get(name);
 }
 
 bool ProjectSettings::has_setting(const String& name) const {
@@ -472,7 +486,7 @@ List<String> ProjectSettings::get_input_presets() const {
 
 Vector<String> ProjectSettings::get_optimizer_presets() const {
     List<PropertyInfo> property_info_list;
-    ProjectSettings::get_singleton()->get_property_list(&property_info_list);
+    Global::ProjectSettings().get_property_list(&property_info_list);
     Vector<String> optimizer_presets;
     for (auto E = property_info_list.front(); E; E = E->next()) {
         if (!E->get().name.begins_with("optimizer_presets/")) {
@@ -604,7 +618,7 @@ Error ProjectSettings::setup(
     Error error = _setup(path, main_pack, try_parent_dirs);
     if (error == OK) {
         String custom_settings =
-            GLOBAL_DEF("application/config/project_settings_override", "");
+            define_setting("application/config/project_settings_override", "");
         if (custom_settings != "") {
             _load_text_settings(custom_settings);
         }
@@ -1370,40 +1384,9 @@ Error ProjectSettings::_save_custom_bnd(const String& settings_file) {
     return save_custom(settings_file);
 };
 
-Variant _GLOBAL_DEF(
-    const String& name,
-    const Variant& default_value,
-    bool requires_restart,
-    bool ignore_in_docs
-) {
-    if (!ProjectSettings::get_singleton()->has_setting(name)) {
-        ProjectSettings::get_singleton()->set(name, default_value);
-    }
-    ProjectSettings::get_singleton()->set_initial_value(name, default_value);
-    ProjectSettings::get_singleton()->set_builtin_order(name);
-    ProjectSettings::get_singleton()->set_restart_if_changed(
-        name,
-        requires_restart
-    );
-    ProjectSettings::get_singleton()->set_ignore_value_in_docs(
-        name,
-        ignore_in_docs
-    );
-    return ProjectSettings::get_singleton()->get(name);
+namespace Global {
+::ProjectSettings& ProjectSettings() {
+    static ::ProjectSettings project_settings;
+    return project_settings;
 }
-
-Variant _GLOBAL_DEF_ALIAS(
-    const String& name,
-    const String& old_name,
-    const Variant& default_value,
-    bool requires_restart
-) {
-    // If the new name doesn't exist, try using the value of the old name.
-    if (!ProjectSettings::get_singleton()->has_setting(name)) {
-        if (ProjectSettings::get_singleton()->has_setting(old_name)) {
-            Variant old_value = ProjectSettings::get_singleton()->get(old_name);
-            ProjectSettings::get_singleton()->set(name, old_value);
-        }
-    }
-    return _GLOBAL_DEF(name, default_value, requires_restart);
-}
+} // namespace Global

@@ -107,17 +107,14 @@ String FileAccess::fix_path(const String& p_path) const {
 
     switch (_access_type) {
         case ACCESS_RESOURCES: {
-            if (ProjectSettings::get_singleton()) {
-                if (r_path.begins_with("res://")) {
-                    String resource_path =
-                        ProjectSettings::get_singleton()->get_resource_path();
-                    if (resource_path != "") {
-                        return r_path.replace("res:/", resource_path);
-                    };
-                    return r_path.replace("res://", "");
-                }
+            if (r_path.begins_with("res://")) {
+                String resource_path =
+                    Global::ProjectSettings().get_resource_path();
+                if (resource_path != "") {
+                    return r_path.replace("res:/", resource_path);
+                };
+                return r_path.replace("res://", "");
             }
-
         } break;
         case ACCESS_USERDATA: {
             if (r_path.begins_with("user://")) {

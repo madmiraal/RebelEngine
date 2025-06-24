@@ -46,8 +46,7 @@ void WebToolsEditorPlugin::_download_zip(Variant p_v) {
         WARN_PRINT("Project download is only available in Editor mode");
         return;
     }
-    String resource_path =
-        ProjectSettings::get_singleton()->get_resource_path();
+    String resource_path = Global::ProjectSettings().get_resource_path();
 
     FileAccess* src_f;
     zlib_filefunc_def io = zipio_create_io_from_file(&src_f);
@@ -119,7 +118,7 @@ void WebToolsEditorPlugin::_zip_recursive(
     dir->list_dir_begin();
     String cur = dir->get_next();
     String project_data_dir_name =
-        ProjectSettings::get_singleton()->get_project_data_dir_name();
+        Global::ProjectSettings().get_project_data_dir_name();
     while (!cur.empty()) {
         String cs = p_path.plus_file(cur);
         if (cur == "." || cur == ".." || cur == project_data_dir_name) {

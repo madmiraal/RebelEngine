@@ -1694,7 +1694,7 @@ SpaceSW::SpaceSW() {
         (8.0 / 180.0 * Math_PI)
     );
     body_time_to_sleep = GLOBAL_DEF("physics/3d/time_before_sleep", 0.5);
-    ProjectSettings::get_singleton()->set_custom_property_info(
+    Global::ProjectSettings().set_custom_property_info(
         "physics/3d/time_before_sleep",
         PropertyInfo(
             Variant::REAL,

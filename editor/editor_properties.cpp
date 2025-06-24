@@ -929,12 +929,10 @@ void EditorPropertyLayers::setup(LayerType p_layer_type) {
     for (int i = 0; i < layer_count; i++) {
         String name;
 
-        if (ProjectSettings::get_singleton()->has_setting(
+        if (Global::ProjectSettings().has_setting(
                 basename + "/layer_" + itos(i + 1)
             )) {
-            name = ProjectSettings::get_singleton()->get(
-                basename + "/layer_" + itos(i + 1)
-            );
+            name = GLOBAL_GET(basename + "/layer_" + itos(i + 1));
         }
 
         if (name == "") {

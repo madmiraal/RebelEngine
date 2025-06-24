@@ -17,14 +17,7 @@ void FileAccessMemory::register_file(String p_name, Vector<uint8_t> p_data) {
         files = memnew((Map<String, Vector<uint8_t>>));
     }
 
-    String name;
-    if (ProjectSettings::get_singleton()) {
-        name = ProjectSettings::get_singleton()->globalize_path(p_name);
-    } else {
-        name = p_name;
-    }
-    // name = DirAccess::normalize_path(name);
-
+    String name    = Global::ProjectSettings().globalize_path(p_name);
     (*files)[name] = p_data;
 }
 
