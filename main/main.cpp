@@ -1820,7 +1820,7 @@ Error Main::setup2(Thread::ID p_main_tid_override) {
     VisualServer::get_singleton()->set_render_loop_enabled(!disable_render_loop
     );
 
-    register_core_singletons();
+    register_globals();
 
     MAIN_PRINT("Main: Setup Logo");
 
@@ -3202,6 +3202,7 @@ void Main::cleanup(bool p_force) {
     if (engine) {
         memdelete(engine);
     }
+    unregister_globals();
 
     if (OS::get_singleton()->is_restart_on_exit_set()) {
         // attempt to restart with arguments

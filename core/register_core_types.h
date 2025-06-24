@@ -9,7 +9,8 @@
 
 void register_core_types();
 void register_core_settings();
-void register_core_singletons();
+void register_globals();
 void unregister_core_types();
+void unregister_globals();
 
 #endif
