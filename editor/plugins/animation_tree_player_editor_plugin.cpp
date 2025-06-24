@@ -1585,9 +1585,7 @@ AnimationTreePlayerEditor::AnimationTreePlayerEditor() {
 
     file_dialog = memnew(EditorFileDialog);
     file_dialog->set_enable_multiple_selection(true);
-    file_dialog->set_current_dir(
-        ProjectSettings::get_singleton()->get_resource_path()
-    );
+    file_dialog->set_current_dir(Global::ProjectSettings().get_resource_path());
     add_child(file_dialog);
     file_dialog->connect("file_selected", this, "_file_dialog_selected");
 

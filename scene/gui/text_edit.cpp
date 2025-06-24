@@ -9514,7 +9514,7 @@ void TextEdit::_bind_methods() {
     BIND_ENUM_CONSTANT(MENU_MAX);
 
     GLOBAL_DEF("gui/timers/text_edit_idle_detect_sec", 3);
-    ProjectSettings::get_singleton()->set_custom_property_info(
+    Global::ProjectSettings().set_custom_property_info(
         "gui/timers/text_edit_idle_detect_sec",
         PropertyInfo(
             Variant::REAL,
@@ -9524,7 +9524,7 @@ void TextEdit::_bind_methods() {
         )
     ); // No negative numbers.
     GLOBAL_DEF("gui/common/text_edit_undo_stack_max_size", 1024);
-    ProjectSettings::get_singleton()->set_custom_property_info(
+    Global::ProjectSettings().set_custom_property_info(
         "gui/common/text_edit_undo_stack_max_size",
         PropertyInfo(
             Variant::INT,

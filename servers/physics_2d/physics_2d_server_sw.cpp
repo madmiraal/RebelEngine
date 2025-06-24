@@ -1648,7 +1648,7 @@ Physics2DServerSW::Physics2DServerSW() {
     GLOBAL_DEF("physics/2d/cell_size", 128);
     GLOBAL_DEF("physics/2d/large_object_surface_threshold_in_cells", 512);
     GLOBAL_DEF("physics/2d/bvh_collision_margin", 1.0);
-    ProjectSettings::get_singleton()->set_custom_property_info(
+    Global::ProjectSettings().set_custom_property_info(
         "physics/2d/bvh_collision_margin",
         PropertyInfo(
             Variant::REAL,

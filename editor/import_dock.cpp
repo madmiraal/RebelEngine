@@ -318,7 +318,7 @@ void ImportDock::_update_preset_menu() {
         ),
         ITEM_SET_AS_DEFAULT
     );
-    if (ProjectSettings::get_singleton()->has_setting(
+    if (Global::ProjectSettings().has_setting(
             "importer_defaults/" + params->importer->get_importer_name()
         )) {
         preset->get_popup()->add_item(TTR("Load Default"), ITEM_LOAD_DEFAULT);
@@ -371,19 +371,19 @@ void ImportDock::_preset_selected(int p_idx) {
                 d[E->get().name] = params->values[E->get().name];
             }
 
-            ProjectSettings::get_singleton()->set(
+            Global::ProjectSettings().set(
                 "importer_defaults/" + params->importer->get_importer_name(),
                 d
             );
-            ProjectSettings::get_singleton()->save();
+            Global::ProjectSettings().save();
             _update_preset_menu();
         } break;
         case ITEM_LOAD_DEFAULT: {
-            ERR_FAIL_COND(!ProjectSettings::get_singleton()->has_setting(
+            ERR_FAIL_COND(!Global::ProjectSettings().has_setting(
                 "importer_defaults/" + params->importer->get_importer_name()
             ));
 
-            Dictionary d = ProjectSettings::get_singleton()->get(
+            Dictionary d = GLOBAL_GET(
                 "importer_defaults/" + params->importer->get_importer_name()
             );
             List<Variant> v;
@@ -401,11 +401,11 @@ void ImportDock::_preset_selected(int p_idx) {
             params->update();
         } break;
         case ITEM_CLEAR_DEFAULT: {
-            ProjectSettings::get_singleton()->set(
+            Global::ProjectSettings().set(
                 "importer_defaults/" + params->importer->get_importer_name(),
                 Variant()
             );
-            ProjectSettings::get_singleton()->save();
+            Global::ProjectSettings().save();
             _update_preset_menu();
         } break;
         default: {

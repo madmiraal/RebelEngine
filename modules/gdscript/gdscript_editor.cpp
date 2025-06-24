@@ -889,6 +889,7 @@ static bool _guess_expression_type(
                 static_cast<const GDScriptParser::OperatorNode*>(p_expression);
             switch (op->op) {
                 case GDScriptParser::OperatorNode::OP_CALL: {
+                    const ProjectSettings& settings = Global::ProjectSettings();
                     if (op->arguments[0]->type
                         == GDScriptParser::Node::TYPE_TYPE) {
                         const GDScriptParser::TypeNode* tn =
@@ -1036,11 +1037,10 @@ static bool _guess_expression_type(
                                                     found = true;
                                                 } else {
                                                     List<PropertyInfo> props;
-                                                    ProjectSettings::
-                                                        get_singleton()
-                                                            ->get_property_list(
-                                                                &props
-                                                            );
+                                                    Global::ProjectSettings()
+                                                        .get_property_list(
+                                                            &props
+                                                        );
 
                                                     for (List<PropertyInfo>::
                                                              Element* E =
@@ -1058,11 +1058,7 @@ static bool _guess_expression_type(
                                                             s.get_slice("/", 1);
                                                         if (name == which) {
                                                             String script =
-                                                                ProjectSettings::
-                                                                    get_singleton(
-                                                                    )
-                                                                        ->get(s
-                                                                        );
+                                                                settings.get(s);
 
                                                             if (script
                                                                     .begins_with(
@@ -3001,13 +2997,13 @@ static void _find_identifiers(
 
     // Autoload singletons
     List<PropertyInfo> props;
-    ProjectSettings::get_singleton()->get_property_list(&props);
+    Global::ProjectSettings().get_property_list(&props);
     for (List<PropertyInfo>::Element* E = props.front(); E; E = E->next()) {
         String s = E->get().name;
         if (!s.begins_with("autoload/")) {
             continue;
         }
-        String path = ProjectSettings::get_singleton()->get(s);
+        String path = GLOBAL_GET(s);
         if (path.begins_with("*")) {
             ScriptCodeCompletionOption option(
                 s.get_slice("/", 1),
@@ -3210,7 +3206,7 @@ static void _find_call_arguments(
                     && p_argidx == 0) {
                     // Get autoloads
                     List<PropertyInfo> props;
-                    ProjectSettings::get_singleton()->get_property_list(&props);
+                    Global::ProjectSettings().get_property_list(&props);
 
                     for (List<PropertyInfo>::Element* E = props.front(); E;
                          E                              = E->next()) {
@@ -3234,7 +3230,7 @@ static void _find_call_arguments(
                     && p_method.operator String().find("action") != -1) {
                     // Get input actions
                     List<PropertyInfo> props;
-                    ProjectSettings::get_singleton()->get_property_list(&props);
+                    Global::ProjectSettings().get_property_list(&props);
                     for (List<PropertyInfo>::Element* E = props.front(); E;
                          E                              = E->next()) {
                         String s = E->get().name;
@@ -3624,7 +3620,7 @@ Error GDScriptLanguage::complete_code(
 
                 // Get autoloads
                 List<PropertyInfo> props;
-                ProjectSettings::get_singleton()->get_property_list(&props);
+                Global::ProjectSettings().get_property_list(&props);
 
                 for (List<PropertyInfo>::Element* E = props.front(); E;
                      E                              = E->next()) {
@@ -3952,7 +3948,7 @@ Error GDScriptLanguage::complete_code(
                     options.insert(option.display, option);
                 }
                 List<PropertyInfo> props;
-                ProjectSettings::get_singleton()->get_property_list(&props);
+                Global::ProjectSettings().get_property_list(&props);
                 for (List<PropertyInfo>::Element* E = props.front(); E;
                      E                              = E->next()) {
                     String s = E->get().name;
@@ -4640,7 +4636,7 @@ Error GDScriptLanguage::lookup_code(
             if (!is_function) {
                 // Guess in autoloads as singletons
                 List<PropertyInfo> props;
-                ProjectSettings::get_singleton()->get_property_list(&props);
+                Global::ProjectSettings().get_property_list(&props);
 
                 for (List<PropertyInfo>::Element* E = props.front(); E;
                      E                              = E->next()) {
@@ -4650,7 +4646,7 @@ Error GDScriptLanguage::lookup_code(
                     }
                     String name = s.get_slice("/", 1);
                     if (name == String(p_symbol)) {
-                        String path = ProjectSettings::get_singleton()->get(s);
+                        String path = GLOBAL_GET(s);
                         if (path.begins_with("*")) {
                             String script = path.substr(1, path.length());
 

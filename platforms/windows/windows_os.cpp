@@ -4011,18 +4011,13 @@ String WindowsOS::get_system_dir(SystemDir p_dir, bool p_shared_storage) const {
 }
 
 String WindowsOS::get_user_data_dir() const {
-    String appname = get_safe_dir_name(
-        ProjectSettings::get_singleton()->get("application/config/name")
-    );
+    String appname = get_safe_dir_name(GLOBAL_GET("application/config/name"));
     if (appname != "") {
-        bool use_custom_dir = ProjectSettings::get_singleton()->get(
-            "application/config/use_custom_user_dir"
-        );
+        bool use_custom_dir =
+            GLOBAL_GET("application/config/use_custom_user_dir");
         if (use_custom_dir) {
             String custom_dir = get_safe_dir_name(
-                ProjectSettings::get_singleton()->get(
-                    "application/config/custom_user_dir_name"
-                ),
+                GLOBAL_GET("application/config/custom_user_dir_name"),
                 true
             );
             if (custom_dir == "") {
@@ -4038,7 +4033,7 @@ String WindowsOS::get_user_data_dir() const {
         }
     }
 
-    return ProjectSettings::get_singleton()->get_resource_path();
+    return Global::ProjectSettings().get_resource_path();
 }
 
 String WindowsOS::get_unique_id() const {

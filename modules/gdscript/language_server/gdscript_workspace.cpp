@@ -942,7 +942,7 @@ Error GDScriptWorkspace::resolve_signature(
 }
 
 GDScriptWorkspace::GDScriptWorkspace() {
-    ProjectSettings::get_singleton()->get_resource_path();
+    Global::ProjectSettings().get_resource_path();
 }
 
 GDScriptWorkspace::~GDScriptWorkspace() {

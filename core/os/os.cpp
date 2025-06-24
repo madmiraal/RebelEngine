@@ -347,7 +347,7 @@ String OS::get_user_data_dir() const {
 
 // Absolute path to res://
 String OS::get_resource_dir() const {
-    return ProjectSettings::get_singleton()->get_resource_path();
+    return Global::ProjectSettings().get_resource_path();
 }
 
 // Access system-specific dirs like Documents, Downloads, etc.
@@ -709,7 +709,7 @@ bool OS::has_feature(const String& p_feature) {
         return true;
     }
 
-    if (ProjectSettings::get_singleton()->has_custom_feature(p_feature)) {
+    if (Global::ProjectSettings().has_custom_feature(p_feature)) {
         return true;
     }
 

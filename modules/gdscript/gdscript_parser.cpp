@@ -4249,14 +4249,11 @@ void GDScriptParser::_parse_class(ClassNode* p_class) {
                     return;
                 }
 
+                const ProjectSettings& settings = Global::ProjectSettings();
                 if (p_class->classname_used
-                    && ProjectSettings::get_singleton()->has_setting(
-                        "autoload/" + p_class->name
-                    )) {
+                    && settings.has_setting("autoload/" + p_class->name)) {
                     const String autoload_path =
-                        ProjectSettings::get_singleton()->get_setting(
-                            "autoload/" + p_class->name
-                        );
+                        settings.get_setting("autoload/" + p_class->name);
                     if (autoload_path.begins_with("*")) {
                         // It's a singleton, and not just a regular AutoLoad
                         // script.
@@ -6638,7 +6635,7 @@ void GDScriptParser::_determine_inheritance(
                 p = nullptr;
             } else {
                 List<PropertyInfo> props;
-                ProjectSettings::get_singleton()->get_property_list(&props);
+                Global::ProjectSettings().get_property_list(&props);
                 for (List<PropertyInfo>::Element* E = props.front(); E;
                      E                              = E->next()) {
                     String s = E->get().name;
@@ -6647,8 +6644,7 @@ void GDScriptParser::_determine_inheritance(
                     }
                     String name = s.get_slice("/", 1);
                     if (name == base) {
-                        String singleton_path =
-                            ProjectSettings::get_singleton()->get(s);
+                        String singleton_path = GLOBAL_GET(s);
                         if (singleton_path.begins_with("*")) {
                             singleton_path = singleton_path.right(1);
                         }
@@ -7047,7 +7043,7 @@ GDScriptParser::DataType GDScriptParser::_resolve_type(
                 continue;
             }
             List<PropertyInfo> props;
-            ProjectSettings::get_singleton()->get_property_list(&props);
+            Global::ProjectSettings().get_property_list(&props);
             String singleton_path;
             for (List<PropertyInfo>::Element* E = props.front(); E;
                  E                              = E->next()) {
@@ -7057,7 +7053,7 @@ GDScriptParser::DataType GDScriptParser::_resolve_type(
                 }
                 String name = s.get_slice("/", 1);
                 if (name == id) {
-                    singleton_path = ProjectSettings::get_singleton()->get(s);
+                    singleton_path = GLOBAL_GET(s);
                     if (singleton_path.begins_with("*")) {
                         singleton_path = singleton_path.right(1);
                     }
@@ -9441,7 +9437,7 @@ GDScriptParser::DataType GDScriptParser::_reduce_identifier_type(
 
         // Non-tool singletons aren't loaded, check project settings
         List<PropertyInfo> props;
-        ProjectSettings::get_singleton()->get_property_list(&props);
+        Global::ProjectSettings().get_property_list(&props);
 
         for (List<PropertyInfo>::Element* E = props.front(); E; E = E->next()) {
             String s = E->get().name;
@@ -9450,7 +9446,7 @@ GDScriptParser::DataType GDScriptParser::_reduce_identifier_type(
             }
             String name = s.get_slice("/", 1);
             if (name == p_identifier) {
-                String script = ProjectSettings::get_singleton()->get(s);
+                String script = GLOBAL_GET(s);
                 if (script.begins_with("*")) {
                     script = script.right(1);
                 }

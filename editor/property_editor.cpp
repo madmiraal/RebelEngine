@@ -476,9 +476,9 @@ bool CustomPropertyEditor::edit(
                     for (int j = 0; j < 10; j++) {
                         int idx     = i * 10 + j;
                         CheckBox* c = checks20[idx];
-                        c->set_text(ProjectSettings::get_singleton()->get(
-                            basename + "/layer_" + itos(idx + 1)
-                        ));
+                        c->set_text(
+                            GLOBAL_GET(basename + "/layer_" + itos(idx + 1))
+                        );
                         c->set_pressed(flgs & (1 << (i * 10 + j)));
                         c->show();
                     }
@@ -1166,7 +1166,7 @@ void CustomPropertyEditor::_file_selected(String p_file) {
     switch (type) {
         case Variant::STRING: {
             if (hint == PROPERTY_HINT_FILE || hint == PROPERTY_HINT_DIR) {
-                v = ProjectSettings::get_singleton()->localize_path(p_file);
+                v = Global::ProjectSettings().localize_path(p_file);
                 emit_signal("variant_changed");
                 hide();
             }

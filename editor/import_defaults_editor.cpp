@@ -74,16 +74,13 @@ void ImportDefaultsEditor::_save() {
             }
         }
 
+        ProjectSettings& project_settings = Global::ProjectSettings();
+        String importer_name =
+            "importer_defaults/" + settings->importer->get_importer_name();
         if (modified.size()) {
-            ProjectSettings::get_singleton()->set(
-                "importer_defaults/" + settings->importer->get_importer_name(),
-                modified
-            );
+            project_settings.set(importer_name, modified);
         } else {
-            ProjectSettings::get_singleton()->set(
-                "importer_defaults/" + settings->importer->get_importer_name(),
-                Variant()
-            );
+            project_settings.set(importer_name, Variant());
         }
 
         emit_signal("project_settings_changed");
@@ -111,12 +108,11 @@ void ImportDefaultsEditor::_update_importer() {
         List<ResourceImporter::ImportOption> options;
         importer->get_import_options(&options);
         Dictionary d;
-        if (ProjectSettings::get_singleton()->has_setting(
-                "importer_defaults/" + importer->get_importer_name()
-            )) {
-            d = ProjectSettings::get_singleton()->get(
-                "importer_defaults/" + importer->get_importer_name()
-            );
+        ProjectSettings& project_settings = Global::ProjectSettings();
+        String importer_name =
+            "importer_defaults/" + importer->get_importer_name();
+        if (project_settings.has_setting(importer_name)) {
+            d = project_settings.get(importer_name);
         }
 
         for (List<ResourceImporter::ImportOption>::Element* E = options.front();

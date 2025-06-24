@@ -326,7 +326,7 @@ public:
         Vector<IosPluginConfig> loaded_plugins;
 
         String plugins_dir =
-            ProjectSettings::get_singleton()->get_resource_path().plus_file(
+            Global::ProjectSettings().get_resource_path().plus_file(
                 "ios/plugins"
             );
 
@@ -376,9 +376,7 @@ void IosEditorExportPlatform::get_preset_features(
     const Ref<EditorExportPreset>& p_preset,
     List<String>* r_features
 ) {
-    String driver = ProjectSettings::get_singleton()->get(
-        "rendering/quality/driver/driver_name"
-    );
+    String driver = GLOBAL_GET("rendering/quality/driver/driver_name");
     r_features->push_back("pvrtc");
     if (driver == "GLES3") {
         r_features->push_back("etc2");
@@ -1196,12 +1194,9 @@ void IosEditorExportPlatform::_fix_config_file(
 
             switch (image_scale_mode) {
                 case 0: {
-                    String logo_path = ProjectSettings::get_singleton()->get(
-                        "application/boot_splash/image"
-                    );
-                    bool is_on = ProjectSettings::get_singleton()->get(
-                        "application/boot_splash/fullsize"
-                    );
+                    String logo_path =
+                        GLOBAL_GET("application/boot_splash/image");
+                    bool is_on = GLOBAL_GET("application/boot_splash/fullsize");
                     // If custom logo is not specified, Rebel Engine does not
                     // scale the default one, so we should do the same.
                     value = (is_on && logo_path.length() > 0) ? "scaleAspectFit"
@@ -1218,9 +1213,7 @@ void IosEditorExportPlatform::_fix_config_file(
             bool use_custom = p_preset->get("storyboard/use_custom_bg_color");
             Color color     = use_custom
                                 ? p_preset->get("storyboard/custom_bg_color")
-                                : ProjectSettings::get_singleton()->get(
-                                "application/boot_splash/bg_color"
-                            );
+                                : GLOBAL_GET("application/boot_splash/bg_color");
             const String value_format =
                 "red=\"$red\" green=\"$green\" blue=\"$blue\" alpha=\"$alpha\"";
 
@@ -1411,9 +1404,7 @@ Error IosEditorExportPlatform::_export_icons(
         if (icon_path.length() == 0) {
             if ((bool)p_preset->get("icons/generate_missing")) {
                 // Resize main app icon
-                icon_path = ProjectSettings::get_singleton()->get(
-                    "application/config/icon"
-                );
+                icon_path      = GLOBAL_GET("application/config/icon");
                 Ref<Image> img = memnew(Image);
                 Error err      = ImageLoader::load_image(icon_path, img);
                 if (err != OK) {
@@ -1557,9 +1548,7 @@ Error IosEditorExportPlatform::_export_loading_screen_file(
     } else {
         Ref<Image> splash;
 
-        const String splash_path = ProjectSettings::get_singleton()->get(
-            "application/boot_splash/image"
-        );
+        const String splash_path = GLOBAL_GET("application/boot_splash/image");
 
         if (!splash_path.empty()) {
             splash.instance();
@@ -1638,15 +1627,11 @@ Error IosEditorExportPlatform::_export_loading_screen_images(
             }
         } else if ((bool)p_preset->get("launch_screens/generate_missing")) {
             // Generate loading screen from the splash screen
-            Color boot_bg_color = ProjectSettings::get_singleton()->get(
-                "application/boot_splash/bg_color"
-            );
-            String boot_logo_path = ProjectSettings::get_singleton()->get(
-                "application/boot_splash/image"
-            );
-            bool boot_logo_scale = ProjectSettings::get_singleton()->get(
-                "application/boot_splash/fullsize"
-            );
+            Color boot_bg_color =
+                GLOBAL_GET("application/boot_splash/bg_color");
+            String boot_logo_path = GLOBAL_GET("application/boot_splash/image");
+            bool boot_logo_scale =
+                GLOBAL_GET("application/boot_splash/fullsize");
 
             Ref<Image> img = memnew(Image);
             img->create(info.width, info.height, false, Image::FORMAT_RGBA8);
@@ -2579,10 +2564,8 @@ Error IosEditorExportPlatform::export_project(
     String pkg_name;
     if (p_preset->get("application/name") != "") {
         pkg_name = p_preset->get("application/name"); // app_name
-    } else if (String(ProjectSettings::get_singleton()->get("application/config/name")) != "") {
-        pkg_name = String(
-            ProjectSettings::get_singleton()->get("application/config/name")
-        );
+    } else if (String(GLOBAL_GET("application/config/name")) != "") {
+        pkg_name = String(GLOBAL_GET("application/config/name"));
     } else {
         pkg_name = "Unnamed";
     }

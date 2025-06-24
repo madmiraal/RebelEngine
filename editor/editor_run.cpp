@@ -27,8 +27,7 @@ Error EditorRun::run(
 ) {
     List<String> args;
 
-    String resource_path =
-        ProjectSettings::get_singleton()->get_resource_path();
+    String resource_path = Global::ProjectSettings().get_resource_path();
 
     if (resource_path != "") {
         args.push_back("--path");
@@ -97,25 +96,19 @@ Error EditorRun::run(
     screen_rect.size     = OS::get_singleton()->get_screen_size(screen);
 
     Size2 desired_size;
-    desired_size.x =
-        ProjectSettings::get_singleton()->get("display/window/size/width");
-    desired_size.y =
-        ProjectSettings::get_singleton()->get("display/window/size/height");
+    desired_size.x = GLOBAL_GET("display/window/size/width");
+    desired_size.y = GLOBAL_GET("display/window/size/height");
 
     Size2 test_size;
-    test_size.x =
-        ProjectSettings::get_singleton()->get("display/window/size/test_width");
-    test_size.y =
-        ProjectSettings::get_singleton()->get("display/window/size/test_height"
-        );
+    test_size.x = GLOBAL_GET("display/window/size/test_width");
+    test_size.y = GLOBAL_GET("display/window/size/test_height");
     if (test_size.x > 0 && test_size.y > 0) {
         desired_size = test_size;
     }
 
     int window_placement =
         EditorSettings::get_singleton()->get("run/window_placement/rect");
-    bool hidpi_proj =
-        ProjectSettings::get_singleton()->get("display/window/dpi/allow_hidpi");
+    bool hidpi_proj   = GLOBAL_GET("display/window/dpi/allow_hidpi");
     int display_scale = 1;
     if (OS::get_singleton()->is_hidpi_allowed()) {
         if (hidpi_proj) {

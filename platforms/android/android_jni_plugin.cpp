@@ -29,7 +29,7 @@ Java_com_rebeltoolbox_rebelengine_plugin_RebelPlugin_nativeRegisterSingleton(
     jni_singletons[singname] = s;
 
     Engine::get_singleton()->add_singleton(Engine::Singleton(singname, s));
-    ProjectSettings::get_singleton()->set(singname, s);
+    Global::ProjectSettings().set(singname, s);
 }
 
 JNIEXPORT void JNICALL
@@ -151,9 +151,8 @@ Java_com_rebeltoolbox_rebelengine_plugin_RebelPlugin_nativeRegisterGDNativeLibra
 
     // Retrieve the current list of gdnative libraries.
     Array singletons = Array();
-    if (ProjectSettings::get_singleton()->has_setting("gdnative/singletons")) {
-        singletons =
-            ProjectSettings::get_singleton()->get("gdnative/singletons");
+    if (Global::ProjectSettings().has_setting("gdnative/singletons")) {
+        singletons = GLOBAL_GET("gdnative/singletons");
     }
 
     // Insert the libraries provided by the plugin
@@ -169,6 +168,6 @@ Java_com_rebeltoolbox_rebelengine_plugin_RebelPlugin_nativeRegisterGDNativeLibra
     }
 
     // Insert the updated list back into project settings.
-    ProjectSettings::get_singleton()->set("gdnative/singletons", singletons);
+    Global::ProjectSettings().set("gdnative/singletons", singletons);
 }
 }

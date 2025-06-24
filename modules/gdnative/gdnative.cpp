@@ -378,7 +378,7 @@ bool GDNative::initialize() {
     // .xcframework. If they are used, we can run dlopen on them. They should be
     // located under Frameworks directory, so we need to replace library path.
     if (!lib_path.ends_with(".a")) {
-        path = ProjectSettings::get_singleton()->globalize_path(lib_path);
+        path = Global::ProjectSettings().globalize_path(lib_path);
 
         if (!FileAccess::exists(path)) {
             String lib_name              = lib_path.get_basename().get_file();
@@ -406,7 +406,7 @@ bool GDNative::initialize() {
 #elif defined(MACOS_ENABLED)
     // On MacOS the exported libraries are located under the Frameworks
     // directory. So we need to replace the library path.
-    String path   = ProjectSettings::get_singleton()->globalize_path(lib_path);
+    String path   = Global::ProjectSettings().globalize_path(lib_path);
     DirAccess* da = DirAccess::create(DirAccess::ACCESS_FILESYSTEM);
 
     if (!da->file_exists(path) && !da->dir_exists(path)) {
@@ -425,7 +425,7 @@ bool GDNative::initialize() {
     memdelete(da);
 
 #else
-    String path = ProjectSettings::get_singleton()->globalize_path(lib_path);
+    String path = Global::ProjectSettings().globalize_path(lib_path);
 #endif
 
     if (library->should_load_once()) {

@@ -326,10 +326,8 @@ void VisualShaderEditor::_update_options_menu() {
     Color unsupported_color = get_color("error_color", "Editor");
     Color supported_color   = get_color("warning_color", "Editor");
 
-    static bool low_driver = ProjectSettings::get_singleton()->get(
-                                 "rendering/quality/driver/driver_name"
-                             )
-                          == "GLES2";
+    static bool low_driver =
+        GLOBAL_GET("rendering/quality/driver/driver_name") == "GLES2";
 
     int current_func = -1;
 

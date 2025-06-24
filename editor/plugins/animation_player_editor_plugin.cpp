@@ -397,7 +397,7 @@ void AnimationPlayerEditor::_animation_save_in_path(
         flg |= ResourceSaver::FLAG_COMPRESS;
     }
 
-    String path = ProjectSettings::get_singleton()->localize_path(p_path);
+    String path = Global::ProjectSettings().localize_path(p_path);
     Error err   = ResourceSaver::save(
         path,
         p_resource,

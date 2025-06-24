@@ -9121,15 +9121,9 @@ void RasterizerStorageGLES3::_render_target_allocate(RenderTarget* rt) {
             || rt->msaa != VS::VIEWPORT_MSAA_DISABLED)) {
         rt->buffers.active = true;
 
-        static const int msaa_value[] = {
-            0,
-            2,
-            4,
-            8,
-            16,
-            4,
-            16
-        }; // MSAA_EXT_nX is a GLES2 temporary hack ignored in GLES3 for now...
+        static const int msaa_value[] = {0, 2, 4, 8, 16, 4, 16};
+        // MSAA_EXT_nX is a GLES2 temporary hack ignored in GLES3 for now...
+
         int msaa = msaa_value[rt->msaa];
 
         int max_samples = 0;
@@ -10573,10 +10567,9 @@ void RasterizerStorageGLES3::initialize() {
         }
     }
 
-    config.shrink_textures_x2      = false;
-    config.use_fast_texture_filter = int(ProjectSettings::get_singleton()->get(
-        "rendering/quality/filters/use_nearest_mipmap_filter"
-    ));
+    config.shrink_textures_x2 = false;
+    config.use_fast_texture_filter =
+        int(GLOBAL_GET("rendering/quality/filters/use_nearest_mipmap_filter"));
 
     config.etc_supported =
         config.extensions.has("GL_OES_compressed_ETC1_RGB8_texture");
@@ -10636,11 +10629,11 @@ void RasterizerStorageGLES3::initialize() {
             _GL_MAX_TEXTURE_MAX_ANISOTROPY_EXT,
             &config.anisotropic_level
         );
-        config.anisotropic_level =
-            MIN(int(ProjectSettings::get_singleton()->get(
-                    "rendering/quality/filters/anisotropic_filter_level"
-                )),
-                config.anisotropic_level);
+        config.anisotropic_level = MIN(
+            int(GLOBAL_GET("rendering/quality/filters/anisotropic_filter_level")
+            ),
+            config.anisotropic_level
+        );
     }
 
     frame.clear_request = false;
@@ -10873,7 +10866,7 @@ void RasterizerStorageGLES3::initialize() {
             "rendering/limits/buffers/blend_shape_max_buffer_size_kb",
             4096
         );
-        ProjectSettings::get_singleton()->set_custom_property_info(
+        Global::ProjectSettings().set_custom_property_info(
             "rendering/limits/buffers/blend_shape_max_buffer_size_kb",
             PropertyInfo(
                 Variant::INT,

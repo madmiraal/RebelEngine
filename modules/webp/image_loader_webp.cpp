@@ -77,9 +77,9 @@ static PoolVector<uint8_t> _webp_lossless_pack(const Ref<Image>& p_image) {
         PoolVector<uint8_t>()
     );
 
-    int compression_level = ProjectSettings::get_singleton()->get(
-        "rendering/misc/lossless_compression/webp_compression_level"
-    );
+    int compression_level =
+        GLOBAL_GET("rendering/misc/lossless_compression/webp_compression_level"
+        );
     compression_level = CLAMP(compression_level, 0, 9);
 
     Ref<Image> img = p_image->duplicate();

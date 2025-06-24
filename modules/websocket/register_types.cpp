@@ -21,7 +21,7 @@
 void register_websocket_types() {
 #define _SET_HINT(NAME, _VAL_, _MAX_)                                          \
     GLOBAL_DEF(NAME, _VAL_);                                                   \
-    ProjectSettings::get_singleton()->set_custom_property_info(                \
+    Global::ProjectSettings().set_custom_property_info(                        \
         NAME,                                                                  \
         PropertyInfo(                                                          \
             Variant::INT,                                                      \

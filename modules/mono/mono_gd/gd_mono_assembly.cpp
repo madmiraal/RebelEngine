@@ -296,12 +296,11 @@ MonoAssembly* GDMonoAssembly::_real_load_assembly_from(
     if (p_path.begins_with("res://")) {
         image_filename = p_path.substr(6, p_path.length());
     } else {
-        image_filename =
-            ProjectSettings::get_singleton()->globalize_path(p_path);
+        image_filename = Global::ProjectSettings().globalize_path(p_path);
     }
 #else
     // FIXME: globalize_path does not work on exported games
-    image_filename = ProjectSettings::get_singleton()->globalize_path(p_path);
+    image_filename = Global::ProjectSettings().globalize_path(p_path);
 #endif
 
     MonoImageOpenStatus status = MONO_IMAGE_OK;

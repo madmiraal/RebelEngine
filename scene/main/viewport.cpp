@@ -1926,9 +1926,8 @@ void Viewport::_gui_show_tooltip() {
         );
     }
 
-    Point2 tooltip_offset = ProjectSettings::get_singleton()->get(
-        "display/mouse_cursor/tooltip_position_offset"
-    );
+    Point2 tooltip_offset =
+        GLOBAL_GET("display/mouse_cursor/tooltip_position_offset");
     Rect2 r(
         gui.tooltip_pos + tooltip_offset,
         gui.tooltip_popup->get_minimum_size()
@@ -4401,7 +4400,7 @@ Viewport::Viewport() {
     gui.tooltip_timer = -1;
 
     gui.tooltip_delay = GLOBAL_DEF("gui/timers/tooltip_delay_sec", 0.5);
-    ProjectSettings::get_singleton()->set_custom_property_info(
+    Global::ProjectSettings().set_custom_property_info(
         "gui/timers/tooltip_delay_sec",
         PropertyInfo(
             Variant::REAL,

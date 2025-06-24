@@ -99,7 +99,7 @@ PoolStringArray get_code_completion(
     switch (p_kind) {
         case CompletionKind::INPUT_ACTIONS: {
             List<PropertyInfo> project_props;
-            ProjectSettings::get_singleton()->get_property_list(&project_props);
+            Global::ProjectSettings().get_property_list(&project_props);
 
             for (List<PropertyInfo>::Element* E = project_props.front(); E;
                  E                              = E->next()) {
@@ -120,7 +120,7 @@ PoolStringArray get_code_completion(
             {
                 // AutoLoads
                 List<PropertyInfo> props;
-                ProjectSettings::get_singleton()->get_property_list(&props);
+                Global::ProjectSettings().get_property_list(&props);
 
                 for (List<PropertyInfo>::Element* E = props.front(); E;
                      E                              = E->next()) {

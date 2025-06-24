@@ -777,8 +777,7 @@ bool CSharpLanguage::is_assembly_reloading_needed() {
 
     GDMonoAssembly* proj_assembly = gdmono->get_project_assembly();
 
-    String appname =
-        ProjectSettings::get_singleton()->get("application/config/name");
+    String appname      = GLOBAL_GET("application/config/name");
     String appname_safe = OS::get_singleton()->get_safe_dir_name(appname);
     if (appname_safe.empty()) {
         appname_safe = "UnnamedProject";
@@ -4101,7 +4100,7 @@ Error ResourceFormatSaverCSharpScript::save(
             CSharpProject::add_item(
                 RebelSharpDirs::get_project_csproj_path(),
                 "Compile",
-                ProjectSettings::get_singleton()->globalize_path(p_path)
+                Global::ProjectSettings().globalize_path(p_path)
             );
         } else {
             ERR_PRINT(

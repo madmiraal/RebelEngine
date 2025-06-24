@@ -572,7 +572,7 @@ void ItemList::_gui_input(const Ref<InputEvent>& p_event) {
                 uint64_t now  = OS::get_singleton()->get_ticks_msec();
                 uint64_t diff = now - search_time_msec;
 
-                if (diff < uint64_t(ProjectSettings::get_singleton()->get(
+                if (diff < uint64_t(GLOBAL_GET(
                                "gui/timers/incremental_search_max_interval_msec"
                            )) * 2) {
                     for (int i = current - 1; i >= 0; i--) {
@@ -604,7 +604,7 @@ void ItemList::_gui_input(const Ref<InputEvent>& p_event) {
                 uint64_t now  = OS::get_singleton()->get_ticks_msec();
                 uint64_t diff = now - search_time_msec;
 
-                if (diff < uint64_t(ProjectSettings::get_singleton()->get(
+                if (diff < uint64_t(GLOBAL_GET(
                                "gui/timers/incremental_search_max_interval_msec"
                            )) * 2) {
                     for (int i = current + 1; i < items.size(); i++) {
@@ -1880,7 +1880,7 @@ void ItemList::_bind_methods() {
     ADD_SIGNAL(MethodInfo("nothing_selected"));
 
     GLOBAL_DEF("gui/timers/incremental_search_max_interval_msec", 2000);
-    ProjectSettings::get_singleton()->set_custom_property_info(
+    Global::ProjectSettings().set_custom_property_info(
         "gui/timers/incremental_search_max_interval_msec",
         PropertyInfo(
             Variant::INT,

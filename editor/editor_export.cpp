@@ -812,7 +812,7 @@ Error EditorExportPlatform::export_project_files(
 
         // Add autoload resources and their dependencies
         List<PropertyInfo> props;
-        ProjectSettings::get_singleton()->get_property_list(&props);
+        Global::ProjectSettings().get_property_list(&props);
 
         for (List<PropertyInfo>::Element* E = props.front(); E; E = E->next()) {
             const PropertyInfo& pi = E->get();
@@ -821,8 +821,7 @@ Error EditorExportPlatform::export_project_files(
                 continue;
             }
 
-            String autoload_path =
-                ProjectSettings::get_singleton()->get(pi.name);
+            String autoload_path = GLOBAL_GET(pi.name);
 
             if (autoload_path.begins_with("*")) {
                 autoload_path = autoload_path.substr(1);
@@ -1077,10 +1076,8 @@ Error EditorExportPlatform::export_project_files(
 
     // Store icon and splash images directly, they need to bypass the import
     // system and be loaded as images
-    String icon =
-        ProjectSettings::get_singleton()->get("application/config/icon");
-    String splash =
-        ProjectSettings::get_singleton()->get("application/boot_splash/image");
+    String icon   = GLOBAL_GET("application/config/icon");
+    String splash = GLOBAL_GET("application/boot_splash/image");
     if (icon != String() && FileAccess::exists(icon)) {
         Vector<uint8_t> array = FileAccess::get_file_as_array(icon);
         err                   = p_func(p_udata, icon, array, idx, total);
@@ -1101,8 +1098,8 @@ Error EditorExportPlatform::export_project_files(
         EditorSettings::get_singleton()->get_cache_dir().plus_file(
             "tmp" + config_file
         );
-    ProjectSettings::get_singleton()
-        ->save_custom(engine_cfb, custom_settings, custom_features);
+    Global::ProjectSettings()
+        .save_custom(engine_cfb, custom_settings, custom_features);
     Vector<uint8_t> data = FileAccess::get_file_as_array(engine_cfb);
     DirAccess::remove_file_or_error(engine_cfb);
 
@@ -1532,18 +1529,11 @@ void EditorExport::add_export_preset(
 }
 
 String EditorExportPlatform::test_etc2() const {
-    String driver = ProjectSettings::get_singleton()->get(
-        "rendering/quality/driver/driver_name"
-    );
-    bool driver_fallback = ProjectSettings::get_singleton()->get(
-        "rendering/quality/driver/fallback_to_gles2"
-    );
-    bool etc_supported = ProjectSettings::get_singleton()->get(
-        "rendering/vram_compression/import_etc"
-    );
-    bool etc2_supported = ProjectSettings::get_singleton()->get(
-        "rendering/vram_compression/import_etc2"
-    );
+    String driver = GLOBAL_GET("rendering/quality/driver/driver_name");
+    bool driver_fallback =
+        GLOBAL_GET("rendering/quality/driver/fallback_to_gles2");
+    bool etc_supported  = GLOBAL_GET("rendering/vram_compression/import_etc");
+    bool etc2_supported = GLOBAL_GET("rendering/vram_compression/import_etc2");
 
     if (driver == "GLES2" && !etc_supported) {
         return TTR(
@@ -1572,18 +1562,12 @@ String EditorExportPlatform::test_etc2() const {
 }
 
 String EditorExportPlatform::test_etc2_or_pvrtc() const {
-    String driver = ProjectSettings::get_singleton()->get(
-        "rendering/quality/driver/driver_name"
-    );
-    bool driver_fallback = ProjectSettings::get_singleton()->get(
-        "rendering/quality/driver/fallback_to_gles2"
-    );
-    bool etc2_supported = ProjectSettings::get_singleton()->get(
-        "rendering/vram_compression/import_etc2"
-    );
-    bool pvrtc_supported = ProjectSettings::get_singleton()->get(
-        "rendering/vram_compression/import_pvrtc"
-    );
+    String driver = GLOBAL_GET("rendering/quality/driver/driver_name");
+    bool driver_fallback =
+        GLOBAL_GET("rendering/quality/driver/fallback_to_gles2");
+    bool etc2_supported = GLOBAL_GET("rendering/vram_compression/import_etc2");
+    bool pvrtc_supported =
+        GLOBAL_GET("rendering/vram_compression/import_pvrtc");
 
     if (driver == "GLES2" && !pvrtc_supported) {
         return TTR(

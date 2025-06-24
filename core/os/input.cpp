@@ -298,7 +298,7 @@ void Input::get_argument_options(
             || pf == "get_action_raw_strength" || pf == "get_axis"
             || pf == "get_vector")) {
         List<PropertyInfo> pinfo;
-        ProjectSettings::get_singleton()->get_property_list(&pinfo);
+        Global::ProjectSettings().get_property_list(&pinfo);
 
         for (List<PropertyInfo>::Element* E = pinfo.front(); E; E = E->next()) {
             const PropertyInfo& pi = E->get();

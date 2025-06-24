@@ -304,18 +304,14 @@ void register_gdnative_types() {
 
     // run singletons
 
-    Array singletons = Array();
-    if (ProjectSettings::get_singleton()->has_setting("gdnative/singletons")) {
-        singletons =
-            ProjectSettings::get_singleton()->get("gdnative/singletons");
+    Array singletons                = Array();
+    const ProjectSettings& settings = Global::ProjectSettings();
+    if (settings.has_setting("gdnative/singletons")) {
+        singletons = settings.get("gdnative/singletons");
     }
     Array excluded = Array();
-    if (ProjectSettings::get_singleton()->has_setting(
-            "gdnative/singletons_disabled"
-        )) {
-        excluded =
-            ProjectSettings::get_singleton()->get("gdnative/singletons_disabled"
-            );
+    if (settings.has_setting("gdnative/singletons_disabled")) {
+        excluded = settings.get("gdnative/singletons_disabled");
     }
 
     for (int i = 0; i < singletons.size(); i++) {

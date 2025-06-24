@@ -134,8 +134,7 @@ Error ResourceSaver::save(
 
         String old_path = p_resource->get_path();
 
-        String local_path =
-            ProjectSettings::get_singleton()->localize_path(p_path);
+        String local_path = Global::ProjectSettings().localize_path(p_path);
 
         RES rwcopy = p_resource;
         if (p_flags & FLAG_CHANGE_PATH) {

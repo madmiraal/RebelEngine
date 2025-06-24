@@ -42,11 +42,11 @@ static Vector3 magnetometer;
 static Vector3 gyroscope;
 
 static void _initialize_java_modules() {
-    if (!ProjectSettings::get_singleton()->has_setting("android/modules")) {
+    if (!Global::ProjectSettings().has_setting("android/modules")) {
         return;
     }
 
-    String modules = ProjectSettings::get_singleton()->get("android/modules");
+    String modules = GLOBAL_GET("android/modules");
     modules        = modules.strip_edges();
     if (modules == String()) {
         return;
@@ -650,12 +650,9 @@ Java_com_rebeltoolbox_rebelengine_RebelEngine_getGlobal(
     jstring path
 ) {
     String js = string_from_jstring(env, path);
-    return env->NewStringUTF(ProjectSettings::get_singleton()
-                                 ->get(js)
-                                 .
-                                 operator String()
-                                 .utf8()
-                                 .get_data());
+    return env->NewStringUTF(
+        Global::ProjectSettings().get(js).operator String().utf8().get_data()
+    );
 }
 
 JNIEXPORT void JNICALL Java_com_rebeltoolbox_rebelengine_RebelEngine_callobject(

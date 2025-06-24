@@ -187,11 +187,7 @@ DWORD CrashHandlerException(EXCEPTION_POINTERS* ep) {
     IMAGE_NT_HEADERS* h = ImageNtHeader(base);
     DWORD image_type    = h->FileHeader.Machine;
 
-    String msg;
-    const ProjectSettings* proj_settings = ProjectSettings::get_singleton();
-    if (proj_settings) {
-        msg = proj_settings->get("debug/settings/crash_handler/message");
-    }
+    String msg = GLOBAL_GET("debug/settings/crash_handler/message");
 
     // Print the engine version just before, so that people are reminded to
     // include the version in backtrace reports.

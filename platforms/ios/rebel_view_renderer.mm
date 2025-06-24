@@ -70,13 +70,13 @@
             NSString* str = (NSString*)value;
             String uval   = String::utf8([str UTF8String]);
 
-            ProjectSettings::get_singleton()->set("Info.plist/" + ukey, uval);
+            Global::ProjectSettings().set("Info.plist/" + ukey, uval);
 
         } else if ([value isKindOfClass:[NSNumber class]]) {
             NSNumber* n = (NSNumber*)value;
             double dval = [n doubleValue];
 
-            ProjectSettings::get_singleton()->set("Info.plist/" + ukey, dval);
+            Global::ProjectSettings().set("Info.plist/" + ukey, dval);
         };
         // do stuff
     }

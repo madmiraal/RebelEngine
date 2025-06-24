@@ -14,7 +14,7 @@
 String DirAccess::_get_root_path() const {
     switch (_access_type) {
         case ACCESS_RESOURCES:
-            return ProjectSettings::get_singleton()->get_resource_path();
+            return Global::ProjectSettings().get_resource_path();
         case ACCESS_USERDATA:
             return OS::get_singleton()->get_user_data_dir();
         default:
@@ -160,17 +160,14 @@ Error DirAccess::make_dir_recursive(String p_dir) {
 String DirAccess::fix_path(String p_path) const {
     switch (_access_type) {
         case ACCESS_RESOURCES: {
-            if (ProjectSettings::get_singleton()) {
-                if (p_path.begins_with("res://")) {
-                    String resource_path =
-                        ProjectSettings::get_singleton()->get_resource_path();
-                    if (resource_path != "") {
-                        return p_path.replace_first("res:/", resource_path);
-                    };
-                    return p_path.replace_first("res://", "");
-                }
+            if (p_path.begins_with("res://")) {
+                String resource_path =
+                    Global::ProjectSettings().get_resource_path();
+                if (resource_path != "") {
+                    return p_path.replace_first("res:/", resource_path);
+                };
+                return p_path.replace_first("res://", "");
             }
-
         } break;
         case ACCESS_USERDATA: {
             if (p_path.begins_with("user://")) {

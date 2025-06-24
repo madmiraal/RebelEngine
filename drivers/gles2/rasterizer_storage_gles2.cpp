@@ -8131,11 +8131,11 @@ void RasterizerStorageGLES2::initialize() {
             _GL_MAX_TEXTURE_MAX_ANISOTROPY_EXT,
             &config.anisotropic_level
         );
-        config.anisotropic_level =
-            MIN(int(ProjectSettings::get_singleton()->get(
-                    "rendering/quality/filters/anisotropic_filter_level"
-                )),
-                config.anisotropic_level);
+        config.anisotropic_level = MIN(
+            int(GLOBAL_GET("rendering/quality/filters/anisotropic_filter_level")
+            ),
+            config.anisotropic_level
+        );
     }
 
     // determine formats for depth textures (or renderbuffers)

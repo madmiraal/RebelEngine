@@ -170,7 +170,7 @@ void register_server_types() {
 
     // Physics 2D
     GLOBAL_DEF(Physics2DServerManager::setting_property_name, "DEFAULT");
-    ProjectSettings::get_singleton()->set_custom_property_info(
+    Global::ProjectSettings().set_custom_property_info(
         Physics2DServerManager::setting_property_name,
         PropertyInfo(
             Variant::STRING,
@@ -188,7 +188,7 @@ void register_server_types() {
 
     // Physics 3D
     GLOBAL_DEF(PhysicsServerManager::setting_property_name, "DEFAULT");
-    ProjectSettings::get_singleton()->set_custom_property_info(
+    Global::ProjectSettings().set_custom_property_info(
         PhysicsServerManager::setting_property_name,
         PropertyInfo(
             Variant::STRING,

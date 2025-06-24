@@ -159,9 +159,7 @@ bool ResourceImporterTexture::get_option_visibility(
         if (compress_mode != COMPRESS_VIDEO_RAM) {
             return false;
         }
-        if (!ProjectSettings::get_singleton()->get(
-                "rendering/vram_compression/import_bptc"
-            )) {
+        if (!GLOBAL_GET("rendering/vram_compression/import_bptc")) {
             return false;
         }
     }
@@ -371,9 +369,7 @@ void ResourceImporterTexture::_save_stex(
     switch (p_compress_mode) {
         case COMPRESS_LOSSLESS: {
             bool lossless_force_png =
-                ProjectSettings::get_singleton()->get(
-                    "rendering/misc/lossless_compression/force_png"
-                )
+                GLOBAL_GET("rendering/misc/lossless_compression/force_png")
                 || !Image::_webp_mem_loader_func; // WebP module disabled.
             bool use_webp =
                 !lossless_force_png && p_image->get_width() <= 16383
@@ -672,12 +668,8 @@ Error ResourceImporterTexture::import(
         bool is_ldr =
             (image->get_format() >= Image::FORMAT_L8
              && image->get_format() <= Image::FORMAT_RGBA5551);
-        bool can_bptc = ProjectSettings::get_singleton()->get(
-            "rendering/vram_compression/import_bptc"
-        );
-        bool can_s3tc = ProjectSettings::get_singleton()->get(
-            "rendering/vram_compression/import_s3tc"
-        );
+        bool can_bptc = GLOBAL_GET("rendering/vram_compression/import_bptc");
+        bool can_s3tc = GLOBAL_GET("rendering/vram_compression/import_s3tc");
 
         if (can_bptc) {
             Image::DetectChannels channels = image->get_detected_channels();
@@ -724,9 +716,7 @@ Error ResourceImporterTexture::import(
             ok_on_pc = true;
         }
 
-        if (ProjectSettings::get_singleton()->get(
-                "rendering/vram_compression/import_etc2"
-            )) {
+        if (GLOBAL_GET("rendering/vram_compression/import_etc2")) {
             _save_stex(
                 image,
                 p_save_path + ".etc2.stex",
@@ -747,9 +737,7 @@ Error ResourceImporterTexture::import(
             formats_imported.push_back("etc2");
         }
 
-        if (ProjectSettings::get_singleton()->get(
-                "rendering/vram_compression/import_etc"
-            )) {
+        if (GLOBAL_GET("rendering/vram_compression/import_etc")) {
             _save_stex(
                 image,
                 p_save_path + ".etc.stex",
@@ -770,9 +758,7 @@ Error ResourceImporterTexture::import(
             formats_imported.push_back("etc");
         }
 
-        if (ProjectSettings::get_singleton()->get(
-                "rendering/vram_compression/import_pvrtc"
-            )) {
+        if (GLOBAL_GET("rendering/vram_compression/import_pvrtc")) {
             _save_stex(
                 image,
                 p_save_path + ".pvrtc.stex",
@@ -840,7 +826,7 @@ String ResourceImporterTexture::get_import_settings_string() const {
     while (compression_formats[index]) {
         String setting_path = "rendering/vram_compression/import_"
                             + String(compression_formats[index]);
-        bool test = ProjectSettings::get_singleton()->get(setting_path);
+        bool test = GLOBAL_GET(setting_path);
         if (test) {
             s += String(compression_formats[index]);
         }
@@ -875,7 +861,7 @@ bool ResourceImporterTexture::are_import_settings_valid(const String& p_path
     while (compression_formats[index]) {
         String setting_path = "rendering/vram_compression/import_"
                             + String(compression_formats[index]);
-        bool test = ProjectSettings::get_singleton()->get(setting_path);
+        bool test = GLOBAL_GET(setting_path);
         if (test) {
             if (formats_imported.find(compression_formats[index]) == -1) {
                 valid = false;

@@ -79,7 +79,7 @@ CommandQueueMT::CommandQueueMT(bool p_sync) {
         "memory/limits/command_queue/multithreading_queue_size_kb",
         DEFAULT_COMMAND_MEM_SIZE_KB
     );
-    ProjectSettings::get_singleton()->set_custom_property_info(
+    Global::ProjectSettings().set_custom_property_info(
         "memory/limits/command_queue/multithreading_queue_size_kb",
         PropertyInfo(
             Variant::INT,

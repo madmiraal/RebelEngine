@@ -315,9 +315,7 @@ Error ResourceImporterLayeredTexture::import(
         bool ok_on_pc    = false;
         bool encode_bptc = false;
 
-        if (ProjectSettings::get_singleton()->get(
-                "rendering/vram_compression/import_bptc"
-            )) {
+        if (GLOBAL_GET("rendering/vram_compression/import_bptc")) {
             encode_bptc = true;
 
             if (no_bptc_if_rgb) {
@@ -344,9 +342,7 @@ Error ResourceImporterLayeredTexture::import(
             ok_on_pc = true;
         }
 
-        if (ProjectSettings::get_singleton()->get(
-                "rendering/vram_compression/import_s3tc"
-            )) {
+        if (GLOBAL_GET("rendering/vram_compression/import_s3tc")) {
             _save_tex(
                 slices,
                 p_save_path + ".s3tc." + extension,
@@ -360,9 +356,7 @@ Error ResourceImporterLayeredTexture::import(
             formats_imported.push_back("s3tc");
         }
 
-        if (ProjectSettings::get_singleton()->get(
-                "rendering/vram_compression/import_etc2"
-            )) {
+        if (GLOBAL_GET("rendering/vram_compression/import_etc2")) {
             _save_tex(
                 slices,
                 p_save_path + ".etc2." + extension,
@@ -375,9 +369,7 @@ Error ResourceImporterLayeredTexture::import(
             formats_imported.push_back("etc2");
         }
 
-        if (ProjectSettings::get_singleton()->get(
-                "rendering/vram_compression/import_etc"
-            )) {
+        if (GLOBAL_GET("rendering/vram_compression/import_etc")) {
             _save_tex(
                 slices,
                 p_save_path + ".etc." + extension,
@@ -390,9 +382,7 @@ Error ResourceImporterLayeredTexture::import(
             formats_imported.push_back("etc");
         }
 
-        if (ProjectSettings::get_singleton()->get(
-                "rendering/vram_compression/import_pvrtc"
-            )) {
+        if (GLOBAL_GET("rendering/vram_compression/import_pvrtc")) {
             _save_tex(
                 slices,
                 p_save_path + ".pvrtc." + extension,
@@ -445,7 +435,7 @@ String ResourceImporterLayeredTexture::get_import_settings_string() const {
     while (compression_formats[index]) {
         String setting_path = "rendering/vram_compression/import_"
                             + String(compression_formats[index]);
-        bool test = ProjectSettings::get_singleton()->get(setting_path);
+        bool test = GLOBAL_GET(setting_path);
         if (test) {
             s += String(compression_formats[index]);
         }
@@ -481,7 +471,7 @@ bool ResourceImporterLayeredTexture::are_import_settings_valid(
     while (compression_formats[index]) {
         String setting_path = "rendering/vram_compression/import_"
                             + String(compression_formats[index]);
-        bool test = ProjectSettings::get_singleton()->get(setting_path);
+        bool test = GLOBAL_GET(setting_path);
         if (test) {
             if (formats_imported.find(compression_formats[index]) == -1) {
                 valid = false;

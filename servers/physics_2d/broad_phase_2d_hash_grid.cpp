@@ -723,7 +723,7 @@ BroadPhase2DSW* BroadPhase2DHashGrid::_create() {
 
 BroadPhase2DHashGrid::BroadPhase2DHashGrid() {
     hash_table_size = GLOBAL_GET("physics/2d/bp_hash_table_size");
-    ProjectSettings::get_singleton()->set_custom_property_info(
+    Global::ProjectSettings().set_custom_property_info(
         "physics/2d/bp_hash_table_size",
         PropertyInfo(
             Variant::INT,
@@ -736,7 +736,7 @@ BroadPhase2DHashGrid::BroadPhase2DHashGrid() {
     hash_table      = memnew_arr(PosBin*, hash_table_size);
 
     cell_size = GLOBAL_GET("physics/2d/cell_size");
-    ProjectSettings::get_singleton()->set_custom_property_info(
+    Global::ProjectSettings().set_custom_property_info(
         "physics/2d/cell_size",
         PropertyInfo(
             Variant::INT,
@@ -748,7 +748,7 @@ BroadPhase2DHashGrid::BroadPhase2DHashGrid() {
 
     large_object_min_surface =
         GLOBAL_GET("physics/2d/large_object_surface_threshold_in_cells");
-    ProjectSettings::get_singleton()->set_custom_property_info(
+    Global::ProjectSettings().set_custom_property_info(
         "physics/2d/large_object_surface_threshold_in_cells",
         PropertyInfo(
             Variant::INT,

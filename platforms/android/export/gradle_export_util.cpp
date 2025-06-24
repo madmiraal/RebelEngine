@@ -184,9 +184,8 @@ Error _create_project_name_strings_files(
         String property_name = "application/config/name_" + locale;
         String locale_directory = "res://android/project/src/main/res/" + file
                                 + "/project_name_string.xml";
-        if (ProjectSettings::get_singleton()->has_setting(property_name)) {
-            String locale_project_name =
-                ProjectSettings::get_singleton()->get(property_name);
+        if (Global::ProjectSettings().has_setting(property_name)) {
+            String locale_project_name  = GLOBAL_GET(property_name);
             String processed_xml_string = vformat(
                 project_name_xml_string,
                 _android_xml_escape(locale_project_name)
@@ -214,12 +213,9 @@ String bool_to_string(bool v) {
 }
 
 String _get_gles_tag() {
-    bool min_gles3 = ProjectSettings::get_singleton()->get(
-                         "rendering/quality/driver/driver_name"
-                     ) == "GLES3"
-                  && !ProjectSettings::get_singleton()->get(
-                      "rendering/quality/driver/fallback_to_gles2"
-                  );
+    bool min_gles3 =
+        GLOBAL_GET("rendering/quality/driver/driver_name") == "GLES3"
+        && !GLOBAL_GET("rendering/quality/driver/fallback_to_gles2");
     return min_gles3 ? "    <uses-feature android:glEsVersion=\"0x00030000\" "
                        "android:required=\"true\" />\n"
                      : "";

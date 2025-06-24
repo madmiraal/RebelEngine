@@ -1164,7 +1164,7 @@ void ProjectsManager::_run_selected() {
 
         const String& project_folder = project->project_folder;
         const String& project_data_dir_name =
-            ProjectSettings::get_singleton()->get_project_data_dir_name();
+            Global::ProjectSettings().get_project_data_dir_name();
         if (!DirAccess::exists(project_folder + "/" + project_data_dir_name)) {
             no_assets_folder_error->popup_centered();
             continue;

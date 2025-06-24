@@ -103,7 +103,7 @@ bool _ResourceLoader::has(const String& p_path) {
 #endif // DISABLE_DEPRECATED
 
 bool _ResourceLoader::has_cached(const String& p_path) {
-    String local_path = ProjectSettings::get_singleton()->localize_path(p_path);
+    String local_path = Global::ProjectSettings().localize_path(p_path);
     return ResourceCache::has(local_path);
 }
 

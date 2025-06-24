@@ -203,7 +203,7 @@ void register_core_types() {
 void register_core_settings() {
     // Since in register core types, globals may not be present.
     GLOBAL_DEF("network/limits/tcp/connect_timeout_seconds", (30));
-    ProjectSettings::get_singleton()->set_custom_property_info(
+    Global::ProjectSettings().set_custom_property_info(
         "network/limits/tcp/connect_timeout_seconds",
         PropertyInfo(
             Variant::INT,
@@ -213,7 +213,7 @@ void register_core_settings() {
         )
     );
     GLOBAL_DEF_RST("network/limits/packet_peer_stream/max_buffer_po2", (16));
-    ProjectSettings::get_singleton()->set_custom_property_info(
+    Global::ProjectSettings().set_custom_property_info(
         "network/limits/packet_peer_stream/max_buffer_po2",
         PropertyInfo(
             Variant::INT,
@@ -224,7 +224,7 @@ void register_core_settings() {
     );
 
     GLOBAL_DEF("network/ssl/certificates", "");
-    ProjectSettings::get_singleton()->set_custom_property_info(
+    Global::ProjectSettings().set_custom_property_info(
         "network/ssl/certificates",
         PropertyInfo(
             Variant::STRING,
@@ -252,7 +252,7 @@ void register_globals() {
     ClassDB::register_class<Expression>();
 
     Engine::get_singleton()->add_singleton(
-        Engine::Singleton("ProjectSettings", ProjectSettings::get_singleton())
+        Engine::Singleton("ProjectSettings", &(Global::ProjectSettings()))
     );
     Engine::get_singleton()->add_singleton(
         Engine::Singleton("IP", IP::get_singleton())
@@ -345,4 +345,7 @@ void unregister_core_types() {
     MemoryPool::cleanup();
 }
 
-void unregister_globals() {}
+void unregister_globals() {
+    Global::ProjectSettings().clear();
+    ObjectDB::remove_instance(&(Global::ProjectSettings()));
+}

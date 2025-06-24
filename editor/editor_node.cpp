@@ -368,9 +368,8 @@ void EditorNode::_version_control_menu_option(int p_idx) {
 }
 
 void EditorNode::_update_title() {
-    const String appname =
-        ProjectSettings::get_singleton()->get("application/config/name");
-    String title = (appname.empty() ? "Unnamed Project" : appname)
+    const String appname = GLOBAL_GET("application/config/name");
+    String title         = (appname.empty() ? "Unnamed Project" : appname)
                  + String(" - ") + VERSION_NAME;
     const String edited =
         editor_data.get_edited_scene_root()
@@ -490,12 +489,8 @@ void EditorNode::_notification(int p_what) {
             scene_root->set_size_override(
                 true,
                 Size2(
-                    ProjectSettings::get_singleton()->get(
-                        "display/window/size/width"
-                    ),
-                    ProjectSettings::get_singleton()->get(
-                        "display/window/size/height"
-                    )
+                    GLOBAL_GET("display/window/size/width"),
+                    GLOBAL_GET("display/window/size/height")
                 )
             );
 
@@ -533,12 +528,10 @@ void EditorNode::_notification(int p_what) {
             {
                 _initializing_addons = true;
                 Vector<String> addons;
-                if (ProjectSettings::get_singleton()->has_setting(
+                if (Global::ProjectSettings().has_setting(
                         "editor_plugins/enabled"
                     )) {
-                    addons = ProjectSettings::get_singleton()->get(
-                        "editor_plugins/enabled"
-                    );
+                    addons = GLOBAL_GET("editor_plugins/enabled");
                 }
 
                 for (int i = 0; i < addons.size(); i++) {
@@ -575,7 +568,7 @@ void EditorNode::_notification(int p_what) {
             // except in headless mode.
             if (OS::get_singleton()->can_draw()
                 && !OS::get_singleton()->is_no_window_mode_enabled()) {
-                ProjectSettings::get_singleton()->save();
+                Global::ProjectSettings().save();
             }
 
             /* DO NOT LOAD SCENES HERE, WAIT FOR FILE SCANNING AND REIMPORT TO
@@ -838,15 +831,14 @@ void EditorNode::_on_plugin_ready(
 }
 
 void EditorNode::_remove_plugin_from_enabled(const String& p_name) {
-    ProjectSettings* ps             = ProjectSettings::get_singleton();
-    PoolStringArray enabled_plugins = ps->get("editor_plugins/enabled");
+    PoolStringArray enabled_plugins = GLOBAL_GET("editor_plugins/enabled");
     for (int i = 0; i < enabled_plugins.size(); ++i) {
         if (enabled_plugins.get(i) == p_name) {
             enabled_plugins.remove(i);
             break;
         }
     }
-    ps->set("editor_plugins/enabled", enabled_plugins);
+    Global::ProjectSettings().set("editor_plugins/enabled", enabled_plugins);
 }
 
 void EditorNode::_resources_changed(const PoolVector<String>& p_resources) {
@@ -1117,11 +1109,10 @@ void EditorNode::_scan_external_changes() {
     }
 
     String project_settings_path =
-        ProjectSettings::get_singleton()->get_resource_path().plus_file(
-            "project.rebel"
+        Global::ProjectSettings().get_resource_path().plus_file("project.rebel"
         );
     if (FileAccess::get_modified_time(project_settings_path)
-        > ProjectSettings::get_singleton()->get_last_saved_time()) {
+        > Global::ProjectSettings().get_last_saved_time()) {
         TreeItem* ti = disk_changed_list->create_item(r);
         ti->set_text(0, "project.rebel");
         need_reload = true;
@@ -1134,7 +1125,7 @@ void EditorNode::_scan_external_changes() {
 
 void EditorNode::_resave_scenes(String p_str) {
     save_all_scenes();
-    ProjectSettings::get_singleton()->save();
+    Global::ProjectSettings().save();
     disk_changed->hide();
 }
 
@@ -1170,11 +1161,8 @@ void EditorNode::_reload_modified_scenes() {
 }
 
 void EditorNode::_reload_project_settings() {
-    ProjectSettings::get_singleton()->setup(
-        ProjectSettings::get_singleton()->get_resource_path(),
-        String(),
-        true
-    );
+    Global::ProjectSettings()
+        .setup(Global::ProjectSettings().get_resource_path(), String(), true);
 }
 
 void EditorNode::_vp_resized() {}
@@ -1262,7 +1250,7 @@ void EditorNode::save_resource_in_path(
         flg |= ResourceSaver::FLAG_COMPRESS;
     }
 
-    String path = ProjectSettings::get_singleton()->localize_path(p_path);
+    String path = Global::ProjectSettings().localize_path(p_path);
     Error err   = ResourceSaver::save(
         path,
         p_resource,
@@ -1745,9 +1733,8 @@ void EditorNode::_save_scene_with_preview(String p_file, int p_idx) {
             // save thumbnail directly, as thumbnailer may not update due to
             // actual scene not changing md5
             String temp_path = EditorSettings::get_singleton()->get_cache_dir();
-            String cache_base = ProjectSettings::get_singleton()
-                                    ->globalize_path(p_file)
-                                    .md5_text();
+            String cache_base =
+                Global::ProjectSettings().globalize_path(p_file).md5_text();
             cache_base = temp_path.plus_file("resthumb-" + cache_base);
 
             // does not have it, try to load a cached thumbnail
@@ -1956,9 +1943,7 @@ void EditorNode::_save_scene(String p_file, int idx) {
     }
 
     if (err == OK) {
-        scene->set_filename(
-            ProjectSettings::get_singleton()->localize_path(p_file)
-        );
+        scene->set_filename(Global::ProjectSettings().localize_path(p_file));
         if (idx < 0 || idx == editor_data.get_edited_scene()) {
             set_current_version(editor_data.get_undo_redo().get_version());
         } else {
@@ -2005,7 +1990,7 @@ void EditorNode::restart_editor() {
 
     List<String> args;
     args.push_back("--path");
-    args.push_back(ProjectSettings::get_singleton()->get_resource_path());
+    args.push_back(Global::ProjectSettings().get_resource_path());
     args.push_back("-e");
     if (to_reopen != String()) {
         args.push_back(to_reopen);
@@ -2078,11 +2063,8 @@ void EditorNode::_dialog_action(String p_file) {
             load_scene(p_file);
         } break;
         case SETTINGS_PICK_MAIN_SCENE: {
-            ProjectSettings::get_singleton()->set(
-                "application/run/main_scene",
-                p_file
-            );
-            ProjectSettings::get_singleton()->save();
+            Global::ProjectSettings().set("application/run/main_scene", p_file);
+            Global::ProjectSettings().save();
             // would be nice to show the Projects Manager opened with the
             // highlighted field..
 
@@ -2730,7 +2712,7 @@ void EditorNode::_run(bool p_current, const String& p_custom) {
     List<String> breakpoints;
     editor_data.get_editor_breakpoints(&breakpoints);
 
-    args = ProjectSettings::get_singleton()->get("editor/main_run_args");
+    args = GLOBAL_GET("editor/main_run_args");
     skip_breakpoints =
         ScriptEditor::get_singleton()->get_debugger()->is_skip_breakpoints();
     emit_signal("play_pressed");
@@ -3277,9 +3259,9 @@ void EditorNode::_menu_option_confirm(int p_option, bool p_confirmed) {
         case FILE_EXPLORE_ANDROID: {
             OS::get_singleton()->shell_open(
                 "file://"
-                + ProjectSettings::get_singleton()
-                      ->get_resource_path()
-                      .plus_file("android")
+                + Global::ProjectSettings().get_resource_path().plus_file(
+                    "android"
+                )
             );
         } break;
         case RUN_RELOAD_CURRENT_PROJECT: {
@@ -3576,11 +3558,11 @@ void EditorNode::_menu_option_confirm(int p_option, bool p_confirmed) {
         } break;
 
         case SET_VIDEO_DRIVER_SAVE_AND_RESTART: {
-            ProjectSettings::get_singleton()->set(
+            Global::ProjectSettings().set(
                 "rendering/quality/driver/driver_name",
                 video_driver_request
             );
-            ProjectSettings::get_singleton()->save();
+            Global::ProjectSettings().save();
 
             save_all_scenes();
             restart_editor();
@@ -3603,8 +3585,7 @@ void EditorNode::_screenshot(bool p_use_utc) {
             "interface/editor/automatically_open_screenshots"
         )) {
         OS::get_singleton()->shell_open(
-            String("file://")
-            + ProjectSettings::get_singleton()->globalize_path(path)
+            String("file://") + Global::ProjectSettings().globalize_path(path)
         );
     }
 }
@@ -3996,15 +3977,9 @@ void EditorNode::_update_addon_config() {
     }
 
     if (enabled_addons.size() == 0) {
-        ProjectSettings::get_singleton()->set(
-            "editor_plugins/enabled",
-            Variant()
-        );
+        Global::ProjectSettings().set("editor_plugins/enabled", Variant());
     } else {
-        ProjectSettings::get_singleton()->set(
-            "editor_plugins/enabled",
-            enabled_addons
-        );
+        Global::ProjectSettings().set("editor_plugins/enabled", enabled_addons);
     }
 
     project_settings->queue_save();
@@ -4406,7 +4381,7 @@ Error EditorNode::load_scene(
         load_errors->clear();
     }
 
-    String lpath = ProjectSettings::get_singleton()->localize_path(p_scene);
+    String lpath = Global::ProjectSettings().localize_path(p_scene);
 
     if (!lpath.begins_with("res://")) {
         show_accept(
@@ -6551,7 +6526,7 @@ void EditorNode::_global_menu_action(
 }
 
 void EditorNode::_dropped_files(const Vector<String>& p_files, int p_screen) {
-    String to_path = ProjectSettings::get_singleton()->globalize_path(
+    String to_path = Global::ProjectSettings().globalize_path(
         get_filesystem_dock()->get_selected_path()
     );
 
@@ -8438,8 +8413,8 @@ EditorNode::EditorNode() {
     right_menu_hb->add_child(video_driver);
 
     String video_drivers =
-        ProjectSettings::get_singleton()
-            ->get_custom_property_info()["rendering/quality/driver/driver_name"]
+        Global::ProjectSettings()
+            .get_custom_property_info()["rendering/quality/driver/driver_name"]
             .hint_string;
     String current_video_driver = OS::get_singleton()->get_video_driver_name(
         OS::get_singleton()->get_current_video_driver()

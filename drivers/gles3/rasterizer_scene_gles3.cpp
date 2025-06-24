@@ -7912,7 +7912,7 @@ void RasterizerSceneGLES3::initialize() {
         "rendering/limits/rendering/max_renderable_elements",
         (int)RenderList::DEFAULT_MAX_ELEMENTS
     );
-    ProjectSettings::get_singleton()->set_custom_property_info(
+    Global::ProjectSettings().set_custom_property_info(
         "rendering/limits/rendering/max_renderable_elements",
         PropertyInfo(
             Variant::INT,
@@ -7925,7 +7925,7 @@ void RasterizerSceneGLES3::initialize() {
         "rendering/limits/rendering/max_renderable_lights",
         (int)RenderList::DEFAULT_MAX_LIGHTS
     );
-    ProjectSettings::get_singleton()->set_custom_property_info(
+    Global::ProjectSettings().set_custom_property_info(
         "rendering/limits/rendering/max_renderable_lights",
         PropertyInfo(
             Variant::INT,
@@ -7938,7 +7938,7 @@ void RasterizerSceneGLES3::initialize() {
         "rendering/limits/rendering/max_renderable_reflections",
         (int)RenderList::DEFAULT_MAX_REFLECTIONS
     );
-    ProjectSettings::get_singleton()->set_custom_property_info(
+    Global::ProjectSettings().set_custom_property_info(
         "rendering/limits/rendering/max_renderable_reflections",
         PropertyInfo(
             Variant::INT,
@@ -7951,7 +7951,7 @@ void RasterizerSceneGLES3::initialize() {
         "rendering/limits/rendering/max_lights_per_object",
         (int)RenderList::DEFAULT_MAX_LIGHTS_PER_OBJECT
     );
-    ProjectSettings::get_singleton()->set_custom_property_info(
+    Global::ProjectSettings().set_custom_property_info(
         "rendering/limits/rendering/max_lights_per_object",
         PropertyInfo(
             Variant::INT,
@@ -8315,7 +8315,7 @@ void RasterizerSceneGLES3::initialize() {
             "rendering/limits/buffers/immediate_buffer_size_kb",
             2048
         );
-        ProjectSettings::get_singleton()->set_custom_property_info(
+        Global::ProjectSettings().set_custom_property_info(
             "rendering/limits/buffers/immediate_buffer_size_kb",
             PropertyInfo(
                 Variant::INT,
@@ -8356,7 +8356,7 @@ void RasterizerSceneGLES3::initialize() {
 
     {
         GLOBAL_DEF("rendering/quality/subsurface_scattering/quality", 1);
-        ProjectSettings::get_singleton()->set_custom_property_info(
+        Global::ProjectSettings().set_custom_property_info(
             "rendering/quality/subsurface_scattering/quality",
             PropertyInfo(
                 Variant::INT,
@@ -8366,7 +8366,7 @@ void RasterizerSceneGLES3::initialize() {
             )
         );
         GLOBAL_DEF("rendering/quality/subsurface_scattering/scale", 1.0);
-        ProjectSettings::get_singleton()->set_custom_property_info(
+        Global::ProjectSettings().set_custom_property_info(
             "rendering/quality/subsurface_scattering/scale",
             PropertyInfo(
                 Variant::INT,

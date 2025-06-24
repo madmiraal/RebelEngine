@@ -425,7 +425,7 @@ Ref<ResourceImporter> ResourceFormatImporter::get_importer_by_extension(
 
 String ResourceFormatImporter::get_import_base_path(const String& p_for_file
 ) const {
-    return ProjectSettings::get_singleton()->get_project_data_path().plus_file(
+    return Global::ProjectSettings().get_project_data_path().plus_file(
         p_for_file.get_file() + "-" + p_for_file.md5_text()
     );
 }

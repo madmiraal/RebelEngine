@@ -3432,7 +3432,7 @@ VisualScriptLanguage::VisualScriptLanguage() {
     _debug_parse_err_file = "";
     _debug_call_stack_pos = 0;
     int dmcs = GLOBAL_DEF("debug/settings/visual_script/max_call_stack", 1024);
-    ProjectSettings::get_singleton()->set_custom_property_info(
+    Global::ProjectSettings().set_custom_property_info(
         "debug/settings/visual_script/max_call_stack",
         PropertyInfo(
             Variant::INT,

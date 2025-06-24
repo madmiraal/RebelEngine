@@ -377,7 +377,7 @@ MessageQueue::MessageQueue() {
         "memory/limits/message_queue/max_size_kb",
         DEFAULT_QUEUE_SIZE_KB
     );
-    ProjectSettings::get_singleton()->set_custom_property_info(
+    Global::ProjectSettings().set_custom_property_info(
         "memory/limits/message_queue/max_size_kb",
         PropertyInfo(
             Variant::INT,
