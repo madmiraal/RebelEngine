@@ -34,7 +34,6 @@ void StringName::setup() {
 
 void StringName::cleanup() {
     lock.lock();
-
     int lost_strings = 0;
     for (int i = 0; i < STRING_TABLE_LEN; i++) {
         while (_table[i]) {
@@ -42,21 +41,16 @@ void StringName::cleanup() {
             lost_strings++;
             if (OS::get_singleton()->is_stdout_verbose()) {
                 if (d->cname) {
-                    print_line("Orphan StringName: " + String(d->cname));
+                    print_verbose("Orphan StringName: " + String(d->cname));
                 } else {
-                    print_line("Orphan StringName: " + String(d->name));
+                    print_verbose("Orphan StringName: " + String(d->name));
                 }
             }
-
             _table[i] = _table[i]->next;
-            memdelete(d);
         }
     }
-    if (lost_strings) {
-        print_verbose(
-            "StringName: " + itos(lost_strings)
-            + " unclaimed string names at exit."
-        );
+    if (lost_strings > 0) {
+        print_line(itos(lost_strings) + " unclaimed string names at exit.");
     }
     lock.unlock();
 }
