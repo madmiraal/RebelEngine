@@ -34,7 +34,6 @@ void StringName::setup() {
 
 void StringName::cleanup() {
     lock.lock();
-
     int lost_strings = 0;
     for (int i = 0; i < STRING_TABLE_LEN; i++) {
         while (_table[i]) {
@@ -58,11 +57,14 @@ void StringName::cleanup() {
             + " unclaimed string names at exit."
         );
     }
+    configured = false;
     lock.unlock();
 }
 
 void StringName::unref() {
-    ERR_FAIL_COND(!configured);
+    if (!configured) {
+        return;
+    }
 
     if (_data && _data->refcount.unref()) {
         lock.lock();
