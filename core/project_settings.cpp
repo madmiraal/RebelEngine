@@ -19,6 +19,26 @@
 
 #include <zlib.h>
 
+struct Setting {
+    String name;
+    Variant current_value;
+    Variant initial_value;
+    int position            = 0;
+    int flags               = 0;
+    bool hide_from_editor   = false;
+    bool restart_if_changed = false;
+#ifdef DEBUG_METHODS_ENABLED
+    bool ignore_value_in_docs = false;
+#endif
+
+    Setting() = default;
+
+    Setting(const String& name, const Variant& value, int position) :
+        name(name),
+        current_value(value),
+        position(position) {}
+};
+
 bool operator<(const Setting& left, const Setting& right) {
     if (left.position == right.position) {
         return left.name < right.name;
