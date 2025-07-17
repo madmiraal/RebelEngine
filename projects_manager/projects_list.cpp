@@ -138,40 +138,43 @@ bool ProjectsList::is_any_project_missing() const {
 }
 
 bool ProjectsList::key_pressed(Ref<InputEventKey> key_event) {
-    switch (key_event->get_scancode()) {
+    uint32_t scan_code   = key_event->get_scancode();
+    bool shift_pressed   = key_event->get_shift();
+    bool command_pressed = key_event->get_command();
+
+    if (scan_code == KEY_F && command_pressed) {
+        set_search_focus();
+        return true;
+    }
+
+    if (get_project_count() == 0) {
+        return false;
+    }
+
+    int selected_index = 0;
+    switch (scan_code) {
         case KEY_HOME: {
-            if (get_project_count() > 0) {
-                _select_index(0);
-                return true;
-            }
         } break;
         case KEY_END: {
-            if (get_project_count() > 0) {
-                _select_index(get_project_count() - 1);
-                return true;
-            }
+            selected_index = get_project_count() - 1;
         } break;
         case KEY_UP: {
-            if (first_selected_project_index > 0 && !key_event->get_shift()) {
-                _select_index(first_selected_project_index - 1);
-                return true;
+            if (last_selected_project_index > 1) {
+                selected_index = last_selected_project_index - 1;
             }
         } break;
         case KEY_DOWN: {
-            if (first_selected_project_index < get_project_count() - 2
-                && !key_event->get_shift()) {
-                _select_index(first_selected_project_index + 1);
-                return true;
+            selected_index = last_selected_project_index + 1;
+            if (selected_index > get_project_count() - 1) {
+                selected_index = get_project_count() - 1;
             }
         } break;
-        case KEY_F: {
-            if (key_event->get_command()) {
-                set_search_focus();
-                return true;
-            }
+        default: {
+            return false;
         } break;
     }
-    return false;
+    _on_selection_changed(shift_pressed, false, projects[selected_index]);
+    return true;
 }
 
 void ProjectsList::refresh_selected_projects() {
@@ -454,6 +457,20 @@ void ProjectsList::_on_item_double_clicked() {
     emit_signal("item_double_clicked");
 }
 
+void ProjectsList::_on_item_updated(const Node* p_node) {
+    _sort_projects();
+
+    const ProjectsListItem* item = Object::cast_to<ProjectsListItem>(p_node);
+    if (item->favorite) {
+        for (int i = 0; i < projects.size(); ++i) {
+            if (projects[i]->project_key == item->project_key) {
+                _ensure_item_visible(i);
+                break;
+            }
+        }
+    }
+}
+
 void ProjectsList::_on_search_text_changed(const String&) {
     _filter_projects();
 }
@@ -489,20 +506,6 @@ void ProjectsList::_on_sort_order_selected(int p_index) {
     _sort_projects();
 }
 
-void ProjectsList::_on_item_updated(const Node* p_node) {
-    _sort_projects();
-
-    const ProjectsListItem* item = Object::cast_to<ProjectsListItem>(p_node);
-    if (item->favorite) {
-        for (int i = 0; i < projects.size(); ++i) {
-            if (projects[i]->project_key == item->project_key) {
-                _ensure_item_visible(i);
-                break;
-            }
-        }
-    }
-}
-
 void ProjectsList::_refresh_projects_list() {
     _filter_projects();
     _sort_projects();
@@ -514,8 +517,8 @@ void ProjectsList::_remove_project(int p_index, bool p_update_settings) {
 
     selected_project_keys.erase(item->project_key);
 
-    if (item->get_index() == first_selected_project_index) {
-        first_selected_project_index = -1;
+    if (item->get_index() == last_selected_project_index) {
+        last_selected_project_index = -1;
     }
 
     if (p_update_settings) {
@@ -552,27 +555,27 @@ void ProjectsList::_sort_projects() {
 void ProjectsList::_select_index(int p_index) {
     _clear_selection();
     _add_item_to_selection(projects[p_index]);
-    first_selected_project_index = p_index;
+    last_selected_project_index = p_index;
     _ensure_item_visible(p_index);
 }
 
 void ProjectsList::_select_range(ProjectsListItem* p_to_item) {
-    if (first_selected_project_index == -1) {
+    if (last_selected_project_index == -1) {
         _select_index(p_to_item->get_index());
         return;
     }
 
     _clear_selection();
-    int last_selected_project_index = p_to_item->get_index();
+    int selected_project_index = p_to_item->get_index();
 
     bool select = false;
     for (int index = 0; index < projects.size(); index++) {
         ProjectsListItem* item = projects[index];
-        if (item->get_index() == first_selected_project_index) {
+        if (item->get_index() == last_selected_project_index) {
             _add_item_to_selection(item);
             select = !select;
         }
-        if (item->get_index() == last_selected_project_index) {
+        if (item->get_index() == selected_project_index) {
             _add_item_to_selection(item);
             select = !select;
         }
@@ -583,13 +586,13 @@ void ProjectsList::_select_range(ProjectsListItem* p_to_item) {
 }
 
 void ProjectsList::_toggle_item_selected(ProjectsListItem* p_item) {
-    const String& project_key = p_item->project_key;
+    const String& project_key   = p_item->project_key;
+    p_item->selected            = !p_item->selected;
+    last_selected_project_index = p_item->get_index();
     if (p_item->selected) {
-        p_item->selected = false;
-        selected_project_keys.erase(project_key);
-    } else {
-        p_item->selected = true;
         selected_project_keys.insert(project_key);
+    } else {
+        selected_project_keys.erase(project_key);
     }
     p_item->update();
 }
