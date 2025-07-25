@@ -30,12 +30,12 @@ jobs:
             build-options: production=yes target=release_debug
 
           - name: macOS Editor x86 64 bit
-            os: macos-latest
+            os: macos-15
             artifact: macos-editor-x86-64
             build-options: production=yes target=release_debug
 
           - name: macOS Editor armv8 64 bit
-            os: macos-latest
+            os: macos-15
             artifact: macos-editor-arm64
             build-options: production=yes target=release_debug arch=arm64
 
@@ -73,22 +73,22 @@ jobs:
 
           # Rebel Engine macOS builds
           - name: macOS Engine x86 64 bit
-            os: macos-latest
+            os: macos-15
             artifact: macos-engine-x86-64
             build-options: production=yes tools=no target=release
 
           - name: macOS Engine x86 64 bit Debug
-            os: macos-latest
+            os: macos-15
             artifact: macos-engine-x86-64-debug
             build-options: production=yes tools=no target=release_debug
 
           - name: macOS Engine armv8 64 bit
-            os: macos-latest
+            os: macos-15
             artifact: macos-engine-arm64
             build-options: production=yes tools=no target=release arch=arm64
 
           - name: macOS Engine armv8 64 bit Debug
-            os: macos-latest
+            os: macos-15
             artifact: macos-engine-arm64-debug
             build-options: production=yes tools=no target=release_debug arch=arm64
 
@@ -135,22 +135,22 @@ jobs:
 
           # Rebel Engine iOS Library builds
           - name: iOS Engine Library arm 64 bit
-            os: macos-latest
+            os: macos-15
             artifact: ios-engine-library-arm64
             build-options: platform=ios production=yes tools=no target=release
 
           - name: iOS Engine Library arm 64 bit Debug
-            os: macos-latest
+            os: macos-15
             artifact: ios-engine-library-arm64-debug
             build-options: platform=ios production=yes tools=no target=release_debug
 
           - name: iOS Engine Library x86 64 bit Simulator
-            os: macos-latest
+            os: macos-15
             artifact: ios-engine-library-x86-64
             build-options: platform=ios production=yes tools=no ios_simulator=yes target=release arch=x86_64
 
           - name: iOS Engine Library x86 64 bit Simulator Debug
-            os: macos-latest
+            os: macos-15
             artifact: ios-engine-library-x86-64-debug
             build-options: platform=ios production=yes tools=no ios_simulator=yes target=release_debug arch=x86_64
 
@@ -314,7 +314,7 @@ jobs:
   macos-apps:
     name: Create macOS Apps
     needs: builds
-    runs-on: macos-latest
+    runs-on: macos-15
     steps:
       - name: Checkout Rebel Engine
         uses: actions/checkout@v5
@@ -381,7 +381,7 @@ jobs:
   ios-template:
     name: Create iOS Template
     needs: builds
-    runs-on: macos-latest
+    runs-on: macos-15
     steps:
       - name: Checkout Rebel Engine
         uses: actions/checkout@v5
