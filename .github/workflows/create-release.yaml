@@ -26,7 +26,7 @@ jobs:
             rebel-executable: rebel.linux.opt.tools.64
 
           - name: Windows Editor
-            os: windows-latest
+            os: windows-2025
             artifact: windows-editor
             build-options: production=yes target=release_debug
             rebel-executable: rebel.windows.opt.tools.64.msvc.exe
@@ -58,25 +58,25 @@ jobs:
 
           # Rebel Engine Windows builds
           - name: Windows Engine 64 bit
-            os: windows-latest
+            os: windows-2025
             artifact: windows-engine-x86-64
             build-options: production=yes tools=no target=release
             rebel-executable: rebel.windows.opt.64.msvc.exe
 
           - name: Windows Engine 64 bit Debug
-            os: windows-latest
+            os: windows-2025
             artifact: windows-engine-x86-64-debug
             build-options: production=yes tools=no target=release_debug
             rebel-executable: rebel.windows.opt.debug.64.msvc.exe
 
           - name: Windows Engine 32 bit
-            os: windows-latest
+            os: windows-2025
             artifact: windows-engine-x86-32
             build-options: production=yes tools=no target=release bits=32
             rebel-executable: rebel.windows.opt.32.msvc.exe
 
           - name: Windows Engine 32 bit Debug
-            os: windows-latest
+            os: windows-2025
             artifact: windows-engine-x86-32-debug
             build-options: production=yes tools=no target=release_debug bits=32
             rebel-executable: rebel.windows.opt.debug.32.msvc.exe
