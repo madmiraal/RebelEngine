@@ -16,7 +16,7 @@ jobs:
     name: Template - ${{ matrix.os }}
     strategy:
       matrix:
-        os: [ubuntu-latest, windows-latest, macos-latest]
+        os: [windows-2025]
 
     steps:
       - uses: actions/checkout@v5
