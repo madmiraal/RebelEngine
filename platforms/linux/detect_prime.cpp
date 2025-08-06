@@ -142,6 +142,7 @@ void create_context() {
 
     glXMakeCurrent(x11_display, x11_window, glx_context);
     XFree(vi);
+    XFree(fbc);
 }
 
 int detect_prime() {
