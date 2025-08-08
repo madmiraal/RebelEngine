@@ -115,6 +115,24 @@ jobs:
           ref: main
           path: RebelTestProject
 
+#      - name: Without specifying DRI_PRIME
+#        if: ${{ matrix.test }}
+#        run: |
+#          xvfb-run ${{ matrix.bin }} --audio-driver Dummy -e -q --path RebelTestProject 2>&1 | tee sanitizers_log.txt || true
+#          tools/scripts/check_ci_log.py sanitizers_log.txt
+
+      - name: Without specifying xvfb-run
+        if: ${{ matrix.test }}
+        run: |
+          DRI_PRIME=0 ${{ matrix.bin }} --audio-driver Dummy -e -q --path RebelTestProject 2>&1 | tee sanitizers_log.txt || true
+          tools/scripts/check_ci_log.py sanitizers_log.txt
+
+      - name: Without specifying DRI_PRIME or xvfb-run
+        if: ${{ matrix.test }}
+        run: |
+          ${{ matrix.bin }} --audio-driver Dummy -e -q --path RebelTestProject 2>&1 | tee sanitizers_log.txt || true
+          tools/scripts/check_ci_log.py sanitizers_log.txt
+
       # Editor is quite complicated piece of software, so it is easy to introduce bug here
       - name: Open and close editor
         if: ${{ matrix.test }}
