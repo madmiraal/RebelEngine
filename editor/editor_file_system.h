@@ -120,7 +120,6 @@ class EditorFileSystem : public Node {
 
     EditorFileSystemDirectory* new_filesystem;
 
-    bool abort_scan;
     bool scanning;
     bool importing;
     bool first_scan;
