@@ -666,43 +666,18 @@ bool EditorFileSystem::_update_scan_actions() {
 }
 
 void EditorFileSystem::scan() {
-    if (false /*&& bool(Globals::get_singleton()->get("debug/disable_scan"))*/) {
-        return;
-    }
-
     if (scanning || scanning_changes || thread.is_started()) {
         return;
     }
 
     _update_extensions();
 
-    if (!use_threads) {
-        scanning   = true;
-        scan_total = 0;
-        _scan_filesystem();
-        if (filesystem) {
-            memdelete(filesystem);
-        }
-        // file_type_cache.clear();
-        filesystem     = new_filesystem;
-        new_filesystem = nullptr;
-        _update_scan_actions();
-        scanning = false;
-        emit_signal("filesystem_changed");
-        emit_signal("sources_changed", sources_changed.size() > 0);
-        _queue_update_script_classes();
-        first_scan = false;
-    } else {
-        ERR_FAIL_COND(thread.is_started());
-        set_process(true);
-        Thread::Settings s;
-        scanning   = true;
-        scan_total = 0;
-        s.priority = Thread::PRIORITY_LOW;
-        thread.start(_thread_func, this, s);
-        // tree->hide();
-        // progress->show();
-    }
+    set_process(true);
+    Thread::Settings s;
+    scanning   = true;
+    scan_total = 0;
+    s.priority = Thread::PRIORITY_LOW;
+    thread.start(_thread_func, this, s);
 }
 
 void EditorFileSystem::ScanProgress::update(int p_current, int p_total) const {
@@ -1166,30 +1141,12 @@ void EditorFileSystem::scan_changes() {
     scanning_changes      = true;
     scanning_changes_done = false;
 
-    if (!use_threads) {
-        if (filesystem) {
-            EditorProgressBG pr("sources", TTR("ScanSources"), 1000);
-            ScanProgress sp;
-            sp.progress = &pr;
-            sp.hi       = 1;
-            sp.low      = 0;
-            scan_total  = 0;
-            _scan_fs_changes(filesystem, sp);
-            if (_update_scan_actions()) {
-                emit_signal("filesystem_changed");
-            }
-        }
-        scanning_changes      = false;
-        scanning_changes_done = true;
-        emit_signal("sources_changed", sources_changed.size() > 0);
-    } else {
-        ERR_FAIL_COND(thread_sources.is_started());
-        set_process(true);
-        scan_total = 0;
-        Thread::Settings s;
-        s.priority = Thread::PRIORITY_LOW;
-        thread_sources.start(_thread_func_sources, this, s);
-    }
+    ERR_FAIL_COND(thread_sources.is_started());
+    set_process(true);
+    scan_total = 0;
+    Thread::Settings s;
+    s.priority = Thread::PRIORITY_LOW;
+    thread_sources.start(_thread_func_sources, this, s);
 }
 
 void EditorFileSystem::_notification(int p_what) {
@@ -1202,7 +1159,7 @@ void EditorFileSystem::_notification(int p_what) {
         case NOTIFICATION_EXIT_TREE: {
             Thread& active_thread =
                 thread.is_started() ? thread : thread_sources;
-            if (use_threads && active_thread.is_started()) {
+            if (active_thread.is_started()) {
                 while (scanning) {
                     OS::get_singleton()->delay_usec(1000);
                 }
@@ -1221,44 +1178,39 @@ void EditorFileSystem::_notification(int p_what) {
 
         } break;
         case NOTIFICATION_PROCESS: {
-            if (use_threads) {
-                if (scanning_changes) {
-                    if (scanning_changes_done) {
-                        scanning_changes = false;
+            if (scanning_changes) {
+                if (scanning_changes_done) {
+                    scanning_changes = false;
 
-                        set_process(false);
-
-                        thread_sources.wait_to_finish();
-                        if (_update_scan_actions()) {
-                            emit_signal("filesystem_changed");
-                        }
-                        emit_signal(
-                            "sources_changed",
-                            sources_changed.size() > 0
-                        );
-                        _queue_update_script_classes();
-                        first_scan = false;
-                    }
-                } else if (!scanning) {
                     set_process(false);
 
-                    if (filesystem) {
-                        memdelete(filesystem);
+                    thread_sources.wait_to_finish();
+                    if (_update_scan_actions()) {
+                        emit_signal("filesystem_changed");
                     }
-                    filesystem     = new_filesystem;
-                    new_filesystem = nullptr;
-                    thread.wait_to_finish();
-                    _update_scan_actions();
-                    emit_signal("filesystem_changed");
                     emit_signal("sources_changed", sources_changed.size() > 0);
                     _queue_update_script_classes();
                     first_scan = false;
                 }
+            } else if (!scanning) {
+                set_process(false);
 
-                if (!is_processing() && scan_changes_pending) {
-                    scan_changes_pending = false;
-                    scan_changes();
+                if (filesystem) {
+                    memdelete(filesystem);
                 }
+                filesystem     = new_filesystem;
+                new_filesystem = nullptr;
+                thread.wait_to_finish();
+                _update_scan_actions();
+                emit_signal("filesystem_changed");
+                emit_signal("sources_changed", sources_changed.size() > 0);
+                _queue_update_script_classes();
+                first_scan = false;
+            }
+
+            if (!is_processing() && scan_changes_pending) {
+                scan_changes_pending = false;
+                scan_changes();
             }
         } break;
     }
@@ -2457,7 +2409,6 @@ EditorFileSystem::EditorFileSystem() {
 
     scanning       = false;
     importing      = false;
-    use_threads    = true;
     new_filesystem = nullptr;
 
     scanning_changes      = false;

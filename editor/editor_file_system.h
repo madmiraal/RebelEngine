@@ -114,7 +114,6 @@ class EditorFileSystem : public Node {
         }
     };
 
-    bool use_threads;
     Thread thread;
     static void _thread_func(void* _userdata);
 
