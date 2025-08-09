@@ -122,6 +122,13 @@ jobs:
           xvfb-run ${{ matrix.bin }} --audio-driver Dummy -e -q --path RebelTestProject 2>&1 | tee sanitizers_log.txt || true
           tools/scripts/check_ci_log.py sanitizers_log.txt
 
+      - name: Save sanitizers log file
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: "Sanitizers Log"
+          path: sanitizers_log.txt
+
       # Run test project
       - name: Run project
         if: ${{ matrix.test }}
