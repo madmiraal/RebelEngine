@@ -153,18 +153,28 @@ Error LinuxGLContext::initialize() {
         valuemask             |= CWBackPixel;
 
     } else {
+        print_line("Layered not allowed...");
+        print_line("Creating FBConfig...");
         GLXFBConfig* fbc = glXChooseFBConfig(
             x11_display,
             DefaultScreen(x11_display),
             visual_attribs,
             &fbcount
         );
+        if (!fbc) {
+            print_line("glXChooseFBConfig failed");
+        } else {
+            print_line("glXChooseFBConfig succeeded");
+        }
         ERR_FAIL_COND_V(!fbc, ERR_UNCONFIGURED);
 
+        print_line("Creating visual from FBConfig...");
         vi = glXGetVisualFromFBConfig(x11_display, fbc[0]);
 
         fbconfig = fbc[0];
+        print_line("Freeing FBConfig...");
         XFree(fbc);
+        print_line("FBConfig freed!");
     }
 
     int (*oldHandler)(Display*, XErrorEvent*) =
