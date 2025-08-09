@@ -117,34 +117,51 @@ Error LinuxGLContext::initialize() {
     unsigned long valuemask = CWBorderPixel | CWColormap | CWEventMask;
 
     if (OS::get_singleton()->is_layered_allowed()) {
+        print_line("Layered allowed...");
+        print_line("Creating FBConfig...");
         GLXFBConfig* fbc = glXChooseFBConfig(
             x11_display,
             DefaultScreen(x11_display),
             visual_attribs_layered,
             &fbcount
         );
+        if (!fbc) {
+            print_line("glXChooseFBConfig failed");
+        } else {
+            print_line("glXChooseFBConfig succeeded");
+        }
         ERR_FAIL_COND_V(!fbc, ERR_UNCONFIGURED);
 
         for (int i = 0; i < fbcount; i++) {
+            print_line("Creating visual from FBConfig[" + itos(i) + "]");
             vi = (XVisualInfo*)glXGetVisualFromFBConfig(x11_display, fbc[i]);
             if (!vi) {
+                print_line("Failed to create visual");
                 continue;
             }
 
+            print_line("Creating XRenderPictFormat...");
             XRenderPictFormat* pict_format =
                 XRenderFindVisualFormat(x11_display, vi->visual);
             if (!pict_format) {
+                print_line("Failed to create XRenderPictFormat");
+                print_line("Freeing visual...");
                 XFree(vi);
+                print_line("Freed visual!");
                 vi = nullptr;
                 continue;
             }
 
+            print_line("Copying FBConfig[" + itos(i) + "]");
             fbconfig = fbc[i];
             if (pict_format->direct.alphaMask > 0) {
+                print_line("PictFormat supports alphaMask!");
                 break;
             }
         }
+        print_line("Freeing FBConfig...");
         XFree(fbc);
+        print_line("FBConfig freed!");
         ERR_FAIL_COND_V(!fbconfig, ERR_UNCONFIGURED);
 
         swa.background_pixmap  = None;
