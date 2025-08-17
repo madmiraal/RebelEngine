@@ -86,14 +86,12 @@ jobs:
           target: ${{ matrix.target }}
           tools: ${{ matrix.tools }}
 
-      # Generate mono glue
       - name: Generate Mono glue code
         if: ${{ matrix.build-mono }}
         run: |
-          xvfb-run ${{ matrix.bin }} --generate-mono-glue modules/mono/glue || true
+          xvfb-run ${{ matrix.bin }} --generate-mono-glue modules/mono/glue
 
-      # Rebuild with mono
-      - name: Build (mono_glue=yes)
+      - name: Build with Mono
         uses: ./.github/actions/build
         if: ${{ matrix.build-mono }}
         with:
@@ -102,8 +100,8 @@ jobs:
           target: ${{ matrix.target }}
           tools: ${{ matrix.tools }}
 
-      # Checkout test project
-      # If the test project needs to be updated, modify these settings to point to the updated test project.
+      # Checkout Rebel Test Project
+      # If Rebel Test Project needs to be updated, modify these settings to point to the updated test project.
       # - repository: Your fork of the test project i.e. <username>/RebelTestProject
       # - ref: Your branch with the updated test project e.g. fix-test-project
       # - path: RebelTestProject - Don't change. This is the folder the rest of the workflow uses.
@@ -135,7 +133,7 @@ jobs:
       - name: Check API XML documentation
         if: ${{ matrix.test }}
         run: |
-          echo "Running --generate-docs to see if this changes the API XML documentation files."
+          echo "Checking XML documentation"
           echo "If a diff is created, the API XML documentation changes are incomplete."
           echo "Update the API XML documentation with --generate-docs."
           echo
