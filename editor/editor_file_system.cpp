@@ -13,8 +13,8 @@
 #include "core/os/os.h"
 #include "core/project_settings.h"
 #include "core/variant_parser.h"
+#include "editor/editor_directory.h"
 #include "editor/editor_file_info.h"
-#include "editor/editor_file_system_directory.h"
 #include "editor/editor_node.h"
 #include "editor/editor_resource_preview.h"
 #include "editor/editor_settings.h"
@@ -136,7 +136,7 @@ void EditorFileSystem::_scan_filesystem() {
     sp.hi       = 1;
     sp.progress = &scan_progress;
 
-    new_filesystem         = memnew(EditorFileSystemDirectory);
+    new_filesystem         = memnew(EditorDirectory);
     new_filesystem->parent = nullptr;
 
     DirAccess* d = DirAccess::create(DirAccess::ACCESS_RESOURCES);
@@ -513,7 +513,7 @@ EditorFileSystem::ScanProgress EditorFileSystem::ScanProgress::get_sub(
 }
 
 void EditorFileSystem::_scan_new_dir(
-    EditorFileSystemDirectory* p_dir,
+    EditorDirectory* p_dir,
     DirAccess* da,
     const ScanProgress& p_progress
 ) {
@@ -566,8 +566,7 @@ void EditorFileSystem::_scan_new_dir(
             if (d == cd || !d.begins_with(cd)) {
                 da->change_dir(cd); // avoid recursion
             } else {
-                EditorFileSystemDirectory* efd =
-                    memnew(EditorFileSystemDirectory);
+                EditorDirectory* efd = memnew(EditorDirectory);
 
                 efd->parent = p_dir;
                 efd->name   = E->get();
@@ -707,7 +706,7 @@ void EditorFileSystem::_scan_new_dir(
 }
 
 void EditorFileSystem::_scan_fs_changes(
-    EditorFileSystemDirectory* p_dir,
+    EditorDirectory* p_dir,
     const ScanProgress& p_progress
 ) {
     uint64_t current_mtime = FileAccess::get_modified_time(p_dir->get_path());
@@ -759,8 +758,7 @@ void EditorFileSystem::_scan_fs_changes(
                         continue;
                     }
 
-                    EditorFileSystemDirectory* efd =
-                        memnew(EditorFileSystemDirectory);
+                    EditorDirectory* efd = memnew(EditorDirectory);
 
                     efd->parent = p_dir;
                     efd->name   = f;
@@ -1037,12 +1035,12 @@ float EditorFileSystem::get_scanning_progress() const {
     return scan_total;
 }
 
-EditorFileSystemDirectory* EditorFileSystem::get_filesystem() {
+EditorDirectory* EditorFileSystem::get_filesystem() {
     return filesystem;
 }
 
 void EditorFileSystem::_save_filesystem_cache(
-    EditorFileSystemDirectory* p_dir,
+    EditorDirectory* p_dir,
     FileAccess* p_file
 ) {
     if (!p_dir) {
@@ -1082,7 +1080,7 @@ void EditorFileSystem::_save_filesystem_cache(
 
 bool EditorFileSystem::_find_file(
     const String& p_file,
-    EditorFileSystemDirectory** r_d,
+    EditorDirectory** r_d,
     int& r_file_pos
 ) const {
     // todo make faster
@@ -1107,7 +1105,7 @@ bool EditorFileSystem::_find_file(
     String file = path[path.size() - 1];
     path.resize(path.size() - 1);
 
-    EditorFileSystemDirectory* fs = filesystem;
+    EditorDirectory* fs = filesystem;
 
     for (int i = 0; i < path.size(); i++) {
         if (path[i].begins_with(".")) {
@@ -1124,7 +1122,7 @@ bool EditorFileSystem::_find_file(
 
         if (idx == -1) {
             // does not exist, create i guess?
-            EditorFileSystemDirectory* efsd = memnew(EditorFileSystemDirectory);
+            EditorDirectory* efsd = memnew(EditorDirectory);
 
             efsd->name   = path[i];
             efsd->parent = fs;
@@ -1163,8 +1161,8 @@ bool EditorFileSystem::_find_file(
 }
 
 String EditorFileSystem::get_file_type(const String& p_file) const {
-    EditorFileSystemDirectory* fs = nullptr;
-    int cpos                      = -1;
+    EditorDirectory* fs = nullptr;
+    int cpos            = -1;
 
     if (!_find_file(p_file, &fs, cpos)) {
         return "";
@@ -1173,16 +1171,14 @@ String EditorFileSystem::get_file_type(const String& p_file) const {
     return fs->files[cpos]->type;
 }
 
-EditorFileSystemDirectory* EditorFileSystem::find_file(
-    const String& p_file,
-    int* r_index
-) const {
+EditorDirectory* EditorFileSystem::find_file(const String& p_file, int* r_index)
+    const {
     if (!filesystem || scanning) {
         return nullptr;
     }
 
-    EditorFileSystemDirectory* fs = nullptr;
-    int cpos                      = -1;
+    EditorDirectory* fs = nullptr;
+    int cpos            = -1;
     if (!_find_file(p_file, &fs, cpos)) {
         return nullptr;
     }
@@ -1194,9 +1190,7 @@ EditorFileSystemDirectory* EditorFileSystem::find_file(
     return fs;
 }
 
-EditorFileSystemDirectory* EditorFileSystem::get_filesystem_path(
-    const String& p_path
-) {
+EditorDirectory* EditorFileSystem::get_filesystem_path(const String& p_path) {
     if (!filesystem || scanning) {
         return nullptr;
     }
@@ -1223,7 +1217,7 @@ EditorFileSystemDirectory* EditorFileSystem::get_filesystem_path(
         return nullptr;
     }
 
-    EditorFileSystemDirectory* fs = filesystem;
+    EditorDirectory* fs = filesystem;
 
     for (int i = 0; i < path.size(); i++) {
         int idx = -1;
@@ -1302,7 +1296,7 @@ String EditorFileSystem::_get_global_script_class(
     return String();
 }
 
-void EditorFileSystem::_scan_script_classes(EditorFileSystemDirectory* p_dir) {
+void EditorFileSystem::_scan_script_classes(EditorDirectory* p_dir) {
     int filecount                      = p_dir->files.size();
     const EditorFileInfo* const* files = p_dir->files.ptr();
     for (int i = 0; i < filecount; i++) {
@@ -1372,8 +1366,8 @@ void EditorFileSystem::_queue_update_script_classes() {
 }
 
 void EditorFileSystem::update_file(const String& p_file) {
-    EditorFileSystemDirectory* fs = nullptr;
-    int cpos                      = -1;
+    EditorDirectory* fs = nullptr;
+    int cpos            = -1;
 
     if (!_find_file(p_file, &fs, cpos)) {
         if (!fs) {
@@ -1640,9 +1634,9 @@ Error EditorFileSystem::_reimport_group(
         }
         md5s->close();
 
-        EditorFileSystemDirectory* fs = nullptr;
-        int cpos                      = -1;
-        bool found                    = _find_file(file, &fs, cpos);
+        EditorDirectory* fs = nullptr;
+        int cpos            = -1;
+        bool found          = _find_file(file, &fs, cpos);
         ERR_FAIL_COND_V_MSG(
             !found,
             ERR_UNCONFIGURED,
@@ -1677,9 +1671,9 @@ Error EditorFileSystem::_reimport_group(
 }
 
 void EditorFileSystem::_reimport_file(const String& p_file) {
-    EditorFileSystemDirectory* fs = nullptr;
-    int cpos                      = -1;
-    bool found                    = _find_file(p_file, &fs, cpos);
+    EditorDirectory* fs = nullptr;
+    int cpos            = -1;
+    bool found          = _find_file(p_file, &fs, cpos);
     ERR_FAIL_COND_MSG(!found, "Can't find file '" + p_file + "'.");
 
     // try to obtain existing params
@@ -1923,7 +1917,7 @@ void EditorFileSystem::_reimport_file(const String& p_file) {
 }
 
 void EditorFileSystem::_find_group_files(
-    EditorFileSystemDirectory* efd,
+    EditorDirectory* efd,
     Map<String, Vector<String>>& group_files,
     Set<String>& groups_to_reimport
 ) {
@@ -2014,8 +2008,8 @@ void EditorFileSystem::reimport_files(const Vector<String>& p_files) {
         }
 
         // group may have changed, so also update group reference
-        EditorFileSystemDirectory* fs = nullptr;
-        int cpos                      = -1;
+        EditorDirectory* fs = nullptr;
+        int cpos            = -1;
         if (_find_file(p_files[i], &fs, cpos)) {
             fs->files.write[cpos]->import_group_file = group_file;
         }
@@ -2087,7 +2081,7 @@ bool EditorFileSystem::is_group_file(const String& p_path) const {
 }
 
 void EditorFileSystem::_move_group_files(
-    EditorFileSystemDirectory* efd,
+    EditorDirectory* efd,
     const String& p_group_file,
     const String& p_new_location
 ) {
@@ -2215,7 +2209,7 @@ EditorFileSystem::EditorFileSystem() {
         GLOBAL_DEF("editor/reimport_missing_imported_files", true);
 
     singleton          = this;
-    filesystem         = memnew(EditorFileSystemDirectory); // like, empty
+    filesystem         = memnew(EditorDirectory);
     filesystem->parent = nullptr;
 
     scanning       = false;

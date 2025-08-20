@@ -17,8 +17,8 @@
 #include "core/project_settings.h"
 #include "core/script_language.h"
 #include "core/version.h"
+#include "editor/editor_directory.h"
 #include "editor/editor_file_system.h"
-#include "editor/editor_file_system_directory.h"
 #include "editor/editor_node.h"
 #include "editor/editor_settings.h"
 #include "editor/plugins/script_editor_plugin.h"
@@ -405,7 +405,7 @@ Ref<EditorExportPreset> EditorExportPlatform::create_preset() {
 }
 
 void EditorExportPlatform::_export_find_resources(
-    EditorFileSystemDirectory* p_dir,
+    EditorDirectory* p_dir,
     Set<String>& p_paths
 ) {
     for (int i = 0; i < p_dir->get_subdir_count(); i++) {
@@ -427,7 +427,7 @@ void EditorExportPlatform::_export_find_dependencies(
 
     p_paths.insert(p_path);
 
-    EditorFileSystemDirectory* dir;
+    EditorDirectory* dir;
     int file_idx;
     dir = EditorFileSystem::get_singleton()->find_file(p_path, &file_idx);
     if (!dir) {

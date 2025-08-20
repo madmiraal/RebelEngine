@@ -15,7 +15,7 @@
 
 class FileAccess;
 class EditorExportPlatform;
-class EditorFileSystemDirectory;
+class EditorDirectory;
 struct EditorProgress;
 
 class EditorExportPreset : public Reference {
@@ -168,10 +168,7 @@ private:
         PoolVector<String> features_pv;
     };
 
-    void _export_find_resources(
-        EditorFileSystemDirectory* p_dir,
-        Set<String>& p_paths
-    );
+    void _export_find_resources(EditorDirectory* p_dir, Set<String>& p_paths);
     void _export_find_dependencies(const String& p_path, Set<String>& p_paths);
 
     void gen_debug_flags(Vector<String>& r_flags, int p_flags);

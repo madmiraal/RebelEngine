@@ -8,7 +8,8 @@
 
 #include "core/io/resource_loader.h"
 #include "core/os/file_access.h"
-#include "editor/editor_file_system_directory.h"
+#include "editor/editor_directory.h"
+#include "editor/editor_file_system.h"
 #include "editor/editor_node.h"
 #include "editor/editor_scale.h"
 #include "scene/gui/margin_container.h"
@@ -45,20 +46,20 @@ void DependencyEditor::_load_pressed(Object* p_item, int p_cell, int p_button) {
 }
 
 void DependencyEditor::_fix_and_find(
-    EditorFileSystemDirectory* efsd,
+    EditorDirectory* directory,
     Map<String, Map<String, String>>& candidates
 ) {
-    for (int i = 0; i < efsd->get_subdir_count(); i++) {
-        _fix_and_find(efsd->get_subdir(i), candidates);
+    for (int i = 0; i < directory->get_subdir_count(); i++) {
+        _fix_and_find(directory->get_subdir(i), candidates);
     }
 
-    for (int i = 0; i < efsd->get_file_count(); i++) {
-        String file = efsd->get_file(i);
+    for (int i = 0; i < directory->get_file_count(); i++) {
+        String file = directory->get_file(i);
         if (!candidates.has(file)) {
             continue;
         }
 
-        String path = efsd->get_file_path(i);
+        String path = directory->get_file_path(i);
 
         for (Map<String, String>::Element* E = candidates[file].front(); E;
              E                               = E->next()) {
@@ -313,17 +314,17 @@ void DependencyEditorOwners::_bind_methods() {
     );
 }
 
-void DependencyEditorOwners::_fill_owners(EditorFileSystemDirectory* efsd) {
-    if (!efsd) {
+void DependencyEditorOwners::_fill_owners(EditorDirectory* directory) {
+    if (!directory) {
         return;
     }
 
-    for (int i = 0; i < efsd->get_subdir_count(); i++) {
-        _fill_owners(efsd->get_subdir(i));
+    for (int i = 0; i < directory->get_subdir_count(); i++) {
+        _fill_owners(directory->get_subdir(i));
     }
 
-    for (int i = 0; i < efsd->get_file_count(); i++) {
-        Vector<String> deps = efsd->get_file_deps(i);
+    for (int i = 0; i < directory->get_file_count(); i++) {
+        Vector<String> deps = directory->get_file_deps(i);
         bool found          = false;
         for (int j = 0; j < deps.size(); j++) {
             if (deps[j] == editing) {
@@ -335,10 +336,11 @@ void DependencyEditorOwners::_fill_owners(EditorFileSystemDirectory* efsd) {
             continue;
         }
 
-        Ref<Texture> icon =
-            EditorNode::get_singleton()->get_class_icon(efsd->get_file_type(i));
+        Ref<Texture> icon = EditorNode::get_singleton()->get_class_icon(
+            directory->get_file_type(i)
+        );
 
-        owners->add_item(efsd->get_file_path(i), icon);
+        owners->add_item(directory->get_file_path(i), icon);
     }
 }
 
@@ -369,18 +371,18 @@ DependencyEditorOwners::DependencyEditorOwners(EditorNode* p_editor) {
 ///////////////////////
 
 void DependencyRemoveDialog::_find_files_in_removed_folder(
-    EditorFileSystemDirectory* efsd,
+    EditorDirectory* directory,
     const String& p_folder
 ) {
-    if (!efsd) {
+    if (!directory) {
         return;
     }
 
-    for (int i = 0; i < efsd->get_subdir_count(); ++i) {
-        _find_files_in_removed_folder(efsd->get_subdir(i), p_folder);
+    for (int i = 0; i < directory->get_subdir_count(); ++i) {
+        _find_files_in_removed_folder(directory->get_subdir(i), p_folder);
     }
-    for (int i = 0; i < efsd->get_file_count(); i++) {
-        String file = efsd->get_file_path(i);
+    for (int i = 0; i < directory->get_file_count(); i++) {
+        String file = directory->get_file_path(i);
         ERR_FAIL_COND(all_remove_files.has(file)
         ); // We are deleting a directory which is contained in a directory we
            // are deleting...
@@ -392,19 +394,19 @@ void DependencyRemoveDialog::_find_files_in_removed_folder(
 }
 
 void DependencyRemoveDialog::_find_all_removed_dependencies(
-    EditorFileSystemDirectory* efsd,
+    EditorDirectory* directory,
     Vector<RemovedDependency>& p_removed
 ) {
-    if (!efsd) {
+    if (!directory) {
         return;
     }
 
-    for (int i = 0; i < efsd->get_subdir_count(); i++) {
-        _find_all_removed_dependencies(efsd->get_subdir(i), p_removed);
+    for (int i = 0; i < directory->get_subdir_count(); i++) {
+        _find_all_removed_dependencies(directory->get_subdir(i), p_removed);
     }
 
-    for (int i = 0; i < efsd->get_file_count(); i++) {
-        const String path = efsd->get_file_path(i);
+    for (int i = 0; i < directory->get_file_count(); i++) {
+        const String path = directory->get_file_path(i);
 
         // It doesn't matter if a file we are about to delete will have some of
         // its dependencies removed too
@@ -412,12 +414,12 @@ void DependencyRemoveDialog::_find_all_removed_dependencies(
             continue;
         }
 
-        Vector<String> all_deps = efsd->get_file_deps(i);
+        Vector<String> all_deps = directory->get_file_deps(i);
         for (int j = 0; j < all_deps.size(); ++j) {
             if (all_remove_files.has(all_deps[j])) {
                 RemovedDependency dep;
                 dep.file              = path;
-                dep.file_type         = efsd->get_file_type(i);
+                dep.file_type         = directory->get_file_type(i);
                 dep.dependency        = all_deps[j];
                 dep.dependency_folder = all_remove_files[all_deps[j]];
                 p_removed.push_back(dep);
@@ -770,24 +772,24 @@ void OrphanResourcesDialog::ok_pressed() {
 }
 
 bool OrphanResourcesDialog::_fill_owners(
-    EditorFileSystemDirectory* efsd,
+    EditorDirectory* directory,
     HashMap<String, int>& refs,
     TreeItem* p_parent
 ) {
-    if (!efsd) {
+    if (!directory) {
         return false;
     }
 
     bool has_children = false;
 
-    for (int i = 0; i < efsd->get_subdir_count(); i++) {
+    for (int i = 0; i < directory->get_subdir_count(); i++) {
         TreeItem* dir_item = nullptr;
         if (p_parent) {
             dir_item = files->create_item(p_parent);
-            dir_item->set_text(0, efsd->get_subdir(i)->get_name());
+            dir_item->set_text(0, directory->get_subdir(i)->get_name());
             dir_item->set_icon(0, get_icon("folder", "FileDialog"));
         }
-        bool children = _fill_owners(efsd->get_subdir(i), refs, dir_item);
+        bool children = _fill_owners(directory->get_subdir(i), refs, dir_item);
 
         if (p_parent) {
             if (!children) {
@@ -798,28 +800,28 @@ bool OrphanResourcesDialog::_fill_owners(
         }
     }
 
-    for (int i = 0; i < efsd->get_file_count(); i++) {
+    for (int i = 0; i < directory->get_file_count(); i++) {
         if (!p_parent) {
-            Vector<String> deps = efsd->get_file_deps(i);
+            Vector<String> deps = directory->get_file_deps(i);
             for (int j = 0; j < deps.size(); j++) {
                 if (!refs.has(deps[j])) {
                     refs[deps[j]] = 1;
                 }
             }
         } else {
-            String path = efsd->get_file_path(i);
+            String path = directory->get_file_path(i);
             if (!refs.has(path)) {
                 TreeItem* ti = files->create_item(p_parent);
                 ti->set_cell_mode(0, TreeItem::CELL_MODE_CHECK);
-                ti->set_text(0, efsd->get_file(i));
+                ti->set_text(0, directory->get_file(i));
                 ti->set_editable(0, true);
 
-                String type = efsd->get_file_type(i);
+                String type = directory->get_file_type(i);
 
                 Ref<Texture> icon =
                     EditorNode::get_singleton()->get_class_icon(type);
                 ti->set_icon(0, icon);
-                int ds = efsd->get_file_deps(i).size();
+                int ds = directory->get_file_deps(i).size();
                 ti->set_text(1, itos(ds));
                 if (ds) {
                     ti->add_button(

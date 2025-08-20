@@ -7,8 +7,8 @@
 #include "quick_open.h"
 
 #include "core/os/keyboard.h"
+#include "editor/editor_directory.h"
 #include "editor/editor_file_system.h"
-#include "editor/editor_file_system_directory.h"
 
 void EditorQuickOpen::popup_dialog(
     const StringName& p_base,
@@ -106,21 +106,21 @@ float EditorQuickOpen::_path_cmp(String search, String path) const {
 }
 
 void EditorQuickOpen::_parse_fs(
-    EditorFileSystemDirectory* efsd,
+    EditorDirectory* directory,
     Vector<Pair<String, Ref<Texture>>>& list
 ) {
-    for (int i = 0; i < efsd->get_subdir_count(); i++) {
-        _parse_fs(efsd->get_subdir(i), list);
+    for (int i = 0; i < directory->get_subdir_count(); i++) {
+        _parse_fs(directory->get_subdir(i), list);
     }
 
     String search_text = search_box->get_text();
 
     Vector<String> base_types = String(base_type).split(String(","));
-    for (int i = 0; i < efsd->get_file_count(); i++) {
-        String file = efsd->get_file_path(i);
+    for (int i = 0; i < directory->get_file_count(); i++) {
+        String file = directory->get_file_path(i);
         file        = file.substr(6, file.length());
 
-        StringName file_type = efsd->get_file_type(i);
+        StringName file_type = directory->get_file_type(i);
         // Iterate all possible base types.
         for (int j = 0; j < base_types.size(); j++) {
             if (ClassDB::is_parent_class(file_type, base_types[j])
@@ -178,11 +178,11 @@ Vector<Pair<String, Ref<Texture>>> EditorQuickOpen::_sort_fs(
 void EditorQuickOpen::_update_search() {
     search_options->clear();
     TreeItem* root = search_options->create_item();
-    EditorFileSystemDirectory* efsd =
+    EditorDirectory* directory =
         EditorFileSystem::get_singleton()->get_filesystem();
     Vector<Pair<String, Ref<Texture>>> list;
 
-    _parse_fs(efsd, list);
+    _parse_fs(directory, list);
     list = _sort_fs(list);
 
     for (int i = 0; i < list.size(); i++) {

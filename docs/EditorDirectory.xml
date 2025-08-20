@@ -6,7 +6,7 @@ SPDX-FileCopyrightText: 2007-2014 Juan Linietsky, Ariel Manzur
 
 SPDX-License-Identifier: MIT
 -->
-<class name="EditorFileSystemDirectory" inherits="Object" version="1.0">
+<class name="EditorDirectory" inherits="Object" version="1.0">
     <brief_description>
         A directory for the resource filesystem.
     </brief_description>
@@ -85,7 +85,7 @@ SPDX-License-Identifier: MIT
             </description>
         </method>
         <method name="get_parent">
-            <return type="EditorFileSystemDirectory" />
+            <return type="EditorDirectory" />
             <description>
                 Returns the parent directory for this directory or [code]null[/code] if called on a directory at [code]res://[/code] or [code]user://[/code].
             </description>
@@ -97,7 +97,7 @@ SPDX-License-Identifier: MIT
             </description>
         </method>
         <method name="get_subdir">
-            <return type="EditorFileSystemDirectory" />
+            <return type="EditorDirectory" />
             <argument index="0" name="idx" type="int" />
             <description>
                 Returns the subdirectory at index [code]idx[/code].

@@ -13,9 +13,9 @@
 #include "core/os/keyboard.h"
 #include "core/os/os.h"
 #include "core/project_settings.h"
+#include "editor/editor_directory.h"
 #include "editor/editor_feature_profile.h"
 #include "editor/editor_file_system.h"
-#include "editor/editor_file_system_directory.h"
 #include "editor/editor_node.h"
 #include "editor/editor_resource_preview.h"
 #include "editor/editor_scale.h"
@@ -41,7 +41,7 @@ Ref<Texture> FileSystemDock::_get_tree_item_icon(
 
 bool FileSystemDock::_create_tree(
     TreeItem* p_parent,
-    EditorFileSystemDirectory* p_dir,
+    EditorDirectory* p_dir,
     Vector<String>& uncollapsed_paths,
     bool p_select_in_favorites,
     bool p_unfold_path
@@ -266,7 +266,7 @@ void FileSystemDock::_update_tree(
         } else {
             text = fave.get_file();
             int index;
-            EditorFileSystemDirectory* dir =
+            EditorDirectory* dir =
                 EditorFileSystem::get_singleton()->find_file(fave, &index);
             if (dir) {
                 icon = _get_tree_item_icon(
@@ -702,7 +702,7 @@ bool FileSystemDock::_is_file_type_disabled_by_feature_profile(
 }
 
 void FileSystemDock::_search(
-    EditorFileSystemDirectory* p_path,
+    EditorDirectory* p_path,
     List<FileInfo>* matches,
     int p_max_items
 ) {
@@ -887,11 +887,8 @@ void FileSystemDock::_update_file_list(bool p_keep_selection) {
                 }
             } else {
                 int index;
-                EditorFileSystemDirectory* efd =
-                    EditorFileSystem::get_singleton()->find_file(
-                        favorite,
-                        &index
-                    );
+                EditorDirectory* efd = EditorFileSystem::get_singleton()
+                                           ->find_file(favorite, &index);
 
                 FileInfo fi;
                 fi.name = favorite.get_file();
@@ -917,7 +914,7 @@ void FileSystemDock::_update_file_list(bool p_keep_selection) {
         if (directory.ends_with("/") && directory != "res://") {
             directory = directory.substr(0, directory.length() - 1);
         }
-        EditorFileSystemDirectory* efd =
+        EditorDirectory* efd =
             EditorFileSystem::get_singleton()->get_filesystem_path(directory);
         if (!efd) {
             directory = path.get_base_dir();
@@ -1246,7 +1243,7 @@ void FileSystemDock::_push_to_history() {
 }
 
 void FileSystemDock::_get_all_items_in_dir(
-    EditorFileSystemDirectory* efsd,
+    EditorDirectory* efsd,
     Vector<String>& files,
     Vector<String>& folders
 ) const {
@@ -1264,7 +1261,7 @@ void FileSystemDock::_get_all_items_in_dir(
 }
 
 void FileSystemDock::_find_remaps(
-    EditorFileSystemDirectory* efsd,
+    EditorDirectory* efsd,
     const Map<String, String>& renames,
     Vector<String>& to_remaps
 ) const {
@@ -1724,7 +1721,7 @@ void FileSystemDock::_folder_removed(String p_folder) {
     }
 
     current_path->set_text(path);
-    EditorFileSystemDirectory* efd =
+    EditorDirectory* efd =
         EditorFileSystem::get_singleton()->get_filesystem_path(path);
     if (efd) {
         efd->force_update();

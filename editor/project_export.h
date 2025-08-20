@@ -104,7 +104,7 @@ private:
     void _filter_changed(const String& p_filter);
     void _fill_resource_tree();
     bool _fill_tree(
-        EditorFileSystemDirectory* p_dir,
+        EditorDirectory* p_dir,
         TreeItem* p_item,
         Ref<EditorExportPreset>& current,
         bool p_only_scenes

@@ -28,10 +28,10 @@
 #include "editor/dependency_editor.h"
 #include "editor/editor_about.h"
 #include "editor/editor_audio_buses.h"
+#include "editor/editor_directory.h"
 #include "editor/editor_export.h"
 #include "editor/editor_feature_profile.h"
 #include "editor/editor_file_system.h"
-#include "editor/editor_file_system_directory.h"
 #include "editor/editor_help.h"
 #include "editor/editor_inspector.h"
 #include "editor/editor_layouts_dialog.h"
@@ -4733,8 +4733,8 @@ void EditorNode::register_editor_types() {
     ClassDB::register_class<EditorSpatialGizmoPlugin>();
     ClassDB::register_virtual_class<EditorResourcePreview>();
     ClassDB::register_class<EditorResourcePreviewGenerator>();
+    ClassDB::register_class<EditorDirectory>();
     ClassDB::register_virtual_class<EditorFileSystem>();
-    ClassDB::register_class<EditorFileSystemDirectory>();
     ClassDB::register_class<EditorVCSInterface>();
     ClassDB::register_virtual_class<ScriptEditor>();
     ClassDB::register_virtual_class<EditorInterface>();
@@ -5062,15 +5062,15 @@ void EditorNode::progress_end_task_bg(const String& p_task) {
 }
 
 Ref<Texture> EditorNode::_file_dialog_get_icon(const String& p_path) {
-    EditorFileSystemDirectory* efsd =
+    EditorDirectory* directory =
         EditorFileSystem::get_singleton()->get_filesystem_path(
             p_path.get_base_dir()
         );
-    if (efsd) {
+    if (directory) {
         String file = p_path.get_file();
-        for (int i = 0; i < efsd->get_file_count(); i++) {
-            if (efsd->get_file(i) == file) {
-                String type = efsd->get_file_type(i);
+        for (int i = 0; i < directory->get_file_count(); i++) {
+            if (directory->get_file(i) == file) {
+                String type = directory->get_file_type(i);
 
                 if (singleton->icon_type_cache.has(type)) {
                     return singleton->icon_type_cache[type];

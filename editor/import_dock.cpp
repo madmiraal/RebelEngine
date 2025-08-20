@@ -6,8 +6,8 @@
 
 #include "import_dock.h"
 
+#include "editor/editor_directory.h"
 #include "editor/editor_file_system.h"
-#include "editor/editor_file_system_directory.h"
 #include "editor/editor_node.h"
 #include "editor/editor_resource_preview.h"
 
@@ -444,22 +444,19 @@ void ImportDock::clear() {
     preset->get_popup()->clear();
 }
 
-static bool _find_owners(
-    EditorFileSystemDirectory* efsd,
-    const String& p_path
-) {
-    if (!efsd) {
+static bool _find_owners(EditorDirectory* directory, const String& p_path) {
+    if (!directory) {
         return false;
     }
 
-    for (int i = 0; i < efsd->get_subdir_count(); i++) {
-        if (_find_owners(efsd->get_subdir(i), p_path)) {
+    for (int i = 0; i < directory->get_subdir_count(); i++) {
+        if (_find_owners(directory->get_subdir(i), p_path)) {
             return true;
         }
     }
 
-    for (int i = 0; i < efsd->get_file_count(); i++) {
-        Vector<String> deps = efsd->get_file_deps(i);
+    for (int i = 0; i < directory->get_file_count(); i++) {
+        Vector<String> deps = directory->get_file_deps(i);
         if (deps.find(p_path) != -1) {
             return true;
         }

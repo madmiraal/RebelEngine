@@ -15,8 +15,8 @@
 #include "core/os/os.h"
 #include "core/project_settings.h"
 #include "editor/editor_data.h"
+#include "editor/editor_directory.h"
 #include "editor/editor_file_system.h"
-#include "editor/editor_file_system_directory.h"
 #include "editor/editor_node.h"
 #include "editor/editor_scale.h"
 #include "editor/editor_settings.h"
@@ -718,7 +718,7 @@ void ProjectExportDialog::_fill_resource_tree() {
 }
 
 bool ProjectExportDialog::_fill_tree(
-    EditorFileSystemDirectory* p_dir,
+    EditorDirectory* p_dir,
     TreeItem* p_item,
     Ref<EditorExportPreset>& current,
     bool p_only_scenes

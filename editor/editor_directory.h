@@ -4,8 +4,8 @@
 //
 // SPDX-License-Identifier: MIT
 
-#ifndef EDITOR_FILE_SYSTEM_DIRECTORY_H
-#define EDITOR_FILE_SYSTEM_DIRECTORY_H
+#ifndef EDITOR_DIRECTORY_H
+#define EDITOR_DIRECTORY_H
 
 #include "core/object.h"
 #include "core/string_name.h"
@@ -14,15 +14,15 @@
 
 struct EditorFileInfo;
 
-class EditorFileSystemDirectory : public Object {
-    GDCLASS(EditorFileSystemDirectory, Object);
+class EditorDirectory : public Object {
+    GDCLASS(EditorDirectory, Object);
 
     String name;
     uint64_t modified_time;
     bool verified; // used for checking changes
 
-    EditorFileSystemDirectory* parent;
-    Vector<EditorFileSystemDirectory*> subdirs;
+    EditorDirectory* parent;
+    Vector<EditorDirectory*> subdirs;
 
     void sort_files();
 
@@ -37,7 +37,7 @@ public:
     String get_path() const;
 
     int get_subdir_count() const;
-    EditorFileSystemDirectory* get_subdir(int p_idx);
+    EditorDirectory* get_subdir(int p_idx);
     int get_file_count() const;
     String get_file(int p_idx) const;
     String get_file_path(int p_idx) const;
@@ -49,15 +49,15 @@ public:
     String get_file_script_class_extends(int p_idx) const;   // used for scripts
     String get_file_script_class_icon_path(int p_idx) const; // used for scripts
 
-    EditorFileSystemDirectory* get_parent();
+    EditorDirectory* get_parent();
 
     int find_file_index(const String& p_file) const;
     int find_dir_index(const String& p_dir) const;
 
     void force_update();
 
-    EditorFileSystemDirectory();
-    ~EditorFileSystemDirectory();
+    EditorDirectory();
+    ~EditorDirectory();
 };
 
-#endif // EDITOR_FILE_SYSTEM_DIRECTORY_H
+#endif // EDITOR_DIRECTORY_H

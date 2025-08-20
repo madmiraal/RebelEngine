@@ -16,7 +16,7 @@
 #include "scene/main/node.h"
 
 class DirAccess;
-class EditorFileSystemDirectory;
+class EditorDirectory;
 class FileAccess;
 struct EditorFileInfo;
 struct EditorProgressBG;
@@ -38,9 +38,9 @@ class EditorFileSystem : public Node {
         };
 
         Action action;
-        EditorFileSystemDirectory* dir;
+        EditorDirectory* dir;
         String file;
-        EditorFileSystemDirectory* new_dir;
+        EditorDirectory* new_dir;
         EditorFileInfo* new_file;
 
         ItemAction() {
@@ -54,7 +54,7 @@ class EditorFileSystem : public Node {
     Thread thread;
     static void _thread_func(void* _userdata);
 
-    EditorFileSystemDirectory* new_filesystem;
+    EditorDirectory* new_filesystem;
 
     bool scanning;
     bool importing;
@@ -72,7 +72,7 @@ class EditorFileSystem : public Node {
 
     void _save_late_updated_files();
 
-    EditorFileSystemDirectory* filesystem;
+    EditorDirectory* filesystem;
 
     static EditorFileSystem* singleton;
 
@@ -100,19 +100,16 @@ class EditorFileSystem : public Node {
     };
 
     void _save_filesystem_cache();
-    void _save_filesystem_cache(
-        EditorFileSystemDirectory* p_dir,
-        FileAccess* p_file
-    );
+    void _save_filesystem_cache(EditorDirectory* p_dir, FileAccess* p_file);
 
     bool _find_file(
         const String& p_file,
-        EditorFileSystemDirectory** r_d,
+        EditorDirectory** r_d,
         int& r_file_pos
     ) const;
 
     void _scan_fs_changes(
-        EditorFileSystemDirectory* p_dir,
+        EditorDirectory* p_dir,
         const ScanProgress& p_progress
     );
 
@@ -123,7 +120,7 @@ class EditorFileSystem : public Node {
     Set<String> import_extensions;
 
     void _scan_new_dir(
-        EditorFileSystemDirectory* p_dir,
+        EditorDirectory* p_dir,
         DirAccess* da,
         const ScanProgress& p_progress
     );
@@ -162,7 +159,7 @@ class EditorFileSystem : public Node {
         }
     };
 
-    void _scan_script_classes(EditorFileSystemDirectory* p_dir);
+    void _scan_script_classes(EditorDirectory* p_dir);
     SafeFlag update_script_classes_queued;
     void _queue_update_script_classes();
 
@@ -179,13 +176,13 @@ class EditorFileSystem : public Node {
                                // filesystem (pendrives, most of the time)
 
     void _find_group_files(
-        EditorFileSystemDirectory* efd,
+        EditorDirectory* efd,
         Map<String, Vector<String>>& group_files,
         Set<String>& groups_to_reimport
     );
 
     void _move_group_files(
-        EditorFileSystemDirectory* efd,
+        EditorDirectory* efd,
         const String& p_group_file,
         const String& p_new_location
     );
@@ -201,7 +198,7 @@ public:
         return singleton;
     }
 
-    EditorFileSystemDirectory* get_filesystem();
+    EditorDirectory* get_filesystem();
     bool is_scanning() const;
 
     bool is_importing() const {
@@ -215,10 +212,9 @@ public:
     void update_file(const String& p_file);
     Set<String> get_valid_extensions() const;
 
-    EditorFileSystemDirectory* get_filesystem_path(const String& p_path);
+    EditorDirectory* get_filesystem_path(const String& p_path);
     String get_file_type(const String& p_file) const;
-    EditorFileSystemDirectory* find_file(const String& p_file, int* r_index)
-        const;
+    EditorDirectory* find_file(const String& p_file, int* r_index) const;
 
     void reimport_files(const Vector<String>& p_files);
 

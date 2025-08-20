@@ -11,8 +11,8 @@
 #include "gdscript_compiler.h"
 
 #ifdef TOOLS_ENABLED
+#include "editor/editor_directory.h"
 #include "editor/editor_file_system.h"
-#include "editor/editor_file_system_directory.h"
 #include "editor/editor_settings.h"
 #endif
 
@@ -588,7 +588,7 @@ struct GDScriptCompletionIdentifier {
 };
 
 static void _get_directory_contents(
-    EditorFileSystemDirectory* p_dir,
+    EditorDirectory* p_dir,
     Map<String, ScriptCodeCompletionOption>& r_list,
     String p_ends_with = ""
 ) {

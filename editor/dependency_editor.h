@@ -12,8 +12,8 @@
 #include "scene/gui/tab_container.h"
 #include "scene/gui/tree.h"
 
+class EditorDirectory;
 class EditorFileDialog;
-class EditorFileSystemDirectory;
 class EditorNode;
 
 class DependencyEditor : public AcceptDialog {
@@ -29,7 +29,7 @@ class DependencyEditor : public AcceptDialog {
     List<String> missing;
 
     void _fix_and_find(
-        EditorFileSystemDirectory* efsd,
+        EditorDirectory* directory,
         Map<String, Map<String, String>>& candidates
     );
 
@@ -56,7 +56,7 @@ class DependencyEditorOwners : public AcceptDialog {
     EditorNode* editor;
     String editing;
 
-    void _fill_owners(EditorFileSystemDirectory* efsd);
+    void _fill_owners(EditorDirectory* directory);
 
     static void _bind_methods();
     void _list_rmb_select(int p_item, const Vector2& p_pos);
@@ -100,11 +100,11 @@ class DependencyRemoveDialog : public ConfirmationDialog {
     };
 
     void _find_files_in_removed_folder(
-        EditorFileSystemDirectory* efsd,
+        EditorDirectory* directory,
         const String& p_folder
     );
     void _find_all_removed_dependencies(
-        EditorFileSystemDirectory* efsd,
+        EditorDirectory* directory,
         Vector<RemovedDependency>& p_removed
     );
     void _build_removed_dependency_tree(
@@ -156,7 +156,7 @@ class OrphanResourcesDialog : public ConfirmationDialog {
     void ok_pressed();
 
     bool _fill_owners(
-        EditorFileSystemDirectory* efsd,
+        EditorDirectory* directory,
         HashMap<String, int>& refs,
         TreeItem* p_parent
     );

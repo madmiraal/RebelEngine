@@ -20,9 +20,7 @@ private:
 
     bool updating;
 
-    static Set<String> _find_singletons_recursive(
-        EditorFileSystemDirectory* p_dir
-    );
+    static Set<String> _find_singletons_recursive(EditorDirectory* p_dir);
 
 protected:
     void _notification(int p_what);

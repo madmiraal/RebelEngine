@@ -169,7 +169,7 @@ private:
     Ref<Texture> _get_tree_item_icon(bool p_is_valid, String p_file_type);
     bool _create_tree(
         TreeItem* p_parent,
-        EditorFileSystemDirectory* p_dir,
+        EditorDirectory* p_dir,
         Vector<String>& uncollapsed_paths,
         bool p_select_in_favorites,
         bool p_unfold_path = false
@@ -205,12 +205,12 @@ private:
     void _update_import_dock();
 
     void _get_all_items_in_dir(
-        EditorFileSystemDirectory* efsd,
+        EditorDirectory* directory,
         Vector<String>& files,
         Vector<String>& folders
     ) const;
     void _find_remaps(
-        EditorFileSystemDirectory* efsd,
+        EditorDirectory* directory,
         const Map<String, String>& renames,
         Vector<String>& to_remaps
     ) const;
@@ -304,7 +304,7 @@ private:
     void _sort_file_info_list(List<FileSystemDock::FileInfo>& r_file_list);
 
     void _search(
-        EditorFileSystemDirectory* p_path,
+        EditorDirectory* p_path,
         List<FileInfo>* matches,
         int p_max_items
     );

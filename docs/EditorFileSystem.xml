@@ -25,13 +25,13 @@ SPDX-License-Identifier: MIT
             </description>
         </method>
         <method name="get_filesystem">
-            <return type="EditorFileSystemDirectory" />
+            <return type="EditorDirectory" />
             <description>
                 Gets the root directory object.
             </description>
         </method>
         <method name="get_filesystem_path">
-            <return type="EditorFileSystemDirectory" />
+            <return type="EditorDirectory" />
             <argument index="0" name="path" type="String" />
             <description>
                 Returns a view into the filesystem at [code]path[/code].

@@ -10,8 +10,8 @@
 #include "../gdscript_parser.h"
 #include "core/project_settings.h"
 #include "core/script_language.h"
+#include "editor/editor_directory.h"
 #include "editor/editor_file_system.h"
-#include "editor/editor_file_system_directory.h"
 #include "editor/editor_help.h"
 #include "editor/editor_node.h"
 #include "gdscript_language_protocol.h"
@@ -602,20 +602,20 @@ void GDScriptWorkspace::publish_diagnostics(const String& p_path) {
 }
 
 void GDScriptWorkspace::_get_owners(
-    EditorFileSystemDirectory* efsd,
+    EditorDirectory* directory,
     String p_path,
     List<String>& owners
 ) {
-    if (!efsd) {
+    if (!directory) {
         return;
     }
 
-    for (int i = 0; i < efsd->get_subdir_count(); i++) {
-        _get_owners(efsd->get_subdir(i), p_path, owners);
+    for (int i = 0; i < directory->get_subdir_count(); i++) {
+        _get_owners(directory->get_subdir(i), p_path, owners);
     }
 
-    for (int i = 0; i < efsd->get_file_count(); i++) {
-        Vector<String> deps = efsd->get_file_deps(i);
+    for (int i = 0; i < directory->get_file_count(); i++) {
+        Vector<String> deps = directory->get_file_deps(i);
         bool found          = false;
         for (int j = 0; j < deps.size(); j++) {
             if (deps[j] == p_path) {
@@ -627,7 +627,7 @@ void GDScriptWorkspace::_get_owners(
             continue;
         }
 
-        owners.push_back(efsd->get_file_path(i));
+        owners.push_back(directory->get_file_path(i));
     }
 }
 

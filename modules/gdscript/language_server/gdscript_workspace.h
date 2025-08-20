@@ -18,7 +18,7 @@ class GDScriptWorkspace : public Reference {
 
 private:
     void _get_owners(
-        EditorFileSystemDirectory* efsd,
+        EditorDirectory* directory,
         String p_path,
         List<String>& owners
     );

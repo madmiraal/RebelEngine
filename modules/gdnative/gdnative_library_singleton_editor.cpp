@@ -7,12 +7,12 @@
 #ifdef TOOLS_ENABLED
 #include "gdnative_library_singleton_editor.h"
 
-#include "editor/editor_file_system_directory.h"
+#include "editor/editor_directory.h"
 #include "editor/editor_node.h"
 #include "gdnative.h"
 
 Set<String> GDNativeLibrarySingletonEditor::_find_singletons_recursive(
-    EditorFileSystemDirectory* p_dir
+    EditorDirectory* p_dir
 ) {
     Set<String> file_paths;
 
@@ -46,8 +46,7 @@ Set<String> GDNativeLibrarySingletonEditor::_find_singletons_recursive(
 }
 
 void GDNativeLibrarySingletonEditor::_discover_singletons() {
-    EditorFileSystemDirectory* dir =
-        EditorFileSystem::get_singleton()->get_filesystem();
+    EditorDirectory* dir = EditorFileSystem::get_singleton()->get_filesystem();
 
     Set<String> file_paths = _find_singletons_recursive(dir);
 
