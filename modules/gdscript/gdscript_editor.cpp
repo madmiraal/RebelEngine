@@ -12,6 +12,7 @@
 
 #ifdef TOOLS_ENABLED
 #include "editor/editor_file_system.h"
+#include "editor/editor_file_system_directory.h"
 #include "editor/editor_settings.h"
 #endif
 

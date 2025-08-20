@@ -7,6 +7,8 @@
 #include "quick_open.h"
 
 #include "core/os/keyboard.h"
+#include "editor/editor_file_system.h"
+#include "editor/editor_file_system_directory.h"
 
 void EditorQuickOpen::popup_dialog(
     const StringName& p_base,

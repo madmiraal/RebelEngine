@@ -6,8 +6,10 @@
 
 #include "code_completion.h"
 
+#include "core/os/dir_access.h"
 #include "core/project_settings.h"
 #include "editor/editor_file_system.h"
+#include "editor/editor_file_system_directory.h"
 #include "editor/editor_settings.h"
 #include "scene/gui/control.h"
 #include "scene/main/node.h"

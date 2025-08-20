@@ -7,6 +7,7 @@
 #ifdef TOOLS_ENABLED
 #include "gdnative_library_singleton_editor.h"
 
+#include "editor/editor_file_system_directory.h"
 #include "editor/editor_node.h"
 #include "gdnative.h"
 

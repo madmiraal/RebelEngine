@@ -7,82 +7,19 @@
 #ifndef EDITOR_FILE_SYSTEM_H
 #define EDITOR_FILE_SYSTEM_H
 
-#include "core/os/dir_access.h"
+#include "core/hash_map.h"
+#include "core/list.h"
 #include "core/os/thread.h"
-#include "core/os/thread_safe.h"
-#include "core/safe_refcount.h"
 #include "core/set.h"
+#include "core/ustring.h"
+#include "core/vector.h"
 #include "scene/main/node.h"
 
+class DirAccess;
+class EditorFileSystemDirectory;
 class FileAccess;
-
+struct EditorFileInfo;
 struct EditorProgressBG;
-
-class EditorFileSystemDirectory : public Object {
-    GDCLASS(EditorFileSystemDirectory, Object);
-
-    String name;
-    uint64_t modified_time;
-    bool verified; // used for checking changes
-
-    EditorFileSystemDirectory* parent;
-    Vector<EditorFileSystemDirectory*> subdirs;
-
-    struct FileInfo {
-        String file;
-        StringName type;
-        uint64_t modified_time;
-        uint64_t import_modified_time;
-        bool import_valid;
-        String import_group_file;
-        Vector<String> deps;
-        bool verified; // used for checking changes
-        String script_class_name;
-        String script_class_extends;
-        String script_class_icon_path;
-    };
-
-    struct FileInfoSort {
-        bool operator()(const FileInfo* p_a, const FileInfo* p_b) const {
-            return p_a->file < p_b->file;
-        }
-    };
-
-    void sort_files();
-
-    Vector<FileInfo*> files;
-
-    static void _bind_methods();
-
-    friend class EditorFileSystem;
-
-public:
-    String get_name();
-    String get_path() const;
-
-    int get_subdir_count() const;
-    EditorFileSystemDirectory* get_subdir(int p_idx);
-    int get_file_count() const;
-    String get_file(int p_idx) const;
-    String get_file_path(int p_idx) const;
-    StringName get_file_type(int p_idx) const;
-    Vector<String> get_file_deps(int p_idx) const;
-    bool get_file_import_is_valid(int p_idx) const;
-    uint64_t get_file_modified_time(int p_idx) const;
-    String get_file_script_class_name(int p_idx) const;      // used for scripts
-    String get_file_script_class_extends(int p_idx) const;   // used for scripts
-    String get_file_script_class_icon_path(int p_idx) const; // used for scripts
-
-    EditorFileSystemDirectory* get_parent();
-
-    int find_file_index(const String& p_file) const;
-    int find_dir_index(const String& p_dir) const;
-
-    void force_update();
-
-    EditorFileSystemDirectory();
-    ~EditorFileSystemDirectory();
-};
 
 class EditorFileSystem : public Node {
     GDCLASS(EditorFileSystem, Node);
@@ -104,7 +41,7 @@ class EditorFileSystem : public Node {
         EditorFileSystemDirectory* dir;
         String file;
         EditorFileSystemDirectory* new_dir;
-        EditorFileSystemDirectory::FileInfo* new_file;
+        EditorFileInfo* new_file;
 
         ItemAction() {
             action   = ACTION_NONE;

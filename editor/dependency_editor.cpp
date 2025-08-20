@@ -8,8 +8,9 @@
 
 #include "core/io/resource_loader.h"
 #include "core/os/file_access.h"
-#include "editor_node.h"
-#include "editor_scale.h"
+#include "editor/editor_file_system_directory.h"
+#include "editor/editor_node.h"
+#include "editor/editor_scale.h"
 #include "scene/gui/margin_container.h"
 
 void DependencyEditor::_searched(const String& p_path) {

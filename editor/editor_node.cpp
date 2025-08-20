@@ -31,6 +31,7 @@
 #include "editor/editor_export.h"
 #include "editor/editor_feature_profile.h"
 #include "editor/editor_file_system.h"
+#include "editor/editor_file_system_directory.h"
 #include "editor/editor_help.h"
 #include "editor/editor_inspector.h"
 #include "editor/editor_layouts_dialog.h"

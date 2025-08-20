@@ -11,6 +11,7 @@
 #include "core/project_settings.h"
 #include "core/script_language.h"
 #include "editor/editor_file_system.h"
+#include "editor/editor_file_system_directory.h"
 #include "editor/editor_help.h"
 #include "editor/editor_node.h"
 #include "gdscript_language_protocol.h"

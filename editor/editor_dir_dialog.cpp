@@ -9,6 +9,7 @@
 #include "core/os/keyboard.h"
 #include "core/os/os.h"
 #include "editor/editor_file_system.h"
+#include "editor/editor_file_system_directory.h"
 #include "editor/editor_settings.h"
 #include "editor_scale.h"
 
