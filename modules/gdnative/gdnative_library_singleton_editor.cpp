@@ -8,6 +8,7 @@
 #include "gdnative_library_singleton_editor.h"
 
 #include "editor/editor_directory.h"
+#include "editor/editor_file.h"
 #include "editor/editor_node.h"
 #include "gdnative.h"
 
@@ -19,17 +20,17 @@ Set<String> GDNativeLibrarySingletonEditor::_find_singletons_recursive(
     // check children
 
     for (int i = 0; i < p_dir->get_file_count(); i++) {
-        String file_name = p_dir->get_file(i);
-        String file_type = p_dir->get_file_type(i);
+        String file_name = p_dir->get_file(i)->get_name();
+        String file_type = p_dir->get_file(i)->get_type();
 
         if (file_type != "GDNativeLibrary") {
             continue;
         }
 
         Ref<GDNativeLibrary> lib =
-            ResourceLoader::load(p_dir->get_file_path(i));
+            ResourceLoader::load(p_dir->get_file(i)->get_path());
         if (lib.is_valid() && lib->is_singleton()) {
-            file_paths.insert(p_dir->get_file_path(i));
+            file_paths.insert(p_dir->get_file(i)->get_path());
         }
     }
 

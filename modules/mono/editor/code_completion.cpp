@@ -9,6 +9,7 @@
 #include "core/os/dir_access.h"
 #include "core/project_settings.h"
 #include "editor/editor_directory.h"
+#include "editor/editor_file.h"
 #include "editor/editor_file_system.h"
 #include "editor/editor_settings.h"
 #include "scene/gui/control.h"
@@ -72,7 +73,7 @@ void _get_directory_contents(
     PoolStringArray& r_suggestions
 ) {
     for (int i = 0; i < p_dir->get_file_count(); i++) {
-        r_suggestions.push_back(quoted(p_dir->get_file_path(i)));
+        r_suggestions.push_back(quoted(p_dir->get_file(i)->get_path()));
     }
 
     for (int i = 0; i < p_dir->get_subdir_count(); i++) {

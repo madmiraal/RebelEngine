@@ -12,6 +12,7 @@
 
 #ifdef TOOLS_ENABLED
 #include "editor/editor_directory.h"
+#include "editor/editor_file.h"
 #include "editor/editor_file_system.h"
 #include "editor/editor_settings.h"
 #endif
@@ -598,7 +599,7 @@ static void _get_directory_contents(
 
     for (int i = 0; i < p_dir->get_file_count(); i++) {
         ScriptCodeCompletionOption option(
-            p_dir->get_file_path(i),
+            p_dir->get_file(i)->get_path(),
             ScriptCodeCompletionOption::KIND_FILE_PATH
         );
         option.insert_text = quote_style + option.display + quote_style;

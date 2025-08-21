@@ -18,6 +18,7 @@
 #include "core/script_language.h"
 #include "core/version.h"
 #include "editor/editor_directory.h"
+#include "editor/editor_file.h"
 #include "editor/editor_file_system.h"
 #include "editor/editor_node.h"
 #include "editor/editor_settings.h"
@@ -413,7 +414,7 @@ void EditorExportPlatform::_export_find_resources(
     }
 
     for (int i = 0; i < p_dir->get_file_count(); i++) {
-        p_paths.insert(p_dir->get_file_path(i));
+        p_paths.insert(p_dir->get_file(i)->get_path());
     }
 }
 
@@ -434,7 +435,7 @@ void EditorExportPlatform::_export_find_dependencies(
         return;
     }
 
-    Vector<String> deps = dir->get_file_deps(file_idx);
+    Vector<String> deps = dir->get_file(file_idx)->get_dependencies();
 
     for (int i = 0; i < deps.size(); i++) {
         _export_find_dependencies(deps[i], p_paths);

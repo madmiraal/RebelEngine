@@ -31,6 +31,7 @@
 #include "editor/editor_directory.h"
 #include "editor/editor_export.h"
 #include "editor/editor_feature_profile.h"
+#include "editor/editor_file.h"
 #include "editor/editor_file_system.h"
 #include "editor/editor_help.h"
 #include "editor/editor_inspector.h"
@@ -4734,6 +4735,7 @@ void EditorNode::register_editor_types() {
     ClassDB::register_virtual_class<EditorResourcePreview>();
     ClassDB::register_class<EditorResourcePreviewGenerator>();
     ClassDB::register_class<EditorDirectory>();
+    ClassDB::register_class<EditorFile>();
     ClassDB::register_virtual_class<EditorFileSystem>();
     ClassDB::register_class<EditorVCSInterface>();
     ClassDB::register_virtual_class<ScriptEditor>();
@@ -5069,8 +5071,8 @@ Ref<Texture> EditorNode::_file_dialog_get_icon(const String& p_path) {
     if (directory) {
         String file = p_path.get_file();
         for (int i = 0; i < directory->get_file_count(); i++) {
-            if (directory->get_file(i) == file) {
-                String type = directory->get_file_type(i);
+            if (directory->get_file(i)->get_name() == file) {
+                String type = directory->get_file(i)->get_type();
 
                 if (singleton->icon_type_cache.has(type)) {
                     return singleton->icon_type_cache[type];

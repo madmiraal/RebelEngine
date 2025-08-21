@@ -15,6 +15,7 @@
 #include "core/project_settings.h"
 #include "editor/editor_directory.h"
 #include "editor/editor_feature_profile.h"
+#include "editor/editor_file.h"
 #include "editor/editor_file_system.h"
 #include "editor/editor_node.h"
 #include "editor/editor_resource_preview.h"
@@ -108,14 +109,14 @@ bool FileSystemDock::_create_tree(
         // Build the list of the files to display.
         List<FileInfo> file_list;
         for (int i = 0; i < p_dir->get_file_count(); i++) {
-            String file_type = p_dir->get_file_type(i);
+            String file_type = p_dir->get_file(i)->get_type();
 
             if (_is_file_type_disabled_by_feature_profile(file_type)) {
                 // If type is disabled, file won't be displayed.
                 continue;
             }
 
-            String file_name = p_dir->get_file(i);
+            String file_name = p_dir->get_file(i)->get_name();
             if (searched_string.length() > 0) {
                 if (file_name.to_lower().find(searched_string) < 0) {
                     // The searched string is not in the file name, we skip it.
@@ -127,10 +128,10 @@ bool FileSystemDock::_create_tree(
             }
 
             FileInfo fi;
-            fi.name          = p_dir->get_file(i);
-            fi.type          = p_dir->get_file_type(i);
-            fi.import_broken = !p_dir->get_file_import_is_valid(i);
-            fi.modified_time = p_dir->get_file_modified_time(i);
+            fi.name          = p_dir->get_file(i)->get_name();
+            fi.type          = p_dir->get_file(i)->get_type();
+            fi.import_broken = !p_dir->get_file(i)->is_import_valid();
+            fi.modified_time = p_dir->get_file(i)->get_modified_time();
 
             file_list.push_back(fi);
         }
@@ -270,8 +271,8 @@ void FileSystemDock::_update_tree(
                 EditorFileSystem::get_singleton()->find_file(fave, &index);
             if (dir) {
                 icon = _get_tree_item_icon(
-                    dir->get_file_import_is_valid(index),
-                    dir->get_file_type(index)
+                    dir->get_file(index)->is_import_valid(),
+                    dir->get_file(index)->get_type()
                 );
             } else {
                 icon = get_icon("File", "EditorIcons");
@@ -715,14 +716,14 @@ void FileSystemDock::_search(
     }
 
     for (int i = 0; i < p_path->get_file_count(); i++) {
-        String file = p_path->get_file(i);
+        String file = p_path->get_file(i)->get_name();
 
         if (file.to_lower().find(searched_string) != -1) {
             FileInfo fi;
             fi.name          = file;
-            fi.type          = p_path->get_file_type(i);
-            fi.path          = p_path->get_file_path(i);
-            fi.import_broken = !p_path->get_file_import_is_valid(i);
+            fi.type          = p_path->get_file(i)->get_type();
+            fi.path          = p_path->get_file(i)->get_path();
+            fi.import_broken = !p_path->get_file(i)->is_import_valid();
 
             if (_is_file_type_disabled_by_feature_profile(fi.type)) {
                 // This type is disabled, will not appear here.
@@ -894,9 +895,10 @@ void FileSystemDock::_update_file_list(bool p_keep_selection) {
                 fi.name = favorite.get_file();
                 fi.path = favorite;
                 if (efd) {
-                    fi.type          = efd->get_file_type(index);
-                    fi.import_broken = !efd->get_file_import_is_valid(index);
-                    fi.modified_time = efd->get_file_modified_time(index);
+                    fi.type          = efd->get_file(index)->get_type();
+                    fi.import_broken = !efd->get_file(index)->is_import_valid();
+                    fi.modified_time =
+                        efd->get_file(index)->get_modified_time();
                 } else {
                     fi.type          = "";
                     fi.import_broken = true;
@@ -982,11 +984,11 @@ void FileSystemDock::_update_file_list(bool p_keep_selection) {
             // Display the folder content.
             for (int i = 0; i < efd->get_file_count(); i++) {
                 FileInfo fi;
-                fi.name          = efd->get_file(i);
+                fi.name          = efd->get_file(i)->get_name();
                 fi.path          = directory.plus_file(fi.name);
-                fi.type          = efd->get_file_type(i);
-                fi.import_broken = !efd->get_file_import_is_valid(i);
-                fi.modified_time = efd->get_file_modified_time(i);
+                fi.type          = efd->get_file(i)->get_type();
+                fi.import_broken = !efd->get_file(i)->is_import_valid();
+                fi.modified_time = efd->get_file(i)->get_modified_time();
 
                 file_list.push_back(fi);
             }
@@ -1256,7 +1258,7 @@ void FileSystemDock::_get_all_items_in_dir(
         _get_all_items_in_dir(efsd->get_subdir(i), files, folders);
     }
     for (int i = 0; i < efsd->get_file_count(); i++) {
-        files.push_back(efsd->get_file_path(i));
+        files.push_back(efsd->get_file(i)->get_path());
     }
 }
 
@@ -1269,10 +1271,10 @@ void FileSystemDock::_find_remaps(
         _find_remaps(efsd->get_subdir(i), renames, to_remaps);
     }
     for (int i = 0; i < efsd->get_file_count(); i++) {
-        Vector<String> deps = efsd->get_file_deps(i);
+        Vector<String> deps = efsd->get_file(i)->get_dependencies();
         for (int j = 0; j < deps.size(); j++) {
             if (renames.has(deps[j])) {
-                to_remaps.push_back(efsd->get_file_path(i));
+                to_remaps.push_back(efsd->get_file(i)->get_path());
                 break;
             }
         }

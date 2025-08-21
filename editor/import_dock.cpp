@@ -7,6 +7,7 @@
 #include "import_dock.h"
 
 #include "editor/editor_directory.h"
+#include "editor/editor_file.h"
 #include "editor/editor_file_system.h"
 #include "editor/editor_node.h"
 #include "editor/editor_resource_preview.h"
@@ -456,7 +457,7 @@ static bool _find_owners(EditorDirectory* directory, const String& p_path) {
     }
 
     for (int i = 0; i < directory->get_file_count(); i++) {
-        Vector<String> deps = directory->get_file_deps(i);
+        Vector<String> deps = directory->get_file(i)->get_dependencies();
         if (deps.find(p_path) != -1) {
             return true;
         }

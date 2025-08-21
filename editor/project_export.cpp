@@ -16,6 +16,7 @@
 #include "core/project_settings.h"
 #include "editor/editor_data.h"
 #include "editor/editor_directory.h"
+#include "editor/editor_file.h"
 #include "editor/editor_file_system.h"
 #include "editor/editor_node.h"
 #include "editor/editor_scale.h"
@@ -742,16 +743,16 @@ bool ProjectExportDialog::_fill_tree(
     }
 
     for (int i = 0; i < p_dir->get_file_count(); i++) {
-        String type = p_dir->get_file_type(i);
+        String type = p_dir->get_file(i)->get_type();
         if (p_only_scenes && type != "PackedScene") {
             continue;
         }
 
         TreeItem* file = include_files->create_item(p_item);
         file->set_cell_mode(0, TreeItem::CELL_MODE_CHECK);
-        file->set_text(0, p_dir->get_file(i));
+        file->set_text(0, p_dir->get_file(i)->get_name());
 
-        String path = p_dir->get_file_path(i);
+        String path = p_dir->get_file(i)->get_path();
 
         file->set_icon(0, EditorNode::get_singleton()->get_class_icon(type));
         file->set_editable(0, true);

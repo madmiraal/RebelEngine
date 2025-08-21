@@ -17,8 +17,8 @@
 
 class DirAccess;
 class EditorDirectory;
+class EditorFile;
 class FileAccess;
-struct EditorFileInfo;
 struct EditorProgressBG;
 
 class EditorFileSystem : public Node {
@@ -41,7 +41,7 @@ class EditorFileSystem : public Node {
         EditorDirectory* dir;
         String file;
         EditorDirectory* new_dir;
-        EditorFileInfo* new_file;
+        EditorFile* new_file;
 
         ItemAction() {
             action   = ACTION_NONE;

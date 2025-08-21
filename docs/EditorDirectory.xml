@@ -31,10 +31,10 @@ SPDX-License-Identifier: MIT
             </description>
         </method>
         <method name="get_file" qualifiers="const">
-            <return type="String" />
+            <return type="EditorFile" />
             <argument index="0" name="idx" type="int" />
             <description>
-                Returns the name of the file at index [code]idx[/code].
+                Returns the [EditorFile] of the file at index [code]idx[/code].
             </description>
         </method>
         <method name="get_file_count" qualifiers="const">
@@ -43,48 +43,13 @@ SPDX-License-Identifier: MIT
                 Returns the number of files in this directory.
             </description>
         </method>
-        <method name="get_file_import_is_valid" qualifiers="const">
-            <return type="bool" />
-            <argument index="0" name="idx" type="int" />
-            <description>
-                Returns [code]true[/code] if the file at index [code]idx[/code] imported properly.
-            </description>
-        </method>
-        <method name="get_file_path" qualifiers="const">
-            <return type="String" />
-            <argument index="0" name="idx" type="int" />
-            <description>
-                Returns the path to the file at index [code]idx[/code].
-            </description>
-        </method>
-        <method name="get_file_script_class_extends" qualifiers="const">
-            <return type="String" />
-            <argument index="0" name="idx" type="int" />
-            <description>
-                Returns the base class of the script class defined in the file at index [code]idx[/code]. If the file doesn't define a script class using the [code]class_name[/code] syntax, this will return an empty string.
-            </description>
-        </method>
-        <method name="get_file_script_class_name" qualifiers="const">
-            <return type="String" />
-            <argument index="0" name="idx" type="int" />
-            <description>
-                Returns the name of the script class defined in the file at index [code]idx[/code]. If the file doesn't define a script class using the [code]class_name[/code] syntax, this will return an empty string.
-            </description>
-        </method>
-        <method name="get_file_type" qualifiers="const">
-            <return type="String" />
-            <argument index="0" name="idx" type="int" />
-            <description>
-                Returns the resource type of the file at index [code]idx[/code]. This returns a string such as [code]"Resource"[/code] or [code]"GDScript"[/code], [i]not[/i] a file extension such as [code]".gd"[/code].
-            </description>
-        </method>
-        <method name="get_name">
+        <method name="get_name" qualifiers="const">
             <return type="String" />
             <description>
                 Returns the name of this directory.
             </description>
         </method>
-        <method name="get_parent">
+        <method name="get_parent" qualifiers="const">
             <return type="EditorDirectory" />
             <description>
                 Returns the parent directory for this directory or [code]null[/code] if called on a directory at [code]res://[/code] or [code]user://[/code].
@@ -96,7 +61,7 @@ SPDX-License-Identifier: MIT
                 Returns the path to this directory.
             </description>
         </method>
-        <method name="get_subdir">
+        <method name="get_subdir" qualifiers="const">
             <return type="EditorDirectory" />
             <argument index="0" name="idx" type="int" />
             <description>

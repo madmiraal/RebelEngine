@@ -9,6 +9,7 @@
 #include "core/io/resource_loader.h"
 #include "core/os/file_access.h"
 #include "editor/editor_directory.h"
+#include "editor/editor_file.h"
 #include "editor/editor_file_system.h"
 #include "editor/editor_node.h"
 #include "editor/editor_scale.h"
@@ -54,12 +55,12 @@ void DependencyEditor::_fix_and_find(
     }
 
     for (int i = 0; i < directory->get_file_count(); i++) {
-        String file = directory->get_file(i);
+        String file = directory->get_file(i)->get_name();
         if (!candidates.has(file)) {
             continue;
         }
 
-        String path = directory->get_file_path(i);
+        String path = directory->get_file(i)->get_path();
 
         for (Map<String, String>::Element* E = candidates[file].front(); E;
              E                               = E->next()) {
@@ -324,7 +325,7 @@ void DependencyEditorOwners::_fill_owners(EditorDirectory* directory) {
     }
 
     for (int i = 0; i < directory->get_file_count(); i++) {
-        Vector<String> deps = directory->get_file_deps(i);
+        Vector<String> deps = directory->get_file(i)->get_dependencies();
         bool found          = false;
         for (int j = 0; j < deps.size(); j++) {
             if (deps[j] == editing) {
@@ -337,10 +338,10 @@ void DependencyEditorOwners::_fill_owners(EditorDirectory* directory) {
         }
 
         Ref<Texture> icon = EditorNode::get_singleton()->get_class_icon(
-            directory->get_file_type(i)
+            directory->get_file(i)->get_type()
         );
 
-        owners->add_item(directory->get_file_path(i), icon);
+        owners->add_item(directory->get_file(i)->get_path(), icon);
     }
 }
 
@@ -382,7 +383,7 @@ void DependencyRemoveDialog::_find_files_in_removed_folder(
         _find_files_in_removed_folder(directory->get_subdir(i), p_folder);
     }
     for (int i = 0; i < directory->get_file_count(); i++) {
-        String file = directory->get_file_path(i);
+        String file = directory->get_file(i)->get_path();
         ERR_FAIL_COND(all_remove_files.has(file)
         ); // We are deleting a directory which is contained in a directory we
            // are deleting...
@@ -406,7 +407,7 @@ void DependencyRemoveDialog::_find_all_removed_dependencies(
     }
 
     for (int i = 0; i < directory->get_file_count(); i++) {
-        const String path = directory->get_file_path(i);
+        const String path = directory->get_file(i)->get_path();
 
         // It doesn't matter if a file we are about to delete will have some of
         // its dependencies removed too
@@ -414,12 +415,12 @@ void DependencyRemoveDialog::_find_all_removed_dependencies(
             continue;
         }
 
-        Vector<String> all_deps = directory->get_file_deps(i);
+        Vector<String> all_deps = directory->get_file(i)->get_dependencies();
         for (int j = 0; j < all_deps.size(); ++j) {
             if (all_remove_files.has(all_deps[j])) {
                 RemovedDependency dep;
                 dep.file              = path;
-                dep.file_type         = directory->get_file_type(i);
+                dep.file_type         = directory->get_file(i)->get_type();
                 dep.dependency        = all_deps[j];
                 dep.dependency_folder = all_remove_files[all_deps[j]];
                 p_removed.push_back(dep);
@@ -802,26 +803,26 @@ bool OrphanResourcesDialog::_fill_owners(
 
     for (int i = 0; i < directory->get_file_count(); i++) {
         if (!p_parent) {
-            Vector<String> deps = directory->get_file_deps(i);
+            Vector<String> deps = directory->get_file(i)->get_dependencies();
             for (int j = 0; j < deps.size(); j++) {
                 if (!refs.has(deps[j])) {
                     refs[deps[j]] = 1;
                 }
             }
         } else {
-            String path = directory->get_file_path(i);
+            String path = directory->get_file(i)->get_path();
             if (!refs.has(path)) {
                 TreeItem* ti = files->create_item(p_parent);
                 ti->set_cell_mode(0, TreeItem::CELL_MODE_CHECK);
-                ti->set_text(0, directory->get_file(i));
+                ti->set_text(0, directory->get_file(i)->get_name());
                 ti->set_editable(0, true);
 
-                String type = directory->get_file_type(i);
+                String type = directory->get_file(i)->get_type();
 
                 Ref<Texture> icon =
                     EditorNode::get_singleton()->get_class_icon(type);
                 ti->set_icon(0, icon);
-                int ds = directory->get_file_deps(i).size();
+                int ds = directory->get_file(i)->get_dependencies().size();
                 ti->set_text(1, itos(ds));
                 if (ds) {
                     ti->add_button(

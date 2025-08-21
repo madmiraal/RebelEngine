@@ -8,6 +8,7 @@
 
 #include "core/os/keyboard.h"
 #include "editor/editor_directory.h"
+#include "editor/editor_file.h"
 #include "editor/editor_file_system.h"
 
 void EditorQuickOpen::popup_dialog(
@@ -117,10 +118,10 @@ void EditorQuickOpen::_parse_fs(
 
     Vector<String> base_types = String(base_type).split(String(","));
     for (int i = 0; i < directory->get_file_count(); i++) {
-        String file = directory->get_file_path(i);
+        String file = directory->get_file(i)->get_path();
         file        = file.substr(6, file.length());
 
-        StringName file_type = directory->get_file_type(i);
+        StringName file_type = directory->get_file(i)->get_type();
         // Iterate all possible base types.
         for (int j = 0; j < base_types.size(); j++) {
             if (ClassDB::is_parent_class(file_type, base_types[j])

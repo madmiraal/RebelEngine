@@ -11,6 +11,7 @@
 #include "core/project_settings.h"
 #include "core/script_language.h"
 #include "editor/editor_directory.h"
+#include "editor/editor_file.h"
 #include "editor/editor_file_system.h"
 #include "editor/editor_help.h"
 #include "editor/editor_node.h"
@@ -615,7 +616,7 @@ void GDScriptWorkspace::_get_owners(
     }
 
     for (int i = 0; i < directory->get_file_count(); i++) {
-        Vector<String> deps = directory->get_file_deps(i);
+        Vector<String> deps = directory->get_file(i)->get_dependencies();
         bool found          = false;
         for (int j = 0; j < deps.size(); j++) {
             if (deps[j] == p_path) {
@@ -627,7 +628,7 @@ void GDScriptWorkspace::_get_owners(
             continue;
         }
 
-        owners.push_back(directory->get_file_path(i));
+        owners.push_back(directory->get_file(i)->get_path());
     }
 }
 
