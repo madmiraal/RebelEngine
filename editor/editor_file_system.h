@@ -54,7 +54,7 @@ class EditorFileSystem : public Node {
     Thread thread;
     static void _thread_func(void* _userdata);
 
-    EditorDirectory* new_filesystem;
+    EditorDirectory* new_root_directory;
 
     bool scanning;
     bool importing;
@@ -72,7 +72,7 @@ class EditorFileSystem : public Node {
 
     void _save_late_updated_files();
 
-    EditorDirectory* filesystem;
+    EditorDirectory* root_directory;
 
     static EditorFileSystem* singleton;
 

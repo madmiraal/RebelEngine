@@ -1726,7 +1726,9 @@ void FileSystemDock::_folder_removed(String p_folder) {
     EditorDirectory* efd =
         EditorFileSystem::get_singleton()->get_filesystem_path(path);
     if (efd) {
-        efd->force_update();
+        // Set modified_time to 0 to force `EditorFileSystem::_scan_fs_changes`
+        // to search for changes in the directory.
+        efd->set_modified_time(0);
     }
 }
 

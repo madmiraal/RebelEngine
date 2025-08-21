@@ -6,6 +6,7 @@
 #define EDITOR_FILE_H
 
 #include "core/object.h"
+#include "core/string_name.h"
 #include "core/ustring.h"
 #include "core/vector.h"
 
@@ -58,12 +59,6 @@ private:
     bool verified                 = false;
 
     static void _bind_methods();
-};
-
-struct EditorFileSort {
-    bool operator()(const EditorFile* left, const EditorFile* right) const {
-        return left->get_name() < right->get_name();
-    }
 };
 
 #endif // EDITOR_FILE_H

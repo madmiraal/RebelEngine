@@ -8,7 +8,6 @@
 #define EDITOR_DIRECTORY_H
 
 #include "core/object.h"
-#include "core/string_name.h"
 #include "core/ustring.h"
 #include "core/vector.h"
 
@@ -17,40 +16,41 @@ class EditorFile;
 class EditorDirectory : public Object {
     GDCLASS(EditorDirectory, Object);
 
-    String name;
-    uint64_t modified_time;
-    bool verified; // used for checking changes
-
-    EditorDirectory* parent;
-    Vector<EditorDirectory*> subdirs;
-
-    void sort_files();
-
-    Vector<EditorFile*> files;
-
-    static void _bind_methods();
-
-    friend class EditorFileSystem;
-
 public:
+    ~EditorDirectory();
+
     String get_name() const;
+    void set_name(const String& new_name);
     String get_path() const;
+    EditorDirectory* get_parent() const;
+    void set_parent(EditorDirectory* new_parent);
 
     int get_subdir_count() const;
-    EditorDirectory* get_subdir(int p_idx) const;
+    int find_dir_index(const String& directory_name) const;
+    EditorDirectory* get_subdir(int index) const;
+    void add_subdir(EditorDirectory* new_directory);
+
     int get_file_count() const;
-    EditorFile* get_file(int p_idx) const;
+    int find_file_index(const String& filename) const;
+    EditorFile* get_file(int index) const;
+    void add_file(EditorFile* new_file);
     void remove_file(EditorFile* file);
+    bool delete_file(const String& filename);
 
-    EditorDirectory* get_parent() const;
+    uint64_t get_modified_time() const;
+    void set_modified_time(uint64_t new_time);
+    bool is_verified() const;
+    void set_verified(bool new_verified);
 
-    int find_file_index(const String& p_file) const;
-    int find_dir_index(const String& p_dir) const;
+private:
+    String name;
+    EditorDirectory* parent_directory = nullptr;
+    Vector<EditorDirectory*> subdirectories;
+    Vector<EditorFile*> files;
+    uint64_t modified_time = 0;
+    bool verified          = false;
 
-    void force_update();
-
-    EditorDirectory();
-    ~EditorDirectory();
+    static void _bind_methods();
 };
 
 #endif // EDITOR_DIRECTORY_H
