@@ -1,5 +1,6 @@
 name: Create Release
 on:
+  push:
   workflow_dispatch:
     inputs:
       version:
@@ -13,7 +14,7 @@ jobs:
   builds:
     name: ${{ matrix.name }}
     # Don't run on forks.
-    if: github.repository == 'RebelToolbox/RebelEngine'
+    if: github.repository == 'madmiraal/RebelEngine'
     runs-on: ${{ matrix.os }}
     strategy:
       matrix:
