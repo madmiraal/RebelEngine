@@ -479,7 +479,7 @@ def configure(env):
         ] = os.environ  # this makes build less repeatable, but simplifies some things
         env["ENV"]["TMP"] = os.environ["TMP"]
 
-    if env["use_mingw"] or (os.name == "posix"):
+    if env["use_mingw"] or not "MSVC_VERSION" in env or (os.name == "posix"):
         setup_mingw(env)
         configure_mingw(env)
         env.msvc = False

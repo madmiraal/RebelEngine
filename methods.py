@@ -873,8 +873,9 @@ def get_compiler_version(env):
                 subprocess.check_output([env.subst(env["CXX"]), "--version"]).strip()
             )
         except (subprocess.CalledProcessError, OSError):
-            print("Couldn't parse CXX environment variable to infer compiler version.")
-            return None
+            print("Couldn't find the compiler:", env["CXX"])
+            print("Please ensure it is installed and available in the PATH")
+            exit(1)
     else:  # TODO: Implement for MSVC
         return None
     match = re.search("[0-9]+\.[0-9.]+", version)
