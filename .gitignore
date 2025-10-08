@@ -140,6 +140,7 @@ tags
 
 # Visual Studio
 cpp.hint
+CppProperties.json
 *.log
 *.pdb
 *.sln
