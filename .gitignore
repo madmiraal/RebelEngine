@@ -110,7 +110,13 @@ gmon.out
 node_modules/
 
 # Qt Creator
-*.pro.user*
+*.cflags
+*.config
+*.creator
+*.cxxflags
+*.files
+*.includes
+*.user
 
 # SCons
 config.log
@@ -140,6 +146,9 @@ tags
 
 # Visual Studio
 cpp.hint
+CMake*.json
+CppProperties.json
+out/
 *.log
 *.pdb
 *.sln
