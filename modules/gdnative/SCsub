@@ -30,7 +30,7 @@ import gdnative_builders
 
 _, gensource = env_gdnative.CommandNoCache(
     ["include/gdnative_api_struct.gen.h", "gdnative_api_struct.gen.cpp"],
-    "gdnative_api.json",
+    ["gdnative_api.json", "gdnative_builders.py"],
     run_in_subprocess(gdnative_builders.build_gdnative_api_struct),
 )
 env_gdnative.add_source_files(env.modules_sources, [gensource])
@@ -41,7 +41,7 @@ env.use_ptrcall = True
 if get_cmdline_bool("gdnative_wrapper", False):
     (gensource,) = env_gdnative.CommandNoCache(
         "gdnative_wrapper_code.gen.cpp",
-        "gdnative_api.json",
+        ["gdnative_api.json", "gdnative_builders.py"],
         run_in_subprocess(gdnative_builders.build_gdnative_wrapper_code),
     )
 
