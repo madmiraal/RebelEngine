@@ -13,37 +13,39 @@ def _spaced(e):
 
 def _build_gdnative_api_struct_header(api):
     gdnative_api_init_macro = [
-        "\textern const rebel_gdnative_core_api_struct *_gdnative_wrapper_api_struct;"
+        "    extern const rebel_gdnative_core_api_struct *_gdnative_wrapper_api_struct;"
     ]
 
     for ext in api["extensions"]:
         name = ext["name"]
         gdnative_api_init_macro.append(
-            "\textern const rebel_gdnative_ext_{0}_api_struct *_gdnative_wrapper_{0}_api_struct;".format(
+            "    extern const rebel_gdnative_ext_{0}_api_struct *_gdnative_wrapper_{0}_api_struct;".format(
                 name
             )
         )
 
     gdnative_api_init_macro.append(
-        "\t_gdnative_wrapper_api_struct = options->api_struct;"
+        "    _gdnative_wrapper_api_struct = options->api_struct;"
     )
     gdnative_api_init_macro.append(
-        "\tfor (unsigned int i = 0; i < _gdnative_wrapper_api_struct->num_extensions; i++) { "
+        "    for (unsigned int i = 0; i < _gdnative_wrapper_api_struct->num_extensions; i++) { "
     )
     gdnative_api_init_macro.append(
-        "\t\tswitch (_gdnative_wrapper_api_struct->extensions[i]->type) {"
+        "        switch (_gdnative_wrapper_api_struct->extensions[i]->type) {"
     )
 
     for ext in api["extensions"]:
         name = ext["name"]
-        gdnative_api_init_macro.append("\t\t\tcase GDNATIVE_EXT_%s:" % ext["type"])
         gdnative_api_init_macro.append(
-            "\t\t\t\t_gdnative_wrapper_{0}_api_struct = (rebel_gdnative_ext_{0}_api_struct *)"
+            "            case GDNATIVE_EXT_%s:" % ext["type"]
+        )
+        gdnative_api_init_macro.append(
+            "                _gdnative_wrapper_{0}_api_struct = (rebel_gdnative_ext_{0}_api_struct *)"
             " _gdnative_wrapper_api_struct->extensions[i];".format(name)
         )
-        gdnative_api_init_macro.append("\t\t\t\tbreak;")
-    gdnative_api_init_macro.append("\t\t}")
-    gdnative_api_init_macro.append("\t}")
+        gdnative_api_init_macro.append("                break;")
+    gdnative_api_init_macro.append("        }")
+    gdnative_api_init_macro.append("    }")
 
     out = [
         "/* THIS FILE IS GENERATED DO NOT EDIT */",
@@ -67,11 +69,11 @@ def _build_gdnative_api_struct_header(api):
         "#endif",
         "",
         "enum GDNATIVE_API_TYPES {",
-        "\tGDNATIVE_" + api["core"]["type"] + ",",
+        "    GDNATIVE_" + api["core"]["type"] + ",",
     ]
 
     for ext in api["extensions"]:
-        out += ["\tGDNATIVE_EXT_" + ext["type"] + ","]
+        out += ["    GDNATIVE_EXT_" + ext["type"] + ","]
 
     out += ["};", ""]
 
@@ -91,9 +93,9 @@ def _build_gdnative_api_struct_header(api):
                 )
             )
             + "_api_struct {",
-            "\tunsigned int type;",
-            "\trebel_gdnative_api_version version;",
-            "\tconst rebel_gdnative_api_struct *next;",
+            "    unsigned int type;",
+            "    rebel_gdnative_api_version version;",
+            "    const rebel_gdnative_api_struct *next;",
         ]
 
         for funcdef in ext["api"]:
@@ -101,7 +103,7 @@ def _build_gdnative_api_struct_header(api):
                 ["%s%s" % (_spaced(t), n) for t, n in funcdef["arguments"]]
             )
             ret_val.append(
-                "\t%s(*%s)(%s);"
+                "    %s(*%s)(%s);"
                 % (_spaced(funcdef["return_type"]), funcdef["name"], args)
             )
 
@@ -130,9 +132,9 @@ def _build_gdnative_api_struct_header(api):
             "typedef struct rebel_gdnative_core_"
             + ("{0}_{1}".format(core["version"]["major"], core["version"]["minor"]))
             + "_api_struct {",
-            "\tunsigned int type;",
-            "\trebel_gdnative_api_version version;",
-            "\tconst rebel_gdnative_api_struct *next;",
+            "    unsigned int type;",
+            "    rebel_gdnative_api_version version;",
+            "    const rebel_gdnative_api_struct *next;",
         ]
 
         for funcdef in core["api"]:
@@ -140,7 +142,7 @@ def _build_gdnative_api_struct_header(api):
                 ["%s%s" % (_spaced(t), n) for t, n in funcdef["arguments"]]
             )
             ret_val.append(
-                "\t%s(*%s)(%s);"
+                "    %s(*%s)(%s);"
                 % (_spaced(funcdef["return_type"]), funcdef["name"], args)
             )
 
@@ -162,17 +164,18 @@ def _build_gdnative_api_struct_header(api):
 
     out += [
         "typedef struct rebel_gdnative_core_api_struct {",
-        "\tunsigned int type;",
-        "\trebel_gdnative_api_version version;",
-        "\tconst rebel_gdnative_api_struct *next;",
-        "\tunsigned int num_extensions;",
-        "\tconst rebel_gdnative_api_struct **extensions;",
+        "    unsigned int type;",
+        "    rebel_gdnative_api_version version;",
+        "    const rebel_gdnative_api_struct *next;",
+        "    unsigned int num_extensions;",
+        "    const rebel_gdnative_api_struct **extensions;",
     ]
 
     for funcdef in api["core"]["api"]:
         args = ", ".join(["%s%s" % (_spaced(t), n) for t, n in funcdef["arguments"]])
         out.append(
-            "\t%s(*%s)(%s);" % (_spaced(funcdef["return_type"]), funcdef["name"], args)
+            "    %s(*%s)(%s);"
+            % (_spaced(funcdef["return_type"]), funcdef["name"], args)
         )
 
     out += [
@@ -236,13 +239,13 @@ def _build_gdnative_api_struct_source(api):
             + " "
             + get_extension_struct_instance_name(name, ext, include_version)
             + " = {",
-            "\tGDNATIVE_EXT_" + ext["type"] + ",",
-            "\t{"
+            "    GDNATIVE_EXT_" + ext["type"] + ",",
+            "    {"
             + str(ext["version"]["major"])
             + ", "
             + str(ext["version"]["minor"])
             + "},",
-            "\t"
+            "    "
             + (
                 "NULL"
                 if not ext["next"]
@@ -255,7 +258,7 @@ def _build_gdnative_api_struct_source(api):
         ]
 
         for funcdef in ext["api"]:
-            ret_val.append("\t%s," % funcdef["name"])
+            ret_val.append("    %s," % funcdef["name"])
 
         ret_val += ["};\n"]
 
@@ -275,13 +278,13 @@ def _build_gdnative_api_struct_source(api):
                 )
             )
             + " = {",
-            "\tGDNATIVE_" + core["type"] + ",",
-            "\t{"
+            "    GDNATIVE_" + core["type"] + ",",
+            "    {"
             + str(core["version"]["major"])
             + ", "
             + str(core["version"]["minor"])
             + "},",
-            "\t"
+            "    "
             + (
                 "NULL"
                 if not core["next"]
@@ -296,7 +299,7 @@ def _build_gdnative_api_struct_source(api):
         ]
 
         for funcdef in core["api"]:
-            ret_val.append("\t%s," % funcdef["name"])
+            ret_val.append("    %s," % funcdef["name"])
 
         ret_val += ["};\n"]
 
@@ -310,7 +313,7 @@ def _build_gdnative_api_struct_source(api):
 
     for ext in api["extensions"]:
         name = ext["name"]
-        out += ["\t(rebel_gdnative_api_struct *)&api_extension_" + name + "_struct,"]
+        out += ["    (rebel_gdnative_api_struct *)&api_extension_" + name + "_struct,"]
 
     out += ["};\n"]
 
@@ -319,19 +322,19 @@ def _build_gdnative_api_struct_source(api):
 
     out += [
         "extern const rebel_gdnative_core_api_struct api_struct = {",
-        "\tGDNATIVE_" + api["core"]["type"] + ",",
-        "\t{"
+        "    GDNATIVE_" + api["core"]["type"] + ",",
+        "    {"
         + str(api["core"]["version"]["major"])
         + ", "
         + str(api["core"]["version"]["minor"])
         + "},",
-        "\t(const rebel_gdnative_api_struct *)&api_1_1,",
-        "\t" + str(len(api["extensions"])) + ",",
-        "\tgdnative_extensions_pointers,",
+        "    (const rebel_gdnative_api_struct *)&api_1_1,",
+        "    " + str(len(api["extensions"])) + ",",
+        "    gdnative_extensions_pointers,",
     ]
 
     for funcdef in api["core"]["api"]:
-        out.append("\t%s," % funcdef["name"])
+        out.append("    %s," % funcdef["name"])
     out.append("};\n")
 
     return "\n".join(out)
@@ -387,7 +390,7 @@ def _build_gdnative_wrapper_code(api):
 
         args = ", ".join(["%s" % n for t, n in funcdef["arguments"]])
 
-        return_line = "\treturn " if funcdef["return_type"] != "void" else "\t"
+        return_line = "    return " if funcdef["return_type"] != "void" else "    "
         return_line += (
             "_gdnative_wrapper_api_struct->" + funcdef["name"] + "(" + args + ");"
         )
@@ -408,7 +411,7 @@ def _build_gdnative_wrapper_code(api):
 
             args = ", ".join(["%s" % n for t, n in funcdef["arguments"]])
 
-            return_line = "\treturn " if funcdef["return_type"] != "void" else "\t"
+            return_line = "    return " if funcdef["return_type"] != "void" else "    "
             return_line += (
                 "_gdnative_wrapper_"
                 + name
