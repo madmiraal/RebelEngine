@@ -90,6 +90,11 @@ jobs:
             artifact: rebel-server-linux
             build-options: platform=server dev=yes
 
+          - name: Server Engine on Windows
+            os: windows-latest
+            artifact: rebel-server-windows
+            build-options: platform=server dev=yes
+
     steps:
       - name: Build Rebel
         uses: RebelToolbox/RebelBuildAction@v4

@@ -15,6 +15,11 @@ jobs:
             command-prefix: xvfb-run
             logs: linux-run-tests-logs
 
+          - name: Windows run tests
+            os: windows-latest
+            artifact: rebel-windows
+            logs: windows-run-tests-logs
+
     steps:
       - name: Build Rebel
         id: build
