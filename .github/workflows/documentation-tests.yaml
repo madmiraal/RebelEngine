@@ -43,7 +43,7 @@ jobs:
     steps:
       - name: Build Rebel
         id: build
-        uses: RebelToolbox/RebelBuildAction@v4
+        uses: madmiraal/RebelBuildAction@add-repository-and-branch
         with:
           repository: ${{ github.repository }}
           ref: ${{ github.ref }}
