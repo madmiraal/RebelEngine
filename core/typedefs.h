@@ -204,7 +204,7 @@ static _FORCE_INLINE_ T nearest_power_of_2_templated(T x) {
 static inline unsigned int nearest_shift(unsigned int p_number) {
     for (int i = 30; i >= 0; i--) {
         if (p_number & (1 << i)) {
-            return i + 1;
+            return static_cast<unsigned int>(i + 1);
         }
     }
 
