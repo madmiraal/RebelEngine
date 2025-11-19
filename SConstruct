@@ -499,6 +499,7 @@ if selected_platform in platform_list:
         disable_nonessential_warnings = [
             "/wd4018",  # Level 3: Comparing signed and unsigned.
             "/wd4061",  # Level 4: Enum in switch is not explicitly handled by a case label.
+            "/wd4062",  # Level 4: Enum in switch is not handled.
             "/wd4100",  # Level 4: Unreferenced parameter.
             "/wd4127",  # Level 4: Conditional expression is constant.
             "/wd4191",  # Level 3: Unsafe conversion.
@@ -511,7 +512,7 @@ if selected_platform in platform_list:
             "/wd4296",  # Level 4: Expression is always false.
             "/wd4305",  # Level 1: Conversion to smaller type in initialization or construction.
             "/wd4324",  # Level 4: Structure was padded due to alignment specifier.
-            "/wd4355",  # Level 1: 'this' used in base member initializer list.
+            # "/wd4355",  # Level 1: 'this' used in base member initializer list.
             "/wd4365",  # Level 4: Conversion from signed to unsigned.
             "/wd4388",  # Level 4: Operator comparing signed and unsigned variables.
             "/wd4389",  # Level 4: Equality comparing signed and unsigned variables.
@@ -528,6 +529,7 @@ if selected_platform in platform_list:
             "/wd4701",  # Level 4: Potentially uninitialized local variable used.
             "/wd4702",  # Level 4: Unreachable code.
             "/wd4703",  # Level 4: Potentially uninitialized local pointer variable used.
+            "/wd4774",  # Level 4: Format string argument is not a string literal.
             "/wd4777",  # Level 4: Format string requires an argument of different type.
             "/wd4800",  # Level 4: Implicit conversion to bool.
             "/wd4820",  # Level 4: Order of members caused added padding.
