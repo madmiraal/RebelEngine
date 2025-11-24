@@ -17,6 +17,12 @@ class RWLock {
     mutable std::shared_timed_mutex mutex;
 
 public:
+    RWLock()                          = default;
+    RWLock(const RWLock&)             = delete;
+    RWLock& operator=(const RWLock&)  = delete;
+    RWLock(const RWLock&&)            = delete;
+    RWLock& operator=(const RWLock&&) = delete;
+
     // Lock the rwlock, block if locked by someone else
     void read_lock() const {
         mutex.lock_shared();

@@ -24,18 +24,16 @@ struct MemoryPool {
     struct Alloc {
         SafeRefCount refcount;
         SafeNumeric<uint32_t> lock;
-        void* mem;
-        PoolAllocator::ID pool_id;
-        size_t size;
+        void* mem                 = nullptr;
+        PoolAllocator::ID pool_id = POOL_ALLOCATOR_INVALID_ID;
+        size_t size               = 0;
+        Alloc* free_list          = nullptr;
 
-        Alloc* free_list;
-
-        Alloc() :
-            lock(0),
-            mem(nullptr),
-            pool_id(POOL_ALLOCATOR_INVALID_ID),
-            size(0),
-            free_list(nullptr) {}
+        Alloc()                         = default;
+        Alloc(const Alloc&)             = delete;
+        Alloc& operator=(const Alloc&)  = delete;
+        Alloc(const Alloc&&)            = delete;
+        Alloc& operator=(const Alloc&&) = delete;
     };
 
     static Alloc* allocs;

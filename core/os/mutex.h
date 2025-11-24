@@ -10,13 +10,13 @@
 #include "core/error_list.h"
 #include "core/typedefs.h"
 
-#if !defined(NO_THREADS)
+#ifndef NO_THREADS
 
 #include <mutex>
 
-template <class StdMutexT>
+template <class MutexType>
 class MutexImpl {
-    mutable StdMutexT mutex;
+    mutable MutexType mutex;
     friend class MutexLock;
 
 public:
@@ -31,6 +31,11 @@ public:
     _ALWAYS_INLINE_ Error try_lock() const {
         return mutex.try_lock() ? OK : ERR_BUSY;
     }
+
+    MutexImpl(const MutexImpl<MutexType>&)                        = delete;
+    MutexImpl<MutexType>& operator=(const MutexImpl<MutexType>&)  = delete;
+    MutexImpl(const MutexImpl<MutexType>&&)                       = delete;
+    MutexImpl<MutexType>& operator=(const MutexImpl<MutexType>&&) = delete;
 };
 
 // This is written this way instead of being a template to overcome a limitation
@@ -66,6 +71,11 @@ public:
             mutex->unlock();
         }
     }
+
+    MutexLock(const MutexLock&)             = delete;
+    MutexLock& operator=(const MutexLock&)  = delete;
+    MutexLock(const MutexLock&&)            = delete;
+    MutexLock& operator=(const MutexLock&&) = delete;
 };
 
 using Mutex = MutexImpl<std::recursive_mutex>; // Recursive, for general use
@@ -74,13 +84,13 @@ using BinaryMutex = MutexImpl<std::mutex>; // Non-recursive, handle with care
 extern template class MutexImpl<std::recursive_mutex>;
 extern template class MutexImpl<std::mutex>;
 
-#else
+#else // NO_THREADS
 
 class FakeMutex {
     FakeMutex() {}
 };
 
-template <class MutexT>
+template <class MutexType>
 class MutexImpl {
 public:
     _ALWAYS_INLINE_ void lock() const {}
@@ -90,16 +100,26 @@ public:
     _ALWAYS_INLINE_ Error try_lock() const {
         return OK;
     }
+
+    MutexImpl(const MutexImpl<MutexType>&)                        = delete;
+    MutexImpl<MutexType>& operator=(const MutexImpl<MutexType>&)  = delete;
+    MutexImpl(const MutexImpl<MutexType>&&)                       = delete;
+    MutexImpl<MutexType>& operator=(const MutexImpl<MutexType>&&) = delete;
 };
 
 class MutexLock {
 public:
     explicit MutexLock(const MutexImpl<FakeMutex>& p_mutex) {}
+
+    MutexLock(const MutexLock&)             = delete;
+    MutexLock& operator=(const MutexLock&)  = delete;
+    MutexLock(const MutexLock&&)            = delete;
+    MutexLock& operator=(const MutexLock&&) = delete;
 };
 
 using Mutex       = MutexImpl<FakeMutex>;
-using BinaryMutex = MutexImpl<FakeMutex>; // Non-recursive, handle with care
+using BinaryMutex = MutexImpl<FakeMutex>;
 
-#endif // !NO_THREADS
+#endif // NO_THREADS
 
 #endif // MUTEX_H
