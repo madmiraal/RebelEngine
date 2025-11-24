@@ -547,7 +547,6 @@ if selected_platform in platform_list:
             "/wd5045",  # Level 4: Compiler will insert Spectre mitigation for memory load.
             "/wd5204",  # Level 3: Class has virtual functions, but its trivial destructor is not virtual.
             "/wd5219",  # Level 2: Implicit conversion with possible loss of data.
-            "/wd5246",  # Level 1: The initialization of a subobject should be wrapped in braces.
             "/wd5267",  # Level 4: Implicit copy constructor/assignment operator is deprecated because it has a user-provided assignment operator/copy constructor.
         ]
         if env["warnings"] == "extra":
