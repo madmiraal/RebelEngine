@@ -245,7 +245,7 @@ public:
     operator VHACD::Vertex() const;
 
 private:
-    std::array<T, 3> m_data{ T(0.0) };
+    std::array<T, 3> m_data{};
 };
 
 typedef VHACD::Vector3<double> Vect3;
@@ -839,13 +839,13 @@ protected:
  */
     template <typename T>
     inline Vector3<T>::Vector3(T a)
-            : m_data{a, a, a}
+            : m_data{{a, a, a}}
     {
     }
 
     template <typename T>
     inline Vector3<T>::Vector3(T x, T y, T z)
-            : m_data{x, y, z}
+            : m_data{{x, y, z}}
     {
     }
 
@@ -1478,7 +1478,7 @@ private:
 
     int m_sign{ 0 };
     int m_exponent{ 0 };
-    std::array<uint64_t, VHACD_GOOGOL_SIZE> m_mantissa{ 0 };
+    std::array<uint64_t, VHACD_GOOGOL_SIZE> m_mantissa{};
 
 public:
     static Googol m_zero;
