@@ -20,6 +20,11 @@ class NodePath {
         bool has_slashes;
         mutable bool hash_cache_valid;
         mutable uint32_t hash_cache;
+        Data()                        = default;
+        Data(const Data&)             = delete;
+        Data& operator=(const Data&)  = delete;
+        Data(const Data&&)            = delete;
+        Data& operator=(const Data&&) = delete;
     };
 
     mutable Data* data;

@@ -9,7 +9,7 @@
 
 #include "core/typedefs.h"
 
-#if !defined(NO_THREADS)
+#ifndef NO_THREADS
 
 #include <atomic>
 #include <type_traits>
@@ -123,6 +123,11 @@ public:
     _ALWAYS_INLINE_ explicit SafeNumeric(T p_value = static_cast<T>(0)) {
         set(p_value);
     }
+
+    SafeNumeric(const SafeNumeric<T>&)                = delete;
+    SafeNumeric<T>& operator=(const SafeNumeric<T>&)  = delete;
+    SafeNumeric(const SafeNumeric<T>&&)               = delete;
+    SafeNumeric<T>& operator=(const SafeNumeric<T>&&) = delete;
 };
 
 class SafeFlag {
@@ -148,6 +153,11 @@ public:
     _ALWAYS_INLINE_ explicit SafeFlag(bool p_value = false) {
         set_to(p_value);
     }
+
+    SafeFlag(const SafeFlag&)             = delete;
+    SafeFlag& operator=(const SafeFlag&)  = delete;
+    SafeFlag(const SafeFlag&&)            = delete;
+    SafeFlag& operator=(const SafeFlag&&) = delete;
 };
 
 class SafeRefCount {
@@ -177,9 +187,15 @@ public:
     _ALWAYS_INLINE_ void init(uint32_t p_value = 1) {
         count.set(p_value);
     }
+
+    SafeRefCount()                                = default;
+    SafeRefCount(const SafeRefCount&)             = delete;
+    SafeRefCount& operator=(const SafeRefCount&)  = delete;
+    SafeRefCount(const SafeRefCount&&)            = delete;
+    SafeRefCount& operator=(const SafeRefCount&&) = delete;
 };
 
-#else
+#else // NO_THREADS
 
 template <class T>
 class SafeNumeric {
@@ -248,6 +264,11 @@ public:
 
     _ALWAYS_INLINE_ explicit SafeNumeric(T p_value = static_cast<T>(0)) :
         value(p_value) {}
+
+    SafeNumeric(const SafeNumeric<T>&)                = delete;
+    SafeNumeric<T>& operator=(const SafeNumeric<T>&)  = delete;
+    SafeNumeric(const SafeNumeric<T>&&)               = delete;
+    SafeNumeric<T>& operator=(const SafeNumeric<T>&&) = delete;
 };
 
 class SafeFlag {
@@ -272,6 +293,11 @@ public:
     }
 
     _ALWAYS_INLINE_ explicit SafeFlag(bool p_value = false) : flag(p_value) {}
+
+    SafeFlag(const SafeFlag&)             = delete;
+    SafeFlag& operator=(const SafeFlag&)  = delete;
+    SafeFlag(const SafeFlag&&)            = delete;
+    SafeFlag& operator=(const SafeFlag&&) = delete;
 };
 
 class SafeRefCount {
@@ -312,8 +338,13 @@ public:
     }
 
     SafeRefCount() : count(0) {}
+
+    SafeRefCount(const SafeRefCount&)             = delete;
+    SafeRefCount& operator=(const SafeRefCount&)  = delete;
+    SafeRefCount(const SafeRefCount&&)            = delete;
+    SafeRefCount& operator=(const SafeRefCount&&) = delete;
 };
 
-#endif
+#endif // NO_THREADS
 
 #endif // SAFE_REFCOUNT_H

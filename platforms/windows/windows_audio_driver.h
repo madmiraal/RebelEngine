@@ -109,6 +109,10 @@ public:
     virtual String capture_get_device();
 
     WindowsAudioDriver();
+    WindowsAudioDriver(const WindowsAudioDriver&)             = delete;
+    WindowsAudioDriver& operator=(const WindowsAudioDriver&)  = delete;
+    WindowsAudioDriver(const WindowsAudioDriver&&)            = delete;
+    WindowsAudioDriver& operator=(const WindowsAudioDriver&&) = delete;
 };
 
 #endif // WINDOWS_AUDIO_DRIVER_H

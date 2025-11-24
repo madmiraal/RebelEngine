@@ -25,24 +25,23 @@ class StringName {
 
     struct _Data {
         SafeRefCount refcount;
-        const char* cname;
+        const char* cname = nullptr;
         String name;
 
         String get_name() const {
             return cname ? String(cname) : name;
         }
 
-        int idx;
-        uint32_t hash;
-        _Data* prev;
-        _Data* next;
+        int idx       = 0;
+        uint32_t hash = 0;
+        _Data* prev   = nullptr;
+        _Data* next   = nullptr;
 
-        _Data() {
-            cname = nullptr;
-            next = prev = nullptr;
-            idx         = 0;
-            hash        = 0;
-        }
+        _Data()                         = default;
+        _Data(const _Data&)             = delete;
+        _Data& operator=(const _Data&)  = delete;
+        _Data(const _Data&&)            = delete;
+        _Data& operator=(const _Data&&) = delete;
     };
 
     static _Data* _table[STRING_TABLE_LEN];
