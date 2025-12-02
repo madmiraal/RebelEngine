@@ -58,6 +58,7 @@ jobs:
           ${{ matrix.command-prefix }} RebelEngine/bin/${{ steps.build.outputs.build-filename }} 30 --video-driver GLES3 --audio-driver Dummy --path RebelTestProject 2>&1 | tee project.log
 
       - name: Upload tests' logs
+        if: always()
         uses: actions/upload-artifact@v5
         with:
           name: ${{ matrix.logs }}
