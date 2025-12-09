@@ -267,12 +267,6 @@ Comment: hq2x implementation
 Copyright: 2016, Bruno Ribeiro
 License: Apache-2.0
 
-Files: ./third-party/misc/ifaddrs-android.cc
- ./third-party/misc/ifaddrs-android.h
-Comment: libjingle
-Copyright: 2012-2013, Google Inc.
-License: BSD-3-clause
-
 Files: ./third-party/misc/mikktspace.c
  ./third-party/misc/mikktspace.h
 Comment: Tangent Space Normal Maps implementation

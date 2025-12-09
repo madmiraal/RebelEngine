@@ -331,12 +331,6 @@ Collection of single-file libraries used in Rebel Engine.
   * Source: https://github.com/brunexgeek/hqx
   * License: Apache 2.0
 
-- `ifaddrs-android.{cc,h}`
-  * Source: https://chromium.googlesource.com/external/webrtc/stable/talk/+/master/base
-  * Commit: 5976650443d68ccfadf1dea24999ee459dd2819d (July 2013)
-  * License: BSD-3-Clause
-  Note: Includes Rebel changes.
-
 - `mikktspace.{c,h}`
   * Project: http://www.mikktspace.com/
   * Source: https://github.com/mmikk/MikkTSpace

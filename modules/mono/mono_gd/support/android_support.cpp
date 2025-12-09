@@ -8,17 +8,6 @@
 
 #if defined(ANDROID_ENABLED)
 
-#include <cstddef>
-#include <dlfcn.h> // dlopen, dlsym
-#include <mono/utils/mono-dl-fallback.h>
-#include <sys/system_properties.h>
-
-#if __ANDROID_API__ < 24
-#include "third-party/misc/ifaddrs-android.h"
-#else
-#include <ifaddrs.h>
-#endif
-
 #include "../../utils/path_utils.h"
 #include "../../utils/string_utils.h"
 #include "../gd_mono_cache.h"
@@ -28,6 +17,12 @@
 #include "platforms/android/android_jni_os.h"
 #include "platforms/android/android_jni_thread.h"
 #include "platforms/android/android_os.h"
+
+#include <cstddef>
+#include <dlfcn.h> // dlopen, dlsym
+#include <ifaddrs.h>
+#include <mono/utils/mono-dl-fallback.h>
+#include <sys/system_properties.h>
 
 // Warning: JNI boilerplate ahead... continue at your own risk
 
