@@ -1797,6 +1797,7 @@ Error Main::setup2(Thread::ID p_main_tid_override) {
     }
 #endif
 
+    printf("Calling OS->initialise()....\n");
     Error err = OS::get_singleton()->initialize(
         video_mode,
         video_driver_idx,
