@@ -50,55 +50,55 @@ jobs:
           - name: Android arm64v8 library on Linux
             os: ubuntu-latest
             artifact: android-arm64v8-linux
-            build-options: platform=android
+            build-options: platform=android dev=yes
 
           - name: Android arm64v8 library on macOS
             os: macos-latest
             artifact: android-arm64v8-macos
-            build-options: platform=android
+            build-options: platform=android dev=yes
 
           - name: Android arm64v8 library on Windows
             os: windows-latest
             artifact: android-arm64v8-windows
-            build-options: platform=android
+            build-options: platform=android dev=yes
 
           # iOS builds
           - name: iOS arm64 library
             os: macOS-latest
             artifact: rebel-ios-arm64
-            build-options: platform=ios
+            build-options: platform=ios dev=yes
 
           # Web builds
           - name: Web library on Linux
             os: ubuntu-latest
             artifact: rebel-web-linux
-            build-options: platform=web
+            build-options: platform=web dev=yes
 
           - name: Web library on macOS
             os: macos-latest
             artifact: rebel-web-macos
-            build-options: platform=web
+            build-options: platform=web dev=yes
 
           - name: Web library on Windows
             os: windows-latest
             artifact: rebel-web-windows
-            build-options: platform=web
+            build-options: platform=web dev=yes
 
           # Server builds
           - name: Server Engine on Linux
             os: ubuntu-latest
             artifact: rebel-server-linux
-            build-options: platform=server
+            build-options: platform=server dev=yes
 
           - name: Server Engine on macOS
             os: macos-latest
             artifact: rebel-server-macos
-            build-options: platform=server
+            build-options: platform=server dev=yes
 
           - name: Server Engine on Windows
             os: windows-latest
             artifact: rebel-server-windows
-            build-options: platform=server
+            build-options: platform=server dev=yes
 
     steps:
       - name: Build Rebel
