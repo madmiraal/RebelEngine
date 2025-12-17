@@ -1494,6 +1494,7 @@ Error WindowsOS::initialize(
     int p_video_driver,
     int p_audio_driver
 ) {
+    printf("WindowsOS::initializing...\n");
     main_loop        = NULL;
     outside          = true;
     window_has_focus = true;
@@ -1518,9 +1519,11 @@ Error WindowsOS::initialize(
     }
 
     video_mode = p_desired;
-    // printf("**************** desired %s, mode %s\n",
-    // p_desired.fullscreen?"true":"false",
-    // video_mode.fullscreen?"true":"false");
+    printf(
+        "Full screen desired: %s, video mode full screen: %s\n",
+        p_desired.fullscreen ? "true" : "false",
+        video_mode.fullscreen ? "true" : "false"
+    );
     RECT WindowRect;
 
     WindowRect.left   = 0;
@@ -1568,6 +1571,7 @@ Error WindowsOS::initialize(
 
     pre_fs_valid = true;
     if (video_mode.fullscreen) {
+        printf("Windows fullscreen...\n");
         /* this returns DPI unaware size, commenting
         DEVMODE current;
         memset(&current, 0, sizeof(current));
@@ -1635,6 +1639,7 @@ Error WindowsOS::initialize(
 #endif
 
     if (windowid) {
+        printf("Got windowid...\n");
 // strtoull on mingw
 #ifdef MINGW_ENABLED
         hWnd = (HWND)strtoull(windowid, NULL, 0);
@@ -1665,6 +1670,7 @@ Error WindowsOS::initialize(
         video_mode.height     = rect.bottom;
         video_mode.fullscreen = false;
     } else {
+        printf("Didn't get windowid...\n");
         hWnd = CreateWindowExW(
             dwExStyle,
             L"Engine",
@@ -1691,6 +1697,7 @@ Error WindowsOS::initialize(
     };
 
     if (video_mode.always_on_top) {
+        printf("Always on top...\n");
         SetWindowPos(
             hWnd,
             video_mode.always_on_top ? HWND_TOPMOST : HWND_NOTOPMOST,
@@ -1702,6 +1709,7 @@ Error WindowsOS::initialize(
         );
     }
     if ((get_current_tablet_driver() == "wintab") && wintab_available) {
+        printf("Windows tablet...\n");
         wintab_WTInfo(WTI_DEFSYSCTX, 0, &wtlc);
         wtlc.lcOptions |= CXO_MESSAGES;
         wtlc.lcPktData =
@@ -1745,6 +1753,7 @@ Error WindowsOS::initialize(
     last_tilt            = Vector2();
 
 #ifdef OPENGL_ENABLED
+    printf("OpenGL enabled...\n");
     bool gles3_context = true;
     if (p_video_driver == VIDEO_DRIVER_GLES2) {
         gles3_context = false;
@@ -1755,30 +1764,37 @@ Error WindowsOS::initialize(
 
     gl_context = NULL;
     while (!gl_context) {
+        printf("gl_context is null...\n");
         gl_context = memnew(WindowsGLContext(hWnd, gles3_context));
 
         if (gl_context->initialize() != OK) {
+            printf("glcontext did not initialize...\n");
             memdelete(gl_context);
             gl_context = NULL;
 
             if (GLOBAL_GET("rendering/quality/driver/fallback_to_gles2")
                 || editor) {
                 if (p_video_driver == VIDEO_DRIVER_GLES2) {
+                    printf("GLES2 Failed...\n");
                     gl_initialization_error = true;
                     break;
                 }
-
+                printf("Trying GLES2\n");
                 p_video_driver = VIDEO_DRIVER_GLES2;
                 gles3_context  = false;
             } else {
+                printf("Failed!\n");
                 gl_initialization_error = true;
                 break;
             }
         }
     }
+    printf("gl_context is not null!\n");
 
     while (true) {
+        printf("true!\n");
         if (gles3_context) {
+            printf("gles3_context is not null...\n");
             if (RasterizerGLES3::is_viable() == OK) {
                 RasterizerGLES3::register_config();
                 RasterizerGLES3::make_current();
@@ -1786,6 +1802,7 @@ Error WindowsOS::initialize(
             } else {
                 if (GLOBAL_GET("rendering/quality/driver/fallback_to_gles2")
                     || editor) {
+                    printf("Using gles2...\n");
                     p_video_driver = VIDEO_DRIVER_GLES2;
                     gles3_context  = false;
                     continue;
@@ -1795,6 +1812,7 @@ Error WindowsOS::initialize(
                 }
             }
         } else {
+            printf("gles3_context is null...\n");
             if (RasterizerGLES2::is_viable() == OK) {
                 RasterizerGLES2::register_config();
                 RasterizerGLES2::make_current();
@@ -1831,6 +1849,7 @@ Error WindowsOS::initialize(
         ));
     }
 
+    printf("Initializing visual server...\n");
     visual_server->init();
 
     input  = memnew(InputDefault);
