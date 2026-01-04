@@ -15,22 +15,45 @@ concurrency:
 jobs:
   build-windows:
     # Windows 10 with latest image
-    runs-on: "windows-latest"
+    runs-on: ${{ matrix.os }}
     name: ${{ matrix.name }}
     strategy:
       fail-fast: false
       matrix:
         include:
           - name: Editor (target=release_debug, tools=yes)
+            os: windows-latest
             cache-name: windows-editor
             target: release_debug
             tools: true
             bin: "./bin/rebel.windows.opt.tools.64.exe"
 
           - name: Template (target=release, tools=no)
+            os: windows-latest
             cache-name: windows-template
             target: release
             tools: false
+
+          - name: MinGW GCC 8.1.0
+            os: windows-2019
+            build-options: use_mingw=yes
+            cache-name: windows-mingw-8
+            target: debug
+            tools: true
+
+          - name: MinGW GCC 14.2.0
+            os: windows-2022
+            build-options: use_mingw=yes
+            cache-name: windows-mingw-14
+            target: debug
+            tools: true
+
+          - name: MinGW GCC 15.2.0
+            os: windows-2025
+            build-options: use_mingw=yes
+            cache-name: windows-mingw-15
+            target: debug
+            tools: true
 
     steps:
       - uses: actions/checkout@v6
@@ -47,7 +70,7 @@ jobs:
       - name: Build
         uses: ./.github/actions/build
         with:
-          sconsflags: ${{ env.SCONSFLAGS }}
+          sconsflags: ${{ env.SCONSFLAGS }} ${{ matrix.build-options }}
           platform: windows
           target: ${{ matrix.target }}
           tools: ${{ matrix.tools }}
