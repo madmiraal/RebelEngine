@@ -16,7 +16,7 @@ SPDX-License-Identifier: MIT
     <tutorials>
     </tutorials>
     <methods>
-        <method name="rooms_clear">
+        <method name="rooms_clear" qualifiers="const">
             <return type="void" />
             <description>
                 This function clears all converted data from the [b]room graph[/b]. Use this before unloading a level, when transitioning from level to level, or returning to a main menu.
