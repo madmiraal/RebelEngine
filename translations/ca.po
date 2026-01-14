@@ -30614,75 +30614,91 @@ msgid ""
 "[/codeblock]"
 msgstr ""
 
-#: docs/JSONRPC.xml
-msgid "A helper to handle dictionaries which look like JSONRPC documents."
+#: modules/jsonrpc/docs/JSONRPC.xml
+msgid "Creates and processes JSON-RPC objects."
 msgstr ""
 
-#: docs/JSONRPC.xml
+#: modules/jsonrpc/docs/JSONRPC.xml
 msgid ""
 "[url=https://www.jsonrpc.org/]JSON-RPC[/url] is a standard which wraps a "
-"method call in a [JSON] object. The object has a particular structure and "
-"identifies which method is called, the parameters to that function, and "
-"carries an ID to keep track of responses. This class implements that "
-"standard on top of [Dictionary]; you will have to convert between a "
-"[Dictionary] and [JSON] with other functions."
+"method call in a [JSON] object that can be sent between systems. Request, "
+"notification and response objects have a defined structure that enable "
+"methods with arguments to be called and results to be returned. This class "
+"implements that standard using a [Dictionary]."
 msgstr ""
 
-#: docs/JSONRPC.xml
+#: modules/jsonrpc/docs/JSONRPC.xml
 msgid ""
-"Returns a dictionary in the form of a JSON-RPC notification. Notifications "
-"are one-shot messages which do not expect a response.\n"
-"- [code]method[/code]: Name of the method being called.\n"
-"- [code]params[/code]: An array or dictionary of parameters being passed to "
-"the method."
+"Creates a JSON-RPC Notification object as a dictionary. A JSON-RPC "
+"Notification object is sent to a server to call [code]method[/code]. The "
+"method will be called with [code]params[/code] arguments passed as an "
+"[Array] or [Dictionary].\n"
+"Notification objects are sent to a server when a response is not required. "
+"If a response is required, then use [method make_request] to create a "
+"Request object instead.\n"
+"If scopes are used, [code]method[/code] will be of the form \"[i]scope/"
+"method[/i]\". See [method set_scope] for specifying the object against which "
+"the method should be called."
 msgstr ""
 
-#: docs/JSONRPC.xml
+#: modules/jsonrpc/docs/JSONRPC.xml
 msgid ""
-"Returns a dictionary in the form of a JSON-RPC request. Requests are sent to "
-"a server with the expectation of a response. The ID field is used for the "
-"server to specify which exact request it is responding to.\n"
-"- [code]method[/code]: Name of the method being called.\n"
-"- [code]params[/code]: An array or dictionary of parameters being passed to "
-"the method.\n"
-"- [code]id[/code]: Uniquely identifies this request. The server is expected "
-"to send a response with the same ID."
+"Creates a JSON-RPC Request object as a dictionary. A JSON-RPC Request object "
+"is sent to a server to call [code]method[/code]. The method will be called "
+"with [code]params[/code] arguments passed as an [Array] or [Dictionary]. The "
+"[code]id[/code] uniquely identifies this request. The server is expected to "
+"send a response with the same ID.\n"
+"Request objects are sent to a server with the expectation of a response. If "
+"a response is not required, then use [method make_notification] to create a "
+"Notification object instead.\n"
+"If scopes are used, [code]method[/code] will be of the form \"[i]scope/"
+"method[/i]\". See [method set_scope] for specifying the object against which "
+"the method should be called."
 msgstr ""
 
-#: docs/JSONRPC.xml
+#: modules/jsonrpc/docs/JSONRPC.xml
 msgid ""
-"When a server has received and processed a request, it is expected to send a "
-"response. If you did not want a response then you need to have sent a "
-"Notification instead.\n"
-"- [code]result[/code]: The return value of the function which was called.\n"
-"- [code]id[/code]: The ID of the request this response is targeted to."
+"Creates a JSON-RPC Response object as a dictionary. A JSON-RPC Response "
+"object is sent by a server after processing a Request Object. The "
+"[code]result[/code] is the return value of the method called. The [code]id[/"
+"code] is the same id that was sent with the Request object."
 msgstr ""
 
-#: docs/JSONRPC.xml
+#: modules/jsonrpc/docs/JSONRPC.xml
 msgid ""
-"Creates a response which indicates a previous reply has failed in some way.\n"
-"- [code]code[/code]: The error code corresponding to what kind of error this "
-"is. See the [enum ErrorCode] constants.\n"
-"- [code]message[/code]: A custom message about this error.\n"
-"- [code]id[/code]: The request this error is a response to."
+"Creates a JSON-RPC Response error object as a dictionary. A JSON-RPC "
+"Response error object is sent by a server if a Request object results in an "
+"error. The [code]code[/code] indicates the type of error that occurred. It "
+"must be one of the [enum ErrorCode] constants. The [code]message[/code] is a "
+"short description of the error. It should be a concise single sentence. The "
+"[code]id[/code] is the same id that was sent with the Request object."
 msgstr ""
 
-#: docs/JSONRPC.xml
+#: modules/jsonrpc/docs/JSONRPC.xml
 msgid ""
-"Given a Dictionary which takes the form of a JSON-RPC request: unpack the "
-"request and run it. Methods are resolved by looking at the field called "
-"\"method\" and looking for an equivalently named function in the JSONRPC "
-"object. If one is found that method is called.\n"
-"To add new supported methods extend the JSONRPC class and call [method "
-"process_action] on your subclass.\n"
-"[code]action[/code]: The action to be run, as a Dictionary in the form of a "
-"JSON-RPC request or notification."
+"Processes a [code]request[/code]: a JSON-RPC Request or Notification object "
+"passed as a [Dictionary] or an [Array] of JSON-RPC [Dictionary] objects. If "
+"it received a JSON-RPC Request object, it returns a JSON-RPC Response object "
+"as a [Dictionary] or an [Array] of JSON-RPC Response objects.\n"
+"The [code]unused[/code] argument is not used.\n"
+"[b]Note:[/b] Only methods of objects added using [method set_scope] or "
+"declared in the class extended from [JSONRPC] are processed."
 msgstr ""
 
-#: docs/JSONRPC.xml
+#: modules/jsonrpc/docs/JSONRPC.xml
 msgid ""
-"A method call was requested but no function of that name existed in the "
-"JSONRPC subclass."
+"Processes a [code]request_string[/code]: a JSON-RPC Request or Notification "
+"object passed as a JSON [String]. If it received a JSON-RPC Request object, "
+"it returns a JSON-RPC Response object as a JSON [String].\n"
+"[b]Note:[/b] Only methods of objects added using [method set_scope] or "
+"declared in the class extended from [JSONRPC] are processed."
+msgstr ""
+
+#: modules/jsonrpc/docs/JSONRPC.xml
+msgid ""
+"Adds a [code]target[/code] object, whose methods can be called via a JSON-"
+"RPC Request object. The object is identified via the [code]scope[/code] "
+"name. Methods are called using the form \"[i]scope/method[/i]\"."
 msgstr ""
 
 #: docs/KinematicBody.xml
