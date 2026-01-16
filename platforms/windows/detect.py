@@ -272,7 +272,7 @@ def configure_msvc(env, manual_msvc_config):
     env.AppendUnique(
         CPPDEFINES=[
             "WINDOWS_ENABLED",
-            "OPENGL_ENABLED",
+            # "OPENGL_ENABLED",
             "WINMIDI_ENABLED",
             "TYPED_METHOD_BIND",
             "WIN32",
@@ -419,7 +419,7 @@ def configure_mingw(env):
     env.Append(
         CPPDEFINES=[
             "WINDOWS_ENABLED",
-            "OPENGL_ENABLED",
+            # "OPENGL_ENABLED",
             "WINMIDI_ENABLED",
         ]
     )
