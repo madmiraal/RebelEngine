@@ -18,9 +18,13 @@
 #include "servers/visual_server.h"
 #include "windows_audio_driver.h"
 #include "windows_crash_handler.h"
-#include "windows_gl_context.h"
 #include "windows_key_mapping.h"
 #include "windows_power.h"
+
+#ifdef OPENGL_ENABLED
+#include "windows_gl_context.h"
+#endif // OPENGL_ENABLED
+
 #ifdef XAUDIO2_ENABLED
 #include "drivers/xaudio2/audio_driver_xaudio2.h"
 #endif
@@ -289,9 +293,9 @@ class WindowsOS : public OS {
     bool outside;
     int old_x, old_y;
     Point2i center;
-#if defined(OPENGL_ENABLED)
+#ifdef OPENGL_ENABLED
     WindowsGLContext* gl_context;
-#endif
+#endif // OPENGL_ENABLED
     VisualServer* visual_server;
     int pressrc;
     HINSTANCE hInstance; // Holds The Instance Of The Application
@@ -583,7 +587,6 @@ public:
     virtual String get_joy_guid(int p_device) const;
 
     virtual void _set_use_vsync(bool p_enable);
-    // virtual bool is_vsync_enabled() const;
 
     virtual OS::PowerState get_power_state();
     virtual int get_power_seconds_left();
