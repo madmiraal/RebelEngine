@@ -1791,6 +1791,7 @@ Error WindowsOS::initialize(
         }
     }
     printf("gl_context is not null!\n");
+    return ERR_PRINTER_ON_FIRE;
 
     while (true) {
         printf("true!\n");
