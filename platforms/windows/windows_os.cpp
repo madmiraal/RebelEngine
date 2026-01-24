@@ -1744,8 +1744,7 @@ Error WindowsOS::initialize(
     last_pressure_update = 0;
     last_tilt            = Vector2();
 
-#if defined(OPENGL_ENABLED)
-
+#ifdef OPENGL_ENABLED
     bool gles3_context = true;
     if (p_video_driver == VIDEO_DRIVER_GLES2) {
         gles3_context = false;
@@ -1822,7 +1821,7 @@ Error WindowsOS::initialize(
 
     gl_context->set_use_vsync(video_mode.use_vsync);
     set_vsync_via_compositor(video_mode.vsync_via_compositor);
-#endif
+#endif // OPENGL_ENABLED
 
     visual_server = memnew(VisualServerRaster);
     if (get_render_thread_mode() != RENDER_THREAD_UNSAFE) {
@@ -2000,7 +1999,7 @@ void WindowsOS::finalize() {
     if (gl_context) {
         memdelete(gl_context);
     }
-#endif
+#endif // OPENGL_ENABLED
 
     if (user_proc) {
         SetWindowLongPtr(hWnd, GWLP_WNDPROC, (LONG_PTR)user_proc);
@@ -2769,10 +2768,12 @@ void* WindowsOS::get_native_handle(int p_handle_type) {
             return NULL; // Do we have a value to return here?
         case WINDOW_HANDLE:
             return hWnd;
+#ifdef OPENGL_ENABLED
         case WINDOW_VIEW:
             return gl_context->get_hdc();
         case OPENGL_CONTEXT:
             return gl_context->get_hglrc();
+#endif // OPENGL_ENABLED
         default:
             return NULL;
     }
@@ -3875,15 +3876,21 @@ String WindowsOS::keyboard_get_layout_name(int p_index) const {
 }
 
 void WindowsOS::release_rendering_thread() {
+#ifdef OPENGL_ENABLED
     gl_context->release_current();
+#endif // OPENGL_ENABLED
 }
 
 void WindowsOS::make_rendering_thread() {
+#ifdef OPENGL_ENABLED
     gl_context->make_current();
+#endif // OPENGL_ENABLED
 }
 
 void WindowsOS::swap_buffers() {
+#ifdef OPENGL_ENABLED
     gl_context->swap_buffers();
+#endif // OPENGL_ENABLED
 }
 
 void WindowsOS::force_process_input() {
@@ -4083,19 +4090,12 @@ String WindowsOS::get_joy_guid(int p_device) const {
 }
 
 void WindowsOS::_set_use_vsync(bool p_enable) {
+#ifdef OPENGL_ENABLED
     if (gl_context) {
         gl_context->set_use_vsync(p_enable);
     }
+#endif // OPENGL_ENABLED
 }
-
-/*
-bool WindowsOS::is_vsync_enabled() const {
-
-    if (gl_context)
-        return gl_context->is_using_vsync();
-
-    return true;
-}*/
 
 OS::PowerState WindowsOS::get_power_state() {
     return power_manager->get_power_state();
