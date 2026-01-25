@@ -8,7 +8,6 @@ import shutil
 import subprocess
 import sys
 
-
 HEADER = """
 # SPDX-FileCopyrightText: 2023 Rebel Engine contributors
 # SPDX-FileCopyrightText: 2014-2022 Godot Engine contributors

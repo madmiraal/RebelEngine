@@ -10,7 +10,6 @@ import textwrap
 import xml.etree.ElementTree as ET
 from collections import OrderedDict
 
-
 class_defs = OrderedDict()
 current_file = ""
 current_class = ""
@@ -828,7 +827,7 @@ def rst_text(text):
     result = ""
     remaining_text = text
     while remaining_text:
-        (plain_text, tag, remaining_text) = extract_next_tag(remaining_text)
+        plain_text, tag, remaining_text = extract_next_tag(remaining_text)
         result += escape_special_characters(plain_text)
         result += rst_tag(tag)
         if (
@@ -879,11 +878,11 @@ def escape_special_characters(text):
 
 
 def extract_next_tag(text):
-    (before_text, tag_name, after_text) = extract_next_tag_name(text)
+    before_text, tag_name, after_text = extract_next_tag_name(text)
     if tag_name == "":
         return (before_text, None, after_text)
     tag = TagDef(tag_name)
-    (tag.name, tag.value) = extract_tag_value(tag_name)
+    tag.name, tag.value = extract_tag_value(tag_name)
     block_tags = [
         "b",
         "code",
@@ -893,7 +892,7 @@ def extract_next_tag(text):
         "url",
     ]
     if tag.name in block_tags:
-        (tag.contents, after_text) = extract_tag_contents(tag.name, after_text)
+        tag.contents, after_text = extract_tag_contents(tag.name, after_text)
     return (before_text, tag, after_text)
 
 
@@ -927,7 +926,7 @@ def extract_tag_contents(tag_name, text):
     next_tag_name = ""
     remaining_text = text
     while next_tag_name != ("/" + tag_name) and remaining_text:
-        (before_text, next_tag_name, remaining_text) = extract_next_tag_name(
+        before_text, next_tag_name, remaining_text = extract_next_tag_name(
             remaining_text
         )
         tag_contents += before_text

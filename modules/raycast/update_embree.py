@@ -141,13 +141,11 @@ for f in all_files:
 with open(
     os.path.join(dest_dir, "kernels/hash.h"), "w", encoding="utf-8", newline="\n"
 ) as hash_file:
-    hash_file.write(
-        f"""// Copyright 2009-2021 Intel Corporation
+    hash_file.write(f"""// Copyright 2009-2021 Intel Corporation
 // SPDX-License-Identifier: Apache-2.0
 
 #define RTC_HASH "{commit_hash}"
-"""
-    )
+""")
 
 for config_file in config_files:
     os.rename(
