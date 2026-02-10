@@ -122,3 +122,8 @@ tasks.register('createCustomBuildTemplate', Zip) {
     archiveFileName = 'android_template.zip'
     destinationDirectory = file(binDir)
 }
+
+// Preserve the permissions from the file system when creating the custom build template.
+tasks.named('createCustomBuildTemplate') {
+    useFileSystemPermissions()
+}
