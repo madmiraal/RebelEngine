@@ -555,11 +555,11 @@ jobs:
           #Creating release
           if [[ ${{ github.event_name }} == "schedule" ]] ; then
             echo "Creating $version Nightly $(date +'%Y-%m-%d')"
-            gh release create v$version ./release/* --generate-notes --title "Nightly $(date +'%Y-%m-%d')" --prerelease
+            gh release create v$version+$(date +'%Y%m%d') ./release/* --target ${{ github.ref_name }} --generate-notes --title "Nightly $(date +'%Y-%m-%d')" --prerelease
           elif [[ $version == *-* ]] ; then
             echo "Creating Rebel Engine pre-release version $version"
-            gh release create v$version ./release/* --generate-notes --title "Rebel Engine v$version" --prerelease
+            gh release create v$version ./release/* --target ${{ github.ref_name }} --generate-notes --title "Rebel Engine v$version" --prerelease
           else
             echo "Creating Rebel Engine release version $version"
-            gh release create v$version ./release/* --generate-notes --title "Rebel Engine v$version"
+            gh release create v$version ./release/* --target ${{ github.ref_name }} --generate-notes --title "Rebel Engine v$version"
           fi
