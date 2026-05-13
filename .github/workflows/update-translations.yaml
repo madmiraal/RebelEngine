@@ -1,5 +1,6 @@
 name: Update Translations
 on:
+  push:
   workflow_dispatch:
   schedule:
     # Check for updates every day at midnight.
@@ -9,7 +10,7 @@ jobs:
   update-translation-files:
     name: Update Translation Files
     # Don't run on forks.
-    if: github.repository == 'RebelToolbox/RebelEngine'
+    if: github.repository == 'madmiraal/RebelEngine'
     runs-on: ubuntu-latest
 
     steps:
