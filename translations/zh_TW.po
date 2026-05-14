@@ -6,13 +6,6 @@
 #
 # Chinese (Traditional) translation of the Rebel Engine class reference
 #
-# binotaliu <binota@protonmail.ch>, 2020.
-# BinotaLIU <me@binota.org>, 2020.
-# Eric K <eric900601@gmail.com>, 2020.
-# Pierre Stempin <pierre.stempin@gmail.com>, 2020.
-# Lihan Zhu <lihan@proctorio.com>, 2021.
-# jixun <jingshinglai@gmail.com>, 2021.
-# Nick Chu <nickchu35@gmail.com>, 2021.
 msgid ""
 msgstr ""
 "Project-Id-Version: Rebel Engine class reference\n"

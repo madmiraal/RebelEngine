@@ -5,26 +5,7 @@
 # SPDX-License-Identifier: MIT
 #
 # Hungarian translation of the Rebel Editor
-# Árpád Horváth <horvatha4@googlemail.com>, 2018.
-# Nagy Lajos <neutron9707@gmail.com>, 2017.
-# Sandor Domokos <sandor.domokos@gmail.com>, 2017-2018.
-# Varga Dániel <danikah.danikah@gmail.com>, 2016-2018, 2020.
-# Gabor Csordas <gaborcsordas@yahoo.com>, 2018, 2019, 2020.
-# Tusa Gamer <tusagamer@mailinator.com>, 2018.
-# Máté Lugosi <mate.lugosi@gmail.com>, 2019.
-# sztrovacsek <magadeve@gmail.com>, 2019.
-# Ács Zoltán <acszoltan111@gmail.com>, 2020.
-# cefrebevalo <szmarci711@gmail.com>, 2020.
-# thekeymethod <csokan.andras87@protonmail.ch>, 2020.
-# Czmorek Dávid <czmdav.soft@gmail.com>, 2020.
-# Újvári Marcell <mmarci72@gmail.com>, 2021.
-# Gergő Pistai <gergopistai@gmail.com>, 2021.
-# Misi <varady.misi@gmail.com>, 2021.
-# Looky1173 <lgl1173and2006@gmail.com>, 2021.
-# Frontrider <frontrider@tutanota.com>, 2021.
-# Andras Virag <snowflake71@gmail.com>, 2021.
-# balintmaci <balintmaci@gmail.com>, 2021.
-# Balázs Püspök-Kiss <pkblazsak@gmail.com>, 2021.
+#
 msgid ""
 msgstr ""
 "Project-Id-Version: Rebel Editor\n"

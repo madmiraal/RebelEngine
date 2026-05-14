@@ -6,10 +6,6 @@
 #
 # Serbian (cyrillic) translation of the Rebel Editor
 #
-# Александар Урошевић <nicecubedude@gmail.com>, 2017.
-# Младен Габић <cupakabra@protonmail.com>, 2020.
-# Anonymous <noreply@weblate.org>, 2020.
-# Алексић Владица <vlajkousk@gmail.com>, 2021.
 msgid ""
 msgstr ""
 "Project-Id-Version: Rebel Editor\n"

@@ -6,7 +6,6 @@
 #
 # Breton translation of the Rebel Editor
 #
-# Feufoll <feufoll@gmail.com>, 2020.
 msgid ""
 msgstr ""
 "Project-Id-Version: Rebel Editor\n"

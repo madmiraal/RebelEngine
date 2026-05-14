@@ -5,16 +5,7 @@
 # SPDX-License-Identifier: MIT
 #
 # Slovak translation of the Rebel Editor
-# J08nY <johnenter@gmail.com>, 2016.
-# MineGame 159 <minegame459@gmail.com>, 2018.
-# Zuzana Palenikova <sousana.is@gmail.com>, 2019.
-# MineGame159 <petulko08@gmail.com>, 2019, 2020.
-# Michal <alladinsiffon@gmail.com>, 2019.
-# Richard <rgarlik@gmail.com>, 2019.
-# Richard Urban <redasuio1@gmail.com>, 2020.
-# Anonymous <noreply@weblate.org>, 2020.
-# Mario-projects-dev <m.vitek.mv@gmail.com>, 2021.
-# Eliška Fichnová <eliska@fichna.sk>, 2021.
+#
 msgid ""
 msgstr ""
 "Project-Id-Version: Rebel Editor\n"

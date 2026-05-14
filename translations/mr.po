@@ -6,7 +6,6 @@
 #
 # LANGUAGE translation of the Rebel Engine class reference
 #
-# Prachi Joshi <josprachi@yahoo.com>, 2020.
 msgid ""
 msgstr ""
 "Project-Id-Version: Rebel Engine class reference\n"

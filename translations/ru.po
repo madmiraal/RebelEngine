@@ -6,35 +6,6 @@
 #
 # Russian translation of the Rebel Engine class reference
 #
-# Alex <Alex.Gorichev@protonmail.com>, 2020.
-# Nikita <Kulacnikita@ya.ru>, 2020.
-# Алексей Смирнов <tir74@mail.ru>, 2020, 2021.
-# Chaosus89 <chaosus89@gmail.com>, 2020.
-# John Smith <19georginos97@gmail.com>, 2020.
-# NeoLan Qu <it.bulla@mail.ru>, 2020.
-# Danil Alexeev <danil@alexeev.xyz>, 2020, 2021.
-# Mazhar Gören <mazhargoren3@gmail.com>, 2020.
-# Valentine <hehboe@gmail.com>, 2020.
-# GreyCat <grey_cat0@mail.ru>, 2020.
-# Pierre Stempin <pierre.stempin@gmail.com>, 2020.
-# Ilya Brin <wim-norder@yandex.com>, 2020.
-# Artroms <artromskiy.git@gmail.com>, 2021.
-# narrnika <narr13niki@gmail.com>, 2021.
-# TB Designes <tb.designes@gmail.com>, 2021.
-# Alex Ty <drowerer@gmail.com>, 2021.
-# Anna Malinovskaia <tacitcoast@gmail.com>, 2021.
-# Poq Xert <poqxert@poqxert.ru>, 2021.
-# Чтабс <chtabs2k19@gmail.com>, 2021.
-# Nikita Blizniuk <BliznyukNM@gmail.com>, 2021.
-# Сергей Волков <zerosar4@gmail.com>, 2021.
-# Alexander Sinitsyn <almoig747@gmail.com>, 2021.
-# Толя Богомолов <tolya.bogomolov2004@gmail.com>, 2021.
-# Rustam Alieskerov <rustam.aleskerov7@gmail.com>, 2021.
-# Vladimir Svity <development.openworld@gmail.com>, 2021.
-# SuperProCoolName <minzatov.2004@mail.ru>, 2021.
-# GameOverCode <thefguyplayeriwbt@gmail.com>, 2021.
-# trolley813 <trolleybus.1329@gmail.com>, 2021.
-# artem <artem999.r@protonmail.com>, 2021.
 msgid ""
 msgstr ""
 "Project-Id-Version: Rebel Engine class reference\n"

@@ -5,33 +5,7 @@
 # SPDX-License-Identifier: MIT
 #
 # Korean translation of the Rebel Editor
-# Ch <ccwpc@hanmail.net>, 2017.
-# paijai 송 (fivejobi) <xotjq237@gmail.com>, 2018.
-# pgyage3263 <pgyage3263@naver.com>, 2018.
-# Sun Kim <perplexingsun@gmail.com>, 2018.
-# TheRedPlanet <junmo.moon8@gmail.com>, 2018.
-# Xavier Cho <mysticfallband@gmail.com>, 2018.
-# 박한얼 (volzhs) <volzhs@gmail.com>, 2016-2018.
-# 송태섭 <xotjq237@gmail.com>, 2018, 2019, 2020.
-# JY <yimjisoo@mailfence.com>, 2018.
-# Ch. <ccwpc@hanmail.net>, 2018, 2020.
-# moolow <copyhyeon@gmail.com>, 2019.
-# Jiyoon Kim <kimjiy@dickinson.edu>, 2019.
-# Ervin <zetsmart@gmail.com>, 2019.
-# Tilto_ <tilto0822@develable.xyz>, 2020.
-# Myeongjin Lee <aranet100@gmail.com>, 2020, 2021.
-# Doyun Kwon <caen4516@gmail.com>, 2020.
-# Jun Hyung Shin <shmishmi79@gmail.com>, 2020.
-# Yongjin Jo <wnrhd114@gmail.com>, 2020.
-# Yungjoong Song <yungjoong.song@gmail.com>, 2020.
-# Henry LeRoux <henry.leroux@ocsbstudent.ca>, 2021.
-# Postive_ Cloud <postive12@gmail.com>, 2021.
-# dewcked <dewcked@protonmail.ch>, 2021.
-# SteamB23 <steamb23@outlook.com>, 2021.
-# Jaemin Park <ppparkje@naver.com>, 2021.
-# 신동규 <rlsl0422@gmail.com>, 2021.
-# Kiroo <elusive1102@naver.com>, 2021.
-# JumpJetAvocado <dwkng@jbnu.ac.kr>, 2021.
+#
 msgid ""
 msgstr ""
 "Project-Id-Version: Rebel Editor\n"

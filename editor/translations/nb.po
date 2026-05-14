@@ -5,24 +5,7 @@
 # SPDX-License-Identifier: MIT
 #
 # Norwegian Bokmål translation of the Rebel Editor
-# Allan Nordhøy <epost@anotheragency.no>, 2017-2018, 2019, 2020, 2021.
-# Anonymous <GentleSaucepan@protonmail.com>, 2017, 2021.
-# Elias <eliasnykrem@gmail.com>, 2018.
-# flesk <eivindkn@gmail.com>, 2017, 2019.
-# Frank T. Rambol <frank@d-fect.com>, 2018, 2021.
-# Jørgen Aarmo Lund <jorgen.aarmo@gmail.com>, 2016, 2019.
-# NicolaiF <nico-fre@hotmail.com>, 2017-2018, 2019, 2021.
-# Norwegian Disaster <stian.furu.overbye@gmail.com>, 2017.
-# passeride <lukas@passeride.com>, 2017.
-# Byzantin <kasper-hoel@hotmail.com>, 2018.
-# Hans-Marius Øverås <hansmariusoveras@gmail.com>, 2019.
-# Revolution <revosw@gmail.com>, 2019.
-# Petter Reinholdtsen <pere-weblate@hungry.com>, 2019, 2020, 2021.
-# Patrick Sletvold <patricksletvold@hotmail.com>, 2021.
-# Kristoffer <kskau93@gmail.com>, 2021.
-# Lili Zoey <sayaks1@gmail.com>, 2021.
-# slasken06 <ask.skivdal@gmail.com>, 2021.
-# Daniel Skogly <daniel@klungo.no>, 2021.
+#
 msgid ""
 msgstr ""
 "Project-Id-Version: Rebel Editor\n"

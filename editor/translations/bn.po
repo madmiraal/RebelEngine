@@ -5,15 +5,7 @@
 # SPDX-License-Identifier: MIT
 #
 # Bengali translation of the Rebel Editor
-# Abu Md. Maruf Sarker <maruf.webdev@gmail.com>, 2016-2017.
-# Abdullah Zubair <abdullahzubair109@gmail.com>, 2017.
-# Tahmid Karim <tahmidk15@gmail.com>, 2016.
-# Tawhid H. <Tawhidk757@yahoo.com>, 2019.
-# Hasibul Hasan <hasibeng78@gmail.com>, 2019.
-# Oymate <dhruboadittya96@gmail.com>, 2020, 2021.
-# Mokarrom Hossain <mhb2016.bzs@gmail.com>, 2020, 2021.
-# Sagen Soren <sagensoren03@gmail.com>, 2020.
-# Hasibul Hasan <d1hasib@yahoo.com>, 2020.
+#
 msgid ""
 msgstr ""
 "Project-Id-Version: Rebel Editor\n"

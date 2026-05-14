@@ -6,7 +6,6 @@
 #
 # LANGUAGE translation of the Rebel Editor.
 #
-# Withuse <withuse@gmail.com>, 2021.
 msgid ""
 msgstr ""
 "Project-Id-Version: Rebel Editor\n"

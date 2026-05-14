@@ -6,26 +6,6 @@
 #
 # Italian translation of the Rebel Engine class reference
 #
-# Micila Micillotto <micillotto@gmail.com>, 2020, 2021.
-# Bob <spiroski.boban@gmail.com>, 2020.
-# Riccardo Ferro <Riccardo3Ferro@gmail.com>, 2020.
-# Lorenzo Asolan <brixiumx@gmail.com>, 2020.
-# Mirko <miknsop@gmail.com>, 2020.
-# Lorenzo Cerqua <lorenzocerqua@tutanota.com>, 2020.
-# StarFang208 <polaritymanx@yahoo.it>, 2020.
-# Giacomo Bertolotti <giacomo.chappo@hotmail.it>, 2020, 2021.
-# Damiano Guida <damiano.guida22@gmail.com>, 2020.
-# Moncada <moncadaferdinandop@gmail.com>, 2021.
-# DARBY <davide.ale.allegretti@gmail.com>, 2021.
-# Davide Wayan Mores <davidewayanmores@gmail.com>, 2021.
-# Marco Galli <mrcgll98@gmail.com>, 2021.
-# Alessandro Mandelli <mandelli.alessandro@ngi.it>, 2021.
-# Daniele Basso <tiziodcaio@gmail.com>, 2021.
-# Jacopo Farina <jacopo1.farina@gmail.com>, 2021.
-# Riteo Siuga <riteo@posteo.net>, 2021.
-# ZeroKun265 <davidegiambirtone265@gmail.com>, 2021.
-# Andrea Montagna <fullmontis@gmail.com>, 2021.
-# Andrea Leganza <neogene@gmail.com>, 2021.
 msgid ""
 msgstr ""
 "Project-Id-Version: Rebel Engine class reference\n"

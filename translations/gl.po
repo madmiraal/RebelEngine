@@ -6,9 +6,6 @@
 #
 # LANGUAGE translation of the Rebel Engine class reference
 #
-# Andy Barcia <andybarcia4@gmail.com>, 2021.
-# PokeGalaico <abloodyfreaks@gmail.com>, 2021.
-# Kkai <kaieltroll@gmail.com>, 2021.
 msgid ""
 msgstr ""
 "Project-Id-Version: Rebel Engine class reference\n"

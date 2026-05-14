@@ -5,12 +5,7 @@
 # SPDX-License-Identifier: MIT
 #
 # Filipino translation of the Rebel Editor
-# Marco Santos <enum.scima@gmail.com>, 2019.
-# Amado Wilkins <epicalert68@gmail.com>, 2019.
-# Bakainkorp <Ryan.Bautista86@myhunter.cuny.edu>, 2019.
-# Jethro Parker <lionbearjet@hotmail.com>, 2020.
-# Sven Sorupia <stsorupia@gmail.com>, 2021.
-# Napstaguy04 <brokenscreen3@gmail.com>, 2021.
+#
 msgid ""
 msgstr ""
 "Project-Id-Version: Rebel Editor\n"

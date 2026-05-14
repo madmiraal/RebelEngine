@@ -5,8 +5,7 @@
 # SPDX-License-Identifier: MIT
 #
 # Telugu translation of the Rebel Editor
-# suresh p <suresh9247@gmail.com>, 2019, 2020.
-# Jagadeesh Vijay Varma <jagadeeshvarma.b@gmail.com>, 2021.
+#
 msgid ""
 msgstr ""
 "Project-Id-Version: Rebel Editor\n"

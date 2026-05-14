@@ -5,10 +5,7 @@
 # SPDX-License-Identifier: MIT
 #
 # Serbian (latin) translation of the Rebel Editor
-# Milos Ponjavusic <brane@branegames.com>, 2018.
-# BLu <blmasfon@gmail.com>, 2018.
-# Vojislav Bajakic <ch3d4.ns@gmail.com>, 2018.
-# LT <lakizvezdas@gmail.com>, 2019.
+#
 msgid ""
 msgstr ""
 "Project-Id-Version: Rebel Editor\n"

@@ -6,10 +6,6 @@
 #
 # LANGUAGE translation of the Rebel Engine class reference
 #
-# Richard Urban <redasuio1@gmail.com>, 2020.
-# Pierre Stempin <pierre.stempin@gmail.com>, 2020.
-# Mario-projects-dev <m.vitek.mv@gmail.com>, 2021.
-# vrecusko <vrecusko20@gmail.com>, 2021.
 msgid ""
 msgstr ""
 "Project-Id-Version: Rebel Engine class reference\n"

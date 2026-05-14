@@ -5,22 +5,7 @@
 # SPDX-License-Identifier: MIT
 #
 # Danish translation of the Rebel Editor
-# Dankse Memes <purplelops@gmail.com>, 2018.
-# David Lamhauge <davidlamhauge@gmail.com>, 2016, 2018.
-# Esben Damkjær Sørensen <esben@damkjaergaard.com>, 2018.
-# Kim Nielsen <kimmowich@stofanet.dk>, 2017, 2018, 2021.
-# Michael Madsen <mim@michael-madsen.dk>, 2017.
-# Christoffer Schindel <ceas@outlook.com>, 2018.
-# frederikzt <frederikzt@gmail.com>, 2018.
-# Jonathan B. Jørgensen <pizzaernam@gmail.com>, 2018.
-# Peter G. Laursen <GhostReven@gmail.com>, 2018.
-# Rémi Verschelde <akien@godotengine.org>, 2019.
-# Mads K. Bredager <mbredager@gmail.com>, 2019.
-# Kristoffer Andersen <kjaa@google.com>, 2019.
-# Joe Osborne <reachjoe.o@gmail.com>, 2020, 2021.
-# Autowinto <happymansi@hotmail.com>, 2020, 2021.
-# Mikkel Mouridsen <mikkelmouridsen@me.com>, 2020, 2021.
-# snakatk <snaqii@live.dk>, 2021.
+#
 msgid ""
 msgstr ""
 "Project-Id-Version: Rebel Editor\n"

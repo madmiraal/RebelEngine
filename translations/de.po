@@ -6,42 +6,6 @@
 #
 # German translation of the Rebel Engine class reference
 #
-# Jaigskim <filzstift112@gmail.com>, 2020.
-# So Wieso <sowieso@dukun.de>, 2020.
-# artism90 <artism90@googlemail.com>, 2020.
-# HugeGameArt <hugegameartgd@gmail.com>, 2020.
-# Günther Bohn <ciscouser@gmx.de>, 2020, 2021.
-# Rémi Verschelde <akien@godotengine.org>, 2020.
-# Julian Pritzi <julian.pritzi@gmail.com>, 2020.
-# Markus Lechner <marcus.lechner@gmail.com>, 2020.
-# lmarz <leon.marz@kabelmail.de>, 2020.
-# Helmut Hirtes <helmut.h@gmx.de>, 2020.
-# Michal695 <michalek.jedrzejak@gmail.com>, 2020.
-# Dusk <marvin.a.fuerus@gmail.com>, 2020, 2021.
-# Aaron H <aago2001@web.de>, 2020.
-# Gehteuchimmer Nochnichtsan <31415card@web.de>, 2020, 2021.
-# GrauBlitZ <steffen-kremer@outlook.com>, 2020.
-# Geometror <hendrik.brucker@mail.de>, 2020, 2021.
-# Phil Ipp <philk.7438@gmail.com>, 2020.
-# Bjarne Hiller <bjarne.hiller@gmail.com>, 2020.
-# Martin <martinreininger@gmx.net>, 2021.
-# The Origin <fifeimcity@gmail.com>, 2021.
-# Daniel Plaster <danimineiromc@googlemail.com>, 2021.
-# RoniPerson <online141@gmx.de>, 2021.
-# Badewu <neumanntobias3@t-online.de>, 2021.
-# Linux User <no-ads@mail.de>, 2021.
-# Independent-Eye <michalek.jedrzejak@gmail.com>, 2021.
-# Leon Wehrwein <wel@outlook.de>, 2021.
-# Ron Eric Hackländer <mail@roneric.net>, 2021.
-# Stephan Kerbl <stephankerbl@gmail.com>, 2021.
-# jmih03 <joerni@mail.de>, 2021.
-# spoadr <spoadr@gmx.ch>, 2021.
-# Tim <tim14speckenwirth@gmail.com>, 2021.
-# user <online141@gmx.de>, 2021.
-# Jummit <jummit@web.de>, 2021.
-# Bastian <bastian.ike@gmail.com>, 2021.
-# KuhnChris <kuhnchris@kuhnchris.eu>, 2021.
-# Rémi Verschelde <remi@godotengine.org>, 2021.
 msgid ""
 msgstr ""
 "Project-Id-Version: Rebel Engine class reference\n"

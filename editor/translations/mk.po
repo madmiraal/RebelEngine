@@ -6,8 +6,6 @@
 #
 # Macedonian translation of the Rebel Editor
 #
-# Kristijan Fremen Velkovski <me@krisfremen.com>, 2021.
-# Denis <densisman@gmail.com>, 2021.
 msgid ""
 msgstr ""
 "Project-Id-Version: Rebel Editor\n"

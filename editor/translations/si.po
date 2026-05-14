@@ -5,8 +5,7 @@
 # SPDX-License-Identifier: MIT
 #
 # Sinhala translation of the Rebel Editor
-# Yohan Sandun <Yohan99ysk@gmail.com>, 2018.
-# thushariii <thusharipahalage@gmail.com>, 2021.
+#
 msgid ""
 msgstr ""
 "Project-Id-Version: Rebel Editor\n"

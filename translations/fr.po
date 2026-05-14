@@ -6,53 +6,6 @@
 #
 # French translation of the Rebel Engine class reference
 #
-# Rémi Verschelde <remi@godotengine.org>, 2020, 2021.
-# Freyja <aerandil@gmail.com>, 2020.
-# Gol.D.eNI <eniolamy1@gmail.com>, 2020.
-# Anonymous <noreply@weblate.org>, 2020.
-# Nathan <bonnemainsnathan@gmail.com>, 2020.
-# Fox Lahoki <alexbar@live.fr>, 2020.
-# Pierre Caye <pierrecaye@laposte.net>, 2020, 2021.
-# Sofiane <Sofiane-77@caramail.fr>, 2020.
-# Gaya <limanegaya@gmail.com>, 2020.
-# Nick B <nbourrereg@hotmail.com>, 2020.
-# JustATranslator <fa5k52y@mailo.com>, 2020.
-# Omicron <omicron666.dev@gmail.com>, 2020.
-# Pierre Stempin <pierre.stempin@gmail.com>, 2020, 2021.
-# Léo Vincent <l009.vincent@gmail.com>, 2020.
-# Bastien Schmitt <bastien.schmitt221@gmail.com>, 2020.
-# Ben Zepman <zepman@gmail.com>, 2020.
-# Puckid <yannroth@msn.com>, 2020.
-# Boris Petrov <boris.v.petrov@protonmail.com>, 2020.
-# Joseph Boudou <joseph.boudou@matabio.net>, 2020.
-# Helix Sir <vincentbarkmann@gmail.com>, 2020, 2021.
-# Yvanvan 37 <yvanvan.37@gmail.com>, 2020.
-# Synkied <synkx@hotmail.fr>, 2020, 2021.
-# Théo Tavernier <tavernier.2002@gmail.com>, 2020.
-# TechnoPorg <jonah.janzen@gmail.com>, 2020, 2021.
-# Deleted User <noreply+26914@weblate.org>, 2020.
-# Gerard Lamber <gerard13lamber@gmail.com>, 2021.
-# Youssef Harmal <the.coder.crab@gmail.com>, 2021.
-# gael <gael@gborras.fr>, 2021.
-# Clément Topy <topy72.mine@gmail.com>, 2021.
-# Arnaud Golfouse <arnaud.golfouse@laposte.net>, 2021.
-# Toquey SiGauses <meiyo40@gmail.com>, 2021.
-# GABRIELLE Damien <damiengabrielle@gmail.com>, 2021.
-# Julien Vanelian <julienvanelian@hotmail.com>, 2021.
-# Perrier Mathis <mathis.perrier73@gmail.com>, 2021.
-# Blackiris <divjvc@free.fr>, 2021.
-# AndyNekena <andy.nekena@gmail.com>, 2021.
-# Legorel <Legorel412@gmail.com>, 2021.
-# Romain Hebert <romain.hebert0442@gmail.com>, 2021.
-# Tim Krief <tim@timkrief.com>, 2021.
-# Rémi Verschelde <akien@godotengine.org>, 2021.
-# blfr <contact.blfr@gmail.com>, 2021.
-# Urbain <urbain.lantres@tutanota.com>, 2021.
-# syns <jpo.drt@gmail.com>, 2021.
-# Gallonigher <meduse1500@ovh.fr>, 2021.
-# Timothée MB <timothee.me@gmail.com>, 2021.
-# Florent <fnuttens@dabao.fr>, 2021.
-# Benjamin Peter <benji.peter@hotmail.fr>, 2021.
 msgid ""
 msgstr ""
 "Project-Id-Version: Rebel Engine class reference\n"

@@ -5,70 +5,7 @@
 # SPDX-License-Identifier: MIT
 #
 # Turkish translation of the Rebel Editor
-# Aprın Çor Tigin <kabusturk38@gmail.com>, 2016-2017.
-# Aykut YILDIRIM <aykutyildirim@windowslive.com>, 2018.
-# Ceyhun Can Ulker <ceyhuncanu@gmail.com>, 2016.
-# Enes Kaya Öcal <ekayaocal@hotmail.com>, 2016.
-# Enescan Yerlikaya <enescanyerlikaya@gmail.com>, 2017.
-# Fatih Mert Doğancan <fatihmertdogancan@hotmail.com>, 2017.
-# hubbyist <hub@legrud.net>, 2017.
-# H.Hüseyin CİHANGİR <hashusfb@gmail.com>, 2018, 2019.
-# Kaan Gül <qaantum@hotmail.com>, 2018.
-# M. Yavuz Uzun <myavuzuzun@yandex.com>, 2016.
-# monolifed <monolifed@gmail.com>, 2018.
-# Orkun Turan <holygatestudio@yandex.com>, 2016-2017.
-# razah <icnikerazah@gmail.com>, 2017-2018.
-# stnmycri <satenmeycri@gmail.com>, 2017-2018.
-# Yavuz Günay <yavuzgunay@gmail.com>, 2017.
-# Onur Sanır <onursanir@gmail.com>, 2018.
-# Oğuzhan Özdemir <ozdemiroguzhan0@gmail.com>, 2018.
-# Alper Çitmen <alper.citmen@gmail.com>, 2019.
-# ege1212 <owlphp@gmail.com>, 2019.
-# Ömer YAZICIOĞLU <oyazicioglu@gmail.com>, 2019.
-# Mertcan Duman <mertcan.dmn16@gmail.com>, 2019.
-# Furkan Türkal <furkan.turkal@hotmail.com>, 2019.
-# Aiden Demir <dnm00110011@hotmail.com>, 2019.
-# Anton Semchenko <semchenkoanton@protonmail.com>, 2019.
-# Enes Can Yerlikaya <enescanyerlikaya@gmail.com>, 2019.
-# Ömer Akgöz <omerakgoz34@gmail.com>, 2019.
-# Mehmet Dursun <mehmet.dursun@gmail.com>, 2019.
-# Ali Can Çekmez <alcamez@icloud.com>, 2019.
-# Erdem Gez <erdemgezzz@gmail.com>, 2019.
-# rayray61 <laladodo000@gmail.com>, 2019.
-# enesygt <enesyigittt@gmail.com>, 2019.
-# Mustafa Turhan <odunluzikkim@gmail.com>, 2019.
-# Ullima <nacej@my6mail.com>, 2019.
-# Bera Koklu <bkoklu001@student.hampton.k12.va.us>, 2019.
-# Mehmet AKDEMİR <mamoo81@gmail.com>, 2019.
-# Oguz Ersen <oguzersen@protonmail.com>, 2019.
-# isimsiz <isimsiz@mailinator.com>, 2019.
-# Muhammet Mustafa Tozlu <m.mustafatozlu@gmail.com>, 2019.
-# HALİL ATAŞ <halillatass@gmail.com>, 2019.
-# Zsosu Ktosu <zktosu@gmail.com>, 2020.
-# Mesut Aslan <kontinyu@gmail.com>, 2020.
-# Kaan Genç <kaan@kaangenc.me>, 2020.
-# Anonymous <noreply@weblate.org>, 2020.
-# Güneş Gümüş <gunes.gumus.001@gmail.com>, 2020.
-# Oğuz Ersen <oguzersen@protonmail.com>, 2020, 2021.
-# Vedat Günel <gunel15@itu.edu.tr>, 2020.
-# Ahmet Elgün <ahmetelgn@gmail.com>, 2020.
-# Efruz Yıldırır <efruzyildirir@gmail.com>, 2020.
-# Hazar <duurkak@yandex.com>, 2020.
-# Mutlu ORAN <mutlu.oran66@gmail.com>, 2020.
-# Yusuf Osman YILMAZ <wolfkan4219@gmail.com>, 2020.
-# furkan atalar <fatalar55@gmail.com>, 2020, 2021.
-# Suleyman Poyraz <zaryob.dev@gmail.com>, 2020.
-# Çağlar KOPARIR <ckoparir@gmail.com>, 2021.
-# Cem Eren Fukara <cefukara@hotmail.com>, 2021.
-# Jafar Tarverdiyev <cefertarverdiyevv@gmail.com>, 2021.
-# ali aydın <alimxaydin@gmail.com>, 2021.
-# Cannur Daşkıran <canndask@gmail.com>, 2021.
-# kahveciderin <kahveciderin@gmail.com>, 2021.
-# Lucifer25x <umudyt2006@gmail.com>, 2021.
-# Kadir Berk Yağar <ykadirberk2@gmail.com>, 2021.
-# Aysu Toprak <moonwater99@hotmail.com>, 2021.
-# Yusuf Yavuzyigit <yusufyavuzyigit25@gmail.com>, 2021.
-# seckiyn <kyofl6@gmail.com>, 2022.
+#
 msgid ""
 msgstr ""
 "Project-Id-Version: Rebel Editor\n"

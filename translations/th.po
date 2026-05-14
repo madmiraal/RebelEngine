@@ -6,12 +6,6 @@
 #
 # Thai translation of the Rebel Engine class reference
 #
-# Thanachart Monpassorn <nunf_2539@hotmail.com>, 2020.
-# Sanhaphat Srijumpa <fluke031@hotmail.com>, 2020.
-# Pierre Stempin <pierre.stempin@gmail.com>, 2020.
-# Kongfa Warorot <gongpha@hotmail.com>, 2020.
-# PT 07 <porton555@gmail.com>, 2021.
-# SysError_ <ictsanook@hotmail.com>, 2021.
 msgid ""
 msgstr ""
 "Project-Id-Version: Rebel Engine class reference\n"

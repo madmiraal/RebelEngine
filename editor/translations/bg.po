@@ -5,18 +5,7 @@
 # SPDX-License-Identifier: MIT
 #
 # Bulgarian translation of the Rebel Editor
-# Bojidar Marinov <bojidar.marinov.bg@gmail.com>, 2016.
-# Иван Пенев (Адмирал АнимЕ) <aeternus.arcis@gmail.com>, 2016-2017.
-# Любомир Василев <lyubomirv@abv.bg>, 2018, 2020.
-# MaresPW <marespw206@gmail.com>, 2018.
-# PakoSt <kokotekilata@gmail.com>, 2018, 2020.
-# Damyan Dichev <mwshock2@gmail.com>, 2019.
-# Whod <whodizhod@gmail.com>, 2020.
-# Stoyan <stoyan.stoyanov99@protonmail.com>, 2020.
-# zooid <the.zooid@gmail.com>, 2020.
-# Любомир Василев <lyubomirv@gmx.com>, 2020, 2021.
-# Ziv D <wizdavid@gmail.com>, 2020.
-# Violin Iliev <violin.developer@gmail.com>, 2021.
+#
 msgid ""
 msgstr ""
 "Project-Id-Version: Rebel Editor\n"

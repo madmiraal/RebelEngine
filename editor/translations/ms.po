@@ -5,15 +5,7 @@
 # SPDX-License-Identifier: MIT
 #
 # Malay translation of the Rebel Editor
-# Sam Vanguard <syafz119@gmail.com>, 2018.
-# Shaqir Rafiq <moshamoradev@gmail.com>, 2018.
-# Syaz Amirin <amirin123z@gmail.com>, 2018.
-# Nafis Ibrahim <thepreciousnafis@gmail.com>, 2018.
-# Muhammad Hazim bin Hafizalshah <muhammadhazimhafizalshah@gmail.com>, 2020.
-# keviinx <keviinx@yahoo.com>, 2020.
-# Keviindran Ramachandran <keviinx@yahoo.com>, 2020, 2021.
-# Jacque Fresco <aidter@use.startmail.com>, 2021.
-# Lemoney <railkill@gmail.com>, 2021.
+#
 msgid ""
 msgstr ""
 "Project-Id-Version: Rebel Editor\n"

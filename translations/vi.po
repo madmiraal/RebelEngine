@@ -6,11 +6,6 @@
 #
 # LANGUAGE translation of the Rebel Engine class reference
 #
-# Rev <revolnoom7801@gmail.com>, 2021.
-# IoeCmcomc <hopdaigia2004@gmail.com>, 2021.
-# Hung <hungthitkhia@gmail.com>, 2021.
-# Giacat Buile <hatconan20024@gmail.com>, 2021.
-# Quinn Le <quinnsgn@gmail.com>, 2021.
 msgid ""
 msgstr ""
 "Project-Id-Version: Rebel Engine class reference\n"

@@ -6,20 +6,6 @@
 #
 # Turkish translation of the Rebel Engine class reference
 #
-# hüseyinyıldız <hsynyldzcn@gmail.com>, 2020.
-# Mutlu ORAN <mutlu.oran66@gmail.com>, 2020, 2021.
-# Yusuf Osman YILMAZ <wolfkan4219@gmail.com>, 2020, 2021.
-# Oğuz Ersen <oguzersen@protonmail.com>, 2020.
-# Pierre Stempin <pierre.stempin@gmail.com>, 2020.
-# furkan atalar <fatalar55@gmail.com>, 2020.
-# Suleyman Poyraz <zaryob.dev@gmail.com>, 2020.
-# Zsosu Ktosu <zktosu@gmail.com>, 2020.
-# Serkan Tarçın <starcin@gmail.com>, 2020.
-# Cem Eren Fukara <cefukara@hotmail.com>, 2021.
-# The Recon <reconmovyie@gmail.com>, 2021.
-# ali aydın <alimxaydin@gmail.com>, 2021.
-# yigithan <yigithanermet38@gmail.com>, 2021.
-# Yusuf Yavuzyigit <yusufyavuzyigit25@gmail.com>, 2021.
 msgid ""
 msgstr ""
 "Project-Id-Version: Rebel Engine class reference\n"

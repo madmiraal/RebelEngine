@@ -6,10 +6,6 @@
 #
 # Galician translation of the Rebel Editor.
 #
-# Andy Barcia <andybarcia4@gmail.com>, 2021.
-# PokeGalaico <abloodyfreaks@gmail.com>, 2021.
-# Kkai <kaieltroll@gmail.com>, 2021.
-# davidrogel <david.rogel.pernas@icloud.com>, 2021.
 msgid ""
 msgstr ""
 "Project-Id-Version: Rebel Editor\n"

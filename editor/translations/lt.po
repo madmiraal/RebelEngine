@@ -5,11 +5,7 @@
 # SPDX-License-Identifier: MIT
 #
 # Lithuanian translation of the Rebel Editor
-# Ignas Kiela <ignaskiela@super.lt>, 2017.
-# Kornelijus <kornelijus.github@gmail.com>, 2017, 2018.
-# Ignotas Gražys <ignotas.gr@gmail.com>, 2020.
-# Kornelijus Tvarijanavičius <kornelitvari@protonmail.com>, 2020, 2021.
-# Lukas Hamm <ideallygrey@tuta.io>, 2021.
+#
 msgid ""
 msgstr ""
 "Project-Id-Version: Rebel Editor\n"

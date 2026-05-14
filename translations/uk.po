@@ -6,12 +6,6 @@
 #
 # Ukrainian translation of the Rebel Engine class reference
 #
-# Yuri Chornoivan <yurchor@ukr.net>, 2020.
-# Kiev Ball <supermensy2@gmail.com>, 2020.
-# Pierre Stempin <pierre.stempin@gmail.com>, 2020.
-# Wataru Onuki <bettawat@yahoo.co.jp>, 2020.
-# IllusiveMan196 <hamsterrv@gmail.com>, 2021.
-# Valerii Bosiak <valerii540@protonmail.com>, 2021.
 msgid ""
 msgstr ""
 "Project-Id-Version: Rebel Engine class reference\n"

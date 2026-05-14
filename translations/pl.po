@@ -6,20 +6,6 @@
 #
 # Polish translation of the Rebel Engine class reference
 #
-# Tomek <kobewi4e@gmail.com>, 2020, 2021.
-# wieslaw.mlynarski Wiesław <wieslaw.mlynarski@gmail.com>, 2020.
-# Dawid <marzecdawid@gmail.com>, 2020.
-# Filip Glura <mcmr.slendy@gmail.com>, 2020.
-# Pierre Stempin <pierre.stempin@gmail.com>, 2020.
-# Larix_45 <milarczek2004@gmail.com>, 2020.
-# Mateusz Grzonka <alpinus4@gmail.com>, 2020.
-# Michał Borowiec <hello@michal-borowiec.pl>, 2021.
-# Suchy  Talerz <kacperkubis06@gmail.com>, 2021.
-# Seppo Day <piszczatowskis@gmail.com>, 2021.
-# cerkiewny <mstarzycki@gmail.com>, 2021.
-# Dominik Mielcarek <fogbpl@gmail.com>, 2021.
-# CXVMNER <cxvmner@gmail.com>, 2021.
-# Tomasz Piechocki <t.piechocki@yahoo.com>, 2021.
 msgid ""
 msgstr ""
 "Project-Id-Version: Rebel Engine class reference\n"

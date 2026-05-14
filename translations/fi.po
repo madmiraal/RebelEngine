@@ -6,10 +6,6 @@
 #
 # Finnish translation of the Rebel Engine class reference
 #
-# Tapani Niemi <tapani.niemi@kapsi.fi>, 2020, 2021.
-# Pierre Stempin <pierre.stempin@gmail.com>, 2020.
-# Nekromanser <ari.taitto@protonmail.com>, 2021.
-# Leevi Laine <leeviervoemil@gmail.com>, 2021.
 msgid ""
 msgstr ""
 "Project-Id-Version: Rebel Engine class reference\n"

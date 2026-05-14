@@ -5,27 +5,7 @@
 # SPDX-License-Identifier: MIT
 #
 # Persian translation of the Rebel Editor
-# alabd14313 <alabd14313@yahoo.com>, 2016.
-# Dante Marshal <Marshal.Devilhunter@gmail.com>, 2018.
-# hamed nasib <cghamed752@chmail.ir>, 2016.
-# Hasan Hejdari Nasab <hsn6@openmailbox.org>, 2017.
-# rezapouya <r.pouya@chmail.ir>, 2016.
-# sayyed hamed nasib <cghamed752@chmail.ir>, 2017.
-# Behrooz Kashani <bkashani@gmail.com>, 2018.
-# Mahdi <sadisticwarlock@gmail.com>, 2018.
-# hpn33 <hamed.hpn332@gmail.com>, 2019, 2020.
-# Focus <saeeddashticlash@gmail.com>, 2019, 2020.
-# mohamad por <mohamad24xx@gmail.com>, 2020.
-# Tetra Homer <tetrahomer@gmail.com>, 2020.
-# Farshad Faemiyi <ffaemiyi@gmail.com>, 2020.
-# Pikhosh <pikhosh@gmail.com>, 2020.
-# MSKF <walkingdeadstudio@outlook.com>, 2020.
-# Ahmad Maftoun <CarCedo.Pro@gmail.com>, 2020.
-# ItzMiad44909858f5774b6d <maidggg@gmail.com>, 2020.
-# YASAN <yasandev@gmail.com>, 2021.
-# duniyal ras <duniyalr@gmail.com>, 2021.
-# عبدالرئوف عابدی <abdolraoofabedi@gmail.com>, 2021.
-# Alireza Khodabande <alirezakhodabande74@gmail.com>, 2021.
+#
 msgid ""
 msgstr ""
 "Project-Id-Version: Rebel Editor\n"

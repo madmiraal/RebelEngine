@@ -5,7 +5,7 @@
 # SPDX-License-Identifier: MIT
 #
 # Māori translation of the Rebel Editor
-# follower <follower@rancidbacon.com>, 2019.
+#
 msgid ""
 msgstr ""
 "Project-Id-Version: Rebel Editor\n"

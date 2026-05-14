@@ -6,16 +6,6 @@
 #
 # Czech translation of the Rebel Engine class reference
 #
-# Ondrej Pavelka <ondrej.pavelka@outlook.com>, 2020.
-# Zbyněk <zbynek.fiala@gmail.com>, 2020, 2021.
-# Daniel Kříž <Daniel.kriz@protonmail.com>, 2020.
-# Vojtěch Šamla <auzkok@seznam.cz>, 2020, 2021.
-# Pierre Stempin <pierre.stempin@gmail.com>, 2020.
-# Václav Blažej <vaclavblazej@seznam.cz>, 2020.
-# ProfJack <profjackcz@gmail.com>, 2021.
-# Daniel <dan@ger.cz>, 2021.
-# DomcaSuzi <dominio122@gmail.com>, 2021.
-# Tomas Dostal <tomas.dostal.cz@gmail.com>, 2021.
 msgid ""
 msgstr ""
 "Project-Id-Version: Rebel Engine class reference\n"

@@ -5,11 +5,7 @@
 # SPDX-License-Identifier: MIT
 #
 # Pirate translation of the Rebel Editor
-# Calum Knott <calum@calumk.com>, 2017.
-# Zion Nimchuk <zionnimchuk@gmail.com>, 2016-2017.
-# Allan Nordhøy <epost@anotheragency.no>, 2018.
-# David Fatheree <david.fathereewcchs@gmail.com>, 2020.
-# Nathan Franke <natfra@pm.me>, 2021.
+#
 msgid ""
 msgstr ""
 "Project-Id-Version: Rebel Editor\n"

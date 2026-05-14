@@ -5,7 +5,7 @@
 # SPDX-License-Identifier: MIT
 #
 # Irish translation of the Rebel Editor
-# Rónán Quill <ronan085@gmail.com>, 2019, 2020.
+#
 msgid ""
 msgstr ""
 "Project-Id-Version: Rebel Editor\n"
