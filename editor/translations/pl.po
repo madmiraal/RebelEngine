@@ -5,56 +5,7 @@
 # SPDX-License-Identifier: MIT
 #
 # Polish translation of the Rebel Editor
-# 8-bit Pixel <dawdejw@gmail.com>, 2016.
-# Adam Wolanski <adam.wolanski94@gmail.com>, 2017.
-# Adrian Węcławski <weclawskiadrian@gmail.com>, 2016.
-# aelspire <aelspire@gmail.com>, 2017, 2019, 2020, 2021.
-# Daniel Lewan <vision360.daniel@gmail.com>, 2016-2018, 2020.
-# Dariusz Król <rexioweb@gmail.com>, 2018.
-# heya10 <igor.gielzak@gmail.com>, 2017.
-# holistyczny interlokutor <jakubowesmieci@gmail.com>, 2017.
-# Igor <igor.gielzak@gmail.com>, 2018.
-# Kajetan Kuszczyński <kajetanek99@gmail.com>, 2016.
-# Kamil Lewan <lewan.kamil@gmail.com>, 2016.
-# Karol Walasek <coreconviction@gmail.com>, 2016.
-# Maksymilian Świąć <maksymilian.swiac@gmail.com>, 2017-2018.
-# Mietek Szcześniak <ravaging@go2.pl>, 2016.
-# NeverK <neverkoxu@gmail.com>, 2018, 2019, 2020, 2021.
-# Rafal Brozio <rafal.brozio@gmail.com>, 2016, 2019, 2020, 2021.
-# Rafał Ziemniak <synaptykq@gmail.com>, 2017.
-# RM <synaptykq@gmail.com>, 2018, 2020.
-# Sebastian Krzyszkowiak <dos@dosowisko.net>, 2017.
-# Sebastian Pasich <sebastian.pasich@gmail.com>, 2017, 2019, 2020.
-# siatek papieros <sbigneu@gmail.com>, 2016.
-# Zatherz <zatherz@linux.pl>, 2017, 2020, 2021.
-# Tomek <kobewi4e@gmail.com>, 2018, 2019, 2020, 2021.
-# Wojcieh Er Zet <wojcieh.rzepecki@gmail.com>, 2018.
-# Dariusz Siek <dariuszynski@gmail.com>, 2018, 2019, 2020, 2021.
-# Szymon Nowakowski <smnbdg13@gmail.com>, 2019.
-# Nie Powiem <blazek10@tlen.pl>, 2019.
-# Sebastian Hojka <sibibibi1@gmail.com>, 2019.
-# Robert <vizz0@onet.pl>, 2019.
-# Michał Topa <moonchasered@gmail.com>, 2019.
-# Przemysław Pierzga <przemyslawpierzga@gmail.com>, 2019.
-# Artur Maciąg <arturmaciag@gmail.com>, 2019.
-# Rafał Wyszomirski <rawyszo@gmail.com>, 2019.
-# Myver <igormakarowicz@gmail.com>, 2019.
-# Maciej Chamera <chameramaciej@gmail.com>, 2019.
-# Cezary Stasiak <cezary.p.stasiak@gmail.com>, 2019.
-# Jan Ligudziński <jan.ligudzinski@gmail.com>, 2020, 2021.
-# Adam Jagoda <kontakt@lukasz.xyz>, 2020.
-# Filip Glura <mcmr.slendy@gmail.com>, 2020.
-# Roman Skiba <romanskiba0@gmail.com>, 2020.
-# Piotr Grodzki <ziemniakglados@gmail.com>, 2020.
-# Dzejkop <jakubtrad@gmail.com>, 2020, 2021.
-# Mateusz Grzonka <alpinus4@gmail.com>, 2020.
-# gnu-ewm <gnu.ewm@protonmail.com>, 2021.
-# vrid <patryksoon@live.com>, 2021.
-# Suchy  Talerz <kacperkubis06@gmail.com>, 2021.
-# Bartosz Stasiak <bs97086@amu.edu.pl>, 2021.
-# Marek Malaria <to.tylko.dla.kont@gmail.com>, 2021.
-# Mateusz Żak <matisgramy@gmail.com>, 2021.
-# voltinus <voltinusmail@gmail.com>, 2021.
+#
 msgid ""
 msgstr ""
 "Project-Id-Version: Rebel Editor\n"

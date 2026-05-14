@@ -6,10 +6,6 @@
 #
 # LANGUAGE translation of the Rebel Engine class reference
 #
-# Agnis Aldiņš <agnis16@gmail.com>, 2020.
-# Pierre Stempin <pierre.stempin@gmail.com>, 2020.
-# Rihards Kubilis <oldcar@inbox.lv>, 2020.
-# M E <gruffy7932@gmail.com>, 2021.
 msgid ""
 msgstr ""
 "Project-Id-Version: Rebel Engine class reference\n"

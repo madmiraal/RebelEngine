@@ -5,11 +5,7 @@
 # SPDX-License-Identifier: MIT
 #
 # Afrikaans translation of the Rebel Editor
-# Ray West <the.raxar@gmail.com>, 2017.
-# Julius Stopforth <jjstopforth@gmail.com>, 2018.
-# Isa Tippens <isatippens2@gmail.com>, 2019.
-# Henry Geyser <thegoat187@gmail.com>, 2020.
-# Henry LeRoux <henry.leroux@ocsbstudent.ca>, 2021.
+#
 msgid ""
 msgstr ""
 "Project-Id-Version: Rebel Editor\n"

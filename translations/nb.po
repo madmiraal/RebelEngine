@@ -6,8 +6,6 @@
 #
 # LANGUAGE translation of the Rebel Engine class reference
 #
-# slasken06 <ask.skivdal@gmail.com>, 2021.
-# Daniel Skogly <daniel@klungo.no>, 2021.
 msgid ""
 msgstr ""
 "Project-Id-Version: Rebel Engine class reference\n"

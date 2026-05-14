@@ -5,19 +5,7 @@
 # SPDX-License-Identifier: MIT
 #
 # Hindi translation of the Rebel Editor
-# Abhas Kumar Sinha <abhaskumarsinha@gmail.com>, 2017.
-# Suryansh5545 <suryanshpathak5545@gmail.com>, 2018, 2020.
-# Vikram1323 <vikram1323@gmail.com>, 2018.
-# vkubre <v@kubre.in>, 2019.
-# Abhay Patel <abhay111patel@gmail.com>, 2019.
-# Lakshmi-Jayakumar <lakshmi.jayakumar.tkm@gmail.com>, 2019.
-# Devashishsingh98 <devashishsingh98@gmail.com>, 2019.
-# Shirious <sad3119823@gmail.com>, 2020, 2021.
-# Abhay Patel <Traumaticbean@protonmail.com>, 2020.
-# Bishwajeet Parhi <bishwajeet.techmaster@gmail.com>, 2020.
-# l4KKY <greenforcesave@gmail.com>, 2020.
-# harvinder rathor <harvinderr09@gmail.com>, 2021.
-# Sumanyu Aggarwal <sumanyu.code@gmail.com>, 2021.
+#
 msgid ""
 msgstr ""
 "Project-Id-Version: Rebel Editor\n"

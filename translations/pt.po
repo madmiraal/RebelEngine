@@ -6,7 +6,6 @@
 #
 # Portuguese translation of the Rebel Engine class reference
 #
-# Reubens Sanders <reubensst@protonmail.com>, 2021.
 msgid ""
 msgstr ""
 "Project-Id-Version: Rebel Engine class reference\n"

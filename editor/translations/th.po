@@ -5,16 +5,7 @@
 # SPDX-License-Identifier: MIT
 #
 # Thai translation of the Rebel Editor
-# Kaveeta Vivatchai <goodytong@gmail.com>, 2017.
-# Poommetee Ketson (Noshyaar) <poommetee@protonmail.com>, 2017-2018.
-# Thanachart Monpassorn <nunf_2539@hotmail.com>, 2020, 2021.
-# Anonymous <noreply@weblate.org>, 2020.
-# Lon3r <mptube.p@gmail.com>, 2020.
-# Kongfa Warorot <gongpha@hotmail.com>, 2020, 2021.
-# Kongfa Waroros <gongpha@hotmail.com>, 2021.
-# Atirut Wattanamongkol <artjang301@gmail.com>, 2021.
-# PT 07 <porton555@gmail.com>, 2021.
-# SysError_ <ictsanook@hotmail.com>, 2021.
+#
 msgid ""
 msgstr ""
 "Project-Id-Version: Rebel Editor\n"

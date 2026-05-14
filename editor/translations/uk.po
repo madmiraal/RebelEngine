@@ -5,21 +5,7 @@
 # SPDX-License-Identifier: MIT
 #
 # Ukrainian translation of the Rebel Editor
-# Aleksandr <XpycT.TOP@gmail.com>, 2017.
-# Yuri Chornoivan <yurchor@ukr.net>, 2018, 2019, 2020, 2021.
-# Андрій Бандура <andriykopanytsia@gmail.com>, 2018.
-# Гидеон Теон <t.kudely94@gmail.com>, 2017.
-# Максим Якимчук <xpinovo@gmail.com>, 2018, 2019.
-# Марс Ямбар <mjambarmeta@gmail.com>, 2017-2018.
-# Олександр Пилипчук <pilipchukap@rambler.ru>, 2018.
-# Kirill Omelchenko <kirill.omelchenko@gmail.com>, 2018.
-# Александр <ol-vin@mail.ru>, 2018.
-# Богдан Матвіїв <bomtvv@gmail.com>, 2019.
-# Tymofij Lytvynenko <till.svit@gmail.com>, 2020, 2021.
-# Vladislav Glinsky <cl0ne@mithril.org.ua>, 2020.
-# Микола Тимошенко <9081@ukr.net>, 2020.
-# Miroslav <zinmirx@gmail.com>, 2020.
-# IllusiveMan196 <hamsterrv@gmail.com>, 2021.
+#
 msgid ""
 msgstr ""
 "Project-Id-Version: Ukrainian (Godot Engine)\n"

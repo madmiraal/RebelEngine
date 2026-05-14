@@ -6,7 +6,6 @@
 #
 # Tagalog translation of the Rebel Engine class reference
 #
-# Napstaguy04 <brokenscreen3@gmail.com>, 2021.
 msgid ""
 msgstr ""
 "Project-Id-Version: Rebel Engine class reference\n"

@@ -6,9 +6,6 @@
 #
 # Serbian (cyrillic) translation of the Rebel Engine class reference
 #
-# Младен Габић <cupakabra@protonmail.com>, 2020.
-# Pierre Stempin <pierre.stempin@gmail.com>, 2020.
-# Алексић Владица <vlajkousk@gmail.com>, 2021.
 msgid ""
 msgstr ""
 "Project-Id-Version: Rebel Engine class reference\n"

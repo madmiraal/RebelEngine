@@ -5,10 +5,7 @@
 # SPDX-License-Identifier: MIT
 #
 # Georgian translation of the Rebel Editor
-# Giorgi Beriashvili <giorgi.beriashvili@outlook.com>, 2018.
-# George Dzavashvili <dzavashviligeorge@gmail.com>, 2018.
-# დემეტრე შონია <blender.animation.maker@gmail.com>, 2019.
-# Rati Nikolaishvili <rati.nikolaishvili@gmail.com>, 2019.
+#
 msgid ""
 msgstr ""
 "Project-Id-Version: Rebel Editor\n"

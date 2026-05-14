@@ -5,32 +5,7 @@
 # SPDX-License-Identifier: MIT
 #
 # Czech translation of the Rebel Editor
-# Fadex <vitekpaulik@gmail.com>, 2017.
-# Jan 'spl!te' Kondelík <j.kondelik@centrum.cz>, 2016, 2018.
-# Jiri Hysek <contact@jirihysek.com>, 2017.
-# Josef Kuchař <josef.kuchar267@gmail.com>, 2018, 2019.
-# Luděk Novotný <gladosicek@gmail.com>, 2016, 2018.
-# Martin Novák <maidx@seznam.cz>, 2017, 2019.
-# zxey <r.hozak@seznam.cz>, 2018.
-# Vojtěch Šamla <auzkok@seznam.cz>, 2018, 2019, 2020, 2021, 2022.
-# Peeter Angelo <contact@peeterangelo.com>, 2019.
-# VojtechBrezina <vojta.brezina@gmail.com>, 2019, 2021.
-# Garrom Orc Shaman <garromorcshaman@gmail.com>, 2019.
-# David Husička <davidek251@seznam.cz>, 2019.
-# Luboš Nečas <lubosnecas506@seznam.cz>, 2019.
-# David Kubeš <kubesdavid@email.cz>, 2019.
-# Emil Jiří Tywoniak <emil.tywoniak@gmail.com>, 2020, 2021.
-# Filip Vincůrek <vincurek.f@gmail.com>, 2020.
-# Ondrej Pavelka <ondrej.pavelka@outlook.com>, 2020.
-# Zbyněk <zbynek.fiala@gmail.com>, 2020, 2021.
-# Daniel Kříž <Daniel.kriz@protonmail.com>, 2020.
-# VladimirBlazek <vblazek042@gmail.com>, 2020.
-# kubajz22 <til.jakubesko@seznam.cz>, 2020.
-# Václav Blažej <vaclavblazej@seznam.cz>, 2020, 2021.
-# ProfJack <profjackcz@gmail.com>, 2021.
-# swifterik <blaha.j502@gmail.com>, 2021.
-# Daniel <dan@ger.cz>, 2021.
-# Jakub Janšta <jansta.ja@gmail.com>, 2021.
+#
 msgid ""
 msgstr ""
 "Project-Id-Version: Rebel Editor\n"

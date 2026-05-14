@@ -6,7 +6,6 @@
 #
 # Tatar translation of the Rebel Editor.
 #
-# Bualma Show <appleaidar6@gmail.com>, 2021.
 msgid ""
 msgstr ""
 "Project-Id-Version: Rebel Editor\n"

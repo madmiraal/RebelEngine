@@ -5,57 +5,7 @@
 # SPDX-License-Identifier: MIT
 #
 # Dutch translation of the Rebel Editor
-# aelspire <aelspire@gmail.com>, 2017.
-# Aram Nap <xyphex.aram@gmail.com>, 2017.
-# Arjan219 <arjannugteren1@gmail.com>, 2017-2018, 2020.
-# Christophe Swolfs <swolfschristophe@gmail.com>, 2017.
-# Cornee Traas <corneetraas@hotmail.com>, 2017.
-# Daeran Wereld <daeran@gmail.com>, 2017.
-# Dzejkop <jakubtrad@gmail.com>, 2017.
-# Ferdinand de Coninck <ferdinand.deconinck@gmail.com>, 2018.
-# frank <frankvprive@gmail.com>, 2018.
-# Johannes Smit <smitjohannes96@gmail.com>, 2018.
-# Jorn Theunissen <jorn-theunissen@hotmail.com>, 2018.
-# Maikel <maikel_martens_1@hotmail.com>, 2017.
-# millenniumproof <millenniumproof@gmail.com>, 2018.
-# nee <lespam@protonmail.com>, 2018.
-# Pieter-Jan Briers <pieterjan.briers@gmail.com>, 2017-2018.
-# Robin Arys <robinarys@hotmail.com>, 2017.
-# Senno Kaasjager <senno.kaasjager@gmail.com>, 2017.
-# Uxilo <jmolendijk93@gmail.com>, 2017-2018.
-# Willem <studiebolmail@gmail.com>, 2018.
-# Wout Standaert <wout@blobkat.com>, 2017.
-# Zatherz <zatherz@linux.pl>, 2017.
-# Tahar Meijs <tntmeijs@gmail.com>, 2018.
-# Laurent Windels <laurentwindels@yahoo.com>, 2018.
-# rxadmin <r.van.eeghem@gmail.com>, 2018.
-# Peter Goelst <muis24@gmail.com>, 2019.
-# Wouter Buckens <wou.buc@gmail.com>, 2019.
-# Stijn Hinlopen <f.a.hinlopen@gmail.com>, 2019, 2020, 2021.
-# jef dered <themen098s@vivaldi.net>, 2019.
-# Alex H. <sandertjeh13@hotmail.com>, 2019.
-# edouardgr <edouard.gruyters@gmail.com>, 2019.
-# Jimmy De  Smet <J773@telenet.be>, 2019.
-# Bastiaan van der Plaat <bastiaan.v.d.plaat@gmail.com>, 2019.
-# Hector Peeters <hector.peeters@gmail.com>, 2019.
-# Shawn Gyina <gyina.shawn@gmail.com>, 2019.
-# ebbe <ebbesteenhoudt@gmail.com>, 2019.
-# Tirrin <lensenjoe@gmail.com>, 2019.
-# Filip Van Raemdonck <arrawn@gmail.com>, 2019.
-# Julian <jdhoogvorst@gmail.com>, 2019, 2020.
-# kitfka <philipthuijs@gmail.com>, 2020.
-# Mike van Leeuwen <mkvanleeuwen@gmail.com>, 2020.
-# marnicq van loon <marnicqvanloon@gmail.com>, 2020.
-# T-rex08 <ipadtriceratops@gmail.com>, 2021.
-# Dwarffish <hoogvlietjohan@gmail.com>, 2021.
-# Arthur de Roos <arthur.de.roos@gmail.com>, 2021.
-# Vancha March <tjipkevdh@gmail.com>, 2021.
-# Hugo van de Kuilen <hugo.vandekuilen1234567890@gmail.com>, 2021.
-# tobeqz <vanveenjorik+tobeqz@gmail.com>, 2021.
-# Edgar <Edgar@anotherfoxguy.com>, 2021.
-# Daan van Luijk <daanvl@outlook.be>, 2021.
-# Dani Verschoor <daniverschoor@outlook.com>, 2021.
-# naan <xlightfox@hotmail.com>, 2021.
+#
 msgid ""
 msgstr ""
 "Project-Id-Version: Rebel Editor\n"

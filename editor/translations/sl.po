@@ -5,17 +5,7 @@
 # SPDX-License-Identifier: MIT
 #
 # Slovenian translation of the Rebel Editor
-# matevž lapajne <sivar.lapajne@gmail.com>, 2016-2018.
-# Matjaž Vitas <matjaz.vitas@gmail.com>, 2017-2018.
-# Miha Komatar <miha.komatar@gmail.com>, 2018.
-# Simon Šander <simon.sand3r@gmail.com>, 2017.
-# Yahara Octanis <yaharao55@gmail.com>, 2018.
-# Tine Jozelj <tine@tjo.space>, 2018.
-# Andrej Poženel <andrej.pozenel@outlook.com>, 2019.
-# Arnold Marko <arnold.marko@gmail.com>, 2019.
-# Alex <alexrixhardson@gmail.com>, 2019.
-# Andrew Poženel <andrej.pozenel@outlook.com>, 2020.
-# Jakob Tadej Vrtačnik <minecraftalka2@gmail.com>, 2021.
+#
 msgid ""
 msgstr ""
 "Project-Id-Version: Rebel Editor\n"

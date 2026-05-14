@@ -5,16 +5,7 @@
 # SPDX-License-Identifier: MIT
 #
 # Finnish translation of the Rebel Editor
-# basse <basse@roiske.org>, 2017.
-# Bastian Salmela <bastian.salmela@gmail.com>, 2017, 2018.
-# ekeimaja <ekeimaja@gmail.com>, 2017-2018.
-# Jarmo Riikonen <amatrelan@gmail.com>, 2017.
-# Nuutti Varvikko <nvarvikko@gmail.com>, 2018.
-# Sami Lehtilä <sami.lehtila@gmail.com>, 2018.
-# Tapani Niemi <tapani.niemi@kapsi.fi>, 2018, 2019, 2020, 2021.
-# Tuomas Lähteenmäki <lahtis@gmail.com>, 2019.
-# Matti Niskanen <matti.t.niskanen@gmail.com>, 2020.
-# Severi Vidnäs <severi.vidnas@gmail.com>, 2021.
+#
 msgid ""
 msgstr ""
 "Project-Id-Version: Rebel Editor\n"

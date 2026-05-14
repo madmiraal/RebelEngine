@@ -5,21 +5,7 @@
 # SPDX-License-Identifier: MIT
 #
 # Romanian translation of the Rebel Editor
-# Calin Sopterean <csopterean@gmail.com>, 2018.
-# Filip <filipanton@tutanota.com>, 2018, 2020.
-# Nitroretro <nitroretro@protonmail.com>, 2018.
-# TigerxWood <TigerxWood@gmail.com>, 2018.
-# Grigore Antoniuc <grisa181@gmail.com>, 2018.
-# Boby Ilea <boby.ilea@gmail.com>, 2019.
-# EVOKZH <avip.ady@gmail.com>, 2019, 2020.
-# Marincia Catalin <catalinmarincia@gmail.com>, 2020.
-# Marincia Cătălin <catalinmarincia@gmail.com>, 2020.
-# Teodor <teo.virghi@yahoo.ro>, 2020.
-# f0roots <f0rootss@gmail.com>, 2020.
-# Gigel2 <mihalacher02@gmail.com>, 2020.
-# R3ktGamerRO <bluegamermc1@gmail.com>, 2021.
-# FlooferLand <yunaflarf@gmail.com>, 2021.
-# N3mEee <n3mebusiness@gmail.com>, 2021.
+#
 msgid ""
 msgstr ""
 "Project-Id-Version: Rebel Editor\n"

@@ -5,11 +5,7 @@
 # SPDX-License-Identifier: MIT
 #
 # Estonian translation of the Rebel Editor
-# Jens <arrkiin@gmail.com>, 2019.
-# Mattias Aabmets <mattias.aabmets@gmail.com>, 2019.
-# StReef <streef.gtx@gmail.com>, 2020, 2021.
-# René <renepiik@gmail.com>, 2020.
-# Kritzmensch <streef.gtx@gmail.com>, 2021.
+#
 msgid ""
 msgstr ""
 "Project-Id-Version: Rebel Editor\n"

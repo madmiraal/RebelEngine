@@ -5,29 +5,7 @@
 # SPDX-License-Identifier: MIT
 #
 # Swedish translation of the Rebel Editor
-# bergmarklund <davemcgroin@gmail.com>, 2017, 2018.
-# Christoffer Sundbom <christoffer_karlsson@live.se>, 2017, 2021.
-# Jakob Sinclair <sinclair.jakob@mailbox.org>, 2018.
-# . <grenoscar@gmail.com>, 2018, 2020.
-# Kristoffer Grundström <kristoffer.grundstrom1983@gmail.com>, 2018.
-# Magnus Helander <helander@fastmail.net>, 2018.
-# Daniel K <danielkimblad@hotmail.com>, 2018.
-# Toiya <elviraa98@gmail.com>, 2019.
-# Fredrik Welin <figgemail@gmail.com>, 2019.
-# Mattias Münster <mattiasmun@gmail.com>, 2019.
-# Anonymous <noreply@weblate.org>, 2020.
-# Joakim Lundberg <joakim@joakimlundberg.com>, 2020.
-# Kristoffer Grundström <swedishsailfishosuser@tutanota.com>, 2020, 2021.
-# Jonas Robertsson <jonas.robertsson@posteo.net>, 2020, 2021.
-# André Andersson <andre.eric.andersson@gmail.com>, 2020.
-# Andreas Westrell <andreas.westrell@gmail.com>, 2020.
-# Gustav Andersson <gustav.andersson96@outlook.com>, 2020.
-# Shaggy <anton_christoffersson@hotmail.com>, 2020.
-# Marcus Toftedahl <marcus.toftedahl@his.se>, 2020.
-# Alex25820 <Alexander_sjogren@hotmail.se>, 2021.
-# Leon <joel.lundborg@gmail.com>, 2021.
-# Kent Jofur <kent.jofur@gmail.com>, 2021.
-# Alex25820 <alexs25820@gmail.com>, 2021.
+#
 msgid ""
 msgstr ""
 "Project-Id-Version: Rebel Editor\n"

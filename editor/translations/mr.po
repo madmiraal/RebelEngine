@@ -5,8 +5,7 @@
 # SPDX-License-Identifier: MIT
 #
 # Marathi translation of the Rebel Editor
-# Prachi Joshi <josprachi@yahoo.com>, 2019, 2020.
-# Shirious <sad3119823@gmail.com>, 2020.
+#
 msgid ""
 msgstr ""
 "Project-Id-Version: Rebel Editor\n"

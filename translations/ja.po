@@ -6,13 +6,6 @@
 #
 # Japanese translation of the Rebel Engine class reference
 #
-# Wataru Onuki <bettawat@yahoo.co.jp>, 2020, 2021.
-# BinotaLIU <me@binota.org>, 2020.
-# Pierre Stempin <pierre.stempin@gmail.com>, 2020.
-# kazuma kondo <kazmax7@gmail.com>, 2020.
-# Itoyo Onuki <bettawat@yahoo.co.jp>, 2021.
-# nitenook <admin@alterbaum.net>, 2021.
-# Tarou Yamada <mizuningyou@yahoo.co.jp>, 2021.
 msgid ""
 msgstr ""
 "Project-Id-Version: Rebel Engine class reference\n"

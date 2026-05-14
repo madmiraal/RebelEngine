@@ -6,7 +6,6 @@
 #
 # Central Atlas Tamazight translation of the Rebel Editor
 #
-# Hakim Oubouali <hakim.oubouali.skr@gmail.com>, 2020.
 msgid ""
 msgstr ""
 "Project-Id-Version: Rebel Editor\n"

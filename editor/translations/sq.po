@@ -5,8 +5,7 @@
 # SPDX-License-Identifier: MIT
 #
 # Albanian translation of the Rebel Editor
-# Igli <iglibh@outlook.com>, 2018.
-# Enrik Qose <enrikqose@gmail.com>, 2019.
+#
 msgid ""
 msgstr ""
 "Project-Id-Version: Rebel Editor\n"

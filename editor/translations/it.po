@@ -5,69 +5,7 @@
 # SPDX-License-Identifier: MIT
 #
 # Italian translation of the Rebel Editor
-# Alessio Corridori <alessiocorridori@hotmail.com>, 2018.
-# Dario Bonfanti <bonfi.96@hotmail.it>, 2016-2017.
-# Dario D'Ambra <legione0@gmail.com>, 2017.
-# dariocavada <cavada@ectrlsolutions.com>, 2017.
-# Elia Zanaboni <elia.zanaboni@gmail.com>, 2017.
-# Giovanni Solimeno (Crax97) <gsolimeno97@gmail.com>, 2017.
-# Marco Melorio <m.melorio@icloud.com>, 2017, 2019.
-# Matteo <matteo.guglielmetti@hotmail.it>, 2018.
-# Myself <whatamidoing.wt@gmail.com>, 2017-2018.
-# RealAquilus <JamesHeller@live.it>, 2017.
-# Samuele Zolfanelli <samdazel@gmail.com>, 2018, 2019.
-# Sean Bone <seanbone@zumguy.com>, 2017, 2020.
-# Red Pill <redpill902@gmail.com>, 2018.
-# iRadEntertainment <devitadario@gmail.com>, 2018, 2019.
-# ondsinet _ (nik man) <nikman00@gmail.com>, 2018.
-# Ste d f <sdfilippo84@gmail.com>, 2018.
-# Salvo Permiracolo <salvoperm@gmail.com>, 2018, 2019.
-# Giovanni Tommasi <tommasig@gmail.com>, 2018.
-# xxssmaoxx <simon.dottor@gmail.com>, 2018.
-# Nicola Gramola <nicola.gramola@gmail.com>, 2018.
-# Davide Wayan Mores <moresdavidewayan@gmail.com>, 2018.
-# Alessandro Zoppi <alessandro.zoppi@live.it>, 2019.
-# Hairic95 <hairic95@gmail.com>, 2019.
-# Christian Biffi <creixx@virgilio.it>, 2019.
-# Giuseppe Guerra <me@nyodev.xyz>, 2019.
-# RHC <rhc.throwaway@gmail.com>, 2019, 2020.
-# Antonio Giungato <antonio.giungato@gmail.com>, 2019, 2020.
-# Marco Galli <mrcgll98@gmail.com>, 2019, 2020, 2021.
-# MassiminoilTrace <omino.gis@gmail.com>, 2019, 2020, 2021.
-# MARCO BANFI <mbanfi@gmail.com>, 2019.
-# Marco <rodomar705@gmail.com>, 2019.
-# Davide Giuliano <davidegiuliano00@gmail.com>, 2019.
-# Stefano Merazzi <asso99@hotmail.com>, 2019.
-# Sinapse X <sinapsex13@gmail.com>, 2019.
-# Micila Micillotto <micillotto@gmail.com>, 2019, 2020, 2021.
-# Mirko Soppelsa <miknsop@gmail.com>, 2019, 2020, 2021.
-# No <kingofwizards.kw7@gmail.com>, 2019.
-# StarFang208 <polaritymanx@yahoo.it>, 2019.
-# Katia Piazza <gydey@ridiculousglitch.com>, 2019, 2021.
-# nickfla1 <lanterniniflavio@gmail.com>, 2019.
-# Fabio Iotti <fabiogiopla@gmail.com>, 2020.
-# Douglas Fiedler <dognew@gmail.com>, 2020.
-# E440QF <ettore.beltra@gmail.com>, 2020.
-# Giuseppe Lucido <giuseppe.lucido@gmail.com>, 2020.
-# Mirko Proto <mirko7@protonmail.com>, 2020.
-# J. Lavoie <j.lavoie@net-c.ca>, 2020.
-# Andrea Terenziani <andrea.terenziani.at@gmail.com>, 2020.
-# Anonymous <noreply@weblate.org>, 2020.
-# riccardo boffelli <riccardo.boffelli.96@gmail.com>, 2020, 2021.
-# Lorenzo Asolan <brixiumx@gmail.com>, 2020.
-# Lorenzo Cerqua <lorenzocerqua@tutanota.com>, 2020, 2021.
-# Federico Manzella <ferdiu.manzella@gmail.com>, 2020.
-# Ziv D <wizdavid@gmail.com>, 2020.
-# Riteo Siuga <lorenzocerqua@tutanota.com>, 2021.
-# Alessandro Mandelli <mandelli.alessandro@ngi.it>, 2021.
-# Jusef Azzolina <rosarioazzolina33@gmail.com>, 2021.
-# Daniele Basso <tiziodcaio@gmail.com>, 2021.
-# Riteo Siuga <riteo@posteo.net>, 2021, 2022.
-# Luigi <luibass92@live.it>, 2021.
-# Micky <micheledevita2@gmail.com>, 2021.
-# Fabio Plos <altre0cose@gmail.com>, 2021.
-# Theraloss <danilo.polani@gmail.com>, 2021.
-# Pietro Grungo <pietro.grungo@libero.it>, 2021.
+#
 msgid ""
 msgstr ""
 "Project-Id-Version: Rebel Editor\n"

@@ -5,24 +5,7 @@
 # SPDX-License-Identifier: MIT
 #
 # Vietnamese translation of the Rebel Editor
-# 01lifeleft <01lifeleft@gmail.com>, 2018.
-# Dlean Jeans <dleanjeans@gmail.com>, 2018.
-# Hai Le <dark.hades.1102@gmail.com>, 2017.
-# Nguyễn Tuấn Anh <anhnt.fami@gmail.com>, 2017.
-# Tung Le <tungkradle@gmail.com>, 2017.
-# 38569459 <xxx38569459@gmail.com>, 2018.
-# TyTYct Hihi <tytyct@gmail.com>, 2019.
-# Steve Dang <itsnguu@outlook.com>, 2019, 2020.
-# Peter Anh <peteranh3105@gmail.com>, 2019.
-# Dũng Đinh <dqdthanhthanh@gmail.com>, 2019.
-# Steve Dang <bynguu@outlook.com>, 2020.
-# Harry Mitchell <minhyh0987@gmail.com>, 2020.
-# HSGamer <huynhqtienvtag@gmail.com>, 2020.
-# LetterC67 <hoangdeptoong@gmail.com>, 2020, 2021.
-# Rev <revolnoom7801@gmail.com>, 2021.
-# SyliawDeV <thanhlongstranger@gmail.com>, 2021.
-# IoeCmcomc <hopdaigia2004@gmail.com>, 2021.
-# Hung <hungthitkhia@gmail.com>, 2021.
+#
 msgid ""
 msgstr ""
 "Project-Id-Version: Rebel Editor\n"

@@ -6,14 +6,6 @@
 #
 # Indonesian translation of the Rebel Engine class reference
 #
-# Sofyan Sugianto <sofyanartem@gmail.com>, 2020, 2021.
-# Pierre Stempin <pierre.stempin@gmail.com>, 2020.
-# Ade Fikri Malihuddin <ade.fm97@gmail.com>, 2020.
-# Hanz <hanzhaxors@gmail.com>, 2021.
-# Naufal Adriansyah <naufaladrn90@gmail.com>, 2021.
-# Hilman Hazazi <hafizd.muhammad.kren.403@gmail.com>, 2021.
-# Stephen Gunawan Susilo <gunawanstephen@yahoo.com>, 2021.
-# Azizkhasyi 11 <azizkhasyi11@gmail.com>, 2021.
 msgid ""
 msgstr ""
 "Project-Id-Version: Rebel Engine class reference\n"

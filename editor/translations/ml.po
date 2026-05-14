@@ -5,9 +5,7 @@
 # SPDX-License-Identifier: MIT
 #
 # Malayalam translation of the Rebel Editor
-# christy james <jkuttu@gmail.com>, 2018.
-# Lakshmi-Jayakumar <lakshmi.jayakumar.tkm@gmail.com>, 2019.
-# Anvar Nazar <anvarnasar@ymail.com>, 2019.
+#
 msgid ""
 msgstr ""
 "Project-Id-Version: Rebel Editor\n"

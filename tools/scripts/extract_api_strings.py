@@ -16,8 +16,6 @@ HEADER = """\
 #
 # LANGUAGE translation of the Rebel Engine class reference
 #
-# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
-#
 #, fuzzy
 msgid ""
 msgstr ""

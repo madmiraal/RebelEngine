@@ -5,18 +5,7 @@
 # SPDX-License-Identifier: MIT
 #
 # Esperanto translation of the Rebel Editor
-# Scott Starkey <yekrats@gmail.com>, 2019.
-# AlexHoratio <yukithetupper@gmail.com>, 2019.
-# Teashrock <kajitsu22@gmail.com>, 2019.
-# Brandon Dyer <brandondyer64@gmail.com>, 2019.
-# Alejandro Sánchez Medina <alejandrosanchzmedina@gmail.com>, 2019.
-# Sr Half <flavio05@outlook.com>, 2020.
-# Cristian Yepez <cristianyepez@gmail.com>, 2020.
-# BinotaLIU <me@binota.org>, 2020.
-# Jakub Fabijan <animatorzPolski@gmail.com>, 2021.
-# mourning20s <mourning20s@protonmail.com>, 2021.
-# Manuel González <mgoopazo@gmail.com>, 2021.
-# Wang Tseryui <2251439097@qq.com>, 2021.
+#
 msgid ""
 msgstr ""
 "Project-Id-Version: Rebel Editor\n"

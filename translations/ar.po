@@ -6,16 +6,6 @@
 #
 # Arabic translation of the Rebel Engine class reference
 #
-# Airbus5717 <Abdussamadf350@gmail.com>, 2020.
-# Nabeel20 <nabeelandnizam@gmail.com>, 2020.
-# أحمد مصطفى الطبراني <eltabaraniahmed@gmail.com>, 2020.
-# Musab Alasaifer <mousablasefer@gmail.com>, 2020.
-# Pierre Stempin <pierre.stempin@gmail.com>, 2020.
-# Kareem Abduljaleel <karemjaleel34@gmail.com>, 2021.
-# Deleted User <noreply+32227@weblate.org>, 2021.
-# xX-Void-Xx <arandomdude75@gmail.com>, 2021.
-# Alaa alden Aldroubi <alaa.aldroubi@gmail.com>, 2021.
-# يزن حمزه <yznhamzeh@gmail.com>, 2021.
 msgid ""
 msgstr ""
 "Project-Id-Version: Rebel Engine class reference\n"

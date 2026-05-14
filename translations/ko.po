@@ -6,16 +6,6 @@
 #
 # Korean translation of the Rebel Engine class reference
 #
-# Doyun Kwon <caen4516@gmail.com>, 2020.
-# Pierre Stempin <pierre.stempin@gmail.com>, 2020.
-# Yungjoong Song <yungjoong.song@gmail.com>, 2020.
-# Myeongjin Lee <aranet100@gmail.com>, 2021.
-# H-S Kim <heennavi@gmail.com>, 2021.
-# moolow <copyhyeon@gmail.com>, 2021.
-# Jaemin Park <ppparkje@naver.com>, 2021.
-# dewcked <dewcked@protonmail.ch>, 2021.
-# 신동규 <rlsl0422@gmail.com>, 2021.
-# whatthesamuel <alex01763@gmail.com>, 2021.
 msgid ""
 msgstr ""
 "Project-Id-Version: Rebel Engine class reference\n"

@@ -6,16 +6,6 @@
 #
 # LANGUAGE translation of the Rebel Engine class reference
 #
-# Tetra Homer <tetrahomer@gmail.com>, 2020.
-# Mitsuha Miamizu <mitsuha.miamizu4444@gmail.com>, 2020.
-# ali <rhpcir@gmail.com>, 2020.
-# Farshad Faemiyi <ffaemiyi@gmail.com>, 2020.
-# Pierre Stempin <pierre.stempin@gmail.com>, 2020.
-# MoriExplain <mrmortezw@gmail.com>, 2020.
-# Pikhosh <pikhosh@gmail.com>, 2020.
-# MSKF <walkingdeadstudio@outlook.com>, 2020.
-# ItzMiad44909858f5774b6d <maidggg@gmail.com>, 2020.
-# ahmad maftoon <ahmadmaftoon.1387@gmail.com>, 2021.
 msgid ""
 msgstr ""
 "Project-Id-Version: Rebel Engine class reference\n"

@@ -5,8 +5,7 @@
 # SPDX-License-Identifier: MIT
 #
 # Chinese (Hong Kong) translation of the Rebel Editor
-# Wesley (zx-wt) <ZX_WT@ymail.com>, 2016-2017, 2020.
-# cnieFIT <dtotncq@gmail.com>, 2019.
+#
 msgid ""
 msgstr ""
 "Project-Id-Version: Rebel Editor\n"

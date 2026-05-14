@@ -5,7 +5,7 @@
 # SPDX-License-Identifier: MIT
 #
 # Odia translation of the Rebel Editor
-# Pro Neon <proneon267@gmail.com>, 2019.
+#
 msgid ""
 msgstr ""
 "Project-Id-Version: Rebel Editor\n"

@@ -5,25 +5,7 @@
 # SPDX-License-Identifier: MIT
 #
 # Hebrew translation of the Rebel Editor
-# Daniel <lorddaniel09@gmail.com>, 2018.
-# Ben Golan <golanben4@gmail.com>, 2017.
-# Luc Stepniewski <lior@gradstein.info>, 2017.
-# Yaron Shahrabani <sh.yaron@gmail.com>, 2018, 2019, 2020.
-# RaikaRakka <shaiyatta@gmail.com>, 2018.
-# Ido Dana <idodana01@gmail.com>, 2019.
-# Daniel Dovgun <daniel.dovgun@gmail.com>, 2019.
-# MordechaiHadad <Mordechai.hadad01@gmail.com>, 2019.
-# Daniel <danielharush5252@gmail.com>, 2020.
-# test test <ugbdvwpeikvyzwaadt@awdrt.org>, 2020.
-# Anonymous <noreply@weblate.org>, 2020.
-# Daniel Kariv <danielkariv98@gmail.com>, 2020.
-# Ziv D <wizdavid@gmail.com>, 2020, 2021.
-# yariv benj <yariv4400@gmail.com>, 2020, 2021.
-# Guy Dadon <guydadon14@gmail.com>, 2020.
-# bruvzg <bruvzg13@gmail.com>, 2020.
-# Omer I.S. <omeritzicschwartz@gmail.com>, 2021.
-# Ram Tourgeman <ramtorgeman@gmail.com>, 2021.
-# Shailee Eliyahu <dev.sle.il@gmail.com>, 2021.
+#
 msgid ""
 msgstr ""
 "Project-Id-Version: Rebel Editor\n"

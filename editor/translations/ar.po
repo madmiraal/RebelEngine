@@ -5,61 +5,7 @@
 # SPDX-License-Identifier: MIT
 #
 # Arabic translation of the Rebel Editor
-# Adel <dragonhunter250@gmail.com>, 2018.
-# athomield <athomield@hotmail.com>, 2017.
-# Basil Al-Khateeb <basil.y.alkhateeb@gmail.com>, 2017.
-# Jamal Alyafei <jamal.qassim@gmail.com>, 2017.
-# john lennon <khoanantonio@outlook.com>, 2017.
-# Mohammmad Khashashneh <mohammad.rasmi@gmail.com>, 2016, 2020.
-# Mr ChaosXD <mrchaosxd3@gmail.com>, 2018.
-# Mrwan Ashraf <mrwan.ashraf94@gmail.com>, 2017.
-# noureldin sharaf <sharaf.noureldin@yahoo.com>, 2017.
-# omar anwar aglan <omar.aglan91@yahoo.com>, 2017-2018.
-# OWs Tetra <owstetra@gmail.com>, 2017.
-# Rached Noureddine <rached.noureddine@gmail.com>, 2018.
-# Rex_sa <asd1234567890m@gmail.com>, 2017, 2018, 2019.
-# Wajdi Feki <wajdi.feki@gmail.com>, 2017.
-# Omar Aglan <omar.aglan91@yahoo.com>, 2018, 2019, 2020.
-# Codes Otaku <ilyas.gamerz@gmail.com>, 2018, 2019.
-# Takai Eddine Kennouche <takai.kenn@gmail.com>, 2018.
-# Mohamed El-Baz <albaz2000eg@gmail.com>, 2018.
-# عاصم شكر - Aasem shokr <aasemshokr@gmail.com>, 2018.
-# Mohammad Fares <mhdchehade@gmail.com>, 2018.
-# NewFriskFan26 <newfriskfan26@gmail.com>, 2019.
-# spiderx0x <legendofdarks@gmail.com>, 2019.
-# Ibraheem Tawfik <tawfikibraheem@gmail.com>, 2019.
-# DiscoverSquishy <noaimi@discoversquishy.me>, 2019.
-# ButterflyOfFire <ButterflyOfFire@protonmail.com>, 2019.
-# PhoenixHO <oussamahaddouche0@gmail.com>, 2019.
-# orcstudio <orcstudio@orcstudio.org>, 2019.
-# Rachid Graphicos <graphicos1d@gmail.com>, 2019.
-# traveller010 <manar.bushnaq.001@gmail.com>, 2019.
-# Ahmed Shahwan <dev.ahmed.shahwan@gmail.com>, 2019.
-# hshw <shw@tutanota.com>, 2020.
-# Youssef Harmal <the.coder.crab@gmail.com>, 2020.
-# Nabeel20 <nabeelandnizam@gmail.com>, 2020, 2021.
-# merouche djallal <kbordora@gmail.com>, 2020.
-# Airbus5717 <Abdussamadf350@gmail.com>, 2020.
-# tamsamani mohamed <tamsmoha@gmail.com>, 2020.
-# Anas <anas.ghamdi61@gmail.com>, 2020.
-# R-K <raouf9005@gmail.com>, 2020.
-# HeroFight dev <abdkafi2002@gmail.com>, 2020.
-# أحمد مصطفى الطبراني <eltabaraniahmed@gmail.com>, 2020.
-# ChemicalInk <aladdinalkhafaji@gmail.com>, 2020.
-# Musab Alasaifer <mousablasefer@gmail.com>, 2020.
-# Yassine Oudjana <y.oudjana@protonmail.com>, 2020.
-# bruvzg <bruvzg13@gmail.com>, 2020.
-# StarlkYT <mrsstarlkps4@gmail.com>, 2020, 2021.
-# Games Toon <xxtvgoodxx@gmail.com>, 2021.
-# Kareem Abduljaleel <karemjaleel34@gmail.com>, 2021.
-# ILG - Game <moegypt277@gmail.com>, 2021.
-# Hatim Jamal <hatimjamal8@gmail.com>, 2021.
-# HASSAN GAMER - حسن جيمر <gamerhassan55@gmail.com>, 2021, 2022.
-# abubakrAlsaab <madeinsudan19@gmail.com>, 2021.
-# Hafid Talbi <atalbiie@gmail.com>, 2021.
-# Hareth Mohammed <harethpy@gmail.com>, 2021.
-# Mohammed Mubarak <modymu9@gmail.com>, 2021.
-# Spirit <i8bou3@gmail.com>, 2021.
+#
 msgid ""
 msgstr ""
 "Project-Id-Version: Rebel Editor\n"

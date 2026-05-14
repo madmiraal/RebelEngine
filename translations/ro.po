@@ -6,11 +6,6 @@
 #
 # LANGUAGE translation of the Rebel Engine class reference
 #
-# EVOKZH <avip.ady@gmail.com>, 2020.
-# f0roots <f0rootss@gmail.com>, 2020.
-# Pierre Stempin <pierre.stempin@gmail.com>, 2020.
-# FlooferLand <yunaflarf@gmail.com>, 2021.
-# N3mEee <n3mebusiness@gmail.com>, 2021.
 msgid ""
 msgstr ""
 "Project-Id-Version: Rebel Engine class reference\n"

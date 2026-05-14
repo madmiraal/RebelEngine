@@ -6,11 +6,6 @@
 #
 # LANGUAGE translation of the Rebel Engine class reference
 #
-# Misi <varady.misi@gmail.com>, 2021.
-# Looky1173 <lgl1173and2006@gmail.com>, 2021.
-# Frontrider <frontrider@tutanota.com>, 2021.
-# Andras Virag <snowflake71@gmail.com>, 2021.
-# balintmaci <balintmaci@gmail.com>, 2021.
 msgid ""
 msgstr ""
 "Project-Id-Version: Rebel Engine class reference\n"

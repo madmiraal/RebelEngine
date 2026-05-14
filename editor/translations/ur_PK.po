@@ -6,8 +6,6 @@
 #
 # Urdu (Pakistan) translation of the Rebel Editor
 #
-# Muhammad Ali <ali@codeonion.com>, 2016.
-# Faisal Rehman <faisalurrehman234@gmail.com>, 2021.
 msgid ""
 msgstr ""
 "Project-Id-Version: Rebel Editor\n"

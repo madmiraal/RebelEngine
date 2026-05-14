@@ -6,8 +6,6 @@
 #
 # LANGUAGE translation of the Rebel Engine class reference
 #
-# Jethro Parker <lionbearjet@hotmail.com>, 2020.
-# Pierre Stempin <pierre.stempin@gmail.com>, 2020.
 msgid ""
 msgstr ""
 "Project-Id-Version: Rebel Engine class reference\n"

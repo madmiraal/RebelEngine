@@ -6,10 +6,6 @@
 #
 # Dutch translation of the Rebel Engine class reference
 #
-# Stijn Hinlopen <f.a.hinlopen@gmail.com>, 2020.
-# marnicq van loon <marnicqvanloon@gmail.com>, 2020.
-# Pierre Stempin <pierre.stempin@gmail.com>, 2020.
-# Daan van Luijk <daanvl@outlook.be>, 2021.
 msgid ""
 msgstr ""
 "Project-Id-Version: Rebel Engine class reference\n"

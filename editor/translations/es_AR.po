@@ -5,23 +5,7 @@
 # SPDX-License-Identifier: MIT
 #
 # Spanish (Argentina) translation of the Rebel Editor
-# Diego López <diegodario21@gmail.com>, 2017.
-# Lisandro Lorea <lisandrolorea@gmail.com>, 2016-2018, 2019, 2020, 2021.
-# Roger Blanco Ribera <roger.blancoribera@gmail.com>, 2016-2018.
-# Sebastian Silva <sebastian@sugarlabs.org>, 2016.
-# Jose Luis Bossio <joseluisbossio@gmail.com>, 2018.
-# Reynaldo Cruz <rcruz60@gmail.com>, 2018.
-# Javier Ocampos <xavier.ocampos@gmail.com>, 2018, 2019, 2020, 2021.
-# Andrés S <andres.segovia.dev@gmail.com>, 2019.
-# Florencia Menéndez <mariaflormz2@gmail.com>, 2019.
-# roger <616steam@gmail.com>, 2019, 2020.
-# Francisco José Carllinni <panchopepe@protonmail.com>, 2019.
-# Nicolas Zirulnik <nicolaszirulnik@gmail.com>, 2020.
-# Cristian Yepez <cristianyepez@gmail.com>, 2020.
-# Skarline <lihue-molina@hotmail.com>, 2020.
-# Joakker <joaquinandresleon108@gmail.com>, 2020.
-# M3CG <cgmario1999@gmail.com>, 2021.
-# Manuel González <mgoopazo@gmail.com>, 2021.
+#
 msgid ""
 msgstr ""
 "Project-Id-Version: Rebel Editor\n"

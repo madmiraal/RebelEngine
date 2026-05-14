@@ -5,23 +5,7 @@
 # SPDX-License-Identifier: MIT
 #
 # Portuguese translation of the Rebel Editor
-# António Sarmento <antonio.luis.sarmento@gmail.com>, 2016.
-# Carlos Vieira <carlos.vieira@gmail.com>, 2017.
-# João <joao@nogordio.com>, 2018.
-# João Graça <jgraca95@gmail.com>, 2017.
-# João Lopes <linux-man@hotmail.com>, 2017-2018, 2019, 2020, 2021.
-# Miguel Gomes <miggas09@gmail.com>, 2017.
-# Paulo Caldeira <paucal@gmail.com>, 2018.
-# Pedro Gomes <pedrogomes1698@gmail.com>, 2017.
-# Rueben Stevens <supercell03@gmail.com>, 2017.
-# SARDON <fabio3_Santos@hotmail.com>, 2017.
-# Vinicius Gonçalves <viniciusgoncalves21@gmail.com>, 2017.
-# ssantos <ssantos@web.de>, 2018, 2019, 2020, 2021.
-# Gonçalo Dinis Guerreiro João <goncalojoao205@gmail.com>, 2019.
-# Manuela Silva <mmsrs@sky.com>, 2020.
-# Murilo Gama <murilovsky2030@gmail.com>, 2020.
-# Ricardo Subtil <ricasubtil@gmail.com>, 2020.
-# André Silva <andre.olivais@gmail.com>, 2021.
+#
 msgid ""
 msgstr ""
 "Project-Id-Version: Rebel Editor\n"

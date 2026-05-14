@@ -5,76 +5,7 @@
 # SPDX-License-Identifier: MIT
 #
 # Spanish translation of the Rebel Editor
-# Addiel Lucena Perez <addiell2017@gmail.com>, 2017.
-# Aleix Sanchis <aleixsanchis@hotmail.com>, 2017, 2018.
-# Alejandro Alvarez <eliluminado00@gmail.com>, 2017.
-# Avocado <avocadosan42@gmail.com>, 2018, 2019.
-# BLaDoM GUY <simplybladom@gmail.com>, 2017.
-# Carlos López <genetita@gmail.com>, 2016.
-# David Arranz <davarrcal@hotmail.com>, 2018.
-# David Couto <davidcouto@gmail.com>, 2017.
-# Dharkael <izhe@hotmail.es>, 2017, 2019.
-# Diego López <diegodario21@gmail.com>, 2017.
-# eon-s <emanuel.segretin@gmail.com>, 2018, 2019, 2020.
-# Gustavo Leon <gleondiaz@gmail.com>, 2017-2018.
-# Javier Ocampos <xavier.ocampos@gmail.com>, 2018, 2019, 2020, 2021.
-# Jose Maria Martinez <josemar1992@hotmail.com>, 2018.
-# Juan Quiroga <juanquiroga9@gmail.com>, 2017.
-# Kiji Pixel <raccoon.fella@gmail.com>, 2017.
-# Lisandro Lorea <lisandrolorea@gmail.com>, 2016-2017, 2019, 2020, 2021.
-# Lonsfor <lotharw@protonmail.com>, 2017-2018.
-# Mario Nachbaur <manachbaur@gmail.com>, 2018.
-# Oscar Carballal <oscar.carballal@protonmail.com>, 2017-2018.
-# R. Joshua Seville <rjoshua@protonmail.com>, 2018.
-# Rabid Orange <theorangerabid@gmail.com>, 2017, 2018.
-# Roger Blanco Ribera <roger.blancoribera@gmail.com>, 2016-2018.
-# Sebastian Silva <sebastian@fuentelibre.org>, 2016.
-# Swyter <swyterzone@gmail.com>, 2016-2017.
-# Vazquinhos <vazquinhos@gmail.com>, 2018.
-# Yovani Damián <blackblex@gmail.com>, 2018.
-# Andrus Diaz German <andrusdiazaleman@gmail.com>, 2018.
-# Franklin David Macias Avellan <franklin.macias864@gmail.com>, 2018.
-# Dianiel García <jdangarr@gmail.com>, 2018.
-# ayahuasca1979 <ayahuasca1979@gmail.com>, 2018.
-# Elena G <elena.guzbla@gmail.com>, 2018.
-# willy zegarra <willyzegarra58@gmail.com>, 2018.
-# emma peel <emma.peel@riseup.net>, 2018.
-# Vicente Juárez <vijuarez@uc.cl>, 2019.
-# juan david julio <illus.kun@gmail.com>, 2019.
-# Patrick Zoch Alves <patrickzochalves@gmail.com>, 2019.
-# roger <616steam@gmail.com>, 2019.
-# Dario <darlex259@gmail.com>, 2019.
-# Adolfo Jayme Barrientos <fitojb@ubuntu.com>, 2019.
-# Julián Luini <jluini@gmail.com>, 2020.
-# Victor S. <victorstancioiu@gmail.com>, 2020, 2021.
-# henry rujano herrera <rujhen@gmail.com>, 2020.
-# Megamega53 <Christopher.Morales21@myhunter.cuny.edu>, 2020.
-# Serk Lintur <serk.lintur@gmail.com>, 2020.
-# Pedro J. Estébanez <pedrojrulez@gmail.com>, 2020.
-# paco <pacosoftfree@protonmail.com>, 2020.
-# Jonatan <arandajonatan94@tuta.io>, 2020.
-# ACM <albertocm@tuta.io>, 2020.
-# José Manuel Jurado Bujalance <darkbird@vivaldi.net>, 2020.
-# Skarline <lihue-molina@hotmail.com>, 2020.
-# Oxixes <oxixes@protonmail.com>, 2020.
-# David Aroca Rojas <arocarojasdavid@gmail.com>, 2020.
-# Ricardo Pérez <ricpelo@gmail.com>, 2021.
-# A <kaieltroll@gmail.com>, 2021.
-# Lucasdelpiero <lucasdelpiero98@gmail.com>, 2021.
-# SteamGoblin <SteamGoblin860@gmail.com>, 2021.
-# Francisco C <pruebasfrancisco17@gmail.com>, 2021.
-# Cam <cameron.toms@gmail.com>, 2021.
-# Juan camilo <jugarciago01@gmail.com>, 2021.
-# Manuel González <mgoopazo@gmail.com>, 2021.
-# softonicblip <blazeawardspace@gmail.com>, 2021.
-# Ib Quezada <ib@ibquezada.com>, 2021.
-# hiking <joaquinfc@protonmail.com>, 2021.
-# pabloggomez <pgg2733@gmail.com>, 2021.
-# Erick Figueroa <querecuto@hotmail.com>, 2021.
-# jonagamerpro1234 ss <js398704@gmail.com>, 2021.
-# davidrogel <david.rogel.pernas@icloud.com>, 2021.
-# Anderson Guzman Abreu <chicobello1111@gmail.com>, 2021.
-# Manuel Cantón Guillén <manuelcanton8@gmail.com>, 2021.
+#
 msgid ""
 msgstr ""
 "Project-Id-Version: Rebel Editor\n"

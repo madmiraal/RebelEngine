@@ -6,35 +6,6 @@
 #
 # Portuguese (Brazil) translation of the Rebel Engine class reference
 #
-# José Paulo <jose.paulo1919@gmail.com>, 2020.
-# Necco <necco@outlook.com>, 2020.
-# Marcelo Silveira Hayden <mshayden.1998@gmail.com>, 2020, 2021.
-# Felipe Jesus Macedo <fmacedo746@gmail.com>, 2020.
-# SANDRO KARLO SILVA DUTRA <hexodin@gmail.com>, 2020, 2021.
-# Pierre Stempin <pierre.stempin@gmail.com>, 2020.
-# Matheus Medeiros Souza <mmedeiros.cbp@gmail.com>, 2020.
-# John Calistro <jccalistro@gmail.com>, 2020.
-# Eduardo Oliveira <spartulus@gmail.com>, 2020.
-# Igor H. Vieira <zignd.igor@gmail.com>, 2021.
-# Lucas Castro <castroclucas@gmail.com>, 2021.
-# Carlos Bonifacio <carlosboni.sa@gmail.com>, 2021.
-# Stev David <stevedavidh5@gmail.com>, 2021.
-# Lucas E. <lukas.ed45@gmail.com>, 2021.
-# Júlio César <diolandajr@gmail.com>, 2021.
-# Kett Lovahr <vagnerlunes@gmail.com>, 2021.
-# Jaide Alonso Ambrosio <jaide.sp@gmail.com>, 2021.
-# DeeJayLSP <djlsplays@gmail.com>, 2021.
-# Douglas Leão <djlsplays@gmail.com>, 2021.
-# Cauê Henrique Sousa Ferrareto <caue313@gmail.com>, 2021.
-# William Weber Berrutti <wwberrutti@protonmail.ch>, 2021.
-# jak3z <jose_renato06@outlook.com>, 2021.
-# Henrique Darko <henridark00@gmail.com>, 2021.
-# Cearaj <pmoraisleal@gmail.com>, 2021.
-# Fernando H. Rosa <ferhrosa@gmail.com>, 2021.
-# Alefy San <alefyferreiradeoliveira@outlook.com>, 2021.
-# Supernova Files <filessupernova@gmail.com>, 2021.
-# Leo Lamas <leoslamas@gmail.com>, 2021.
-# Vinicius A. Portela <vinicius@simpx.net>, 2021.
 msgid ""
 msgstr ""
 "Project-Id-Version: Rebel Engine class reference\n"

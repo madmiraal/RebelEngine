@@ -5,20 +5,7 @@
 # SPDX-License-Identifier: MIT
 #
 # Catalan translation of the Rebel Editor
-# BennyBeat <bennybeat@gmail.com>, 2017.
-# Javier Ocampos <xavier.ocampos@gmail.com>, 2018.
-# Roger Blanco Ribera <roger.blancoribera@gmail.com>, 2016-2018, 2020.
-# Rubén Moreno <ruben.moreno.romero@gmail.com>, 2018.
-# roger <616steam@gmail.com>, 2019, 2020, 2021.
-# Roger BR <drai_kin@hotmail.com>, 2019.
-# Adolfo Jayme Barrientos <fitojb@ubuntu.com>, 2020.
-# Xavier Gomez <hiulit@gmail.com>, 2020, 2021.
-# Aina <ainasoga@gmail.com>, 2020.
-# Alex Mancha <codingstain@gmail.com>, 2020, 2021.
-# Carles Pastor Badosa <cpbadosa@gmail.com>, 2021.
-# Roberto Pérez <djleizar@gmail.com>, 2021.
-# Joel Garcia Cascalló <jocsencat@gmail.com>, 2021.
-# DFC <damiafluixacanals28@gmail.com>, 2021.
+#
 msgid ""
 msgstr ""
 "Project-Id-Version: Rebel Editor\n"

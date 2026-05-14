@@ -5,32 +5,7 @@
 # SPDX-License-Identifier: MIT
 #
 # Chinese (Taiwan) translation of the Rebel Editor
-# Allen H <w84miracle@gmail.com>, 2017.
-# Billy SU <g4691821@gmail.com>, 2018.
-# Chao Yu <casd82@gmail.com>, 2017.
-# Cliffs Dover <bottle@dancingbottle.com>, 2017.
-# Kisaragi Hiu <mail@kisaragi-hiu.com>, 2018, 2021.
-# Matt <chchwy@gmail.com>, 2017.
-# popcade <popcade@gmail.com>, 2016.
-# Qing <icinriiq@gmail.com>, 2018.
-# Sam Pan <sampan66@gmail.com>, 2016.
-# ken l <macauhome@gmail.com>, 2018.
-# Eric K <eric900601@gmail.com>, 2019.
-# cnieFIT <dtotncq@gmail.com>, 2019.
-# Bluesir Bruce <a5566740293@gmail.com>, 2019, 2020.
-# leela <53352@protonmail.com>, 2019.
-# Kenneth Lo <closer.tw@gmail.com>, 2019.
-# SIYU FU <1002492607@qq.com>, 2019.
-# 鄭惟中 <biglionlion06@gmail.com>, 2020.
-# Alexander Wang <zxcvb22217@gmail.com>, 2020.
-# binotaliu <binota@protonmail.ch>, 2020.
-# Allen H. <w84miracle@gmail.com>, 2020.
-# BinotaLIU <binota@protonmail.ch>, 2020.
-# BinotaLIU <me@binota.org>, 2020, 2021.
-# MintSoda <lionlxh@qq.com>, 2020.
-# meowmeowmeowcat <meowmeowcat1211@gmail.com>, 2021.
-# anthonychen <anton1554970211@126.com>, 2021.
-# Chia-Hsiang Cheng <cche0109@student.monash.edu>, 2021.
+#
 msgid ""
 msgstr ""
 "Project-Id-Version: Rebel Editor\n"

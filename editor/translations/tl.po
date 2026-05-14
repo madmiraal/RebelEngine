@@ -6,7 +6,6 @@
 #
 # Tagalog translation of the Rebel Editor.
 #
-# Napstaguy04 <brokenscreen3@gmail.com>, 2021, 2022.
 msgid ""
 msgstr ""
 "Project-Id-Version: Rebel Editor\n"

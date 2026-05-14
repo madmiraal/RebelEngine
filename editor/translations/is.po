@@ -5,9 +5,7 @@
 # SPDX-License-Identifier: MIT
 #
 # Icelandic translation of the Rebel Editor
-# Jóhannes G. Þorsteinsson <johannesg@johannesg.com>, 2017, 2018, 2020.
-# Kaan Gül <qaantum@hotmail.com>, 2018.
-# Einar Magnús Einarsson <einar.m.einarsson@gmail.com>, 2020.
+#
 msgid ""
 msgstr ""
 "Project-Id-Version: Rebel Editor\n"

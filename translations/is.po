@@ -6,7 +6,6 @@
 #
 # Icelandic translation of the Rebel Engine class reference
 #
-# Tumi Gudmundsson <tumi435@gmail.com>, 2021.
 msgid ""
 msgstr ""
 "Project-Id-Version: Rebel Engine class reference\n"

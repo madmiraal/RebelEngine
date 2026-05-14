@@ -6,9 +6,6 @@
 #
 # Tamil translation of the Rebel Editor
 #
-# Senthil Kumar K <logickumar@gmail.com>, 2017.
-# Survesh VRL <123survesh@gmail.com>, 2020.
-# Sridhar <sreeafmarketing@gmail.com>, 2020.
 msgid ""
 msgstr ""
 "Project-Id-Version: Rebel Editor\n"
