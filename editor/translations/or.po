@@ -4,7 +4,7 @@
 #
 # SPDX-License-Identifier: MIT
 #
-# Odia translation of the Rebel Editor
+# Odia translation of the Rebel Editor.
 #
 msgid ""
 msgstr ""

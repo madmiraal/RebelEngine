@@ -4,7 +4,7 @@
 #
 # SPDX-License-Identifier: MIT
 #
-# Tagalog translation of the Rebel Engine class reference
+# Tagalog translation of the Rebel Engine API.
 #
 msgid ""
 msgstr ""

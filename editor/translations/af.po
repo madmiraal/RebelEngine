@@ -4,7 +4,7 @@
 #
 # SPDX-License-Identifier: MIT
 #
-# Afrikaans translation of the Rebel Editor
+# Afrikaans translation of the Rebel Editor.
 #
 msgid ""
 msgstr ""

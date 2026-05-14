@@ -4,7 +4,7 @@
 #
 # SPDX-License-Identifier: MIT
 #
-# Filipino translation of the Rebel Editor
+# Filipino translation of the Rebel Editor.
 #
 msgid ""
 msgstr ""
