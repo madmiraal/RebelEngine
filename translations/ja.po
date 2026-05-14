@@ -4,7 +4,7 @@
 #
 # SPDX-License-Identifier: MIT
 #
-# Japanese translation of the Rebel Engine class reference
+# Japanese translation of the Rebel Engine API.
 #
 msgid ""
 msgstr ""

@@ -4,7 +4,7 @@
 #
 # SPDX-License-Identifier: MIT
 #
-# Urdu (Pakistan) translation of the Rebel Editor
+# Urdu (Pakistan) translation of the Rebel Editor.
 #
 msgid ""
 msgstr ""

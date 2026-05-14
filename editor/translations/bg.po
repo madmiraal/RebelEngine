@@ -4,7 +4,7 @@
 #
 # SPDX-License-Identifier: MIT
 #
-# Bulgarian translation of the Rebel Editor
+# Bulgarian translation of the Rebel Editor.
 #
 msgid ""
 msgstr ""

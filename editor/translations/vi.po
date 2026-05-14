@@ -4,7 +4,7 @@
 #
 # SPDX-License-Identifier: MIT
 #
-# Vietnamese translation of the Rebel Editor
+# Vietnamese translation of the Rebel Editor.
 #
 msgid ""
 msgstr ""

@@ -4,7 +4,7 @@
 #
 # SPDX-License-Identifier: MIT
 #
-# German translation of the Rebel Engine class reference
+# German translation of the Rebel Engine API.
 #
 msgid ""
 msgstr ""

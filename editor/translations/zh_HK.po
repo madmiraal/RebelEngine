@@ -4,7 +4,7 @@
 #
 # SPDX-License-Identifier: MIT
 #
-# Chinese (Hong Kong) translation of the Rebel Editor
+# Chinese (Hong Kong) translation of the Rebel Editor.
 #
 msgid ""
 msgstr ""

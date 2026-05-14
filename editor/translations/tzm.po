@@ -4,7 +4,7 @@
 #
 # SPDX-License-Identifier: MIT
 #
-# Central Atlas Tamazight translation of the Rebel Editor
+# Central Atlas Tamazight translation of the Rebel Editor.
 #
 msgid ""
 msgstr ""

@@ -4,7 +4,7 @@
 #
 # SPDX-License-Identifier: MIT
 #
-# Serbian (cyrillic) translation of the Rebel Engine class reference
+# Serbian (Cyrillic script) translation of the Rebel Engine API.
 #
 msgid ""
 msgstr ""
