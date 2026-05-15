@@ -845,20 +845,21 @@ BakedLightmap::BakeError BakedLightmap::bake(
         lights_found
     );
 
-    if (meshes_found.size() == 0) {
+    int meshes_count = meshes_found.size();
+    if (meshes_count == 0) {
         bake_end_function(time_started);
         return BAKE_ERROR_NO_MESHES;
     }
 
-    for (int m_i = 0; m_i < meshes_found.size(); m_i++) {
+    for (int m_i = 0; m_i < meshes_count; m_i++) {
         if (bake_step_function) {
-            float p        = (float)(m_i) / meshes_found.size();
+            float p        = (float)(m_i) / meshes_count;
             bool cancelled = bake_step_function(
                 p * 0.05,
                 vformat(
                     TTR("Preparing geometry (%d/%d)"),
                     m_i + 1,
-                    meshes_found.size()
+                    meshes_count
                 ),
                 nullptr,
                 false
