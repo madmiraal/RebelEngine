@@ -7,7 +7,7 @@
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: Rebel Engine class reference\n"
+"Project-Id-Version: Rebel Engine API\n"
 "Report-Msgid-Bugs-To: https://github.com/RebelToolbox/RebelEngine\n"
 "PO-Revision-Date: 2025-02-18 11:02+0000\n"
 "Last-Translator: \"SUrAsEk seEhAwoNG (pLeE)\" <seehawong805@gmail.com>\n"
