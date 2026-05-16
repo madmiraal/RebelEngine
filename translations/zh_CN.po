@@ -24508,7 +24508,7 @@ msgstr "如果文件系统正在被扫描，返回扫描的进度，值为0-1。
 
 #: docs/EditorFileSystem.xml
 msgid "Returns [code]true[/code] of the filesystem is being scanned."
-msgstr "返回 [code]true[/code] 如果文件系统已经被扫[/code]描完毕。"
+msgstr "返回 [code]true[/code] 如果文件系统已经被扫描完毕。"
 
 #: docs/EditorFileSystem.xml
 msgid "Scan the filesystem for changes."
