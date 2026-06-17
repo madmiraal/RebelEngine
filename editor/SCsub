@@ -88,9 +88,7 @@ if env["tools"]:
     # layouts to be displayed properly: ar,bn,fa,he,hi,ml,si,ta,te,ur.
 
     # Editor translations
-    to_include = (
-        "bg,ca,cs,de,el,eo,es_AR,es,fi,fr,gl,hu,id,it,ja,ko,lv,ms,nb,nl,pl,pt_BR,pt,ro,ru,sk,sv,th,tr,uk,vi,zh_CN,zh_TW"
-    ).split(",")
+    to_include = []
     tlist = [
         env.Dir("#editor/translations").abspath + "/" + f + ".po" for f in to_include
     ]
