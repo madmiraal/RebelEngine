@@ -99,8 +99,8 @@ if env["tools"]:
         run_in_subprocess(editor_builders.make_editor_translations_header),
     )
 
-    # Documentation translations
-    to_include = "de,es,fr,ja,zh_CN".split(",")
+    # Rebel Engine API translations
+    to_include = ["es", "ta", "zh_CN"]  # Spanish, Tamil and Chinese (Simplified)
     tlist = [env.Dir("#translations").abspath + "/" + f + ".po" for f in to_include]
     env.Depends("#editor/docs_translations.gen.h", tlist)
     env.CommandNoCache(
