@@ -88,7 +88,9 @@ if env["tools"]:
     # layouts to be displayed properly: ar,bn,fa,he,hi,ml,si,ta,te,ur.
 
     # Editor translations
-    to_include = []
+    to_include = (
+        "bg,ca,cs,de,el,eo,es_AR,es,fi,fr,gl,hu,id,it,ja,ko,lv,ms,nb,nl,pl,pt_BR,pt,ro,ru,sk,sv,th,tr,uk,vi,zh_CN,zh_TW"
+    ).split(",")
     tlist = [
         env.Dir("#editor/translations").abspath + "/" + f + ".po" for f in to_include
     ]
@@ -100,7 +102,7 @@ if env["tools"]:
     )
 
     # Documentation translations
-    to_include = "es,ta,zh_CN".split(",")
+    to_include = "de,es,fr,ja,zh_CN".split(",")
     tlist = [env.Dir("#translations").abspath + "/" + f + ".po" for f in to_include]
     env.Depends("#editor/docs_translations.gen.h", tlist)
     env.CommandNoCache(
