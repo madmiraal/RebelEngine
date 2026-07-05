@@ -930,6 +930,20 @@ def escape_special_characters(text):
                 escaped_text[:position] + r"\_" + escaped_text[position + 1 :]
             )
         position = escaped_text.find("_", position + 2)
+    position = escaped_text.find("`")
+    while position != -1:
+        if not text[position + 1].isspace():
+            escaped_text = (
+                escaped_text[:position] + r"\`" + escaped_text[position + 1 :]
+            )
+        position = escaped_text.find("_", position + 2)
+    position = escaped_text.find("|")
+    while position != -1:
+        if not text[position + 1].isspace():
+            escaped_text = (
+                escaped_text[:position] + r"\|" + escaped_text[position + 1 :]
+            )
+        position = escaped_text.find("_", position + 2)
     return escaped_text
 
 
