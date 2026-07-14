@@ -12,7 +12,7 @@ HEADER = """\
 #
 # SPDX-License-Identifier: MIT
 #
-# LANGUAGE translation of the Rebel Engine class reference
+# LANGUAGE translation of the Rebel Engine API.
 #
 #, fuzzy
 msgid ""

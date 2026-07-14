@@ -3,7 +3,7 @@
 #
 # SPDX-License-Identifier: MIT
 #
-# Chinese (Simplified) translation of the Rebel Engine class reference
+# Chinese (Simplified) translation of the Rebel Engine API.
 #
 msgid ""
 msgstr ""
