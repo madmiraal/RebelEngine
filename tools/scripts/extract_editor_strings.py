@@ -15,8 +15,6 @@ HEADER = """
 #
 # LANGUAGE translation of the Rebel Editor.
 #
-# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
-#
 #, fuzzy
 msgid ""
 msgstr ""
