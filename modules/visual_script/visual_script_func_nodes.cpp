@@ -1116,16 +1116,6 @@ VisualScriptFunctionCall::VisualScriptFunctionCall() {
     rpc_call_mode    = RPC_DISABLED;
 }
 
-template <VisualScriptFunctionCall::CallMode cmode>
-static Ref<VisualScriptNode> create_function_call_node(const String& p_name) {
-    Ref<VisualScriptFunctionCall> node;
-    node.instance();
-    node->set_call_mode(cmode);
-    return node;
-}
-
-//////////////////////////////////////////
-////////////////SET//////////////////////
 //////////////////////////////////////////
 
 int VisualScriptPropertySet::get_output_sequence_port_count() const {
@@ -2088,16 +2078,6 @@ VisualScriptPropertySet::VisualScriptPropertySet() {
     basic_type = Variant::NIL;
 }
 
-template <VisualScriptPropertySet::CallMode cmode>
-static Ref<VisualScriptNode> create_property_set_node(const String& p_name) {
-    Ref<VisualScriptPropertySet> node;
-    node.instance();
-    node->set_call_mode(cmode);
-    return node;
-}
-
-//////////////////////////////////////////
-////////////////GET//////////////////////
 //////////////////////////////////////////
 
 int VisualScriptPropertyGet::get_output_sequence_port_count() const {
@@ -2843,16 +2823,6 @@ VisualScriptPropertyGet::VisualScriptPropertyGet() {
     type_cache = Variant::NIL;
 }
 
-template <VisualScriptPropertyGet::CallMode cmode>
-static Ref<VisualScriptNode> create_property_get_node(const String& p_name) {
-    Ref<VisualScriptPropertyGet> node;
-    node.instance();
-    node->set_call_mode(cmode);
-    return node;
-}
-
-//////////////////////////////////////////
-////////////////EMIT//////////////////////
 //////////////////////////////////////////
 
 int VisualScriptEmitSignal::get_output_sequence_port_count() const {

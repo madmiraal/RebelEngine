@@ -684,14 +684,6 @@ VisualScriptYieldSignal::VisualScriptYieldSignal() {
     base_type = "Object";
 }
 
-template <VisualScriptYieldSignal::CallMode cmode>
-static Ref<VisualScriptNode> create_yield_signal_node(const String& p_name) {
-    Ref<VisualScriptYieldSignal> node;
-    node.instance();
-    node->set_call_mode(cmode);
-    return node;
-}
-
 void register_visual_script_yield_nodes() {
     VisualScriptLanguage::singleton
         ->add_register_func("functions/wait/wait_frame", create_yield_node<VisualScriptYield::YIELD_FRAME>);
