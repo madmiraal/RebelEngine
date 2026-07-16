@@ -8,20 +8,16 @@ import xml.etree.ElementTree as ET
 from collections import OrderedDict
 
 HEADER = """\
-# SPDX-FileCopyrightText: 2023 Rebel Engine contributors
-# SPDX-FileCopyrightText: 2014-2022 Godot Engine contributors
-# SPDX-FileCopyrightText: 2007-2014 Juan Linietsky, Ariel Manzur
+# SPDX-FileCopyrightText: 2026 Rebel Engine contributors
 #
 # SPDX-License-Identifier: MIT
 #
-# LANGUAGE translation of the Rebel Engine class reference
-#
-# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
+# LANGUAGE translation of the Rebel Engine API.
 #
 #, fuzzy
 msgid ""
 msgstr ""
-"Project-Id-Version: Rebel Engine class reference\\n"
+"Project-Id-Version: Rebel Engine API\\n"
 "Report-Msgid-Bugs-To: https://github.com/RebelToolbox/RebelEngine\\n"
 "MIME-Version: 1.0\\n"
 "Content-Type: text/plain; charset=UTF-8\\n"

@@ -1,44 +1,18 @@
 # SPDX-FileCopyrightText: 2023 Rebel Engine contributors
-# SPDX-FileCopyrightText: 2014-2022 Godot Engine contributors
-# SPDX-FileCopyrightText: 2007-2014 Juan Linietsky, Ariel Manzur
+# SPDX-FileCopyrightText: 2020-2022 Godot Engine contributors
 #
 # SPDX-License-Identifier: MIT
 #
-# Spanish translation of the Rebel Engine class reference
+# Spanish translation of the Rebel Engine API.
 #
-# 44pes Games <44pes.games@gmail.com>, 2020.
-# Megamega53 <Christopher.Morales21@myhunter.cuny.edu>, 2020, 2021.
-# Javier Ocampos <xavier.ocampos@gmail.com>, 2020, 2021.
-# Serk Lintur <serk.lintur@gmail.com>, 2020.
-# Lambientan <pedrogtzr@protonmail.com>, 2020.
-# paco <pacosoftfree@protonmail.com>, 2020, 2021.
-# No te interesa <soxahop585@inmail3.com>, 2020.
-# Jonatan <arandajonatan94@tuta.io>, 2020.
-# peter9811 <petercuevas.6@gmail.com>, 2020.
-# Ventura Pérez García <vetu@protonmail.com>, 2020.
-# Joakker <joaquinandresleon108@gmail.com>, 2020, 2021.
-# ACM <albertocm@tuta.io>, 2020.
-# Pierre Stempin <pierre.stempin@gmail.com>, 2020.
-# José Manuel Jurado Bujalance <darkbird@vivaldi.net>, 2020.
-# Osman Robles <osmanrobles10@gmail.com>, 2020.
-# jonagamerpro1234 ss <js398704@gmail.com>, 2020, 2021.
-# Cameron Toms <cameron.toms@gmail.com>, 2021.
-# Roderick Lagunas <rdcklinux@gmail.com>, 2021.
-# Erick Figueroa <querecuto@hotmail.com>, 2021.
-# Anderson Guzman Abreu <chicobello1111@gmail.com>, 2021.
-# Fonspem None <fonspem@gmail.com>, 2021.
-# Andres David Calderón Jimenez <davidcampeon2007@gmail.com>, 2021.
-# Manuel Cantón Guillén <manuelcanton8@gmail.com>, 2021.
-# Rémi Verschelde <akien@godotengine.org>, 2021.
-# Rémi Verschelde <remi@godotengine.org>, 2021.
 msgid ""
 msgstr ""
-"Project-Id-Version: Rebel Engine class reference\n"
+"Project-Id-Version: Rebel Engine API\n"
 "Report-Msgid-Bugs-To: https://github.com/RebelToolbox/RebelEngine\n"
 "PO-Revision-Date: 2021-12-16 20:56+0000\n"
 "Last-Translator: Rémi Verschelde <remi@godotengine.org>\n"
-"Language-Team: Spanish <https://hosted.weblate.org/projects/godot-engine/"
-"godot-class-reference/es/>\n"
+"Language-Team: Spanish <https://hosted.weblate.org/projects/rebel-toolbox/"
+"rebel-engine-api/es/>\n"
 "Language: es\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"

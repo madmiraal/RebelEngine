@@ -9,15 +9,11 @@ import subprocess
 import sys
 
 HEADER = """
-# SPDX-FileCopyrightText: 2023 Rebel Engine contributors
-# SPDX-FileCopyrightText: 2014-2022 Godot Engine contributors
-# SPDX-FileCopyrightText: 2007-2014 Juan Linietsky, Ariel Manzur
+# SPDX-FileCopyrightText: 2026 Rebel Engine contributors
 #
 # SPDX-License-Identifier: MIT
 #
 # LANGUAGE translation of the Rebel Editor.
-#
-# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
 #
 #, fuzzy
 msgid ""
