@@ -3973,7 +3973,7 @@ ThemeEditor::ThemeEditor() {
     top_menu->add_child(theme_save_button);
 
     Button* theme_save_as_button = memnew(Button);
-    theme_save_as_button->set_text(TTR("Save As..."));
+    theme_save_as_button->set_text(TTR("Save As…"));
     theme_save_as_button->set_flat(true);
     theme_save_as_button
         ->connect("pressed", this, "_theme_save_button_cbk", varray(true));
@@ -3982,7 +3982,7 @@ ThemeEditor::ThemeEditor() {
     top_menu->add_child(memnew(VSeparator));
 
     Button* theme_edit_button = memnew(Button);
-    theme_edit_button->set_text(TTR("Manage Items..."));
+    theme_edit_button->set_text(TTR("Manage Items…"));
     theme_edit_button->set_tooltip(
         TTR("Add, remove, organize and import Theme items.")
     );

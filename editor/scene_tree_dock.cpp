@@ -1131,7 +1131,7 @@ void SceneTreeDock::_tool_selected(int p_tool, bool p_confirm_override) {
                     TTR("Can't save the branch of an already instanced "
                         "scene.\nTo create a variation of a scene, you can "
                         "make an inherited scene based on the instanced scene "
-                        "using Scene > New Inherited Scene... instead.")
+                        "using Scene > New Inherited Scene… instead.")
                 );
                 accept->popup_centered_minsize();
                 break;
@@ -1183,7 +1183,7 @@ void SceneTreeDock::_tool_selected(int p_tool, bool p_confirm_override) {
             new_scene_from_dialog->set_current_path(existing);
 
             new_scene_from_dialog->popup_centered_ratio();
-            new_scene_from_dialog->set_title(TTR("Save New Scene As..."));
+            new_scene_from_dialog->set_title(TTR("Save New Scene As…"));
         } break;
         case TOOL_COPY_NODE_PATH: {
             List<Node*> selection = editor_selection->get_selected_node_list();
