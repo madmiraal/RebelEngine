@@ -79,16 +79,36 @@ if env["tools"]:
         run_in_subprocess(editor_builders.make_docs_header),
     )
 
-    # Editor interface and class reference translations incur a significant size
-    # cost for the editor binary (see godot-proposals#3421).
-    # To limit it, we only include translations with a high enough completion
-    # ratio (30% for the editor UI, 10% for the class reference).
-    # Generated with `make include-list` for each resource.
-    # Note: In 3.x, we also exclude languages that depend on complex text
-    # layouts to be displayed properly: ar,bn,fa,he,hi,ml,si,ta,te,ur.
+    # Rebel Editor and Rebel Engine API translations that are over 90% complete
+    # are included in the Rebel Editor build.
 
     # Editor translations
-    to_include = []
+    to_include = [
+        "ar",  # Arabic
+        "ca",  # Catalan
+        "cs",  # Czech
+        "de",  # German
+        "el",  # Greek
+        "es_AR",  # Spanish (Argentina)
+        "es",  # Spanish
+        "fi",  # Finnish
+        "fr",  # French
+        "id",  # Indonesian
+        "it",  # Italian
+        "ja",  # Japanese
+        "ko",  # Korean
+        "nl",  # Dutch
+        "pl",  # Polish
+        "pt_BR",  # Portuguese (Brazil)
+        "pt",  # Portuguese
+        "ru",  # Russian
+        "sr_Cyrl",  # Serbian (cyrillic)
+        "th",  # Thai
+        "tr",  # Turkish
+        "uk",  # Ukrainian
+        "zh_CN",  # Chinese (Simplified)
+        "zh_TW",  # Chinese (Taiwan)
+    ]
     tlist = [
         env.Dir("#editor/translations").abspath + "/" + f + ".po" for f in to_include
     ]
