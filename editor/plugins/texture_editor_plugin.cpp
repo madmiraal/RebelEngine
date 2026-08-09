@@ -7,7 +7,7 @@
 #include "texture_editor_plugin.h"
 
 #include "editor/editor_scale.h"
-#include "scene/resources/dynamic_font.h"
+#include "scene/resources/fonts/dynamic_font.h"
 
 TextureRect* TexturePreview::get_texture_display() {
     return texture_display;

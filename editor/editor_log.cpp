@@ -10,8 +10,7 @@
 #include "core/version.h"
 #include "editor_node.h"
 #include "editor_scale.h"
-#include "scene/gui/center_container.h"
-#include "scene/resources/dynamic_font.h"
+#include "scene/resources/fonts/dynamic_font.h"
 
 void EditorLog::_error_handler(
     void* p_self,

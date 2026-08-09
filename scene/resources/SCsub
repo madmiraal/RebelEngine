@@ -18,6 +18,7 @@ env.scene_sources += third_party_obj
 scene_obj = []
 
 env.add_source_files(scene_obj, "*.cpp")
+env.add_source_files(scene_obj, "fonts/*.cpp")
 env.scene_sources += scene_obj
 
 # Needed to force rebuilding the scene files when the third-party code is updated.
