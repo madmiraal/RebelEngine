@@ -14,7 +14,6 @@
 #include "core/os/input.h"
 #include "core/os/keyboard.h"
 #include "core/pair.h"
-#include "core/print_string.h"
 #include "core/project_settings.h"
 #include "editor/array_property_edit.h"
 #include "editor/create_dialog.h"
@@ -26,12 +25,10 @@
 #include "editor/editor_scale.h"
 #include "editor/editor_settings.h"
 #include "editor/filesystem_dock.h"
-#include "editor/multi_node_edit.h"
 #include "editor/property_selector.h"
 #include "scene/gui/label.h"
 #include "scene/main/viewport.h"
-#include "scene/resources/font.h"
-#include "scene/resources/packed_scene.h"
+#include "scene/resources/fonts/font.h"
 #include "scene/scene_string_names.h"
 
 void EditorResourceConversionPlugin::_bind_methods() {

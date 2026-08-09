@@ -12,7 +12,7 @@
 #include "editor_node.h"
 #include "editor_scale.h"
 #include "filesystem_dock.h"
-#include "scene/resources/font.h"
+#include "scene/resources/fonts/font.h"
 #include "servers/audio_server.h"
 
 void EditorAudioBus::_update_visible_channels() {

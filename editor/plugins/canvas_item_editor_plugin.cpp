@@ -8,7 +8,6 @@
 
 #include "core/os/input.h"
 #include "core/os/keyboard.h"
-#include "core/print_string.h"
 #include "core/project_settings.h"
 #include "editor/editor_node.h"
 #include "editor/editor_scale.h"
@@ -27,7 +26,7 @@
 #include "scene/gui/viewport_container.h"
 #include "scene/main/canvas_layer.h"
 #include "scene/main/viewport.h"
-#include "scene/resources/dynamic_font.h"
+#include "scene/resources/fonts/dynamic_font.h"
 #include "scene/resources/packed_scene.h"
 
 #include <stdlib.h>

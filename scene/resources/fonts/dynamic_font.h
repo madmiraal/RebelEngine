@@ -14,7 +14,7 @@
 #include "core/os/mutex.h"
 #include "core/os/thread_safe.h"
 #include "core/pair.h"
-#include "scene/resources/font.h"
+#include "scene/resources/fonts/font.h"
 
 #include <ft2build.h>
 #include FT_FREETYPE_H

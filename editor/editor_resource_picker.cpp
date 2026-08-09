@@ -12,7 +12,7 @@
 #include "editor_settings.h"
 #include "filesystem_dock.h"
 #include "scene/main/viewport.h"
-#include "scene/resources/dynamic_font.h"
+#include "scene/resources/fonts/dynamic_font.h"
 
 HashMap<StringName, List<StringName>> EditorResourcePicker::allowed_types_cache;
 
