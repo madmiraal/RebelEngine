@@ -546,7 +546,7 @@ void AnimationTreePlayerEditor::_draw_node(const StringName& p_node) {
         ),
         bx
     );
-    font->draw_halign(
+    font->draw_horizontal_align(
         ci,
         ofs + ascofs,
         HALIGN_CENTER,
@@ -556,7 +556,14 @@ void AnimationTreePlayerEditor::_draw_node(const StringName& p_node) {
     );
 
     ofs.y += h;
-    font->draw_halign(ci, ofs + ascofs, HALIGN_CENTER, w, p_node, font_color);
+    font->draw_horizontal_align(
+        ci,
+        ofs + ascofs,
+        HALIGN_CENTER,
+        w,
+        p_node,
+        font_color
+    );
     ofs.y += h;
 
     int inputs = anim_tree->node_get_input_count(p_node);
@@ -662,7 +669,7 @@ void AnimationTreePlayerEditor::_draw_node(const StringName& p_node) {
                 text = anim->get_name();
             }
 
-            font->draw_halign(
+            font->draw_horizontal_align(
                 ci,
                 ofs + ascofs,
                 HALIGN_CENTER,
@@ -679,7 +686,7 @@ void AnimationTreePlayerEditor::_draw_node(const StringName& p_node) {
         case AnimationTreePlayer::NODE_BLEND4:
         case AnimationTreePlayer::NODE_TIMESCALE:
         case AnimationTreePlayer::NODE_TRANSITION: {
-            font->draw_halign(
+            font->draw_horizontal_align(
                 ci,
                 ofs + ascofs,
                 HALIGN_CENTER,
