@@ -118,7 +118,10 @@
 #include "scene/resources/convex_polygon_shape_2d.h"
 #include "scene/resources/cylinder_shape.h"
 #include "scene/resources/default_theme/default_theme.h"
+#include "scene/resources/fonts/bitmap_font.h"
+#include "scene/resources/fonts/bitmap_font_resource_format_loader.h"
 #include "scene/resources/fonts/dynamic_font.h"
+#include "scene/resources/fonts/dynamic_font_data.h"
 #include "scene/resources/gradient.h"
 #include "scene/resources/height_map_shape.h"
 #include "scene/resources/line_shape_2d.h"
@@ -199,6 +202,7 @@ static Ref<ResourceFormatSaverText> resource_saver_text;
 static Ref<ResourceFormatLoaderText> resource_loader_text;
 
 #ifdef MODULE_FREETYPE_ENABLED
+#include "scene/resources/fonts/dynamic_font_resource_format_loader.cpp"
 static Ref<ResourceFormatLoaderDynamicFont> resource_loader_dynamic_font;
 #endif // MODULE_FREETYPE_ENABLED
 
