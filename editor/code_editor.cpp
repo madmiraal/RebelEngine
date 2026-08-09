@@ -12,9 +12,7 @@
 #include "editor/editor_scale.h"
 #include "editor_node.h"
 #include "editor_settings.h"
-#include "scene/gui/margin_container.h"
-#include "scene/gui/separator.h"
-#include "scene/resources/dynamic_font.h"
+#include "scene/resources/fonts/dynamic_font.h"
 
 void GotoLineDialog::popup_find_line(TextEdit* p_edit) {
     text_editor = p_edit;

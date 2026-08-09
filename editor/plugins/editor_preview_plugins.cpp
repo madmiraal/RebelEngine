@@ -6,14 +6,12 @@
 
 #include "editor_preview_plugins.h"
 
-#include "core/io/file_access_memory.h"
 #include "core/io/resource_loader.h"
 #include "core/os/os.h"
 #include "editor/editor_node.h"
-#include "editor/editor_scale.h"
 #include "editor/editor_settings.h"
 #include "scene/resources/bit_map.h"
-#include "scene/resources/dynamic_font.h"
+#include "scene/resources/fonts/dynamic_font.h"
 #include "scene/resources/material.h"
 #include "scene/resources/mesh.h"
 #include "servers/audio/audio_stream.h"

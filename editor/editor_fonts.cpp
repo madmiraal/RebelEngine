@@ -11,7 +11,7 @@
 #include "editor_scale.h"
 #include "editor_settings.h"
 #include "scene/resources/default_theme/default_theme.h"
-#include "scene/resources/dynamic_font.h"
+#include "scene/resources/fonts/dynamic_font.h"
 
 static void configure_dynamic_font_data(
     Ref<DynamicFontData>& font_data,
