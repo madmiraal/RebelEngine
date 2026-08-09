@@ -49,7 +49,7 @@ void ProgressBar::_notification(int p_what) {
 
         if (percent_visible) {
             String txt = itos(int(get_as_ratio() * 100)) + "%";
-            font->draw_halign(
+            font->draw_horizontal_align(
                 get_canvas_item(),
                 Point2(
                     0,

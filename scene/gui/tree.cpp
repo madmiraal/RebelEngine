@@ -3646,7 +3646,7 @@ void Tree::_notification(int p_what) {
                 ofs2       += tbrect.size.width;
                 // text
                 int clip_w  = tbrect.size.width - sb->get_minimum_size().width;
-                f->draw_halign(
+                f->draw_horizontal_align(
                     ci,
                     tbrect.position
                         + Point2i(
