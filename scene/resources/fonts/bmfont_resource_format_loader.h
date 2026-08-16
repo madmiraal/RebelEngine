@@ -4,21 +4,21 @@
 //
 // SPDX-License-Identifier: MIT
 
-#ifndef BITMAP_FONT_RESOURCE_FORMAT_LOADER_H
-#define BITMAP_FONT_RESOURCE_FORMAT_LOADER_H
+#ifndef BMFONT_RESOURCE_FORMAT_LOADER_H
+#define BMFONT_RESOURCE_FORMAT_LOADER_H
 
 #include "core/io/resource_loader.h"
 
 class ResourceFormatLoaderBMFont : public ResourceFormatLoader {
 public:
+    void get_recognized_extensions(List<String>* extensions) const override;
+    String get_resource_type(const String& path) const override;
+    bool handles_type(const String& type_name) const override;
     RES load(
         const String& p_path,
         const String& p_original_path = "",
-        Error* r_error                = nullptr
+        Error* error                  = nullptr
     ) override;
-    void get_recognized_extensions(List<String>* p_extensions) const override;
-    bool handles_type(const String& p_type) const override;
-    String get_resource_type(const String& p_path) const override;
 };
 
-#endif // BITMAP_FONT_RESOURCE_FORMAT_LOADER_H
+#endif // BMFONT_RESOURCE_FORMAT_LOADER_H
