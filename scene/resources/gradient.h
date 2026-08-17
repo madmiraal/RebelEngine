@@ -39,7 +39,7 @@ protected:
 
 public:
     Gradient();
-    virtual ~Gradient();
+    ~Gradient() override;
 
     void add_point(float p_offset, const Color& p_color);
     void remove_point(int p_index);

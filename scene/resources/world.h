@@ -58,7 +58,7 @@ public:
     PhysicsDirectSpaceState* get_direct_space_state();
 
     World();
-    ~World();
+    ~World() override;
 };
 
 #endif // WORLD_H

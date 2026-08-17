@@ -4,8 +4,8 @@
 //
 // SPDX-License-Identifier: MIT
 
-#ifndef BACKBUFFERCOPY_H
-#define BACKBUFFERCOPY_H
+#ifndef BACK_BUFFER_COPY_H
+#define BACK_BUFFER_COPY_H
 
 #include "scene/2d/node_2d.h"
 
@@ -30,21 +30,21 @@ protected:
 
 public:
 #ifdef TOOLS_ENABLED
-    Rect2 _edit_get_rect() const;
-    virtual bool _edit_use_rect() const;
-#endif
+    Rect2 _edit_get_rect() const override;
+    bool _edit_use_rect() const override;
+#endif // TOOLS_ENABLED
 
     void set_rect(const Rect2& p_rect);
     Rect2 get_rect() const;
-    Rect2 get_anchorable_rect() const;
+    Rect2 get_anchorable_rect() const override;
 
     void set_copy_mode(CopyMode p_mode);
     CopyMode get_copy_mode() const;
 
     BackBufferCopy();
-    ~BackBufferCopy();
+    ~BackBufferCopy() override;
 };
 
 VARIANT_ENUM_CAST(BackBufferCopy::CopyMode);
 
-#endif // BACKBUFFERCOPY_H
+#endif // BACK_BUFFER_COPY_H

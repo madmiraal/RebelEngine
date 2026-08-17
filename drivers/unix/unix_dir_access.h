@@ -26,47 +26,46 @@ class UnixDirAccess : public DirAccess {
     bool _cishidden;
 
 protected:
-    virtual String fix_unicode_name(const char* p_name) const {
+    String fix_unicode_name(const char* p_name) const {
         return String::utf8(p_name);
     }
 
-    virtual bool is_hidden(const String& p_name);
+    bool is_hidden(const String& p_name);
 
 public:
-    virtual Error list_dir_begin(); ///< This starts dir listing
-    virtual String get_next();
-    virtual bool current_is_dir() const;
-    virtual bool current_is_hidden() const;
+    Error list_dir_begin() override;
+    String get_next() override;
+    bool current_is_dir() const override;
+    bool current_is_hidden() const override;
 
-    virtual void list_dir_end(); ///<
+    void list_dir_end() override;
 
-    virtual int get_drive_count();
-    virtual String get_drive(int p_drive);
-    virtual bool drives_are_shortcuts();
+    int get_drive_count() override;
+    String get_drive(int p_drive) override;
+    bool drives_are_shortcuts() override;
 
-    virtual Error change_dir(String p_dir
-    ); ///< can be relative or absolute, return false on success
-    virtual String get_current_dir(); ///< return current dir location
-    virtual Error make_dir(String p_dir);
+    Error change_dir(String p_dir) override;
+    String get_current_dir() override;
+    Error make_dir(String p_dir) override;
 
-    virtual bool file_exists(String p_file);
-    virtual bool dir_exists(String p_dir);
+    bool file_exists(String p_file) override;
+    bool dir_exists(String p_dir) override;
 
-    virtual uint64_t get_modified_time(String p_file);
+    uint64_t get_modified_time(String p_file);
 
-    virtual Error rename(String p_path, String p_new_path);
-    virtual Error remove(String p_path);
+    Error rename(String p_path, String p_new_path) override;
+    Error remove(String p_path) override;
 
-    virtual bool is_link(String p_file);
-    virtual String read_link(String p_file);
-    virtual Error create_link(String p_source, String p_target);
+    bool is_link(String p_file) override;
+    String read_link(String p_file) override;
+    Error create_link(String p_source, String p_target) override;
 
-    virtual uint64_t get_space_left();
+    uint64_t get_space_left() override;
 
-    virtual String get_filesystem_type() const;
+    String get_filesystem_type() const override;
 
     UnixDirAccess();
-    ~UnixDirAccess();
+    ~UnixDirAccess() override;
 };
 
 #endif // UNIX_ENABLED

@@ -203,7 +203,7 @@ private:
             next = nullptr;
         }
 
-        virtual ~ENode() {
+        ~ENode() {
             if (next) {
                 memdelete(next);
             }
@@ -354,7 +354,7 @@ public:
     String get_error_text() const;
 
     Expression();
-    ~Expression();
+    ~Expression() override;
 };
 
 #endif // EXPRESSION_H

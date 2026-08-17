@@ -4,8 +4,8 @@
 //
 // SPDX-License-Identifier: MIT
 
-#ifndef EMWSSERVER_H
-#define EMWSSERVER_H
+#ifndef EMWS_SERVER_H
+#define EMWS_SERVER_H
 
 #ifdef WEB_ENABLED
 
@@ -22,31 +22,28 @@ public:
         int p_in_packets,
         int p_out_buffer,
         int p_out_packets
-    );
+    ) override;
     Error listen(
         int p_port,
         Vector<String> p_protocols = Vector<String>(),
         bool gd_mp_api             = false
-    );
-    void stop();
-    bool is_listening() const;
-    bool has_peer(int p_id) const;
-    Ref<WebSocketPeer> get_peer(int p_id) const;
-    IP_Address get_peer_address(int p_peer_id) const;
-    int get_peer_port(int p_peer_id) const;
-    void disconnect_peer(
-        int p_peer_id,
-        int p_code      = 1000,
-        String p_reason = ""
-    );
-    int get_max_packet_size() const;
-    virtual void poll();
+    ) override;
+    void stop() override;
+    bool is_listening() const override;
+    bool has_peer(int p_id) const override;
+    Ref<WebSocketPeer> get_peer(int p_id) const override;
+    IP_Address get_peer_address(int p_peer_id) const override;
+    int get_peer_port(int p_peer_id) const override;
+    void disconnect_peer(int p_peer_id, int p_code = 1000, String p_reason = "")
+        override;
+    int get_max_packet_size() const override;
+    void poll() override;
     virtual PoolVector<String> get_protocols() const;
 
     EMWSServer();
-    ~EMWSServer();
+    ~EMWSServer() override;
 };
 
-#endif
+#endif // WEB_ENABLED
 
-#endif // LWSSERVER_H
+#endif // EMWS_SERVER_H

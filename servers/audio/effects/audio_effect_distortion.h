@@ -4,8 +4,8 @@
 //
 // SPDX-License-Identifier: MIT
 
-#ifndef AUDIOEFFECTDISTORTION_H
-#define AUDIOEFFECTDISTORTION_H
+#ifndef AUDIO_EFFECT_DISTORTION_H
+#define AUDIO_EFFECT_DISTORTION_H
 
 #include "servers/audio/audio_effect.h"
 
@@ -18,11 +18,11 @@ class AudioEffectDistortionInstance : public AudioEffectInstance {
     float h[2];
 
 public:
-    virtual void process(
+    void process(
         const AudioFrame* p_src_frames,
         AudioFrame* p_dst_frames,
         int p_frame_count
-    );
+    ) override;
 };
 
 class AudioEffectDistortion : public AudioEffect {
@@ -48,7 +48,7 @@ protected:
     static void _bind_methods();
 
 public:
-    Ref<AudioEffectInstance> instance();
+    Ref<AudioEffectInstance> instance() override;
 
     void set_mode(Mode p_mode);
     Mode get_mode() const;
@@ -70,4 +70,4 @@ public:
 
 VARIANT_ENUM_CAST(AudioEffectDistortion::Mode)
 
-#endif // AUDIOEFFECTDISTORTION_H
+#endif // AUDIO_EFFECT_DISTORTION_H

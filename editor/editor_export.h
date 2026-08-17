@@ -120,7 +120,7 @@ struct SharedObject {
         path(p_path),
         tags(p_tags) {}
 
-    SharedObject() {}
+    SharedObject() = default;
 };
 
 class EditorExportPlatform : public Reference {
@@ -241,7 +241,7 @@ public:
             option(p_info),
             default_value(p_default) {}
 
-        ExportOption() {}
+        ExportOption() = default;
     };
 
     virtual Ref<EditorExportPreset> create_preset();
@@ -514,7 +514,7 @@ public:
     bool poll_export_platforms();
 
     EditorExport();
-    ~EditorExport();
+    ~EditorExport() override;
 };
 
 class EditorExportPlatformPC : public EditorExportPlatform {
@@ -545,31 +545,30 @@ private:
     FixUpEmbeddedPckFunc fixup_embedded_pck_func;
 
 public:
-    virtual void get_preset_features(
+    void get_preset_features(
         const Ref<EditorExportPreset>& p_preset,
         List<String>* r_features
-    );
+    ) override;
 
-    virtual void get_export_options(List<ExportOption>* r_options);
+    void get_export_options(List<ExportOption>* r_options) override;
 
-    virtual String get_name() const;
-    virtual String get_os_name() const;
-    virtual Ref<Texture> get_logo() const;
+    String get_name() const override;
+    String get_os_name() const override;
+    Ref<Texture> get_logo() const override;
 
-    virtual bool can_export(
+    bool can_export(
         const Ref<EditorExportPreset>& p_preset,
         String& r_error,
         bool& r_missing_templates
-    ) const;
-    virtual List<String> get_binary_extensions(
-        const Ref<EditorExportPreset>& p_preset
-    ) const;
-    virtual Error export_project(
+    ) const override;
+    List<String> get_binary_extensions(const Ref<EditorExportPreset>& p_preset
+    ) const override;
+    Error export_project(
         const Ref<EditorExportPreset>& p_preset,
         bool p_debug,
         const String& p_path,
         int p_flags = 0
-    );
+    ) override;
     virtual Error sign_shared_object(
         const Ref<EditorExportPreset>& p_preset,
         bool p_debug,
@@ -591,11 +590,11 @@ public:
     void set_debug_32(const String& p_file);
 
     void add_platform_feature(const String& p_feature);
-    virtual void get_platform_features(List<String>* r_features);
-    virtual void resolve_platform_feature_priorities(
+    void get_platform_features(List<String>* r_features) override;
+    void resolve_platform_feature_priorities(
         const Ref<EditorExportPreset>& p_preset,
         Set<String>& p_features
-    );
+    ) override;
 
     int get_chmod_flags() const;
     void set_chmod_flags(int p_flags);
@@ -612,12 +611,12 @@ class EditorExportTextSceneToBinaryPlugin : public EditorExportPlugin {
     GDCLASS(EditorExportTextSceneToBinaryPlugin, EditorExportPlugin);
 
 public:
-    virtual void _export_file(
+    void _export_file(
         const String& p_path,
         const String& p_type,
         const Set<String>& p_features
-    );
+    ) override;
     EditorExportTextSceneToBinaryPlugin();
 };
 
-#endif // EDITOR_IMPORT_EXPORT_H
+#endif // EDITOR_EXPORT_H

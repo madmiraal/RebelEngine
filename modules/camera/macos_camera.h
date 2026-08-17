@@ -16,7 +16,7 @@
 class MacOSCamera : public CameraServer {
 public:
     MacOSCamera();
-    ~MacOSCamera();
+    ~MacOSCamera() override;
 
     void update_feeds();
 };

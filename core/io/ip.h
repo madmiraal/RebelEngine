@@ -92,7 +92,7 @@ public:
     static IP* create();
 
     IP();
-    ~IP();
+    ~IP() override;
 };
 
 VARIANT_ENUM_CAST(IP::Type);

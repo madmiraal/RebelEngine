@@ -2040,7 +2040,7 @@ public:
     void set_render_loop_enabled(bool p_enabled);
 
     VisualServer();
-    virtual ~VisualServer();
+    ~VisualServer() override;
 };
 
 // make variant understand the enums

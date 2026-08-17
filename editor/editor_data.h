@@ -115,8 +115,6 @@ private:
     List<PropertyData> clipboard;
     UndoRedo undo_redo;
 
-    void _cleanup_history();
-
     Vector<EditedScene> edited_scene;
     int current_edited_scene;
 
@@ -292,7 +290,7 @@ public:
     }
 
     EditorSelection();
-    ~EditorSelection();
+    ~EditorSelection() override;
 };
 
 #endif // EDITOR_DATA_H

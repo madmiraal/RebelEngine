@@ -178,14 +178,6 @@ private:
 
     } data;
 
-    // used internally
-    Control* _find_control_at_pos(
-        CanvasItem* p_node,
-        const Point2& p_pos,
-        const Transform2D& p_xform,
-        Transform2D& r_inv_xform
-    );
-
     void _window_find_focus_neighbour(
         const Vector2& p_dir,
         Node* p_at,
@@ -241,10 +233,8 @@ private:
     void _update_minimum_size_cache();
 
 protected:
-    virtual void add_child_notify(Node* p_child);
-    virtual void remove_child_notify(Node* p_child);
-
-    // virtual void _window_gui_input(InputEvent p_event);
+    void add_child_notify(Node* p_child) override;
+    void remove_child_notify(Node* p_child) override;
 
     bool _set(const StringName& p_name, const Variant& p_value);
     bool _get(const StringName& p_name, Variant& r_ret) const;
@@ -273,29 +263,29 @@ public:
 
     /* EDITOR */
 #ifdef TOOLS_ENABLED
-    virtual Dictionary _edit_get_state() const;
-    virtual void _edit_set_state(const Dictionary& p_state);
+    Dictionary _edit_get_state() const override;
+    void _edit_set_state(const Dictionary& p_state) override;
 
-    virtual void _edit_set_position(const Point2& p_position);
-    virtual Point2 _edit_get_position() const;
+    void _edit_set_position(const Point2& p_position) override;
+    Point2 _edit_get_position() const override;
 
-    virtual void _edit_set_scale(const Size2& p_scale);
-    virtual Size2 _edit_get_scale() const;
+    void _edit_set_scale(const Size2& p_scale) override;
+    Size2 _edit_get_scale() const override;
 
-    virtual void _edit_set_rect(const Rect2& p_edit_rect);
-    virtual Rect2 _edit_get_rect() const;
-    virtual bool _edit_use_rect() const;
+    void _edit_set_rect(const Rect2& p_edit_rect) override;
+    Rect2 _edit_get_rect() const override;
+    bool _edit_use_rect() const override;
 
-    virtual void _edit_set_rotation(float p_rotation);
-    virtual float _edit_get_rotation() const;
-    virtual bool _edit_use_rotation() const;
+    void _edit_set_rotation(float p_rotation) override;
+    float _edit_get_rotation() const override;
+    bool _edit_use_rotation() const override;
 
-    virtual void _edit_set_pivot(const Point2& p_pivot);
-    virtual Point2 _edit_get_pivot() const;
-    virtual bool _edit_use_pivot() const;
+    void _edit_set_pivot(const Point2& p_pivot) override;
+    Point2 _edit_get_pivot() const override;
+    bool _edit_use_pivot() const override;
 
-    virtual Size2 _edit_get_minimum_size() const;
-#endif
+    Size2 _edit_get_minimum_size() const override;
+#endif // TOOLS_ENABLED
 
     void accept_event();
 
@@ -372,7 +362,7 @@ public:
     Rect2 get_global_rect() const;
     Rect2 get_window_rect(
     ) const; ///< use with care, as it blocks waiting for the visual server
-    Rect2 get_anchorable_rect() const;
+    Rect2 get_anchorable_rect() const override;
 
     void set_rotation(float p_radians);
     void set_rotation_degrees(float p_degrees);
@@ -523,7 +513,7 @@ public:
     CursorShape get_default_cursor_shape() const;
     virtual CursorShape get_cursor_shape(const Point2& p_pos = Point2i()) const;
 
-    virtual Transform2D get_transform() const;
+    Transform2D get_transform() const override;
 
     bool is_toplevel_control() const;
 
@@ -547,15 +537,15 @@ public:
     void set_disable_visibility_clip(bool p_ignore);
     bool is_visibility_clip_disabled() const;
 
-    virtual void get_argument_options(
+    void get_argument_options(
         const StringName& p_function,
         int p_idx,
         List<String>* r_options
-    ) const;
-    virtual String get_configuration_warning() const;
+    ) const override;
+    String get_configuration_warning() const override;
 
     Control();
-    ~Control();
+    ~Control() override;
 };
 
 VARIANT_ENUM_CAST(Control::FocusMode);

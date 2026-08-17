@@ -4,8 +4,8 @@
 //
 // SPDX-License-Identifier: MIT
 
-#ifndef AUDIOEFFECTPANNER_H
-#define AUDIOEFFECTPANNER_H
+#ifndef AUDIO_EFFECT_PANNER_H
+#define AUDIO_EFFECT_PANNER_H
 
 #include "servers/audio/audio_effect.h"
 
@@ -17,11 +17,11 @@ class AudioEffectPannerInstance : public AudioEffectInstance {
     Ref<AudioEffectPanner> base;
 
 public:
-    virtual void process(
+    void process(
         const AudioFrame* p_src_frames,
         AudioFrame* p_dst_frames,
         int p_frame_count
-    );
+    ) override;
 };
 
 class AudioEffectPanner : public AudioEffect {
@@ -34,11 +34,11 @@ protected:
     static void _bind_methods();
 
 public:
-    Ref<AudioEffectInstance> instance();
+    Ref<AudioEffectInstance> instance() override;
     void set_pan(float p_cpanume);
     float get_pan() const;
 
     AudioEffectPanner();
 };
 
-#endif // AUDIOEFFECTPANNER_H
+#endif // AUDIO_EFFECT_PANNER_H

@@ -4,8 +4,8 @@
 //
 // SPDX-License-Identifier: MIT
 
-#ifndef WSLPEER_H
-#define WSLPEER_H
+#ifndef WSL_PEER_H
+#define WSL_PEER_H
 
 #ifndef WEB_ENABLED
 
@@ -73,26 +73,26 @@ public:
     String close_reason;
     void poll(); // Used by client and server.
 
-    virtual int get_available_packet_count() const;
-    virtual Error get_packet(const uint8_t** r_buffer, int& r_buffer_size);
-    virtual Error put_packet(const uint8_t* p_buffer, int p_buffer_size);
+    int get_available_packet_count() const override;
+    Error get_packet(const uint8_t** r_buffer, int& r_buffer_size) override;
+    Error put_packet(const uint8_t* p_buffer, int p_buffer_size) override;
 
-    virtual int get_max_packet_size() const {
+    int get_max_packet_size() const override {
         return _packet_buffer.size();
     };
 
-    virtual int get_current_outbound_buffered_amount() const;
+    int get_current_outbound_buffered_amount() const override;
 
-    virtual void close_now();
-    virtual void close(int p_code = 1000, String p_reason = "");
-    virtual bool is_connected_to_host() const;
-    virtual IP_Address get_connected_host() const;
-    virtual uint16_t get_connected_port() const;
+    void close_now();
+    void close(int p_code = 1000, String p_reason = "") override;
+    bool is_connected_to_host() const override;
+    IP_Address get_connected_host() const override;
+    uint16_t get_connected_port() const override;
 
-    virtual WriteMode get_write_mode() const;
-    virtual void set_write_mode(WriteMode p_mode);
-    virtual bool was_string_packet() const;
-    virtual void set_no_delay(bool p_enabled);
+    WriteMode get_write_mode() const override;
+    void set_write_mode(WriteMode p_mode) override;
+    bool was_string_packet() const override;
+    void set_no_delay(bool p_enabled) override;
 
     void make_context(
         PeerData* p_data,
@@ -105,9 +105,9 @@ public:
     void invalidate();
 
     WSLPeer();
-    ~WSLPeer();
+    ~WSLPeer() override;
 };
 
 #endif // WEB_ENABLED
 
-#endif // LSWPEER_H
+#endif // WSL_PEER_H

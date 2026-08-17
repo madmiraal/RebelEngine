@@ -42,7 +42,7 @@ public:
     };
 
     Room();
-    ~Room();
+    ~Room() override;
 
     void set_room_simplify(real_t p_value);
 
@@ -66,7 +66,7 @@ public:
     // editor only
     PoolVector<Vector3> generate_points();
 
-    String get_configuration_warning() const;
+    String get_configuration_warning() const override;
 
 private:
     // call during each conversion

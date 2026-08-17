@@ -85,7 +85,7 @@ protected:
     void _get_property_list(List<PropertyInfo>* p_list) const;
 
 public:
-    bool has_point(const Point2& p_point) const;
+    bool has_point(const Point2& p_point) const override;
 
     void set_slot(
         int p_idx,
@@ -152,7 +152,7 @@ public:
     void set_resizable(bool p_enable);
     bool is_resizable() const;
 
-    virtual Size2 get_minimum_size() const;
+    Size2 get_minimum_size() const override;
 
     bool is_resizing() const {
         return resizing;

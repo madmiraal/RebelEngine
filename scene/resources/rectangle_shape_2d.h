@@ -22,8 +22,8 @@ public:
     void set_extents(const Vector2& p_extents);
     Vector2 get_extents() const;
 
-    virtual void draw(const RID& p_to_rid, const Color& p_color);
-    virtual Rect2 get_rect() const;
+    void draw(const RID& p_to_rid, const Color& p_color) override;
+    Rect2 get_rect() const override;
 
     RectangleShape2D();
 };

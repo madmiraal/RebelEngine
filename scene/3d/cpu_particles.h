@@ -170,11 +170,11 @@ private:
 protected:
     static void _bind_methods();
     void _notification(int p_what);
-    virtual void _validate_property(PropertyInfo& property) const;
+    void _validate_property(PropertyInfo& property) const override;
 
 public:
-    AABB get_aabb() const;
-    PoolVector<Face3> get_faces(uint32_t p_usage_flags) const;
+    AABB get_aabb() const override;
+    PoolVector<Face3> get_faces(uint32_t p_usage_flags) const override;
 
     void set_emitting(bool p_emitting);
     void set_amount(int p_amount);
@@ -184,7 +184,6 @@ public:
     void set_explosiveness_ratio(float p_ratio);
     void set_randomness_ratio(float p_ratio);
     void set_lifetime_randomness(float p_random);
-    void set_visibility_aabb(const AABB& p_aabb);
     void set_use_local_coordinates(bool p_enable);
     void set_speed_scale(float p_scale);
 
@@ -196,7 +195,6 @@ public:
     float get_explosiveness_ratio() const;
     float get_randomness_ratio() const;
     float get_lifetime_randomness() const;
-    AABB get_visibility_aabb() const;
     bool get_use_local_coordinates() const;
     float get_speed_scale() const;
 
@@ -262,7 +260,6 @@ public:
     PoolVector<Vector3> get_emission_points() const;
     PoolVector<Vector3> get_emission_normals() const;
     PoolVector<Color> get_emission_colors() const;
-    int get_emission_point_count() const;
     float get_emission_ring_height() const;
     float get_emission_ring_inner_radius() const;
     float get_emission_ring_radius() const;
@@ -271,14 +268,14 @@ public:
     void set_gravity(const Vector3& p_gravity);
     Vector3 get_gravity() const;
 
-    virtual String get_configuration_warning() const;
+    String get_configuration_warning() const override;
 
     void restart();
 
     void convert_from_particles(Node* p_particles);
 
     CPUParticles();
-    ~CPUParticles();
+    ~CPUParticles() override;
 };
 
 VARIANT_ENUM_CAST(CPUParticles::DrawOrder)

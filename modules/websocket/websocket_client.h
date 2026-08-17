@@ -36,7 +36,7 @@ public:
     Ref<X509Certificate> get_trusted_ssl_certificate() const;
     void set_trusted_ssl_certificate(Ref<X509Certificate> p_cert);
 
-    virtual void poll() = 0;
+    void poll() override = 0;
     virtual Error connect_to_host(
         String p_host,
         String p_path,
@@ -52,8 +52,8 @@ public:
     virtual IP_Address get_connected_host() const = 0;
     virtual uint16_t get_connected_port() const   = 0;
 
-    virtual bool is_server() const;
-    virtual ConnectionStatus get_connection_status() const = 0;
+    bool is_server() const override;
+    ConnectionStatus get_connection_status() const override = 0;
 
     void _on_peer_packet();
     void _on_connect(String p_protocol);
@@ -61,15 +61,15 @@ public:
     void _on_disconnect(bool p_was_clean);
     void _on_error();
 
-    virtual Error set_buffers(
+    Error set_buffers(
         int p_in_buffer,
         int p_in_packets,
         int p_out_buffer,
         int p_out_packets
-    ) = 0;
+    ) override = 0;
 
     WebSocketClient();
-    ~WebSocketClient();
+    ~WebSocketClient() override;
 };
 
 #endif // WEBSOCKET_CLIENT_H

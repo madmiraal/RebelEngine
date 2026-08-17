@@ -9,7 +9,7 @@
 
 #ifdef ANDROID_ENABLED
 #include "../android_java_class.h"
-#else // ! ANDROID_ENABLED
+#else // !ANDROID_ENABLED
 
 #include "core/reference.h"
 
@@ -17,12 +17,12 @@ class JavaClass : public Reference {
     GDCLASS(JavaClass, Reference);
 
 public:
-    virtual Variant call(
+    Variant call(
         const StringName& p_method,
         const Variant** p_args,
         int p_argcount,
         Variant::CallError& r_error
-    );
+    ) override;
     JavaClass();
 };
 
@@ -30,12 +30,12 @@ class JavaObject : public Reference {
     GDCLASS(JavaObject, Reference);
 
 public:
-    virtual Variant call(
+    Variant call(
         const StringName& p_method,
         const Variant** p_args,
         int p_argcount,
         Variant::CallError& r_error
-    );
+    ) override;
 };
 
 class JavaClassWrapper : public Object {
@@ -54,6 +54,6 @@ public:
     JavaClassWrapper();
 };
 
-#endif // ! ANDROID_ENABLED
+#endif // !ANDROID_ENABLED
 
 #endif // JAVA_CLASS_H

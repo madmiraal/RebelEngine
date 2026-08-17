@@ -4,8 +4,8 @@
 //
 // SPDX-License-Identifier: MIT
 
-#ifndef GRID_THEME_H
-#define GRID_THEME_H
+#ifndef MESH_LIBRARY_H
+#define MESH_LIBRARY_H
 
 #include "core/map.h"
 #include "core/resource.h"
@@ -73,7 +73,7 @@ public:
     int get_last_unused_item_id() const;
 
     MeshLibrary();
-    ~MeshLibrary();
+    ~MeshLibrary() override;
 };
 
-#endif // CUBE_GRID_THEME_H
+#endif // MESH_LIBRARY_H

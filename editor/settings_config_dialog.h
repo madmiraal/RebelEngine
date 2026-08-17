@@ -40,8 +40,8 @@ class EditorSettingsDialog : public AcceptDialog {
     String shortcut_configured;
     String shortcut_filter;
 
-    virtual void cancel_pressed();
-    virtual void ok_pressed();
+    void cancel_pressed() override;
+    void ok_pressed() override;
 
     void _settings_changed();
     void _settings_property_edited(const String& p_name);
@@ -56,9 +56,6 @@ class EditorSettingsDialog : public AcceptDialog {
 
     void _tabs_tab_changed(int p_tab);
     void _focus_current_search_box();
-
-    void _clear_shortcut_search_box();
-    void _clear_search_box();
 
     void _filter_shortcuts(const String& p_filter);
 
@@ -83,7 +80,7 @@ public:
     void popup_edit_settings();
 
     EditorSettingsDialog();
-    ~EditorSettingsDialog();
+    ~EditorSettingsDialog() override;
 };
 
 #endif // SETTINGS_CONFIG_DIALOG_H

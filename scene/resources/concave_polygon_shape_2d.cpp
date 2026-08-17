@@ -9,6 +9,7 @@
 #include "servers/physics_2d_server.h"
 #include "servers/visual_server.h"
 
+#ifdef TOOLS_ENABLED
 bool ConcavePolygonShape2D::_edit_is_selected_on_click(
     const Point2& p_point,
     double p_tolerance
@@ -30,6 +31,7 @@ bool ConcavePolygonShape2D::_edit_is_selected_on_click(
 
     return false;
 }
+#endif // TOOLS_ENABLED
 
 void ConcavePolygonShape2D::set_segments(const PoolVector<Vector2>& p_segments
 ) {

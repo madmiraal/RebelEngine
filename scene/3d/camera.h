@@ -70,7 +70,7 @@ protected:
     void _update_camera_mode();
 
     void _notification(int p_what);
-    virtual void _validate_property(PropertyInfo& p_property) const;
+    void _validate_property(PropertyInfo& p_property) const override;
 
     static void _bind_methods();
 
@@ -149,7 +149,7 @@ public:
     Vector3 get_doppler_tracked_velocity() const;
 
     Camera();
-    ~Camera();
+    ~Camera() override;
 };
 
 VARIANT_ENUM_CAST(Camera::Projection);
@@ -181,7 +181,7 @@ private:
 protected:
     void _notification(int p_what);
     static void _bind_methods();
-    virtual Transform get_camera_transform() const;
+    Transform get_camera_transform() const override;
 
 public:
     void set_clip_to_areas(bool p_clip);
@@ -211,7 +211,7 @@ public:
     float get_clip_offset() const;
 
     ClippedCamera();
-    ~ClippedCamera();
+    ~ClippedCamera() override;
 };
 
 VARIANT_ENUM_CAST(ClippedCamera::ProcessMode);

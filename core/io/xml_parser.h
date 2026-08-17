@@ -92,7 +92,7 @@ public:
     void close();
 
     XMLParser();
-    ~XMLParser();
+    ~XMLParser() override;
 };
 
 #endif

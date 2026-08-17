@@ -20,7 +20,6 @@ class ReparentDialog : public ConfirmationDialog {
     SceneTreeEditor* tree;
     CheckBox* keep_transform;
 
-    void update_tree();
     void _reparent();
     void _cancel();
 
@@ -30,10 +29,9 @@ protected:
 
 public:
     void set_current(const Set<Node*>& p_selection);
-    String get_selected_type();
 
     ReparentDialog();
-    ~ReparentDialog();
+    ~ReparentDialog() override;
 };
 
 #endif

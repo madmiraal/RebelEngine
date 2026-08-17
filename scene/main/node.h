@@ -353,7 +353,7 @@ public:
     bool is_editable_instance(const Node* p_node) const;
     Node* get_deepest_editable_node(Node* start_node) const;
 
-    virtual String to_string();
+    String to_string() override;
 
     /* NOTIFICATIONS */
 
@@ -461,7 +461,7 @@ public:
         const StringName& p_function,
         int p_idx,
         List<String>* r_options
-    ) const;
+    ) const override;
 
     void clear_internal_tree_resource_paths();
 
@@ -553,7 +553,7 @@ public:
     );
 
     Node();
-    ~Node();
+    ~Node() override;
 };
 
 VARIANT_ENUM_CAST(Node::DuplicateFlags);

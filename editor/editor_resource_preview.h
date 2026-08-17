@@ -120,7 +120,7 @@ public:
     void stop();
 
     EditorResourcePreview();
-    ~EditorResourcePreview();
+    ~EditorResourcePreview() override;
 };
 
 #endif // EDITORRESOURCEPREVIEW_H

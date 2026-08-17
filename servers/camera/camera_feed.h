@@ -73,7 +73,7 @@ public:
         String p_name,
         FeedPosition p_position = CameraFeed::FEED_UNSPECIFIED
     );
-    virtual ~CameraFeed();
+    ~CameraFeed() override;
 
     FeedDataType get_datatype() const;
     void set_RGB_img(const Ref<Image>& p_rgb_img);

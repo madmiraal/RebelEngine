@@ -65,7 +65,7 @@ public:
     real_t get_constant_angular_velocity() const;
 
     StaticBody2D();
-    ~StaticBody2D();
+    ~StaticBody2D() override;
 
 private:
     void _reload_physics_characteristics();
@@ -122,7 +122,7 @@ private:
             return body_shape < p_sp.body_shape;
         }
 
-        ShapePair() {}
+        ShapePair() = default;
 
         ShapePair(int p_bs, int p_ls) {
             body_shape  = p_bs;
@@ -249,10 +249,10 @@ public:
 
     Array get_colliding_bodies() const; // function for script
 
-    virtual String get_configuration_warning() const;
+    String get_configuration_warning() const override;
 
     RigidBody2D();
-    ~RigidBody2D();
+    ~RigidBody2D() override;
 
 private:
     void _reload_physics_characteristics();
@@ -384,7 +384,7 @@ public:
     bool is_sync_to_physics_enabled() const;
 
     KinematicBody2D();
-    ~KinematicBody2D();
+    ~KinematicBody2D() override;
 };
 
 class KinematicCollision2D : public Reference {

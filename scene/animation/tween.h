@@ -267,7 +267,7 @@ public:
     );
 
     Tween();
-    ~Tween();
+    ~Tween() override;
 };
 
 VARIANT_ENUM_CAST(Tween::TweenProcessMode);

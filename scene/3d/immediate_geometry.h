@@ -46,11 +46,11 @@ public:
         bool p_add_uv = true
     );
 
-    virtual AABB get_aabb() const;
-    virtual PoolVector<Face3> get_faces(uint32_t p_usage_flags) const;
+    AABB get_aabb() const override;
+    PoolVector<Face3> get_faces(uint32_t p_usage_flags) const override;
 
     ImmediateGeometry();
-    ~ImmediateGeometry();
+    ~ImmediateGeometry() override;
 };
 
 #endif // IMMEDIATE_GEOMETRY_H

@@ -216,7 +216,7 @@ struct CSGBrushOperation {
             bool p_from_b
         );
 
-        Build2DFaces() {}
+        Build2DFaces() = default;
 
         Build2DFaces(
             const CSGBrush& p_brush,

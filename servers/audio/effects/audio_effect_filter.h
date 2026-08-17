@@ -4,8 +4,8 @@
 //
 // SPDX-License-Identifier: MIT
 
-#ifndef AUDIOEFFECTFILTER_H
-#define AUDIOEFFECTFILTER_H
+#ifndef AUDIO_EFFECT_FILTER_H
+#define AUDIO_EFFECT_FILTER_H
 
 #include "servers/audio/audio_effect.h"
 #include "servers/audio/audio_filter_sw.h"
@@ -29,11 +29,11 @@ class AudioEffectFilterInstance : public AudioEffectInstance {
     );
 
 public:
-    virtual void process(
+    void process(
         const AudioFrame* p_src_frames,
         AudioFrame* p_dst_frames,
         int p_frame_count
-    );
+    ) override;
 
     AudioEffectFilterInstance();
 };
@@ -72,7 +72,7 @@ public:
     void set_db(FilterDB p_db);
     FilterDB get_db() const;
 
-    Ref<AudioEffectInstance> instance();
+    Ref<AudioEffectInstance> instance() override;
 
     AudioEffectFilter(AudioFilterSW::Mode p_mode = AudioFilterSW::LOWPASS);
 };
@@ -82,7 +82,7 @@ VARIANT_ENUM_CAST(AudioEffectFilter::FilterDB)
 class AudioEffectLowPassFilter : public AudioEffectFilter {
     GDCLASS(AudioEffectLowPassFilter, AudioEffectFilter);
 
-    void _validate_property(PropertyInfo& property) const {
+    void _validate_property(PropertyInfo& property) const override {
         if (property.name == "gain") {
             property.usage = 0;
         }
@@ -95,7 +95,7 @@ public:
 class AudioEffectHighPassFilter : public AudioEffectFilter {
     GDCLASS(AudioEffectHighPassFilter, AudioEffectFilter);
 
-    void _validate_property(PropertyInfo& property) const {
+    void _validate_property(PropertyInfo& property) const override {
         if (property.name == "gain") {
             property.usage = 0;
         }
@@ -108,7 +108,7 @@ public:
 class AudioEffectBandPassFilter : public AudioEffectFilter {
     GDCLASS(AudioEffectBandPassFilter, AudioEffectFilter);
 
-    void _validate_property(PropertyInfo& property) const {
+    void _validate_property(PropertyInfo& property) const override {
         if (property.name == "gain") {
             property.usage = 0;
         }
@@ -148,4 +148,4 @@ public:
         AudioEffectFilter(AudioFilterSW::HIGHSHELF) {}
 };
 
-#endif // AUDIOEFFECTFILTER_H
+#endif // AUDIO_EFFECT_FILTER_H

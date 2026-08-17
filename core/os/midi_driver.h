@@ -35,7 +35,7 @@ public:
 
     MIDIDriver();
 
-    virtual ~MIDIDriver() {}
+    virtual ~MIDIDriver() = default;
 };
 
 #endif

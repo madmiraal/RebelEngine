@@ -19,10 +19,6 @@ public:
     virtual void clear()     = 0;
     virtual void redraw()    = 0;
     virtual void free()      = 0;
-
-    SpatialGizmo();
-
-    virtual ~SpatialGizmo() {}
 };
 
 class Spatial : public Node {
@@ -128,7 +124,7 @@ public:
         NOTIFICATION_EXIT_GAMEPLAY           = 46,
     };
 
-    virtual void notification_callback(int p_message_type);
+    void notification_callback(int p_message_type) override;
     Spatial* get_parent_spatial() const;
 
     Ref<World> get_world() const;

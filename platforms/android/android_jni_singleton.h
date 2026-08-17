@@ -25,12 +25,12 @@ class JNISingleton : public Object {
     Map<StringName, MethodData> method_map;
 
 public:
-    virtual Variant call(
+    Variant call(
         const StringName& p_method,
         const Variant** p_args,
         int p_argcount,
         Variant::CallError& r_error
-    ) {
+    ) override {
         Map<StringName, MethodData>::Element* E = method_map.find(p_method);
 
         // Check the method we're looking for is in the JNISingleton map and

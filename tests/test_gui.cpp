@@ -39,7 +39,7 @@ public:
         quit();
     }
 
-    virtual void init() {
+    void init() override {
         SceneTree::init();
 
         Panel* frame = memnew(Panel);

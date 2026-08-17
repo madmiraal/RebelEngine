@@ -70,17 +70,17 @@ class MeshLibraryEditorPlugin : public EditorPlugin {
     EditorNode* editor;
 
 public:
-    virtual String get_name() const {
+    String get_name() const override {
         return "MeshLibrary";
     }
 
-    bool has_main_screen() const {
+    bool has_main_screen() const override {
         return false;
     }
 
-    virtual void edit(Object* p_node);
-    virtual bool handles(Object* p_node) const;
-    virtual void make_visible(bool p_visible);
+    void edit(Object* p_node) override;
+    bool handles(Object* p_node) const override;
+    void make_visible(bool p_visible) override;
 
     MeshLibraryEditorPlugin(EditorNode* p_node);
 };

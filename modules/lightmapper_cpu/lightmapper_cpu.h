@@ -207,18 +207,18 @@ class LightmapperCPU : public Lightmapper {
     );
 
 public:
-    virtual void add_albedo_texture(Ref<Texture> p_texture);
-    virtual void add_emission_texture(Ref<Texture> p_texture);
-    virtual void add_mesh(const MeshData& p_mesh, Vector2i p_size);
-    virtual void add_directional_light(
+    void add_albedo_texture(Ref<Texture> p_texture) override;
+    void add_emission_texture(Ref<Texture> p_texture) override;
+    void add_mesh(const MeshData& p_mesh, Vector2i p_size) override;
+    void add_directional_light(
         bool p_bake_direct,
         const Vector3& p_direction,
         const Color& p_color,
         float p_energy,
         float p_indirect_multiplier,
         float p_size
-    );
-    virtual void add_omni_light(
+    ) override;
+    void add_omni_light(
         bool p_bake_direct,
         const Vector3& p_position,
         const Color& p_color,
@@ -227,8 +227,8 @@ public:
         float p_range,
         float p_attenuation,
         float p_size
-    );
-    virtual void add_spot_light(
+    ) override;
+    void add_spot_light(
         bool p_bake_direct,
         const Vector3& p_position,
         const Vector3 p_direction,
@@ -240,8 +240,8 @@ public:
         float p_spot_angle,
         float p_spot_attenuation,
         float p_size
-    );
-    virtual BakeError bake(
+    ) override;
+    BakeError bake(
         BakeQuality p_quality,
         bool p_use_denoiser,
         int p_bounces,
@@ -254,16 +254,16 @@ public:
         BakeStepFunc p_step_function    = nullptr,
         void* p_bake_userdata           = nullptr,
         BakeStepFunc p_substep_function = nullptr
-    );
+    ) override;
 
-    int get_bake_texture_count() const;
-    Ref<Image> get_bake_texture(int p_index) const;
-    int get_bake_mesh_count() const;
-    Variant get_bake_mesh_userdata(int p_index) const;
-    Rect2 get_bake_mesh_uv_scale(int p_index) const;
-    int get_bake_mesh_texture_slice(int p_index) const;
+    int get_bake_texture_count() const override;
+    Ref<Image> get_bake_texture(int p_index) const override;
+    int get_bake_mesh_count() const override;
+    Variant get_bake_mesh_userdata(int p_index) const override;
+    Rect2 get_bake_mesh_uv_scale(int p_index) const override;
+    int get_bake_mesh_texture_slice(int p_index) const override;
 
     LightmapperCPU();
 };
 
-#endif // LIGHTMAPPER_H
+#endif // LIGHTMAPPER_CPU_H

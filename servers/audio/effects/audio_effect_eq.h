@@ -4,8 +4,8 @@
 //
 // SPDX-License-Identifier: MIT
 
-#ifndef AUDIOEFFECTEQ_H
-#define AUDIOEFFECTEQ_H
+#ifndef AUDIO_EFFECT_EQ_H
+#define AUDIO_EFFECT_EQ_H
 
 #include "servers/audio/audio_effect.h"
 #include "servers/audio/effects/eq.h"
@@ -21,11 +21,11 @@ class AudioEffectEQInstance : public AudioEffectInstance {
     Vector<float> gains;
 
 public:
-    virtual void process(
+    void process(
         const AudioFrame* p_src_frames,
         AudioFrame* p_dst_frames,
         int p_frame_count
-    );
+    ) override;
 };
 
 class AudioEffectEQ : public AudioEffect {
@@ -46,7 +46,7 @@ protected:
     static void _bind_methods();
 
 public:
-    Ref<AudioEffectInstance> instance();
+    Ref<AudioEffectInstance> instance() override;
     void set_band_gain_db(int p_band, float p_volume);
     float get_band_gain_db(int p_band) const;
     int get_band_count() const;
@@ -75,4 +75,4 @@ public:
     AudioEffectEQ21() : AudioEffectEQ(EQ::PRESET_21_BANDS) {}
 };
 
-#endif // AUDIOEFFECTEQ_H
+#endif // AUDIO_EFFECT_EQ_H

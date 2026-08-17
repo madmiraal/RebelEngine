@@ -55,7 +55,7 @@ public:
     void initialize();
 
     GDScriptTextDocument();
-    virtual ~GDScriptTextDocument();
+    ~GDScriptTextDocument() override;
 };
 
 #endif

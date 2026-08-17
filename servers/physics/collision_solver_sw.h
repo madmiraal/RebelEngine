@@ -83,4 +83,4 @@ public:
     );
 };
 
-#endif // COLLISION_SOLVER__SW_H
+#endif // COLLISION_SOLVER_SW_H

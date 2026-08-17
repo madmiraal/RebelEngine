@@ -4,8 +4,8 @@
 //
 // SPDX-License-Identifier: MIT
 
-#ifndef WSLCLIENT_H
-#define WSLCLIENT_H
+#ifndef WSL_CLIENT_H
+#define WSL_CLIENT_H
 
 #ifndef WEB_ENABLED
 
@@ -53,7 +53,7 @@ public:
         int p_in_packets,
         int p_out_buffer,
         int p_out_packets
-    );
+    ) override;
     Error connect_to_host(
         String p_host,
         String p_path,
@@ -61,19 +61,19 @@ public:
         bool p_ssl,
         const Vector<String> p_protocol       = Vector<String>(),
         const Vector<String> p_custom_headers = Vector<String>()
-    );
-    int get_max_packet_size() const;
-    Ref<WebSocketPeer> get_peer(int p_peer_id) const;
-    void disconnect_from_host(int p_code = 1000, String p_reason = "");
-    IP_Address get_connected_host() const;
-    uint16_t get_connected_port() const;
-    virtual ConnectionStatus get_connection_status() const;
-    virtual void poll();
+    ) override;
+    int get_max_packet_size() const override;
+    Ref<WebSocketPeer> get_peer(int p_peer_id) const override;
+    void disconnect_from_host(int p_code = 1000, String p_reason = "") override;
+    IP_Address get_connected_host() const override;
+    uint16_t get_connected_port() const override;
+    ConnectionStatus get_connection_status() const override;
+    void poll() override;
 
     WSLClient();
-    ~WSLClient();
+    ~WSLClient() override;
 };
 
 #endif // WEB_ENABLED
 
-#endif // WSLCLIENT_H
+#endif // WSL_CLIENT_H

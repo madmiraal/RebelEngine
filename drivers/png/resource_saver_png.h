@@ -15,16 +15,16 @@ public:
     static Error save_image(const String& p_path, const Ref<Image>& p_img);
     static PoolVector<uint8_t> save_image_to_buffer(const Ref<Image>& p_img);
 
-    virtual Error save(
+    Error save(
         const String& p_path,
         const RES& p_resource,
         uint32_t p_flags = 0
-    );
-    virtual bool recognize(const RES& p_resource) const;
-    virtual void get_recognized_extensions(
+    ) override;
+    bool recognize(const RES& p_resource) const override;
+    void get_recognized_extensions(
         const RES& p_resource,
         List<String>* p_extensions
-    ) const;
+    ) const override;
 
     ResourceSaverPNG();
 };

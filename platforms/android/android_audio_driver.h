@@ -61,22 +61,20 @@ class AndroidAudioDriver : public AudioDriver {
     virtual Error capture_init_device();
 
 public:
-    void set_singleton();
+    const char* get_name() const override;
 
-    virtual const char* get_name() const;
-
-    virtual Error init();
-    virtual void start();
-    virtual int get_mix_rate() const;
-    virtual SpeakerMode get_speaker_mode() const;
-    virtual void lock();
-    virtual void unlock();
-    virtual void finish();
+    Error init() override;
+    void start() override;
+    int get_mix_rate() const override;
+    SpeakerMode get_speaker_mode() const override;
+    void lock() override;
+    void unlock() override;
+    void finish() override;
 
     virtual void set_pause(bool p_pause);
 
-    virtual Error capture_start();
-    virtual Error capture_stop();
+    Error capture_start() override;
+    Error capture_stop() override;
 
     AndroidAudioDriver();
 };

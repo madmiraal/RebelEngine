@@ -156,12 +156,12 @@ class ResourceInteractiveLoaderText : public ResourceInteractiveLoader {
     Ref<PackedScene> _parse_node_tag(VariantParser::ResourceParser& parser);
 
 public:
-    virtual void set_local_path(const String& p_local_path);
-    virtual Ref<Resource> get_resource();
-    virtual Error poll();
-    virtual int get_stage() const;
-    virtual int get_stage_count() const;
-    virtual void set_translation_remapped(bool p_remapped);
+    void set_local_path(const String& p_local_path) override;
+    Ref<Resource> get_resource() override;
+    Error poll() override;
+    int get_stage() const override;
+    int get_stage_count() const override;
+    void set_translation_remapped(bool p_remapped) override;
 
     void open(FileAccess* p_f, bool p_skip_first_tag = false);
     String recognize(FileAccess* p_f);
@@ -178,33 +178,33 @@ public:
 
     Error save_as_binary(FileAccess* p_f, const String& p_path);
     ResourceInteractiveLoaderText();
-    ~ResourceInteractiveLoaderText();
+    ~ResourceInteractiveLoaderText() override;
 };
 
 class ResourceFormatLoaderText : public ResourceFormatLoader {
 public:
     static ResourceFormatLoaderText* singleton;
-    virtual Ref<ResourceInteractiveLoader> load_interactive(
+    Ref<ResourceInteractiveLoader> load_interactive(
         const String& p_path,
         const String& p_original_path = "",
         Error* r_error                = nullptr
-    );
-    virtual void get_recognized_extensions_for_type(
+    ) override;
+    void get_recognized_extensions_for_type(
         const String& p_type,
         List<String>* p_extensions
-    ) const;
-    virtual void get_recognized_extensions(List<String>* p_extensions) const;
-    virtual bool handles_type(const String& p_type) const;
-    virtual String get_resource_type(const String& p_path) const;
-    virtual void get_dependencies(
+    ) const override;
+    void get_recognized_extensions(List<String>* p_extensions) const override;
+    bool handles_type(const String& p_type) const override;
+    String get_resource_type(const String& p_path) const override;
+    void get_dependencies(
         const String& p_path,
         List<String>* p_dependencies,
         bool p_add_types = false
-    );
-    virtual Error rename_dependencies(
+    ) override;
+    Error rename_dependencies(
         const String& p_path,
         const Map<String, String>& p_map
-    );
+    ) override;
 
     static Error convert_file_to_binary(
         const String& p_src_path,
@@ -269,16 +269,16 @@ public:
 class ResourceFormatSaverText : public ResourceFormatSaver {
 public:
     static ResourceFormatSaverText* singleton;
-    virtual Error save(
+    Error save(
         const String& p_path,
         const RES& p_resource,
         uint32_t p_flags = 0
-    );
-    virtual bool recognize(const RES& p_resource) const;
-    virtual void get_recognized_extensions(
+    ) override;
+    bool recognize(const RES& p_resource) const override;
+    void get_recognized_extensions(
         const RES& p_resource,
         List<String>* p_extensions
-    ) const;
+    ) const override;
 
     ResourceFormatSaverText();
 };

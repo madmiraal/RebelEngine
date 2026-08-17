@@ -91,7 +91,7 @@ public:
     void autoload_remove(const String& p_name);
 
     EditorAutoloadSettings();
-    ~EditorAutoloadSettings();
+    ~EditorAutoloadSettings() override;
 };
 
 #endif

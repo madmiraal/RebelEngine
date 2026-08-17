@@ -13,9 +13,9 @@
 
 class UnixSyslogLogger : public Logger {
 public:
-    virtual void logv(const char* p_format, va_list p_list, bool p_err)
+    void logv(const char* p_format, va_list p_list, bool p_err) override
         _PRINTF_FORMAT_ATTRIBUTE_2_0;
-    virtual void print_error(
+    void print_error(
         const char* p_function,
         const char* p_file,
         int p_line,
@@ -24,7 +24,7 @@ public:
         ErrorType p_type
     );
 
-    virtual ~UnixSyslogLogger();
+    ~UnixSyslogLogger() override;
 };
 
 #endif // UNIX_ENABLED

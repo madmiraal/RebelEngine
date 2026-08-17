@@ -23,7 +23,7 @@ public:
         const Transform& frameInB
     );
 
-    virtual PhysicsServer::JointType get_type() const {
+    PhysicsServer::JointType get_type() const override {
         return PhysicsServer::JOINT_SLIDER;
     }
 

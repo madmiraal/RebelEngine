@@ -97,21 +97,21 @@ private:
 protected:
     void resume_audio();
 
-    virtual int get_current_video_driver() const;
+    int get_current_video_driver() const override;
 
-    virtual void initialize_core();
-    virtual Error initialize(
+    void initialize_core() override;
+    Error initialize(
         const VideoMode& p_desired,
         int p_video_driver,
         int p_audio_driver
-    );
+    ) override;
 
-    virtual void set_main_loop(MainLoop* p_main_loop);
-    virtual void delete_main_loop();
+    void set_main_loop(MainLoop* p_main_loop) override;
+    void delete_main_loop() override;
 
-    virtual void finalize();
+    void finalize() override;
 
-    virtual bool _check_internal_feature_support(const String& p_feature);
+    bool _check_internal_feature_support(const String& p_feature) override;
 
 public:
     bool check_size_force_redraw();
@@ -119,72 +119,68 @@ public:
     // Override return type to make writing static callbacks less tedious.
     static WebOS* get_singleton();
 
-    virtual bool has_virtual_keyboard() const;
-    virtual void show_virtual_keyboard(
+    bool has_virtual_keyboard() const override;
+    void show_virtual_keyboard(
         const String& p_existing_text,
         const Rect2& p_screen_rect = Rect2(),
         bool p_multiline           = false,
         int p_max_input_length     = -1,
         int p_cursor_start         = -1,
         int p_cursor_end           = -1
-    );
-    virtual void hide_virtual_keyboard();
+    ) override;
+    void hide_virtual_keyboard() override;
 
-    virtual bool get_swap_ok_cancel();
-    virtual void swap_buffers();
-    virtual void set_video_mode(
-        const VideoMode& p_video_mode,
-        int p_screen = 0
-    );
-    virtual VideoMode get_video_mode(int p_screen = 0) const;
-    virtual void get_fullscreen_mode_list(
-        List<VideoMode>* p_list,
-        int p_screen = 0
-    ) const;
+    bool get_swap_ok_cancel() override;
+    void swap_buffers() override;
+    void set_video_mode(const VideoMode& p_video_mode, int p_screen = 0)
+        override;
+    VideoMode get_video_mode(int p_screen = 0) const override;
+    void get_fullscreen_mode_list(List<VideoMode>* p_list, int p_screen = 0)
+        const override;
 
-    virtual void set_window_size(const Size2);
-    virtual Size2 get_window_size() const;
-    virtual void set_window_maximized(bool p_enabled);
-    virtual bool is_window_maximized() const;
-    virtual void set_window_fullscreen(bool p_enabled);
-    virtual bool is_window_fullscreen() const;
-    virtual Size2 get_screen_size(int p_screen = -1) const;
-    virtual int get_screen_dpi(int p_screen = -1) const;
-    virtual float get_screen_scale(int p_screen = -1) const;
-    virtual float get_screen_max_scale() const;
+    void set_window_size(const Size2) override;
+    Size2 get_window_size() const override;
+    void set_window_maximized(bool p_enabled) override;
+    bool is_window_maximized() const override;
+    void set_window_fullscreen(bool p_enabled) override;
+    bool is_window_fullscreen() const override;
+    Size2 get_screen_size(int p_screen = -1) const override;
+    int get_screen_dpi(int p_screen = -1) const override;
+    float get_screen_scale(int p_screen = -1) const override;
+    float get_screen_max_scale() const override;
 
-    virtual Point2 get_mouse_position() const;
-    virtual int get_mouse_button_state() const;
-    virtual void set_cursor_shape(CursorShape p_shape);
-    virtual void set_custom_mouse_cursor(
+    Point2 get_mouse_position() const override;
+    int get_mouse_button_state() const override;
+    void set_cursor_shape(CursorShape p_shape) override;
+    void set_custom_mouse_cursor(
         const RES& p_cursor,
         CursorShape p_shape,
         const Vector2& p_hotspot
-    );
-    virtual void set_mouse_mode(MouseMode p_mode);
-    virtual MouseMode get_mouse_mode() const;
+    ) override;
+    void set_mouse_mode(MouseMode p_mode) override;
+    MouseMode get_mouse_mode() const override;
 
-    virtual bool get_window_per_pixel_transparency_enabled() const;
-    virtual void set_window_per_pixel_transparency_enabled(bool p_enabled);
+    bool get_window_per_pixel_transparency_enabled() const override;
+    void set_window_per_pixel_transparency_enabled(bool p_enabled) override;
 
-    virtual bool has_touchscreen_ui_hint() const;
+    bool has_touchscreen_ui_hint() const override;
 
-    virtual bool is_joy_known(int p_device);
-    virtual String get_joy_guid(int p_device) const;
+    bool is_joy_known(int p_device) override;
+    String get_joy_guid(int p_device) const override;
 
-    virtual int get_video_driver_count() const;
-    virtual const char* get_video_driver_name(int p_driver) const;
+    int get_video_driver_count() const override;
+    const char* get_video_driver_name(int p_driver) const override;
 
-    virtual int get_audio_driver_count() const;
-    virtual const char* get_audio_driver_name(int p_driver) const;
+    int get_audio_driver_count() const override;
+    const char* get_audio_driver_name(int p_driver) const override;
 
-    virtual void set_clipboard(const String& p_text);
-    virtual String get_clipboard() const;
+    void set_clipboard(const String& p_text) override;
+    String get_clipboard() const override;
 
-    virtual MainLoop* get_main_loop() const;
+    MainLoop* get_main_loop() const override;
     bool main_loop_iterate();
 
-    virtual Error execute(
+    Error execute(
         const String& p_path,
         const List<String>& p_arguments,
         bool p_blocking       = true,
@@ -193,37 +189,38 @@ public:
         int* r_exitcode       = NULL,
         bool read_stderr      = false,
         Mutex* p_pipe_mutex   = NULL
-    );
-    virtual Error kill(const ProcessID& p_pid);
-    virtual int get_process_id() const;
-    int get_processor_count() const;
+    ) override;
+    Error kill(const ProcessID& p_pid) override;
+    int get_process_id() const override;
+    int get_processor_count() const override;
 
-    virtual void alert(const String& p_alert, const String& p_title = "ALERT!");
-    virtual void set_window_title(const String& p_title);
-    virtual void set_icon(const Ref<Image>& p_icon);
-    String get_executable_path() const;
-    virtual Error shell_open(String p_uri);
-    virtual String get_name() const;
+    void alert(const String& p_alert, const String& p_title = "ALERT!")
+        override;
+    void set_window_title(const String& p_title) override;
+    void set_icon(const Ref<Image>& p_icon) override;
+    String get_executable_path() const override;
+    Error shell_open(String p_uri) override;
+    String get_name() const override;
 
-    virtual void add_frame_delay(bool p_can_draw) {}
+    void add_frame_delay(bool p_can_draw) override {}
 
-    virtual bool can_draw() const;
+    bool can_draw() const override;
 
-    virtual String get_cache_path() const;
-    virtual String get_config_path() const;
-    virtual String get_data_path() const;
-    virtual String get_user_data_dir() const;
+    String get_cache_path() const override;
+    String get_config_path() const override;
+    String get_data_path() const override;
+    String get_user_data_dir() const override;
 
-    virtual OS::PowerState get_power_state();
-    virtual int get_power_seconds_left();
-    virtual int get_power_percent_left();
+    OS::PowerState get_power_state() override;
+    int get_power_seconds_left() override;
+    int get_power_percent_left() override;
 
-    virtual bool is_userfs_persistent() const;
+    bool is_userfs_persistent() const override;
     Error open_dynamic_library(
         const String p_path,
         void*& p_library_handle,
         bool p_also_set_library_path
-    );
+    ) override;
     WebOS();
 };
 

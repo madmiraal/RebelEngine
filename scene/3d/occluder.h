@@ -28,10 +28,10 @@ public:
     void set_shape(const Ref<OccluderShape>& p_shape);
     Ref<OccluderShape> get_shape() const;
 
-    String get_configuration_warning() const;
+    String get_configuration_warning() const override;
 
     Occluder();
-    ~Occluder();
+    ~Occluder() override;
 };
 
 #endif // OCCLUDER_H

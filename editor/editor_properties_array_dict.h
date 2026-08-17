@@ -117,7 +117,7 @@ protected:
 
 public:
     void setup(Variant::Type p_array_type, const String& p_hint_string = "");
-    virtual void update_property();
+    void update_property() override;
     EditorPropertyArray();
 };
 
@@ -156,7 +156,7 @@ protected:
     void _notification(int p_what);
 
 public:
-    virtual void update_property();
+    void update_property() override;
     EditorPropertyDictionary();
 };
 

@@ -143,7 +143,7 @@ public:
     );
     Transform(const Basis& p_basis, const Vector3& p_origin = Vector3());
 
-    Transform() {}
+    Transform() = default;
 };
 
 _FORCE_INLINE_ Vector3 Transform::xform(const Vector3& p_vector) const {

@@ -27,15 +27,14 @@ protected:
 
 public:
     CameraFeedWindows();
-    virtual ~CameraFeedWindows();
+    ~CameraFeedWindows() override;
 
-    bool activate_feed();
-    void deactivate_feed();
+    bool activate_feed() override;
+    void deactivate_feed() override;
 };
 
-CameraFeedWindows::CameraFeedWindows(){
-    ///@TODO implement this, should store information about our available camera
-};
+// TODO: Implement this. It should store information about the available camera.
+CameraFeedWindows::CameraFeedWindows() = default;
 
 CameraFeedWindows::~CameraFeedWindows() {
     // make sure we stop recording if we are!
@@ -79,6 +78,4 @@ CameraWindows::CameraWindows() {
     // connected/removed...
 };
 
-CameraWindows::~CameraWindows(){
-
-};
+CameraWindows::~CameraWindows() = default;

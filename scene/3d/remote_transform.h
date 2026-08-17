@@ -46,7 +46,7 @@ public:
 
     void force_update_cache();
 
-    virtual String get_configuration_warning() const;
+    String get_configuration_warning() const override;
 
     RemoteTransform();
 };

@@ -126,7 +126,7 @@ private:
     float _get_attenuation_db(float p_distance) const;
 
 protected:
-    void _validate_property(PropertyInfo& property) const;
+    void _validate_property(PropertyInfo& property) const override;
     void _notification(int p_what);
     static void _bind_methods();
 
@@ -194,7 +194,7 @@ public:
     Ref<AudioStreamPlayback> get_stream_playback();
 
     AudioStreamPlayer3D();
-    ~AudioStreamPlayer3D();
+    ~AudioStreamPlayer3D() override;
 };
 
 VARIANT_ENUM_CAST(AudioStreamPlayer3D::AttenuationModel)

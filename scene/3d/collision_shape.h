@@ -39,10 +39,10 @@ public:
     void set_disabled(bool p_disabled);
     bool is_disabled() const;
 
-    String get_configuration_warning() const;
+    String get_configuration_warning() const override;
 
     CollisionShape();
-    ~CollisionShape();
+    ~CollisionShape() override;
 };
 
-#endif // BODY_VOLUME_H
+#endif // COLLISION_SHAPE_H

@@ -45,10 +45,10 @@ public:
     );
     virtual void popup(const Rect2& p_bounds = Rect2());
 
-    virtual String get_configuration_warning() const;
+    String get_configuration_warning() const override;
 
     Popup();
-    ~Popup();
+    ~Popup() override;
 };
 
 class PopupPanel : public Popup {
@@ -59,8 +59,7 @@ protected:
     void _notification(int p_what);
 
 public:
-    void set_child_rect(Control* p_child);
-    virtual Size2 get_minimum_size() const;
+    Size2 get_minimum_size() const override;
     PopupPanel();
 };
 

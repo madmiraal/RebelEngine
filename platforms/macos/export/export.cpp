@@ -104,28 +104,27 @@ class MacOSEditorExportPlatform : public EditorExportPlatform {
     }
 
 protected:
-    virtual void get_preset_features(
+    void get_preset_features(
         const Ref<EditorExportPreset>& p_preset,
         List<String>* r_features
-    );
-    virtual void get_export_options(List<ExportOption>* r_options);
+    ) override;
+    void get_export_options(List<ExportOption>* r_options) override;
 
 public:
-    virtual String get_name() const {
+    String get_name() const override {
         return "MacOS";
     }
 
-    virtual String get_os_name() const {
+    String get_os_name() const override {
         return "MacOS";
     }
 
-    virtual Ref<Texture> get_logo() const {
+    Ref<Texture> get_logo() const override {
         return logo;
     }
 
-    virtual List<String> get_binary_extensions(
-        const Ref<EditorExportPreset>& p_preset
-    ) const {
+    List<String> get_binary_extensions(const Ref<EditorExportPreset>& p_preset
+    ) const override {
         List<String> list;
         if (use_dmg()) {
             list.push_back("dmg");
@@ -134,32 +133,32 @@ public:
         return list;
     }
 
-    virtual Error export_project(
+    Error export_project(
         const Ref<EditorExportPreset>& p_preset,
         bool p_debug,
         const String& p_path,
         int p_flags = 0
-    );
+    ) override;
 
-    virtual bool can_export(
+    bool can_export(
         const Ref<EditorExportPreset>& p_preset,
         String& r_error,
         bool& r_missing_templates
-    ) const;
+    ) const override;
 
-    virtual void get_platform_features(List<String>* r_features) {
+    void get_platform_features(List<String>* r_features) override {
         r_features->push_back("pc");
         r_features->push_back("s3tc");
         r_features->push_back("MacOS");
     }
 
-    virtual void resolve_platform_feature_priorities(
+    void resolve_platform_feature_priorities(
         const Ref<EditorExportPreset>& p_preset,
         Set<String>& p_features
-    ) {}
+    ) override {}
 
     MacOSEditorExportPlatform();
-    ~MacOSEditorExportPlatform();
+    ~MacOSEditorExportPlatform() override;
 };
 
 void MacOSEditorExportPlatform::get_preset_features(
@@ -608,8 +607,8 @@ void MacOSEditorExportPlatform::_make_icon(
         {"ic11", "",     true,  32  }, // 16x16@2x 32-bit "retina" PNG
         {"il32", "l8mk", false, 32
         }, // 32x32 24-bit RLE + 8-bit uncompressed mask
-        {"is32", "s8mk", false, 16
-        }  // 16x16 24-bit RLE + 8-bit uncompressed mask
+        {"is32", "s8mk", false, 16  }
+        // 16x16 24-bit RLE + 8-bit uncompressed mask
     };
 
     for (uint64_t i = 0; i < (sizeof(icon_infos) / sizeof(icon_infos[0]));

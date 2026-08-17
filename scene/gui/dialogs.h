@@ -43,12 +43,12 @@ class WindowDialog : public Popup {
     int _drag_hit_test(const Point2& pos) const;
 
 protected:
-    virtual void _post_popup();
-    virtual void _fix_size();
+    void _post_popup() override;
+    void _fix_size() override;
 
     virtual void _close_pressed() {}
 
-    virtual bool has_point(const Point2& p_point) const;
+    bool has_point(const Point2& p_point) const override;
     void _notification(int p_what);
     static void _bind_methods();
 
@@ -60,10 +60,10 @@ public:
     void set_resizable(bool p_resizable);
     bool get_resizable() const;
 
-    Size2 get_minimum_size() const;
+    Size2 get_minimum_size() const override;
 
     WindowDialog();
-    ~WindowDialog();
+    ~WindowDialog() override;
 };
 
 class PopupDialog : public Popup {
@@ -74,7 +74,7 @@ protected:
 
 public:
     PopupDialog();
-    ~PopupDialog();
+    ~PopupDialog() override;
 };
 
 class LineEdit;
@@ -89,14 +89,14 @@ class AcceptDialog : public WindowDialog {
 
     void _custom_action(const String& p_action);
     void _ok_pressed();
-    void _close_pressed();
+    void _close_pressed() override;
     void _builtin_text_entered(const String& p_text);
     void _update_child_rects();
 
     static bool swap_ok_cancel;
 
 protected:
-    virtual void _post_popup();
+    void _post_popup() override;
     void _notification(int p_what);
     static void _bind_methods();
 
@@ -107,7 +107,7 @@ protected:
     virtual void custom_action(const String&) {}
 
 public:
-    Size2 get_minimum_size() const;
+    Size2 get_minimum_size() const override;
 
     Label* get_label() {
         return label;
@@ -139,7 +139,7 @@ public:
     bool has_autowrap();
 
     AcceptDialog();
-    ~AcceptDialog();
+    ~AcceptDialog() override;
 };
 
 class ConfirmationDialog : public AcceptDialog {

@@ -4,10 +4,10 @@
 //
 // SPDX-License-Identifier: MIT
 
-#ifdef COREMIDI_ENABLED
-
 #ifndef MIDI_DRIVER_COREMIDI_H
 #define MIDI_DRIVER_COREMIDI_H
+
+#ifdef COREMIDI_ENABLED
 
 #include "core/os/midi_driver.h"
 #include "core/vector.h"
@@ -28,14 +28,15 @@ class MIDIDriverCoreMidi : public MIDIDriver {
     );
 
 public:
-    virtual Error open();
-    virtual void close();
+    Error open() override;
+    void close() override;
 
-    PoolStringArray get_connected_inputs();
+    PoolStringArray get_connected_inputs() override;
 
     MIDIDriverCoreMidi();
-    virtual ~MIDIDriverCoreMidi();
+    ~MIDIDriverCoreMidi() override;
 };
 
-#endif // MIDI_DRIVER_COREMIDI_H
 #endif // COREMIDI_ENABLED
+
+#endif // MIDI_DRIVER_COREMIDI_H

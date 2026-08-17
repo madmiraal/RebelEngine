@@ -68,12 +68,12 @@ class PinJoint2DSW : public Joint2DSW {
     real_t softness;
 
 public:
-    virtual Physics2DServer::JointType get_type() const {
+    Physics2DServer::JointType get_type() const override {
         return Physics2DServer::JOINT_PIN;
     }
 
-    virtual bool setup(real_t p_step);
-    virtual void solve(real_t p_step);
+    bool setup(real_t p_step) override;
+    void solve(real_t p_step) override;
 
     void set_param(Physics2DServer::PinJointParam p_param, real_t p_value);
     real_t get_param(Physics2DServer::PinJointParam p_param) const;
@@ -83,7 +83,7 @@ public:
         Body2DSW* p_body_a,
         Body2DSW* p_body_b = nullptr
     );
-    ~PinJoint2DSW();
+    ~PinJoint2DSW() override;
 };
 
 class GrooveJoint2DSW : public Joint2DSW {
@@ -111,12 +111,12 @@ class GrooveJoint2DSW : public Joint2DSW {
     bool correct;
 
 public:
-    virtual Physics2DServer::JointType get_type() const {
+    Physics2DServer::JointType get_type() const override {
         return Physics2DServer::JOINT_GROOVE;
     }
 
-    virtual bool setup(real_t p_step);
-    virtual void solve(real_t p_step);
+    bool setup(real_t p_step) override;
+    void solve(real_t p_step) override;
 
     GrooveJoint2DSW(
         const Vector2& p_a_groove1,
@@ -125,7 +125,7 @@ public:
         Body2DSW* p_body_a,
         Body2DSW* p_body_b
     );
-    ~GrooveJoint2DSW();
+    ~GrooveJoint2DSW() override;
 };
 
 class DampedSpringJoint2DSW : public Joint2DSW {
@@ -152,12 +152,12 @@ class DampedSpringJoint2DSW : public Joint2DSW {
     real_t v_coef;
 
 public:
-    virtual Physics2DServer::JointType get_type() const {
+    Physics2DServer::JointType get_type() const override {
         return Physics2DServer::JOINT_DAMPED_SPRING;
     }
 
-    virtual bool setup(real_t p_step);
-    virtual void solve(real_t p_step);
+    bool setup(real_t p_step) override;
+    void solve(real_t p_step) override;
 
     void set_param(Physics2DServer::DampedStringParam p_param, real_t p_value);
     real_t get_param(Physics2DServer::DampedStringParam p_param) const;
@@ -168,7 +168,7 @@ public:
         Body2DSW* p_body_a,
         Body2DSW* p_body_b
     );
-    ~DampedSpringJoint2DSW();
+    ~DampedSpringJoint2DSW() override;
 };
 
 #endif // JOINTS_2D_SW_H

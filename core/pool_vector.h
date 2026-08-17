@@ -294,7 +294,7 @@ public:
             this->_ref(p_read.alloc);
         }
 
-        Read() {}
+        Read() = default;
     };
 
     class Write : public Access {

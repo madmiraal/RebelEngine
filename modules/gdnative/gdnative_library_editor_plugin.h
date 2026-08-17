@@ -80,19 +80,21 @@ class GDNativeLibraryEditorPlugin : public EditorPlugin {
     Button* button;
 
 public:
-    virtual String get_name() const {
+    String get_name() const override {
         return "GDNativeLibrary";
     }
 
-    bool has_main_screen() const {
+    bool has_main_screen() const override {
         return false;
     }
 
-    virtual void edit(Object* p_node);
-    virtual bool handles(Object* p_node) const;
-    virtual void make_visible(bool p_visible);
+    void edit(Object* p_node) override;
+    bool handles(Object* p_node) const override;
+    void make_visible(bool p_visible) override;
 
     GDNativeLibraryEditorPlugin(EditorNode* p_node);
 };
-#endif
+
+#endif // TOOLS_ENABLED
+
 #endif // GDNATIVE_LIBRARY_EDITOR_PLUGIN_H

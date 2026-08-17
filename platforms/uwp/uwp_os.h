@@ -144,21 +144,21 @@ private:
     // functions used by main to initialize/deinitialize the OS
 
 protected:
-    virtual int get_video_driver_count() const;
-    virtual int get_current_video_driver() const;
+    int get_video_driver_count() const override;
+    int get_current_video_driver() const override;
 
-    virtual void initialize_core();
-    virtual Error initialize(
+    void initialize_core() override;
+    Error initialize(
         const VideoMode& p_desired,
         int p_video_driver,
         int p_audio_driver
-    );
+    ) override;
 
-    virtual void set_main_loop(MainLoop* p_main_loop);
-    virtual void delete_main_loop();
+    void set_main_loop(MainLoop* p_main_loop) override;
+    void delete_main_loop() override;
 
-    virtual void finalize();
-    virtual void finalize_core();
+    void finalize() override;
+    void finalize_core() override;
 
     void process_events();
 
@@ -168,47 +168,44 @@ public:
     // Event to send to the app wrapper
     HANDLE mouse_mode_changed;
 
-    virtual void alert(const String& p_alert, const String& p_title = "ALERT!");
+    void alert(const String& p_alert, const String& p_title = "ALERT!")
+        override;
     String get_stdin_string(bool p_block);
 
     void set_mouse_mode(MouseMode p_mode);
     MouseMode get_mouse_mode() const;
 
-    virtual Point2 get_mouse_position() const;
-    virtual int get_mouse_button_state() const;
-    virtual void set_window_title(const String& p_title);
+    Point2 get_mouse_position() const override;
+    int get_mouse_button_state() const override;
+    void set_window_title(const String& p_title) override;
 
-    virtual void set_video_mode(
-        const VideoMode& p_video_mode,
-        int p_screen = 0
-    );
-    virtual VideoMode get_video_mode(int p_screen = 0) const;
-    virtual void get_fullscreen_mode_list(
-        List<VideoMode>* p_list,
-        int p_screen = 0
-    ) const;
-    virtual Size2 get_window_size() const;
-    virtual void set_window_size(const Size2 p_size);
-    virtual void set_window_fullscreen(bool p_enabled);
-    virtual bool is_window_fullscreen() const;
-    virtual void set_keep_screen_on(bool p_enabled);
+    void set_video_mode(const VideoMode& p_video_mode, int p_screen = 0)
+        override;
+    VideoMode get_video_mode(int p_screen = 0) const override;
+    void get_fullscreen_mode_list(List<VideoMode>* p_list, int p_screen = 0)
+        const override;
+    Size2 get_window_size() const override;
+    void set_window_size(const Size2 p_size) override;
+    void set_window_fullscreen(bool p_enabled) override;
+    bool is_window_fullscreen() const override;
+    void set_keep_screen_on(bool p_enabled) override;
 
-    virtual MainLoop* get_main_loop() const;
+    MainLoop* get_main_loop() const override;
 
-    virtual String get_name() const;
+    String get_name() const override;
 
-    virtual Date get_date(bool utc) const;
-    virtual Time get_time(bool utc) const;
-    virtual TimeZoneInfo get_time_zone_info() const;
-    virtual uint64_t get_unix_time() const;
+    Date get_date(bool utc) const override;
+    Time get_time(bool utc) const override;
+    TimeZoneInfo get_time_zone_info() const override;
+    uint64_t get_unix_time() const override;
 
-    virtual bool can_draw() const;
-    virtual Error set_cwd(const String& p_cwd);
+    bool can_draw() const override;
+    Error set_cwd(const String& p_cwd) override;
 
-    virtual void delay_usec(uint32_t p_usec) const;
-    virtual uint64_t get_ticks_usec() const;
+    void delay_usec(uint32_t p_usec) const override;
+    uint64_t get_ticks_usec() const override;
 
-    virtual Error execute(
+    Error execute(
         const String& p_path,
         const List<String>& p_arguments,
         bool p_blocking       = true,
@@ -217,86 +214,86 @@ public:
         int* r_exitcode       = NULL,
         bool read_stderr      = false,
         Mutex* p_pipe_mutex   = NULL
-    );
-    virtual Error kill(const ProcessID& p_pid);
+    ) override;
+    Error kill(const ProcessID& p_pid) override;
 
-    virtual bool has_environment(const String& p_var) const;
-    virtual String get_environment(const String& p_var) const;
-    virtual bool set_environment(const String& p_var, const String& p_value)
-        const;
+    bool has_environment(const String& p_var) const override;
+    String get_environment(const String& p_var) const override;
+    bool set_environment(const String& p_var, const String& p_value)
+        const override;
 
-    virtual void set_clipboard(const String& p_text);
-    virtual String get_clipboard() const;
+    void set_clipboard(const String& p_text) override;
+    String get_clipboard() const override;
 
     void set_cursor_shape(CursorShape p_shape);
     CursorShape get_cursor_shape() const;
-    virtual void set_custom_mouse_cursor(
+    void set_custom_mouse_cursor(
         const RES& p_cursor,
         CursorShape p_shape,
         const Vector2& p_hotspot
-    );
+    ) override;
     void set_icon(const Ref<Image>& p_icon);
 
-    virtual String get_executable_path() const;
+    String get_executable_path() const override;
 
-    virtual String get_locale() const;
+    String get_locale() const override;
 
-    virtual void move_window_to_foreground();
-    virtual String get_user_data_dir() const;
+    void move_window_to_foreground() override;
+    String get_user_data_dir() const override;
 
-    virtual bool _check_internal_feature_support(const String& p_feature);
+    bool _check_internal_feature_support(const String& p_feature) override;
 
     void set_window(Windows::UI::Core::CoreWindow ^ p_window);
     void screen_size_changed();
 
-    virtual void release_rendering_thread();
-    virtual void make_rendering_thread();
-    virtual void swap_buffers();
+    void release_rendering_thread() override;
+    void make_rendering_thread() override;
+    void swap_buffers() override;
 
-    virtual bool has_touchscreen_ui_hint() const;
+    bool has_touchscreen_ui_hint() const override;
 
-    virtual bool has_virtual_keyboard() const;
-    virtual void show_virtual_keyboard(
+    bool has_virtual_keyboard() const override;
+    void show_virtual_keyboard(
         const String& p_existing_text,
         const Rect2& p_screen_rect = Rect2(),
         bool p_multiline           = false,
         int p_max_input_length     = -1,
         int p_cursor_start         = -1,
         int p_cursor_end           = -1
-    );
-    virtual void hide_virtual_keyboard();
+    ) override;
+    void hide_virtual_keyboard() override;
 
-    virtual Error open_dynamic_library(
+    Error open_dynamic_library(
         const String p_path,
         void*& p_library_handle,
         bool p_also_set_library_path = false
-    );
-    virtual Error close_dynamic_library(void* p_library_handle);
-    virtual Error get_dynamic_library_symbol_handle(
+    ) override;
+    Error close_dynamic_library(void* p_library_handle) override;
+    Error get_dynamic_library_symbol_handle(
         void* p_library_handle,
         const String p_name,
         void*& p_symbol_handle,
         bool p_optional = false
-    );
+    ) override;
 
-    virtual Error shell_open(String p_uri);
+    Error shell_open(String p_uri) override;
 
     void run();
 
-    virtual bool get_swap_ok_cancel() {
+    bool get_swap_ok_cancel() override {
         return true;
     }
 
     void input_event(const Ref<InputEvent>& p_event);
 
-    virtual OS::PowerState get_power_state();
-    virtual int get_power_seconds_left();
-    virtual int get_power_percent_left();
+    OS::PowerState get_power_state() override;
+    int get_power_seconds_left() override;
+    int get_power_percent_left() override;
 
     void queue_key_event(KeyEvent& p_event);
 
     UwpOS();
-    ~UwpOS();
+    ~UwpOS() override;
 };
 
 #endif // UWP_OS_H

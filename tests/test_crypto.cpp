@@ -10,55 +10,51 @@
 namespace TestCrypto {
 
 class _MockCrypto : public Crypto {
-    virtual PoolByteArray generate_random_bytes(int p_bytes) {
+    PoolByteArray generate_random_bytes(int p_bytes) override {
         return PoolByteArray();
     }
 
-    virtual Ref<CryptoKey> generate_rsa(int p_bytes) {
+    Ref<CryptoKey> generate_rsa(int p_bytes) override {
         return nullptr;
     }
 
-    virtual Ref<X509Certificate> generate_self_signed_certificate(
+    Ref<X509Certificate> generate_self_signed_certificate(
         Ref<CryptoKey> p_key,
         String p_issuer_name,
         String p_not_before,
         String p_not_after
-    ) {
+    ) override {
         return nullptr;
     }
 
-    virtual Vector<uint8_t> sign(
+    Vector<uint8_t> sign(
         HashingContext::HashType p_hash_type,
         Vector<uint8_t> p_hash,
         Ref<CryptoKey> p_key
-    ) {
+    ) override {
         return Vector<uint8_t>();
     }
 
-    virtual bool verify(
+    bool verify(
         HashingContext::HashType p_hash_type,
         Vector<uint8_t> p_hash,
         Vector<uint8_t> p_signature,
         Ref<CryptoKey> p_key
-    ) {
+    ) override {
         return false;
     }
 
-    virtual Vector<uint8_t> encrypt(
-        Ref<CryptoKey> p_key,
-        Vector<uint8_t> p_plaintext
-    ) {
+    Vector<uint8_t> encrypt(Ref<CryptoKey> p_key, Vector<uint8_t> p_plaintext)
+        override {
         return Vector<uint8_t>();
     }
 
-    virtual Vector<uint8_t> decrypt(
-        Ref<CryptoKey> p_key,
-        Vector<uint8_t> p_ciphertext
-    ) {
+    Vector<uint8_t> decrypt(Ref<CryptoKey> p_key, Vector<uint8_t> p_ciphertext)
+        override {
         return Vector<uint8_t>();
     }
 
-    virtual PoolByteArray hmac_digest(
+    PoolByteArray hmac_digest(
         HashingContext::HashType p_hash_type,
         PoolByteArray p_key,
         PoolByteArray p_msg

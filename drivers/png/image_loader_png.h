@@ -16,14 +16,14 @@ private:
     static Ref<Image> load_mem_png(const uint8_t* p_png, int p_size);
 
 public:
-    virtual Error load_image(
+    Error load_image(
         Ref<Image> p_image,
         FileAccess* f,
         bool p_force_linear,
         float p_scale
-    );
-    virtual void get_recognized_extensions(List<String>* p_extensions) const;
+    ) override;
+    void get_recognized_extensions(List<String>* p_extensions) const override;
     ImageLoaderPNG();
 };
 
-#endif
+#endif // IMAGE_LOADER_PNG_H

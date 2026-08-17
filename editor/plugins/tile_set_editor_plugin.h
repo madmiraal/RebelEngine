@@ -153,10 +153,6 @@ class TileSetEditor : public HSplitContainer {
     );
     void _undo_redo_import_scene(Node* p_scene, bool p_merge);
 
-    bool _is_drop_valid(
-        const Dictionary& p_drag_data,
-        const Dictionary& p_item_data
-    ) const;
     Variant get_drag_data_fw(const Point2& p_point, Control* p_from);
     bool can_drop_data_fw(
         const Point2& p_point,
@@ -167,10 +163,6 @@ class TileSetEditor : public HSplitContainer {
         const Point2& p_point,
         const Variant& p_data,
         Control* p_from
-    );
-    void _file_load_request(
-        const PoolVector<String>& p_path,
-        int p_at_pos = -1
     );
 
 protected:
@@ -186,7 +178,7 @@ public:
     );
 
     TileSetEditor(EditorNode* p_editor);
-    ~TileSetEditor();
+    ~TileSetEditor() override;
 
 private:
     void _on_tileset_toolbar_button_pressed(int p_index);
@@ -292,19 +284,19 @@ class TileSetEditorPlugin : public EditorPlugin {
     EditorNode* editor;
 
 public:
-    virtual String get_name() const {
+    String get_name() const override {
         return "TileSet";
     }
 
-    bool has_main_screen() const {
+    bool has_main_screen() const override {
         return false;
     }
 
-    virtual void edit(Object* p_node);
-    virtual bool handles(Object* p_node) const;
-    virtual void make_visible(bool p_visible);
-    void set_state(const Dictionary& p_state);
-    Dictionary get_state() const;
+    void edit(Object* p_node) override;
+    bool handles(Object* p_node) const override;
+    void make_visible(bool p_visible) override;
+    void set_state(const Dictionary& p_state) override;
+    Dictionary get_state() const override;
 
     TileSetEditorPlugin(EditorNode* p_node);
 };

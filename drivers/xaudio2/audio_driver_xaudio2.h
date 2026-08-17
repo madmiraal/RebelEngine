@@ -77,19 +77,19 @@ class AudioDriverXAudio2 : public AudioDriver {
     XAudio2DriverVoiceCallback voice_callback;
 
 public:
-    const char* get_name() const;
+    const char* get_name() const override;
 
-    virtual Error init();
-    virtual void start();
-    virtual int get_mix_rate() const;
-    virtual SpeakerMode get_speaker_mode() const;
-    virtual float get_latency();
-    virtual void lock();
-    virtual void unlock();
-    virtual void finish();
+    Error init() override;
+    void start() override;
+    int get_mix_rate() const override;
+    SpeakerMode get_speaker_mode() const override;
+    float get_latency() override;
+    void lock() override;
+    void unlock() override;
+    void finish() override;
 
     AudioDriverXAudio2();
-    ~AudioDriverXAudio2();
+    ~AudioDriverXAudio2() override;
 };
 
 #endif

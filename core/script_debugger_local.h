@@ -31,9 +31,9 @@ public:
         ScriptLanguage* p_script,
         bool p_can_continue,
         bool p_is_error_breakpoint
-    );
-    virtual void send_message(const String& p_message, const Array& p_args);
-    virtual void send_error(
+    ) override;
+    void send_message(const String& p_message, const Array& p_args) override;
+    void send_error(
         const String& p_func,
         const String& p_file,
         int p_line,
@@ -41,27 +41,25 @@ public:
         const String& p_descr,
         ErrorHandlerType p_type,
         const Vector<ScriptLanguage::StackInfo>& p_stack_info
-    );
+    ) override;
 
-    virtual bool is_profiling() const {
+    bool is_profiling() const override {
         return profiling;
     }
 
-    virtual void add_profiling_frame_data(
-        const StringName& p_name,
-        const Array& p_data
-    ) {}
+    void add_profiling_frame_data(const StringName& p_name, const Array& p_data)
+        override {}
 
-    virtual void idle_poll();
+    void idle_poll() override;
 
-    virtual void profiling_start();
-    virtual void profiling_end();
-    virtual void profiling_set_frame_times(
+    void profiling_start() override;
+    void profiling_end() override;
+    void profiling_set_frame_times(
         float p_frame_time,
         float p_idle_time,
         float p_physics_time,
         float p_physics_frame_time
-    );
+    ) override;
 
     ScriptDebuggerLocal();
 };

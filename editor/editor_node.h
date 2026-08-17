@@ -488,9 +488,6 @@ private:
 
     void _run(bool p_current = false, const String& p_custom = "");
 
-    void _save_optimized();
-    void _import_action(const String& p_action);
-    void _import(const String& p_file);
     void _add_to_recent_scenes(const String& p_scene);
     void _update_recent_scenes();
     void _open_recent_scene(int p_idx);
@@ -531,7 +528,6 @@ private:
     static void _editor_file_dialog_register(EditorFileDialog* p_dialog);
     static void _editor_file_dialog_unregister(EditorFileDialog* p_dialog);
 
-    void _cleanup_scene();
     void _remove_edited_scene(bool p_change_tab = true);
     void _remove_scene(int index, bool p_change_tab = true);
     bool _find_and_save_resource(
@@ -659,8 +655,6 @@ private:
 
     static int build_callback_count;
     static EditorBuildCallback build_callbacks[MAX_BUILD_CALLBACKS];
-
-    void _license_tree_selected();
 
     void _update_update_spinner();
 
@@ -860,10 +854,6 @@ public:
 
     void fix_dependencies(const String& p_for_file);
 
-    void clear_scene() {
-        _cleanup_scene();
-    }
-
     int new_scene();
     Error load_scene(
         const String& p_scene,
@@ -1002,8 +992,6 @@ public:
 
     bool is_scene_in_use(const String& p_path);
 
-    void scan_import_changes();
-
     void save_layout();
 
     void open_export_template_manager();
@@ -1063,8 +1051,7 @@ public:
     );
 
     EditorNode();
-    ~EditorNode();
-    void get_singleton(const char* arg1, bool arg2);
+    ~EditorNode() override;
 
     void add_resource_conversion_plugin(
         const Ref<EditorResourceConversionPlugin>& p_plugin
@@ -1154,7 +1141,7 @@ public:
     bool empty();
 
     EditorPluginList();
-    ~EditorPluginList();
+    ~EditorPluginList() override;
 };
 
 struct EditorProgressBG {

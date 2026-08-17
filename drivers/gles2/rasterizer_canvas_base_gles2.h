@@ -4,8 +4,8 @@
 //
 // SPDX-License-Identifier: MIT
 
-#ifndef RASTERIZERCANVASBASEGLES2_H
-#define RASTERIZERCANVASBASEGLES2_H
+#ifndef RASTERIZER_CANVAS_BASE_GLES2_H
+#define RASTERIZER_CANVAS_BASE_GLES2_H
 
 #include "drivers/gles_common/rasterizer_array.h"
 #include "drivers/gles_common/rasterizer_storage_common.h"
@@ -86,12 +86,12 @@ public:
 
     void _set_uniforms();
 
-    virtual RID light_internal_create();
-    virtual void light_internal_update(RID p_rid, Light* p_light);
-    virtual void light_internal_free(RID p_rid);
+    RID light_internal_create() override;
+    void light_internal_update(RID p_rid, Light* p_light) override;
+    void light_internal_free(RID p_rid) override;
 
-    virtual void canvas_begin();
-    virtual void canvas_end();
+    void canvas_begin() override;
+    void canvas_end() override;
 
     void _draw_gui_primitive(
         int p_points,
@@ -134,7 +134,7 @@ public:
     void _copy_texscreen(const Rect2& p_rect);
     void _copy_screen(const Rect2& p_rect);
 
-    virtual void draw_window_margins(int* black_margin, RID* black_image);
+    void draw_window_margins(int* black_margin, RID* black_image) override;
     void draw_generic_textured_rect(const Rect2& p_rect, const Rect2& p_src);
     void draw_lens_distortion_rect(
         const Rect2& p_rect,
@@ -144,8 +144,8 @@ public:
         float p_oversample
     );
 
-    virtual void reset_canvas();
-    virtual void canvas_light_shadow_buffer_update(
+    void reset_canvas() override;
+    void canvas_light_shadow_buffer_update(
         RID p_buffer,
         const Transform2D& p_light_xform,
         int p_light_mask,
@@ -153,8 +153,8 @@ public:
         float p_far,
         LightOccluderInstance* p_occluders,
         CameraMatrix* p_xform_cache
-    );
-    virtual void canvas_debug_viewport_shadows(Light* p_lights_with_shadow);
+    ) override;
+    void canvas_debug_viewport_shadows(Light* p_lights_with_shadow) override;
 
     RasterizerStorageGLES2::Texture* _bind_canvas_texture(
         const RID& p_texture,
@@ -173,4 +173,4 @@ public:
     RasterizerCanvasBaseGLES2();
 };
 
-#endif // RASTERIZERCANVASBASEGLES2_H
+#endif // RASTERIZER_CANVAS_BASE_GLES2_H

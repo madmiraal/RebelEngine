@@ -37,10 +37,10 @@ struct FilterCallback : public btOverlapFilterCallback {
     );
 
     // return true when pairs need collision
-    virtual bool needBroadphaseCollision(
+    bool needBroadphaseCollision(
         btBroadphaseProxy* proxy0,
         btBroadphaseProxy* proxy1
-    ) const;
+    ) const override;
 };
 
 /// It performs an additional check allow exclusions.
@@ -68,12 +68,12 @@ public:
         collide_with_bodies(p_collide_with_bodies),
         collide_with_areas(p_collide_with_areas) {}
 
-    virtual bool needsCollision(btBroadphaseProxy* proxy0) const;
+    bool needsCollision(btBroadphaseProxy* proxy0) const override;
 
-    virtual btScalar addSingleResult(
+    btScalar addSingleResult(
         btCollisionWorld::LocalRayResult& rayResult,
         bool normalInWorldSpace
-    ) {
+    ) override {
         if (rayResult.m_localShapeInfo) {
             m_shapeId =
                 rayResult.m_localShapeInfo
@@ -107,12 +107,12 @@ public:
         m_exclude(p_exclude),
         count(0) {}
 
-    virtual bool needsCollision(btBroadphaseProxy* proxy0) const;
+    bool needsCollision(btBroadphaseProxy* proxy0) const override;
 
-    virtual btScalar addSingleResult(
+    btScalar addSingleResult(
         btCollisionWorld::LocalConvexResult& convexResult,
         bool normalInWorldSpace
-    );
+    ) override;
 };
 
 struct KinClosestConvexResultCallback :
@@ -137,7 +137,7 @@ public:
         m_exclude(p_exclude),
         m_infinite_inertia(p_infinite_inertia) {}
 
-    virtual bool needsCollision(btBroadphaseProxy* proxy0) const;
+    bool needsCollision(btBroadphaseProxy* proxy0) const override;
 };
 
 struct ClosestConvexResultCallback :
@@ -165,12 +165,12 @@ public:
         collide_with_bodies(p_collide_with_bodies),
         collide_with_areas(p_collide_with_areas) {}
 
-    virtual bool needsCollision(btBroadphaseProxy* proxy0) const;
+    bool needsCollision(btBroadphaseProxy* proxy0) const override;
 
-    virtual btScalar addSingleResult(
+    btScalar addSingleResult(
         btCollisionWorld::LocalConvexResult& convexResult,
         bool normalInWorldSpace
-    );
+    ) override;
 };
 
 struct AllContactResultCallback :
@@ -201,9 +201,9 @@ public:
         collide_with_bodies(p_collide_with_bodies),
         collide_with_areas(p_collide_with_areas) {}
 
-    virtual bool needsCollision(btBroadphaseProxy* proxy0) const;
+    bool needsCollision(btBroadphaseProxy* proxy0) const override;
 
-    virtual btScalar addSingleResult(
+    btScalar addSingleResult(
         btManifoldPoint& cp,
         const btCollisionObjectWrapper* colObj0Wrap,
         int partId0,
@@ -211,7 +211,7 @@ public:
         const btCollisionObjectWrapper* colObj1Wrap,
         int partId1,
         int index1
-    );
+    ) override;
 };
 
 /// Returns the list of contacts pairs in this order: Local contact, other body
@@ -244,9 +244,9 @@ public:
         collide_with_bodies(p_collide_with_bodies),
         collide_with_areas(p_collide_with_areas) {}
 
-    virtual bool needsCollision(btBroadphaseProxy* proxy0) const;
+    bool needsCollision(btBroadphaseProxy* proxy0) const override;
 
-    virtual btScalar addSingleResult(
+    btScalar addSingleResult(
         btManifoldPoint& cp,
         const btCollisionObjectWrapper* colObj0Wrap,
         int partId0,
@@ -254,7 +254,7 @@ public:
         const btCollisionObjectWrapper* colObj1Wrap,
         int partId1,
         int index1
-    );
+    ) override;
 };
 
 struct RestInfoContactResultCallback :
@@ -285,9 +285,9 @@ public:
         collide_with_bodies(p_collide_with_bodies),
         collide_with_areas(p_collide_with_areas) {}
 
-    virtual bool needsCollision(btBroadphaseProxy* proxy0) const;
+    bool needsCollision(btBroadphaseProxy* proxy0) const override;
 
-    virtual btScalar addSingleResult(
+    btScalar addSingleResult(
         btManifoldPoint& cp,
         const btCollisionObjectWrapper* colObj0Wrap,
         int partId0,
@@ -295,7 +295,7 @@ public:
         const btCollisionObjectWrapper* colObj1Wrap,
         int partId1,
         int index1
-    );
+    ) override;
 };
 
 struct DeepPenetrationContactResultCallback : public btManifoldResult {

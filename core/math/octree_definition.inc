@@ -178,13 +178,6 @@ private:
                 children[i] = nullptr;
             }
         }
-
-        ~Octant() {
-            /*
-            for (int i=0;i<8;i++)
-                memdelete_notnull(children[i]);
-            */
-        }
     };
 
     struct PairData;

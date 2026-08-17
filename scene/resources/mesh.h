@@ -198,13 +198,13 @@ public:
         const Vector<AABB>& p_bone_aabbs = Vector<AABB>()
     );
 
-    Array surface_get_arrays(int p_surface) const;
-    Array surface_get_blend_shape_arrays(int p_surface) const;
+    Array surface_get_arrays(int p_surface) const override;
+    Array surface_get_blend_shape_arrays(int p_surface) const override;
 
     void add_blend_shape(const StringName& p_name);
-    int get_blend_shape_count() const;
-    StringName get_blend_shape_name(int p_index) const;
-    void set_blend_shape_name(int p_index, const StringName& p_name);
+    int get_blend_shape_count() const override;
+    StringName get_blend_shape_name(int p_index) const override;
+    void set_blend_shape_name(int p_index, const StringName& p_name) override;
     void clear_blend_shapes();
 
     void set_blend_shape_mode(BlendShapeMode p_mode);
@@ -216,7 +216,7 @@ public:
         const PoolVector<uint8_t>& p_data
     );
 
-    int get_surface_count() const;
+    int get_surface_count() const override;
     void surface_remove(int p_idx);
     void clear_surfaces();
 
@@ -225,17 +225,14 @@ public:
         const AABB& p_aabb
     ); // only recognized by driver
 
-    int surface_get_array_len(int p_idx) const;
-    int surface_get_array_index_len(int p_idx) const;
-    uint32_t surface_get_format(int p_idx) const;
-    PrimitiveType surface_get_primitive_type(int p_idx) const;
-    bool surface_is_alpha_sorting_enabled(int p_idx) const;
+    int surface_get_array_len(int p_idx) const override;
+    int surface_get_array_index_len(int p_idx) const override;
+    uint32_t surface_get_format(int p_idx) const override;
+    PrimitiveType surface_get_primitive_type(int p_idx) const override;
 
-    virtual void surface_set_material(
-        int p_idx,
-        const Ref<Material>& p_material
-    );
-    virtual Ref<Material> surface_get_material(int p_idx) const;
+    void surface_set_material(int p_idx, const Ref<Material>& p_material)
+        override;
+    Ref<Material> surface_get_material(int p_idx) const override;
 
     int surface_find_by_name(const String& p_name) const;
     void surface_set_name(int p_idx, const String& p_name);
@@ -246,8 +243,8 @@ public:
     void set_custom_aabb(const AABB& p_custom);
     AABB get_custom_aabb() const;
 
-    AABB get_aabb() const;
-    virtual RID get_rid() const;
+    AABB get_aabb() const override;
+    RID get_rid() const override;
 
     void regen_normalmaps();
 
@@ -263,11 +260,10 @@ public:
         float p_texel_size                = 0.05
     );
 
-    virtual void reload_from_file();
+    void reload_from_file() override;
 
     ArrayMesh();
-
-    ~ArrayMesh();
+    ~ArrayMesh() override;
 };
 
 VARIANT_ENUM_CAST(Mesh::ArrayType);

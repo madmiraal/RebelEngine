@@ -20,15 +20,15 @@ protected:
     // bind helpers
 
 public:
-    virtual PoolVector<Face3> get_faces(uint32_t p_usage_flags) const;
+    PoolVector<Face3> get_faces(uint32_t p_usage_flags) const override;
 
     void set_multimesh(const Ref<MultiMesh>& p_multimesh);
     Ref<MultiMesh> get_multimesh() const;
 
-    virtual AABB get_aabb() const;
+    AABB get_aabb() const override;
 
     MultiMeshInstance();
-    ~MultiMeshInstance();
+    ~MultiMeshInstance() override;
 };
 
 #endif // MULTIMESH_INSTANCE_H

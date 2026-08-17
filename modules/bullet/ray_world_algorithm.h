@@ -28,22 +28,22 @@ public:
         const btCollisionObjectWrapper* body1Wrap,
         bool isSwapped
     );
-    virtual ~RayWorldAlgorithm();
+    ~RayWorldAlgorithm() override;
 
-    virtual void processCollision(
+    void processCollision(
         const btCollisionObjectWrapper* body0Wrap,
         const btCollisionObjectWrapper* body1Wrap,
         const btDispatcherInfo& dispatchInfo,
         btManifoldResult* resultOut
-    );
-    virtual btScalar calculateTimeOfImpact(
+    ) override;
+    btScalar calculateTimeOfImpact(
         btCollisionObject* body0,
         btCollisionObject* body1,
         const btDispatcherInfo& dispatchInfo,
         btManifoldResult* resultOut
-    );
+    ) override;
 
-    virtual void getAllContactManifolds(btManifoldArray& manifoldArray) {
+    void getAllContactManifolds(btManifoldArray& manifoldArray) override {
         /// should we use m_ownManifold to avoid adding duplicates?
         if (m_manifoldPtr && m_ownManifold) {
             manifoldArray.push_back(m_manifoldPtr);
@@ -54,11 +54,11 @@ public:
         const btDiscreteDynamicsWorld* m_world;
         CreateFunc(const btDiscreteDynamicsWorld* world);
 
-        virtual btCollisionAlgorithm* CreateCollisionAlgorithm(
+        btCollisionAlgorithm* CreateCollisionAlgorithm(
             btCollisionAlgorithmConstructionInfo& ci,
             const btCollisionObjectWrapper* body0Wrap,
             const btCollisionObjectWrapper* body1Wrap
-        ) {
+        ) override {
             void* mem = ci.m_dispatcher1->allocateCollisionAlgorithm(
                 sizeof(RayWorldAlgorithm)
             );
@@ -77,11 +77,11 @@ public:
         const btDiscreteDynamicsWorld* m_world;
         SwappedCreateFunc(const btDiscreteDynamicsWorld* world);
 
-        virtual btCollisionAlgorithm* CreateCollisionAlgorithm(
+        btCollisionAlgorithm* CreateCollisionAlgorithm(
             btCollisionAlgorithmConstructionInfo& ci,
             const btCollisionObjectWrapper* body0Wrap,
             const btCollisionObjectWrapper* body1Wrap
-        ) {
+        ) override {
             void* mem = ci.m_dispatcher1->allocateCollisionAlgorithm(
                 sizeof(RayWorldAlgorithm)
             );

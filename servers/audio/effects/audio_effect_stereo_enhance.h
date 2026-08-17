@@ -4,8 +4,8 @@
 //
 // SPDX-License-Identifier: MIT
 
-#ifndef AUDIOEFFECTSTEREOENHANCE_H
-#define AUDIOEFFECTSTEREOENHANCE_H
+#ifndef AUDIO_EFFECT_STEREO_ENHANCE_H
+#define AUDIO_EFFECT_STEREO_ENHANCE_H
 
 #include "servers/audio/audio_effect.h"
 
@@ -25,13 +25,13 @@ class AudioEffectStereoEnhanceInstance : public AudioEffectInstance {
     unsigned int ringbuff_mask;
 
 public:
-    virtual void process(
+    void process(
         const AudioFrame* p_src_frames,
         AudioFrame* p_dst_frames,
         int p_frame_count
-    );
+    ) override;
 
-    ~AudioEffectStereoEnhanceInstance();
+    ~AudioEffectStereoEnhanceInstance() override;
 };
 
 class AudioEffectStereoEnhance : public AudioEffect {
@@ -48,7 +48,7 @@ protected:
     static void _bind_methods();
 
 public:
-    Ref<AudioEffectInstance> instance();
+    Ref<AudioEffectInstance> instance() override;
 
     void set_pan_pullout(float p_amount);
     float get_pan_pullout() const;
@@ -62,4 +62,4 @@ public:
     AudioEffectStereoEnhance();
 };
 
-#endif // AUDIOEFFECTSTEREOENHANCE_H
+#endif // AUDIO_EFFECT_STEREO_ENHANCE_H

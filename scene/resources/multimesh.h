@@ -4,8 +4,8 @@
 //
 // SPDX-License-Identifier: MIT
 
-#ifndef MULTIMESH_H
-#define MULTIMESH_H
+#ifndef MULTI_MESH_H
+#define MULTI_MESH_H
 
 #include "scene/resources/mesh.h"
 #include "servers/visual_server.h"
@@ -93,10 +93,10 @@ public:
 
     virtual AABB get_aabb() const;
 
-    virtual RID get_rid() const;
+    RID get_rid() const override;
 
     MultiMesh();
-    ~MultiMesh();
+    ~MultiMesh() override;
 };
 
 VARIANT_ENUM_CAST(MultiMesh::TransformFormat);

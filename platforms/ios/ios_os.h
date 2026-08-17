@@ -36,24 +36,24 @@ private:
 
     VideoMode video_mode;
 
-    virtual int get_video_driver_count() const;
-    virtual const char* get_video_driver_name(int p_driver) const;
+    int get_video_driver_count() const override;
+    const char* get_video_driver_name(int p_driver) const override;
 
-    virtual int get_current_video_driver() const;
+    int get_current_video_driver() const override;
 
-    virtual void initialize_core();
-    virtual Error initialize(
+    void initialize_core() override;
+    Error initialize(
         const VideoMode& p_desired,
         int p_video_driver,
         int p_audio_driver
-    );
+    ) override;
 
-    virtual void set_main_loop(MainLoop* p_main_loop);
-    virtual MainLoop* get_main_loop() const;
+    void set_main_loop(MainLoop* p_main_loop) override;
+    MainLoop* get_main_loop() const override;
 
-    virtual void delete_main_loop();
+    void delete_main_loop() override;
 
-    virtual void finalize();
+    void finalize() override;
 
     void perform_event(const Ref<InputEvent>& p_event);
 
@@ -73,46 +73,47 @@ public:
     static IosOS* get_singleton();
 
     IosOS(String p_data_dir);
-    ~IosOS();
+    ~IosOS() override;
 
     bool iterate();
 
     void start();
 
-    virtual Error open_dynamic_library(
+    Error open_dynamic_library(
         const String p_path,
         void*& p_library_handle,
         bool p_also_set_library_path = false
-    );
-    virtual Error close_dynamic_library(void* p_library_handle);
-    virtual Error get_dynamic_library_symbol_handle(
+    ) override;
+    Error close_dynamic_library(void* p_library_handle) override;
+    Error get_dynamic_library_symbol_handle(
         void* p_library_handle,
         const String p_name,
         void*& p_symbol_handle,
         bool p_optional = false
-    );
+    ) override;
 
-    virtual void alert(const String& p_alert, const String& p_title = "ALERT!");
+    void alert(const String& p_alert, const String& p_title = "ALERT!")
+        override;
 
-    virtual String get_name() const;
-    virtual String get_model_name() const;
+    String get_name() const override;
+    String get_model_name() const override;
 
-    virtual void set_clipboard(const String& p_text);
-    virtual String get_clipboard() const;
+    void set_clipboard(const String& p_text) override;
+    String get_clipboard() const override;
 
-    Error shell_open(String p_uri);
+    Error shell_open(String p_uri) override;
 
-    String get_user_data_dir() const;
+    String get_user_data_dir() const override;
 
-    String get_locale() const;
+    String get_locale() const override;
 
-    String get_unique_id() const;
+    String get_unique_id() const override;
 
-    virtual void vibrate_handheld(int p_duration_ms = 500);
+    void vibrate_handheld(int p_duration_ms = 500) override;
 
-    virtual bool _check_internal_feature_support(const String& p_feature);
+    bool _check_internal_feature_support(const String& p_feature) override;
 
-    virtual int get_screen_dpi(int p_screen = -1) const;
+    int get_screen_dpi(int p_screen = -1) const override;
 
     void pencil_press(
         int p_idx,
@@ -158,57 +159,53 @@ public:
         const InputDefault::JoyAxis& p_value
     );
 
-    virtual void set_mouse_show(bool p_show);
-    virtual void set_mouse_grab(bool p_grab);
-    virtual bool is_mouse_grab_enabled() const;
-    virtual Point2 get_mouse_position() const;
-    virtual int get_mouse_button_state() const;
+    void set_mouse_show(bool p_show);
+    void set_mouse_grab(bool p_grab);
+    bool is_mouse_grab_enabled() const;
+    Point2 get_mouse_position() const override;
+    int get_mouse_button_state() const override;
 
-    virtual void set_window_title(const String& p_title);
+    void set_window_title(const String& p_title) override;
 
-    virtual void set_video_mode(
-        const VideoMode& p_video_mode,
-        int p_screen = 0
-    );
-    virtual VideoMode get_video_mode(int p_screen = 0) const;
+    void set_video_mode(const VideoMode& p_video_mode, int p_screen = 0)
+        override;
+    VideoMode get_video_mode(int p_screen = 0) const override;
 
-    virtual void get_fullscreen_mode_list(
-        List<VideoMode>* p_list,
-        int p_screen = 0
-    ) const;
+    void get_fullscreen_mode_list(List<VideoMode>* p_list, int p_screen = 0)
+        const override;
 
-    virtual void set_keep_screen_on(bool p_enabled);
+    void set_keep_screen_on(bool p_enabled) override;
 
-    virtual bool can_draw() const;
+    bool can_draw() const override;
 
-    virtual bool has_virtual_keyboard() const;
-    virtual void show_virtual_keyboard(
+    bool has_virtual_keyboard() const override;
+    void show_virtual_keyboard(
         const String& p_existing_text,
         const Rect2& p_screen_rect = Rect2(),
         bool p_multiline           = false,
         int p_max_input_length     = -1,
         int p_cursor_start         = -1,
         int p_cursor_end           = -1
-    );
-    virtual void hide_virtual_keyboard();
-    virtual int get_virtual_keyboard_height() const;
+    ) override;
+    void hide_virtual_keyboard() override;
+    int get_virtual_keyboard_height() const override;
 
-    virtual Size2 get_window_size() const;
-    virtual Rect2 get_window_safe_area() const;
+    Size2 get_window_size() const override;
+    Rect2 get_window_safe_area() const override;
 
-    virtual bool has_touchscreen_ui_hint() const;
+    bool has_touchscreen_ui_hint() const override;
 
-    virtual Error native_video_play(
+    Error native_video_play(
         String p_path,
         float p_volume,
         String p_audio_track,
         String p_subtitle_track
-    );
-    virtual bool native_video_is_playing() const;
-    virtual void native_video_pause();
-    virtual void native_video_unpause();
-    virtual void native_video_focus_out();
-    virtual void native_video_stop();
+    ) override;
+    bool native_video_is_playing() const override;
+    void native_video_pause() override;
+    void native_video_unpause() override;
+    void native_video_focus_out();
+    void native_video_stop() override;
 
     void on_focus_out();
     void on_focus_in();

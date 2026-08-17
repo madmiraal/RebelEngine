@@ -22,23 +22,23 @@ class GDMonoField : public IMonoClassMember {
     MonoCustomAttrInfo* attributes;
 
 public:
-    virtual GDMonoClass* get_enclosing_class() const GD_FINAL {
+    GDMonoClass* get_enclosing_class() const GD_FINAL {
         return owner;
     }
 
-    virtual MemberType get_member_type() const GD_FINAL {
+    MemberType get_member_type() const GD_FINAL {
         return MEMBER_TYPE_FIELD;
     }
 
-    virtual StringName get_name() const GD_FINAL {
+    StringName get_name() const GD_FINAL {
         return name;
     }
 
-    virtual bool is_static() GD_FINAL;
-    virtual Visibility get_visibility() GD_FINAL;
+    bool is_static() GD_FINAL;
+    Visibility get_visibility() GD_FINAL;
 
-    virtual bool has_attribute(GDMonoClass* p_attr_class) GD_FINAL;
-    virtual MonoObject* get_attribute(GDMonoClass* p_attr_class) GD_FINAL;
+    bool has_attribute(GDMonoClass* p_attr_class) GD_FINAL;
+    MonoObject* get_attribute(GDMonoClass* p_attr_class) GD_FINAL;
     void fetch_attributes();
 
     _FORCE_INLINE_ ManagedType get_type() const {
@@ -55,7 +55,7 @@ public:
     String get_string_value(MonoObject* p_object);
 
     GDMonoField(MonoClassField* p_mono_field, GDMonoClass* p_owner);
-    ~GDMonoField();
+    ~GDMonoField() override;
 };
 
 #endif // GDMONOFIELD_H

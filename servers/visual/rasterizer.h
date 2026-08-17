@@ -1236,8 +1236,6 @@ public:
             };
 
             Type type;
-
-            virtual ~Command() {}
         };
 
         struct CommandLine : public Command {
@@ -1685,7 +1683,7 @@ public:
             update_when_visible = false;
         }
 
-        virtual ~Item() {
+        ~Item() override {
             clear();
             if (copy_back_buffer) {
                 memdelete(copy_back_buffer);
@@ -1751,7 +1749,7 @@ public:
         RID* p_margin_textures
     ) = 0;
 
-    virtual ~RasterizerCanvas() {}
+    virtual ~RasterizerCanvas() = default;
 };
 
 class Rasterizer {

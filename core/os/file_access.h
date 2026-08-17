@@ -203,8 +203,7 @@ public:
     }
 
     FileAccess();
-
-    virtual ~FileAccess() {}
+    virtual ~FileAccess() = default;
 };
 
 struct FileAccessRef {

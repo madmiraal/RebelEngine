@@ -4,8 +4,8 @@
 //
 // SPDX-License-Identifier: MIT
 
-#ifndef RASTERIZERCANVASBASEGLES3_H
-#define RASTERIZERCANVASBASEGLES3_H
+#ifndef RASTERIZER_CANVAS_BASE_GLES3_H
+#define RASTERIZER_CANVAS_BASE_GLES3_H
 
 #include "rasterizer_storage_gles3.h"
 #include "servers/visual/rasterizer.h"
@@ -101,12 +101,12 @@ public:
 
     RID_Owner<LightInternal> light_internal_owner;
 
-    virtual RID light_internal_create();
-    virtual void light_internal_update(RID p_rid, Light* p_light);
-    virtual void light_internal_free(RID p_rid);
+    RID light_internal_create() override;
+    void light_internal_update(RID p_rid, Light* p_light) override;
+    void light_internal_free(RID p_rid) override;
 
-    virtual void canvas_begin();
-    virtual void canvas_end();
+    void canvas_begin() override;
+    void canvas_end() override;
 
     void _set_texture_rect_mode(
         bool p_enable,
@@ -160,9 +160,9 @@ public:
 
     void _copy_texscreen(const Rect2& p_rect);
 
-    virtual void canvas_debug_viewport_shadows(Light* p_lights_with_shadow);
+    void canvas_debug_viewport_shadows(Light* p_lights_with_shadow) override;
 
-    virtual void canvas_light_shadow_buffer_update(
+    void canvas_light_shadow_buffer_update(
         RID p_buffer,
         const Transform2D& p_light_xform,
         int p_light_mask,
@@ -170,9 +170,9 @@ public:
         float p_far,
         LightOccluderInstance* p_occluders,
         CameraMatrix* p_xform_cache
-    );
+    ) override;
 
-    virtual void reset_canvas();
+    void reset_canvas() override;
 
     void draw_generic_textured_rect(const Rect2& p_rect, const Rect2& p_src);
     void draw_lens_distortion_rect(
@@ -190,9 +190,9 @@ public:
     void initialize();
     void finalize();
 
-    virtual void draw_window_margins(int* black_margin, RID* black_image);
+    void draw_window_margins(int* black_margin, RID* black_image) override;
 
     RasterizerCanvasBaseGLES3();
 };
 
-#endif // RASTERIZERCANVASBASEGLES3_H
+#endif // RASTERIZER_CANVAS_BASE_GLES3_H

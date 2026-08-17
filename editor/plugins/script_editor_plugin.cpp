@@ -84,7 +84,7 @@ public:
         }
     }
 
-    virtual RES get_cached_resource(const String& p_path) {
+    RES get_cached_resource(const String& p_path) override {
         Map<String, Cache>::Element* E = cached.find(p_path);
         if (!E) {
             Cache c;
@@ -119,8 +119,6 @@ public:
         max_cache_size = 128;
         max_time_cache = 5 * 60 * 1000; // minutes, five
     }
-
-    virtual ~EditorScriptCodeCompletionCache() {}
 };
 
 void ScriptEditorQuickOpen::popup_dialog(

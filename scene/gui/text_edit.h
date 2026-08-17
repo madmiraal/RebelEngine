@@ -511,7 +511,6 @@ private:
     int get_column_x_offset(int p_char, String p_str) const;
 
     void adjust_viewport_to_cursor();
-    double get_scroll_line_diff() const;
     void _scroll_moved(double);
     void _update_scrollbars();
     void _v_scroll_input();
@@ -535,7 +534,7 @@ private:
 
     // void mouse_motion(const Point& p_pos, const Point& p_rel, int
     // p_button_mask);
-    Size2 get_minimum_size() const;
+    Size2 get_minimum_size() const override;
     int _get_control_height() const;
 
     int get_row_height() const;
@@ -607,7 +606,7 @@ private:
     int _calculate_spaces_till_next_right_indent(int column);
 
 protected:
-    virtual String get_tooltip(const Point2& p_pos) const;
+    String get_tooltip(const Point2& p_pos) const override;
 
     void _insert_text(
         int p_line,
@@ -662,7 +661,8 @@ public:
         SEARCH_RESULT_LINE,
     };
 
-    virtual CursorShape get_cursor_shape(const Point2& p_pos = Point2i()) const;
+    CursorShape get_cursor_shape(const Point2& p_pos = Point2i())
+        const override;
 
     void _get_mouse_pos(const Point2i& p_mouse, int& r_row, int& r_col) const;
     void _get_minimap_mouse_row(const Point2i& p_mouse, int& r_row) const;
@@ -973,9 +973,9 @@ public:
     String get_text_for_completion();
     String get_text_for_lookup_completion();
 
-    virtual bool is_text_field() const;
+    bool is_text_field() const override;
     TextEdit();
-    ~TextEdit();
+    ~TextEdit() override;
 };
 
 VARIANT_ENUM_CAST(TextEdit::MenuItems);

@@ -124,7 +124,7 @@ public:
         insert(i, p_val);
     }
 
-    _FORCE_INLINE_ Vector() {}
+    _FORCE_INLINE_ Vector() = default;
 
     _FORCE_INLINE_ Vector(const Vector& p_from) {
         _cowdata._ref(p_from._cowdata);
@@ -135,7 +135,7 @@ public:
         return *this;
     }
 
-    _FORCE_INLINE_ ~Vector() {}
+    _FORCE_INLINE_ ~Vector() = default;
 };
 
 template <class T>

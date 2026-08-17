@@ -306,7 +306,7 @@ private:
             char_fx_transform.instance();
         }
 
-        virtual ~ItemCustomFX() {
+        ~ItemCustomFX() override {
             _clear_children();
 
             char_fx_transform.unref();
@@ -432,8 +432,6 @@ private:
     bool use_bbcode;
     String bbcode;
 
-    void _update_all_lines();
-
     int fixed_width;
 
     bool fit_content_height;
@@ -517,7 +515,7 @@ public:
         return vscroll;
     }
 
-    virtual CursorShape get_cursor_shape(const Point2& p_pos) const;
+    CursorShape get_cursor_shape(const Point2& p_pos) const override;
 
     void set_selection_enabled(bool p_enabled);
     bool is_selection_enabled() const;
@@ -548,10 +546,10 @@ public:
     void install_effect(const Variant effect);
 
     void set_fixed_size_to_width(int p_width);
-    virtual Size2 get_minimum_size() const;
+    Size2 get_minimum_size() const override;
 
     RichTextLabel();
-    ~RichTextLabel();
+    ~RichTextLabel() override;
 };
 
 VARIANT_ENUM_CAST(RichTextLabel::Align);

@@ -49,8 +49,6 @@ future: no idea
 
  */
 
-SpatialGizmo::SpatialGizmo() {}
-
 void Spatial::_notify_dirty() {
 #ifdef TOOLS_ENABLED
     if ((data.gizmo.is_valid() || data.notify_transform)

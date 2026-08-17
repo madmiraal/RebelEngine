@@ -27,7 +27,7 @@ public:
         List<String>* p_extensions
     ) const;
 
-    virtual ~ResourceFormatSaver() {}
+    ~ResourceFormatSaver() override = default;
 };
 
 typedef void (*ResourceSavedCallback)(

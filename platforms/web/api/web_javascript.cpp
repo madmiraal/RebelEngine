@@ -128,7 +128,7 @@ public:
         _js_id = p_id;
     }
 
-    ~JavaScriptObjectImpl() {
+    ~JavaScriptObjectImpl() override {
         if (_js_id) {
             rebel_js_wrapper_object_unref(_js_id);
         }

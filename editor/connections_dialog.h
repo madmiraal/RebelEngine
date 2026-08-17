@@ -44,7 +44,7 @@ class ConnectDialog : public ConfirmationDialog {
 
     Label* error_label;
 
-    void ok_pressed();
+    void ok_pressed() override;
     void _cancel_pressed();
     void _tree_node_selected();
     void _add_bind();
@@ -73,7 +73,7 @@ public:
 
     void popup_dialog(const String& p_for_signal);
     ConnectDialog();
-    ~ConnectDialog();
+    ~ConnectDialog() override;
 };
 
 //////////////////////////////////////////
@@ -81,7 +81,7 @@ public:
 // Custom Tree needed to use a RichTextLabel as tooltip control
 // when display signal documentation.
 class ConnectionsDockTree : public Tree {
-    virtual Control* make_custom_tooltip(const String& p_text) const;
+    Control* make_custom_tooltip(const String& p_text) const override;
 };
 
 class ConnectionsDock : public VBoxContainer {
@@ -147,7 +147,7 @@ public:
     void update_tree();
 
     ConnectionsDock(EditorNode* p_editor = nullptr);
-    ~ConnectionsDock();
+    ~ConnectionsDock() override;
 };
 
 #endif

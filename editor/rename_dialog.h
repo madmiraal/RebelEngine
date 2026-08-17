@@ -20,7 +20,7 @@
 class RenameDialog : public ConfirmationDialog {
     GDCLASS(RenameDialog, ConfirmationDialog);
 
-    virtual void ok_pressed() {
+    void ok_pressed() override {
         rename();
     };
 
@@ -93,7 +93,7 @@ class RenameDialog : public ConfirmationDialog {
 protected:
     void _notification(int p_what) {};
     static void _bind_methods();
-    virtual void _post_popup();
+    void _post_popup() override;
 
 public:
     void reset();
@@ -103,7 +103,7 @@ public:
         SceneTreeEditor* p_scene_tree_editor,
         UndoRedo* p_undo_redo = nullptr
     );
-    ~RenameDialog(){};
+    ~RenameDialog() override = default;
 };
 
 #endif // MODULE_REGEX_ENABLED

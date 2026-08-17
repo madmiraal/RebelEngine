@@ -403,7 +403,7 @@ public:
     void _clear_stack();
 
     GDScriptFunctionState();
-    ~GDScriptFunctionState();
+    ~GDScriptFunctionState() override;
 };
 
 #endif // GDSCRIPT_FUNCTION_H

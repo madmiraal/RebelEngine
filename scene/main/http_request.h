@@ -139,7 +139,7 @@ public:
     int get_body_size() const;
 
     HTTPRequest();
-    ~HTTPRequest();
+    ~HTTPRequest() override;
 };
 
 VARIANT_ENUM_CAST(HTTPRequest::Result);

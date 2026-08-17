@@ -282,7 +282,7 @@ private:
 protected:
     bool _set(const StringName& p_name, const Variant& p_value);
     bool _get(const StringName& p_name, Variant& r_ret) const;
-    virtual void _validate_property(PropertyInfo& property) const;
+    void _validate_property(PropertyInfo& property) const override;
     void _get_property_list(List<PropertyInfo>* p_list) const;
     void _notification(int p_what);
 
@@ -380,7 +380,7 @@ public:
         const StringName& p_function,
         int p_idx,
         List<String>* r_options
-    ) const;
+    ) const override;
 
 #ifdef TOOLS_ENABLED
     Ref<AnimatedValuesBackup> backup_animated_values(
@@ -391,7 +391,7 @@ public:
 #endif
 
     AnimationPlayer();
-    ~AnimationPlayer();
+    ~AnimationPlayer() override;
 };
 
 VARIANT_ENUM_CAST(AnimationPlayer::AnimationProcessMode);

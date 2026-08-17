@@ -35,7 +35,7 @@ protected:
     static void _bind_methods();
 
 public:
-    virtual Size2 get_minimum_size() const;
+    Size2 get_minimum_size() const override;
 
     void set_text(const String& p_text);
     String get_text() const;
@@ -56,7 +56,7 @@ public:
     TextAlign get_text_align() const;
 
     Button(const String& p_text = String());
-    ~Button();
+    ~Button() override;
 };
 
 VARIANT_ENUM_CAST(Button::TextAlign);

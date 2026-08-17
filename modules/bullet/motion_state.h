@@ -44,7 +44,7 @@ public:
     /// This function is used by Bullet to get the position of object in the
     /// world if the body is kinematic Bullet will move the object to this
     /// location if the body is static Bullet doesn't move at all
-    virtual void getWorldTransform(btTransform& worldTrans) const {
+    void getWorldTransform(btTransform& worldTrans) const override {
         worldTrans = bodyKinematicWorldTransf;
     }
 
@@ -57,7 +57,7 @@ public:
     /// takes world transform from this object because the correct transform is
     /// set by Bullet only after the last step when there are sub steps This
     /// function must update Rebel transform rendering scene for this object.
-    virtual void setWorldTransform(const btTransform& worldTrans) {
+    void setWorldTransform(const btTransform& worldTrans) override {
         bodyCurrentWorldTransform = worldTrans;
 
         owner->notify_transform_changed();

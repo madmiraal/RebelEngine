@@ -22,14 +22,14 @@ class MenuButton : public Button {
     Array _get_items() const;
     void _set_items(const Array& p_items);
 
-    void _gui_input(Ref<InputEvent> p_event);
+    void _gui_input(Ref<InputEvent> p_event) override;
 
 protected:
     void _notification(int p_what);
     static void _bind_methods();
 
 public:
-    virtual void pressed();
+    void pressed() override;
 
     PopupMenu* get_popup() const;
     void set_switch_on_hover(bool p_enabled);
@@ -37,7 +37,7 @@ public:
     void set_disable_shortcuts(bool p_disabled);
 
     MenuButton();
-    ~MenuButton();
+    ~MenuButton() override;
 };
 
 #endif

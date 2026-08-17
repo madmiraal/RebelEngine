@@ -102,41 +102,39 @@ protected:
     void clear();
 
 public:
-    virtual void play();
-    virtual void stop();
-    virtual bool is_playing() const;
+    void play() override;
+    void stop() override;
+    bool is_playing() const override;
 
-    virtual void set_paused(bool p_paused);
-    virtual bool is_paused() const;
+    void set_paused(bool p_paused) override;
+    bool is_paused() const override;
 
-    virtual void set_loop(bool p_enable);
-    virtual bool has_loop() const;
+    void set_loop(bool p_enable) override;
+    bool has_loop() const override;
 
-    virtual float get_length() const;
+    float get_length() const override;
 
-    virtual String get_stream_name() const;
+    String get_stream_name() const;
 
-    virtual int get_loop_count() const;
+    int get_loop_count() const;
 
-    virtual float get_playback_position() const;
-    virtual void seek(float p_time);
+    float get_playback_position() const override;
+    void seek(float p_time) override;
 
     void set_file(const String& p_file);
 
-    virtual Ref<Texture> get_texture() const;
-    virtual void update(float p_delta);
+    Ref<Texture> get_texture() const override;
+    void update(float p_delta) override;
 
-    virtual void set_mix_callback(
-        AudioMixCallback p_callback,
-        void* p_userdata
-    );
-    virtual int get_channels() const;
-    virtual int get_mix_rate() const;
+    void set_mix_callback(AudioMixCallback p_callback, void* p_userdata)
+        override;
+    int get_channels() const override;
+    int get_mix_rate() const override;
 
-    virtual void set_audio_track(int p_idx);
+    void set_audio_track(int p_idx) override;
 
     VideoStreamPlaybackTheora();
-    ~VideoStreamPlaybackTheora();
+    ~VideoStreamPlaybackTheora() override;
 };
 
 class VideoStreamTheora : public VideoStream {
@@ -149,7 +147,7 @@ protected:
     static void _bind_methods();
 
 public:
-    Ref<VideoStreamPlayback> instance_playback() {
+    Ref<VideoStreamPlayback> instance_playback() override {
         Ref<VideoStreamPlaybackTheora> pb = memnew(VideoStreamPlaybackTheora);
         pb->set_audio_track(audio_track);
         pb->set_file(file);
@@ -164,7 +162,7 @@ public:
         return file;
     }
 
-    void set_audio_track(int p_track) {
+    void set_audio_track(int p_track) override {
         audio_track = p_track;
     }
 
@@ -175,14 +173,14 @@ public:
 
 class ResourceFormatLoaderTheora : public ResourceFormatLoader {
 public:
-    virtual RES load(
+    RES load(
         const String& p_path,
         const String& p_original_path = "",
         Error* r_error                = nullptr
-    );
-    virtual void get_recognized_extensions(List<String>* p_extensions) const;
-    virtual bool handles_type(const String& p_type) const;
-    virtual String get_resource_type(const String& p_path) const;
+    ) override;
+    void get_recognized_extensions(List<String>* p_extensions) const override;
+    bool handles_type(const String& p_type) const override;
+    String get_resource_type(const String& p_path) const override;
 };
 
-#endif
+#endif // VIDEO_STREAM_THEORA_H

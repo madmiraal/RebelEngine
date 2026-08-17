@@ -149,7 +149,7 @@ public:
         const StringName& p_function,
         int p_idx,
         List<String>* r_options
-    ) const;
+    ) const override;
 
     virtual bool is_emulating_touch_from_mouse() const = 0;
     virtual bool is_emulating_mouse_from_touch() const = 0;

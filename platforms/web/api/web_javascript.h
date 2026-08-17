@@ -55,7 +55,7 @@ public:
 
     static JavaScript* get_singleton();
     JavaScript();
-    ~JavaScript();
+    ~JavaScript() override;
 };
 
 #endif // WEB_JAVASCRIPT_H

@@ -57,7 +57,6 @@ class AnimationTreePlayerEditor : public Control {
 
     void _popup_edit_dialog();
 
-    void _setup_edit_dialog(const StringName& p_node);
     PopupMenu* master_anim_popup;
     PopupMenu* node_popup;
     PopupMenu* add_popup;
@@ -122,7 +121,6 @@ class AnimationTreePlayerEditor : public Control {
     void _edit_dialog_changede(String);
     void _edit_dialog_changedf(float);
     void _edit_dialog_changed();
-    void _dialog_changed() const;
     ClickType _locate_click(
         const Point2& p_click,
         StringName* p_node_id,
@@ -139,7 +137,7 @@ protected:
     static void _bind_methods();
 
 public:
-    virtual Size2 get_minimum_size() const;
+    Size2 get_minimum_size() const override;
     void edit(AnimationTreePlayer* p_anim_tree);
     AnimationTreePlayerEditor();
 };
@@ -152,20 +150,20 @@ class AnimationTreePlayerEditorPlugin : public EditorPlugin {
     Button* button;
 
 public:
-    virtual String get_name() const {
+    String get_name() const override {
         return "AnimTree";
     }
 
-    bool has_main_screen() const {
+    bool has_main_screen() const override {
         return false;
     }
 
-    virtual void edit(Object* p_object);
-    virtual bool handles(Object* p_object) const;
-    virtual void make_visible(bool p_visible);
+    void edit(Object* p_object) override;
+    bool handles(Object* p_object) const override;
+    void make_visible(bool p_visible) override;
 
     AnimationTreePlayerEditorPlugin(EditorNode* p_node);
-    ~AnimationTreePlayerEditorPlugin();
+    ~AnimationTreePlayerEditorPlugin() override;
 };
 
-#endif // ANIMATION_TREE_EDITOR_PLUGIN_H
+#endif // ANIMATION_TREE_PLAYER_EDITOR_PLUGIN_H

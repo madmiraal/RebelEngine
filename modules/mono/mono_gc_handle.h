@@ -56,7 +56,7 @@ public:
     void release();
 
     MonoGCHandle(uint32_t p_handle, HandleType p_handle_type);
-    ~MonoGCHandle();
+    ~MonoGCHandle() override;
 };
 
 #endif // CSHARP_GC_HANDLE_H

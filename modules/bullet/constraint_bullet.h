@@ -36,7 +36,7 @@ public:
     }
 
 public:
-    virtual ~ConstraintBullet() {
+    ~ConstraintBullet() override {
         bulletdelete(constraint);
         constraint = nullptr;
     }

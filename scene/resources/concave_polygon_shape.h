@@ -39,13 +39,13 @@ class ConcavePolygonShape : public Shape {
 protected:
     static void _bind_methods();
 
-    virtual void _update_shape();
+    void _update_shape() override;
 
 public:
     void set_faces(const PoolVector<Vector3>& p_faces);
     PoolVector<Vector3> get_faces() const;
 
-    Vector<Vector3> get_debug_mesh_lines();
+    Vector<Vector3> get_debug_mesh_lines() override;
 
     ConcavePolygonShape();
 };

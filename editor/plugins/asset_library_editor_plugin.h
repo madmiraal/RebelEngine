@@ -334,19 +334,12 @@ class EditorAssetLibrary : public PanelContainer {
     void _search(int p_page = 0);
     void _rerun_search(int p_ignore);
     void _search_text_changed(const String& p_text = "");
-    void _search_text_entered(const String& p_text = "");
     void _api_request(
         const String& p_request,
         RequestType p_request_type,
         const String& p_arguments = ""
     );
     void _http_request_completed(
-        int p_status,
-        int p_code,
-        const PoolStringArray& headers,
-        const PoolByteArray& p_data
-    );
-    void _http_download_completed(
         int p_status,
         int p_code,
         const PoolStringArray& headers,
@@ -379,27 +372,24 @@ class AssetLibraryEditorPlugin : public EditorPlugin {
     EditorNode* editor;
 
 public:
-    virtual String get_name() const {
+    String get_name() const override {
         return "AssetLib";
     }
 
-    bool has_main_screen() const {
+    bool has_main_screen() const override {
         return true;
     }
 
-    virtual void edit(Object* p_object) {}
+    void edit(Object* p_object) override {}
 
-    virtual bool handles(Object* p_object) const {
+    bool handles(Object* p_object) const override {
         return false;
     }
 
-    virtual void make_visible(bool p_visible);
-    // virtual bool get_remove_list(List<Node*> *p_list) { return
-    // canvas_item_editor->get_remove_list(p_list); } virtual Dictionary
-    // get_state() const; virtual void set_state(const Dictionary& p_state);
+    void make_visible(bool p_visible) override;
 
     AssetLibraryEditorPlugin(EditorNode* p_node);
-    ~AssetLibraryEditorPlugin();
+    ~AssetLibraryEditorPlugin() override;
 };
 
-#endif // EDITORASSETLIBRARY_H
+#endif // ASSET_LIBRARY_EDITOR_PLUGIN_H

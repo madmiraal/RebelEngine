@@ -74,7 +74,7 @@ public:
         const std::string& name,
         const Document& doc
     );
-    virtual ~Geometry();
+    ~Geometry() override;
 
     /** Get the Skin attached to this geometry or NULL */
     const Skin* DeformerSkin() const;
@@ -167,7 +167,7 @@ public:
         const Document& doc
     );
 
-    virtual ~MeshGeometry();
+    ~MeshGeometry() override;
 
     const std::vector<Vector3>& get_vertices() const;
     const std::vector<Edge>& get_edge_map() const;
@@ -226,7 +226,7 @@ public:
     );
 
     /** The class destructor */
-    virtual ~ShapeGeometry();
+    ~ShapeGeometry() override;
 
     /** Get a list of all vertex points, non-unique*/
     const std::vector<Vector3>& GetVertices() const;
@@ -258,7 +258,7 @@ public:
     );
 
     /** The class destructor */
-    virtual ~LineGeometry();
+    ~LineGeometry() override;
 
     /** Get a list of all vertex points, non-unique*/
     const std::vector<Vector3>& GetVertices() const;

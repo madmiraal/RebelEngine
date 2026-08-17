@@ -53,8 +53,6 @@ private:
             loop_wrap     = true;
             enabled       = true;
         }
-
-        virtual ~Track() {}
     };
 
     struct Key {
@@ -514,7 +512,7 @@ public:
     );
 
     Animation();
-    ~Animation();
+    ~Animation() override;
 };
 
 VARIANT_ENUM_CAST(Animation::TrackType);

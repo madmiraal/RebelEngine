@@ -21,10 +21,8 @@ protected:
     static void _bind_methods();
 
 public:
-    virtual bool _edit_is_selected_on_click(
-        const Point2& p_point,
-        double p_tolerance
-    ) const;
+    bool _edit_is_selected_on_click(const Point2& p_point, double p_tolerance)
+        const override;
 
     void set_normal(const Vector2& p_normal);
     void set_d(real_t p_d);
@@ -32,8 +30,8 @@ public:
     Vector2 get_normal() const;
     real_t get_d() const;
 
-    virtual void draw(const RID& p_to_rid, const Color& p_color);
-    virtual Rect2 get_rect() const;
+    void draw(const RID& p_to_rid, const Color& p_color) override;
+    Rect2 get_rect() const override;
 
     LineShape2D();
 };

@@ -52,7 +52,7 @@ public:
     String get_vcs_name();
 
     EditorVCSInterface();
-    virtual ~EditorVCSInterface();
+    ~EditorVCSInterface() override;
 };
 
 #endif // !EDITOR_VCS_INTERFACE_H
