@@ -10,11 +10,6 @@
 #include "core/io/image_loader.h"
 #include "core/ustring.h"
 
-/**
-    @author Daniel Ramirez <djrmuv@gmail.com>
-*/
-
-// Forward declare and include third-party headers in .cpp.
 struct NSVGrasterizer;
 struct NSVGimage;
 

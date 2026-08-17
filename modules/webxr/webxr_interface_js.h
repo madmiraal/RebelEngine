@@ -11,12 +11,6 @@
 
 #include "webxr_interface.h"
 
-/**
-    @author David Snopek <david.snopek@snopekgames.com>
-
-    The WebXR interface is a VR/AR interface that can be used on the web.
-*/
-
 class WebXRInterfaceJS : public WebXRInterface {
     GDCLASS(WebXRInterfaceJS, WebXRInterface);
 

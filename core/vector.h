@@ -7,13 +7,6 @@
 #ifndef VECTOR_H
 #define VECTOR_H
 
-/**
- * @class Vector
- * @author Juan Linietsky
- * Vector container. Regular Vector Container. Use with care and for smaller
- * arrays when possible. Use PoolVector for large arrays.
- */
-
 #include "core/cowdata.h"
 #include "core/error_macros.h"
 #include "core/os/memory.h"

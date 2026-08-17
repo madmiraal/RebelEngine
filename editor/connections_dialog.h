@@ -4,10 +4,6 @@
 //
 // SPDX-License-Identifier: MIT
 
-/**
-@author Juan Linietsky <reduzio@gmail.com>
-*/
-
 #ifndef CONNECTIONS_DIALOG_H
 #define CONNECTIONS_DIALOG_H
 

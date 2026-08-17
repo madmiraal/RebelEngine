@@ -16,10 +16,6 @@
 #include "scene/resources/style_box.h"
 #include "scene/resources/texture.h"
 
-/**
-    @author Mariano Suligoy
-*/
-
 class TextureRegionEditor : public VBoxContainer {
     GDCLASS(TextureRegionEditor, VBoxContainer);
 

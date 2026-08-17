@@ -10,12 +10,6 @@
 #include "modules/gdnative/gdnative.h"
 #include "servers/arvr/arvr_interface.h"
 
-/**
-    @authors Hinsbart & Karroffel & Mux213
-
-    This subclass of our AR/VR interface forms a bridge to GDNative.
-*/
-
 class ARVRInterfaceGDNative : public ARVRInterface {
     GDCLASS(ARVRInterfaceGDNative, ARVRInterface);
 

@@ -9,10 +9,6 @@
 
 #ifndef _3D_DISABLED
 
-/**
- * @author AndreaCatania
- */
-
 #include "core/math/transform.h"
 #include "scene/3d/skeleton.h"
 

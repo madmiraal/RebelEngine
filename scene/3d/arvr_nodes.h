@@ -12,14 +12,6 @@
 #include "scene/resources/mesh.h"
 #include "servers/arvr/arvr_positional_tracker.h"
 
-/**
-    @author Bastiaan Olij <mux213@gmail.com>
-**/
-
-/*
-    ARVRCamera is a subclass of camera which will register itself with its
-   parent ARVROrigin and as a result is automatically positioned
-*/
 class ARVRCamera : public Camera {
     GDCLASS(ARVRCamera, Camera);
 

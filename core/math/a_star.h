@@ -10,12 +10,6 @@
 #include "core/oa_hash_map.h"
 #include "core/reference.h"
 
-/**
-    A* pathfinding algorithm
-
-    @author Juan Linietsky <reduzio@gmail.com>
-*/
-
 class AStar : public Reference {
     GDCLASS(AStar, Reference);
     friend class AStar2D;

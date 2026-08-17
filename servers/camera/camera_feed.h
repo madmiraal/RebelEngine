@@ -12,13 +12,6 @@
 #include "servers/camera_server.h"
 #include "servers/visual_server.h"
 
-/**
-    @author Bastiaan Olij <mux213@gmail.com>
-
-    The camera server is a singleton object that gives access to the various
-    camera feeds that can be used as the background for our environment.
-**/
-
 class CameraFeed : public Reference {
     GDCLASS(CameraFeed, Reference);
 

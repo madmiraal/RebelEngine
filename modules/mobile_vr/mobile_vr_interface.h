@@ -10,21 +10,6 @@
 #include "servers/arvr/arvr_interface.h"
 #include "servers/arvr/arvr_positional_tracker.h"
 
-/**
-    @author Bastiaan Olij <mux213@gmail.com>
-
-    The mobile interface is a native VR interface that can be used on Android
-   and iOS phones. It contains a basic implementation supporting 3DOF tracking
-   if a gyroscope and accelerometer are present and sets up the proper
-   projection matrices based on the values provided.
-
-    We're planning to eventually do separate interfaces towards mobile SDKs that
-   have far more capabilities and do not rely on the user providing most of
-   these settings (though enhancing this with auto detection features based on
-   the device we're running on would be cool). I'm mostly adding this as an
-   example or base plate for more advanced interfaces.
-*/
-
 class MobileVRInterface : public ARVRInterface {
     GDCLASS(MobileVRInterface, ARVRInterface);
 

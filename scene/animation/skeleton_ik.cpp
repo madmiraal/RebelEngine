@@ -4,10 +4,6 @@
 //
 // SPDX-License-Identifier: MIT
 
-/**
- * @author AndreaCatania
- */
-
 #include "skeleton_ik.h"
 
 #ifndef _3D_DISABLED

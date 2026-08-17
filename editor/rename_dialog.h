@@ -17,10 +17,6 @@
 #include "scene/gui/option_button.h"
 #include "scene/gui/spin_box.h"
 
-/**
-@author Blazej Floch
-*/
-
 class RenameDialog : public ConfirmationDialog {
     GDCLASS(RenameDialog, ConfirmationDialog);
 

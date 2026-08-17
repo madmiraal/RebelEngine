@@ -12,22 +12,6 @@
 #include "scene/main/viewport.h"
 #include "servers/arvr_server.h"
 
-/**
-    @author Bastiaan Olij <mux213@gmail.com>
-
-    The ARVR interface is a template class on top of which we build interface to
-   different AR, VR and tracking SDKs. The idea is that we subclass this class,
-   implement the logic, and then instantiate a singleton of each interface when
-   Rebel starts. These instances do not initialize themselves but register
-   themselves with the AR/VR server.
-
-    If the user wants to enable AR/VR the choose the interface they want to use
-   and initialize it.
-
-    Note that we may make this into a fully instantiable class for GDNative
-   support.
-*/
-
 class ARVRInterface : public Reference {
     GDCLASS(ARVRInterface, Reference);
 

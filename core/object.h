@@ -37,10 +37,6 @@
 #define VARIANT_ARGS_FROM_ARRAY(m_arr)                                         \
     m_arr[0], m_arr[1], m_arr[2], m_arr[3], m_arr[4]
 
-/**
-@author Juan Linietsky <reduzio@gmail.com>
-*/
-
 #define ADD_SIGNAL(m_signal) ClassDB::add_signal(get_class_static(), m_signal)
 #define ADD_PROPERTY(m_property, m_setter, m_getter)                           \
     ClassDB::add_property(                                                     \
@@ -67,12 +63,6 @@
     ClassDB::add_property_group(get_class_static(), m_name, m_prefix)
 
 Array convert_property_list(const List<PropertyInfo>* p_list);
-
-/*
-   the following is an incomprehensible blob of hacks and workarounds to
-   compensate for many of the fallencies in C++. As a plus, this macro pretty
-   much alone defines the object model.
-*/
 
 #define REVERSE_GET_PROPERTY_LIST                                              \
                                                                                \

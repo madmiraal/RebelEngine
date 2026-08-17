@@ -14,9 +14,6 @@
 #include "scene/gui/dialogs.h"
 #include "scene/gui/line_edit.h"
 
-/**
-@author Juan Linietsky <reduzio@gmail.com>
-*/
 class ReparentDialog : public ConfirmationDialog {
     GDCLASS(ReparentDialog, ConfirmationDialog);
 

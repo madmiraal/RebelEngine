@@ -15,9 +15,6 @@
 #include "core/ustring.h"
 
 /**
- * @class HashMap
- * @author Juan Linietsky <reduzio@gmail.com>
- *
  * Implementation of a standard Hashing HashMap, for quick lookups of Data
  * associated with a Key. The implementation provides hashers for the default
  * types, if you need a special kind of hasher, provide your own.
@@ -35,7 +32,6 @@
  * amount of elements is RELATIONSHIP times bigger than the hash table, table is
  * resized to solve this condition. if RELATIONSHIP is zero, table is always
  * MIN_HASH_TABLE_POWER.
- *
  */
 
 template <

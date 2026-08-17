@@ -12,14 +12,6 @@
 #include "core/pool_vector.h"
 #include "core/resource.h"
 
-/**
- *	@author Juan Linietsky <reduzio@gmail.com>
- *
- * Image storage class. This is used to store an image in user memory, as well
- *as providing some basic methods for image manipulation. Images can be loaded
- *from a file, or registered into the Render object as textures.
- */
-
 class Image;
 
 typedef Error (*SavePNGFunc)(const String& p_path, const Ref<Image>& p_img);
