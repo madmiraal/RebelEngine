@@ -280,7 +280,6 @@ private:
     };
 
     Map<StringName, ProfileData> profile_data;
-    bool profiling;
 
 public:
     // These two maps must only be touched on the main thread
