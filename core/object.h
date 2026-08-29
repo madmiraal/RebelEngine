@@ -32,8 +32,6 @@
 #define VARIANT_ARG_MAX 5
 #define VARIANT_ARGPTRS                                                        \
     const Variant* argptr[5] = {&p_arg1, &p_arg2, &p_arg3, &p_arg4, &p_arg5};
-#define VARIANT_ARGPTRS_PASS                                                   \
-    *argptr[0], *argptr[1], *argptr[2], *argptr[3], *argptr[4]
 #define VARIANT_ARGS_FROM_ARRAY(m_arr)                                         \
     m_arr[0], m_arr[1], m_arr[2], m_arr[3], m_arr[4]
 
@@ -63,24 +61,6 @@
     ClassDB::add_property_group(get_class_static(), m_name, m_prefix)
 
 Array convert_property_list(const List<PropertyInfo>* p_list);
-
-#define REVERSE_GET_PROPERTY_LIST                                              \
-                                                                               \
-public:                                                                        \
-    _FORCE_INLINE_ bool _is_gpl_reversed() const {                             \
-        return true;                                                           \
-    };                                                                         \
-                                                                               \
-private:
-
-#define UNREVERSE_GET_PROPERTY_LIST                                            \
-                                                                               \
-public:                                                                        \
-    _FORCE_INLINE_ bool _is_gpl_reversed() const {                             \
-        return false;                                                          \
-    };                                                                         \
-                                                                               \
-private:
 
 #define GDCLASS(m_class, m_inherits)                                           \
                                                                                \
