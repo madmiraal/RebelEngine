@@ -1214,7 +1214,7 @@ NativeScriptLanguage::NativeScriptLanguage() {
     NativeScriptLanguage::singleton = this;
 
 #ifdef DEBUG_ENABLED
-    profiling = false;
+
 #endif
 
     _init_call_type      = "nativescript_init";
@@ -1451,7 +1451,6 @@ void NativeScriptLanguage::profiling_start() {
 #endif
 
     profile_data.clear();
-    profiling = true;
 #endif
 }
 
@@ -1461,7 +1460,6 @@ void NativeScriptLanguage::profiling_stop() {
     MutexLock lock(mutex);
 #endif
 
-    profiling = false;
 #endif
 }
 

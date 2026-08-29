@@ -35,7 +35,6 @@ class AndroidAudioDriver : public AudioDriver {
     SLObjectItf sl;
     SLEngineItf EngineItf;
     SLObjectItf OutputMix;
-    SLVolumeItf volumeItf;
     SLObjectItf player;
     SLObjectItf recorder;
     SLAndroidSimpleBufferQueueItf bufferQueueItf;
@@ -44,7 +43,6 @@ class AndroidAudioDriver : public AudioDriver {
     SLDataFormat_PCM pcm;
     SLDataSink audioSink;
     SLDataLocator_OutputMix locator_outputmix;
-    SLBufferQueueState state;
 
     void _buffer_callback(SLAndroidSimpleBufferQueueItf queueItf);
 
