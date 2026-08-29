@@ -20,21 +20,6 @@
 
 #include <atomic>
 
-#define VARIANT_ARG_LIST                                                       \
-    const Variant &p_arg1 = Variant(), const Variant &p_arg2 = Variant(),      \
-                  const Variant &p_arg3 = Variant(),                           \
-                  const Variant &p_arg4 = Variant(),                           \
-                  const Variant &p_arg5 = Variant()
-#define VARIANT_ARG_PASS p_arg1, p_arg2, p_arg3, p_arg4, p_arg5
-#define VARIANT_ARG_DECLARE                                                    \
-    const Variant &p_arg1, const Variant &p_arg2, const Variant &p_arg3,       \
-        const Variant &p_arg4, const Variant &p_arg5
-#define VARIANT_ARG_MAX 5
-#define VARIANT_ARGPTRS                                                        \
-    const Variant* argptr[5] = {&p_arg1, &p_arg2, &p_arg3, &p_arg4, &p_arg5};
-#define VARIANT_ARGS_FROM_ARRAY(m_arr)                                         \
-    m_arr[0], m_arr[1], m_arr[2], m_arr[3], m_arr[4]
-
 #define ADD_SIGNAL(m_signal) ClassDB::add_signal(get_class_static(), m_signal)
 #define ADD_PROPERTY(m_property, m_setter, m_getter)                           \
     ClassDB::add_property(                                                     \
