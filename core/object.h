@@ -22,36 +22,38 @@
 
 #define REBEL_OBJECT(m_class, m_inherits)                                      \
                                                                                \
-private:                                                                       \
-    void operator=(const m_class&) = delete;                                   \
-    mutable StringName _class_name;                                            \
-    friend class ClassDB;                                                      \
-                                                                               \
 public:                                                                        \
     String get_class() const override {                                        \
+        return String(#m_class);                                               \
+    }                                                                          \
+    static _FORCE_INLINE_ String get_class_static() {                          \
         return String(#m_class);                                               \
     }                                                                          \
     const StringName* _get_class_namev() const override {                      \
         if (!_class_name) _class_name = get_class_static();                    \
         return &_class_name;                                                   \
     }                                                                          \
-    static _FORCE_INLINE_ void* get_class_ptr_static() {                       \
-        static int ptr;                                                        \
-        return &ptr;                                                           \
-    }                                                                          \
-    static _FORCE_INLINE_ String get_class_static() {                          \
-        return String(#m_class);                                               \
+    static String inherits_static() {                                          \
+        return String(#m_inherits);                                            \
     }                                                                          \
     static _FORCE_INLINE_ String get_parent_class_static() {                   \
         return m_inherits::get_class_static();                                 \
+    }                                                                          \
+    static void get_valid_parents_static(List<String>* p_parents) {            \
+        if (m_class::_get_valid_parents_static                                 \
+            != m_inherits::_get_valid_parents_static) {                        \
+            m_class::_get_valid_parents_static(p_parents);                     \
+        }                                                                      \
+        m_inherits::get_valid_parents_static(p_parents);                       \
     }                                                                          \
     static void get_inheritance_list_static(List<String>* p_inheritance_list   \
     ) {                                                                        \
         m_inherits::get_inheritance_list_static(p_inheritance_list);           \
         p_inheritance_list->push_back(String(#m_class));                       \
     }                                                                          \
-    static String inherits_static() {                                          \
-        return String(#m_inherits);                                            \
+    static _FORCE_INLINE_ void* get_class_ptr_static() {                       \
+        static int ptr;                                                        \
+        return &ptr;                                                           \
     }                                                                          \
     bool is_class(const String& p_class) const override {                      \
         return (p_class == (#m_class)) ? true : m_inherits::is_class(p_class); \
@@ -61,22 +63,6 @@ public:                                                                        \
                  ? true                                                        \
                  : m_inherits::is_class_ptr(p_ptr);                            \
     }                                                                          \
-                                                                               \
-    static void get_valid_parents_static(List<String>* p_parents) {            \
-        if (m_class::_get_valid_parents_static                                 \
-            != m_inherits::_get_valid_parents_static) {                        \
-            m_class::_get_valid_parents_static(p_parents);                     \
-        }                                                                      \
-                                                                               \
-        m_inherits::get_valid_parents_static(p_parents);                       \
-    }                                                                          \
-                                                                               \
-protected:                                                                     \
-    _FORCE_INLINE_ static void (*_get_bind_methods())() {                      \
-        return &m_class::_bind_methods;                                        \
-    }                                                                          \
-                                                                               \
-public:                                                                        \
     static void initialize_class() {                                           \
         static bool initialized = false;                                       \
         if (initialized) return;                                               \
@@ -88,8 +74,8 @@ public:                                                                        \
     }                                                                          \
                                                                                \
 protected:                                                                     \
-    void _initialize_classv() override {                                       \
-        initialize_class();                                                    \
+    _FORCE_INLINE_ static void (*_get_bind_methods())() {                      \
+        return &m_class::_bind_methods;                                        \
     }                                                                          \
     _FORCE_INLINE_ bool (Object::* _get_get(                                   \
     ) const)(const StringName& p_name, Variant&) const {                       \
@@ -155,8 +141,15 @@ protected:                                                                     \
         if (p_reversed)                                                        \
             m_inherits::_notificationv(p_notification, p_reversed);            \
     }                                                                          \
+    void _initialize_classv() override {                                       \
+        initialize_class();                                                    \
+    }                                                                          \
                                                                                \
-private:
+private:                                                                       \
+    void operator=(const m_class&) = delete;                                   \
+    mutable StringName _class_name;                                            \
+    friend class ClassDB;
+// End #define REBEL_OBJECT
 
 #define OBJ_SAVE_TYPE(m_class)                                                 \
                                                                                \
@@ -166,6 +159,7 @@ public:                                                                        \
     }                                                                          \
                                                                                \
 private:
+// End #define OBJ_SAVE_TYPE
 
 class ScriptInstance;
 class ObjectRC;
