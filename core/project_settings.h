@@ -34,7 +34,7 @@ struct Setting {
 bool operator<(const Setting& left, const Setting& right);
 
 class ProjectSettings : public Object {
-    GDCLASS(ProjectSettings, Object);
+    REBEL_OBJECT(ProjectSettings, Object);
     _THREAD_SAFE_CLASS_
 
 public:

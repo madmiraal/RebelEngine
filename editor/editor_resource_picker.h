@@ -15,7 +15,7 @@
 #include "scene/gui/texture_rect.h"
 
 class EditorResourcePicker : public HBoxContainer {
-    GDCLASS(EditorResourcePicker, HBoxContainer);
+    REBEL_OBJECT(EditorResourcePicker, HBoxContainer);
 
     static HashMap<StringName, List<StringName>> allowed_types_cache;
 
@@ -114,7 +114,7 @@ public:
 };
 
 class EditorScriptPicker : public EditorResourcePicker {
-    GDCLASS(EditorScriptPicker, EditorResourcePicker);
+    REBEL_OBJECT(EditorScriptPicker, EditorResourcePicker);
 
     enum ExtraMenuOption {
         OBJ_MENU_NEW_SCRIPT    = 10,

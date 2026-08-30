@@ -12,7 +12,7 @@
 #include "scene/3d/camera.h"
 
 class CameraEditor : public Control {
-    GDCLASS(CameraEditor, Control);
+    REBEL_OBJECT(CameraEditor, Control);
 
     Panel* panel;
     Button* preview;
@@ -30,7 +30,7 @@ public:
 };
 
 class CameraEditorPlugin : public EditorPlugin {
-    GDCLASS(CameraEditorPlugin, EditorPlugin);
+    REBEL_OBJECT(CameraEditorPlugin, EditorPlugin);
 
     EditorNode* editor;
 

@@ -34,7 +34,7 @@
 
 class EditorSceneImporterFBX : public EditorSceneImporter {
 private:
-    GDCLASS(EditorSceneImporterFBX, EditorSceneImporter);
+    REBEL_OBJECT(EditorSceneImporterFBX, EditorSceneImporter);
 
     struct AssetImportAnimation {
         enum Interpolation {

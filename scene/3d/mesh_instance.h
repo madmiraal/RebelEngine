@@ -14,7 +14,7 @@
 #include "scene/resources/skin.h"
 
 class MeshInstance : public GeometryInstance {
-    GDCLASS(MeshInstance, GeometryInstance);
+    REBEL_OBJECT(MeshInstance, GeometryInstance);
 
 protected:
     Ref<Mesh> mesh;

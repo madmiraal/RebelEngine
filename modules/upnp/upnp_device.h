@@ -10,7 +10,7 @@
 #include "core/reference.h"
 
 class UPNPDevice : public Reference {
-    GDCLASS(UPNPDevice, Reference);
+    REBEL_OBJECT(UPNPDevice, Reference);
 
 public:
     enum IGDStatus {

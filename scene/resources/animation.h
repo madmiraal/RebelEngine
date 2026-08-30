@@ -12,7 +12,7 @@
 #define ANIM_MIN_LENGTH 0.001f
 
 class Animation : public Resource {
-    GDCLASS(Animation, Resource);
+    REBEL_OBJECT(Animation, Resource);
     RES_BASE_EXTENSION("anim");
 
 public:

@@ -10,7 +10,7 @@
 #include "resource_importer_scene.h"
 
 class EditorOBJImporter : public EditorSceneImporter {
-    GDCLASS(EditorOBJImporter, EditorSceneImporter);
+    REBEL_OBJECT(EditorOBJImporter, EditorSceneImporter);
 
 public:
     uint32_t get_import_flags() const override;
@@ -33,7 +33,7 @@ public:
 };
 
 class ResourceImporterOBJ : public ResourceImporter {
-    GDCLASS(ResourceImporterOBJ, ResourceImporter);
+    REBEL_OBJECT(ResourceImporterOBJ, ResourceImporter);
 
 public:
     String get_importer_name() const override;

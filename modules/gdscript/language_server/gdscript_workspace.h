@@ -14,7 +14,7 @@
 #include "lsp.hpp"
 
 class GDScriptWorkspace : public Reference {
-    GDCLASS(GDScriptWorkspace, Reference);
+    REBEL_OBJECT(GDScriptWorkspace, Reference);
 
 private:
     void _get_owners(

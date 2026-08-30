@@ -12,7 +12,7 @@
 class AudioEffectCompressor;
 
 class AudioEffectCompressorInstance : public AudioEffectInstance {
-    GDCLASS(AudioEffectCompressorInstance, AudioEffectInstance);
+    REBEL_OBJECT(AudioEffectCompressorInstance, AudioEffectInstance);
     friend class AudioEffectCompressor;
     Ref<AudioEffectCompressor> base;
 
@@ -32,7 +32,7 @@ public:
 };
 
 class AudioEffectCompressor : public AudioEffect {
-    GDCLASS(AudioEffectCompressor, AudioEffect);
+    REBEL_OBJECT(AudioEffectCompressor, AudioEffect);
 
     friend class AudioEffectCompressorInstance;
     float threshold;

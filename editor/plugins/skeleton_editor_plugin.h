@@ -15,7 +15,7 @@ class PhysicalBone;
 class Joint;
 
 class SkeletonEditor : public Node {
-    GDCLASS(SkeletonEditor, Node);
+    REBEL_OBJECT(SkeletonEditor, Node);
 
     enum Menu {
         MENU_OPTION_CREATE_PHYSICAL_SKELETON
@@ -56,7 +56,7 @@ public:
 };
 
 class SkeletonEditorPlugin : public EditorPlugin {
-    GDCLASS(SkeletonEditorPlugin, EditorPlugin);
+    REBEL_OBJECT(SkeletonEditorPlugin, EditorPlugin);
 
     EditorNode* editor;
     SkeletonEditor* skeleton_editor;

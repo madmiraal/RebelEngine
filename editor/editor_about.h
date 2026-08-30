@@ -26,7 +26,7 @@
  * isn't initialized.
  */
 class EditorAbout : public AcceptDialog {
-    GDCLASS(EditorAbout, AcceptDialog);
+    REBEL_OBJECT(EditorAbout, AcceptDialog);
 
 private:
     void _license_tree_selected();

@@ -13,7 +13,7 @@
 #include <miniupnpc.h>
 
 class UPNP : public Reference {
-    GDCLASS(UPNP, Reference);
+    REBEL_OBJECT(UPNP, Reference);
 
 private:
     String discover_multicast_if;

@@ -40,7 +40,7 @@ class btGjkEpaPenetrationDepthSolver;
 extern ContactAddedCallback gContactAddedCallback;
 
 class BulletPhysicsDirectSpaceState : public PhysicsDirectSpaceState {
-    GDCLASS(BulletPhysicsDirectSpaceState, PhysicsDirectSpaceState);
+    REBEL_OBJECT(BulletPhysicsDirectSpaceState, PhysicsDirectSpaceState);
 
 private:
     SpaceBullet* space;

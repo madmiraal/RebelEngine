@@ -715,7 +715,7 @@ AppxPackager::~AppxPackager() {}
 ////////////////////////////////////////////////////////////////////
 
 class EditorExportPlatformUWP : public EditorExportPlatform {
-    GDCLASS(EditorExportPlatformUWP, EditorExportPlatform);
+    REBEL_OBJECT(EditorExportPlatformUWP, EditorExportPlatform);
 
     Ref<ImageTexture> logo;
 

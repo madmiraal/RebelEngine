@@ -13,7 +13,7 @@
 #include "servers/audio_server.h"
 
 class AudioStreamPlayback : public Reference {
-    GDCLASS(AudioStreamPlayback, Reference);
+    REBEL_OBJECT(AudioStreamPlayback, Reference);
 
 public:
     virtual void start(float p_from_pos = 0.0) = 0;
@@ -33,7 +33,7 @@ public:
 };
 
 class AudioStreamPlaybackResampled : public AudioStreamPlayback {
-    GDCLASS(AudioStreamPlaybackResampled, AudioStreamPlayback);
+    REBEL_OBJECT(AudioStreamPlaybackResampled, AudioStreamPlayback);
 
     enum {
         FP_BITS              = 16, // fixed point used for resampling
@@ -60,7 +60,7 @@ public:
 };
 
 class AudioStream : public Resource {
-    GDCLASS(AudioStream, Resource);
+    REBEL_OBJECT(AudioStream, Resource);
     OBJ_SAVE_TYPE(AudioStream
     ); // Saves derived classes with common type so they can be interchanged.
 
@@ -79,7 +79,7 @@ public:
 class AudioStreamPlaybackMicrophone;
 
 class AudioStreamMicrophone : public AudioStream {
-    GDCLASS(AudioStreamMicrophone, AudioStream);
+    REBEL_OBJECT(AudioStreamMicrophone, AudioStream);
     friend class AudioStreamPlaybackMicrophone;
 
     Set<AudioStreamPlaybackMicrophone*> playbacks;
@@ -97,7 +97,7 @@ public:
 };
 
 class AudioStreamPlaybackMicrophone : public AudioStreamPlaybackResampled {
-    GDCLASS(AudioStreamPlaybackMicrophone, AudioStreamPlaybackResampled);
+    REBEL_OBJECT(AudioStreamPlaybackMicrophone, AudioStreamPlaybackResampled);
     friend class AudioStreamMicrophone;
 
     bool active;
@@ -130,7 +130,7 @@ public:
 class AudioStreamPlaybackRandomPitch;
 
 class AudioStreamRandomPitch : public AudioStream {
-    GDCLASS(AudioStreamRandomPitch, AudioStream);
+    REBEL_OBJECT(AudioStreamRandomPitch, AudioStream);
     friend class AudioStreamPlaybackRandomPitch;
 
     Set<AudioStreamPlaybackRandomPitch*> playbacks;
@@ -156,7 +156,7 @@ public:
 };
 
 class AudioStreamPlaybackRandomPitch : public AudioStreamPlayback {
-    GDCLASS(AudioStreamPlaybackRandomPitch, AudioStreamPlayback);
+    REBEL_OBJECT(AudioStreamPlaybackRandomPitch, AudioStreamPlayback);
     friend class AudioStreamRandomPitch;
 
     Ref<AudioStreamRandomPitch> random_pitch;

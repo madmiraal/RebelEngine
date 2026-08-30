@@ -11,7 +11,7 @@
 #include "gltf_document.h"
 
 class GLTFNode : public Resource {
-    GDCLASS(GLTFNode, Resource);
+    REBEL_OBJECT(GLTFNode, Resource);
     friend class GLTFDocument;
     friend class PackedSceneGLTF;
 

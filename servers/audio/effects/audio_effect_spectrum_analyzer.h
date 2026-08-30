@@ -12,7 +12,7 @@
 class AudioEffectSpectrumAnalyzer;
 
 class AudioEffectSpectrumAnalyzerInstance : public AudioEffectInstance {
-    GDCLASS(AudioEffectSpectrumAnalyzerInstance, AudioEffectInstance);
+    REBEL_OBJECT(AudioEffectSpectrumAnalyzerInstance, AudioEffectInstance);
 
 public:
     enum MagnitudeMode {
@@ -52,7 +52,7 @@ public:
 VARIANT_ENUM_CAST(AudioEffectSpectrumAnalyzerInstance::MagnitudeMode)
 
 class AudioEffectSpectrumAnalyzer : public AudioEffect {
-    GDCLASS(AudioEffectSpectrumAnalyzer, AudioEffect);
+    REBEL_OBJECT(AudioEffectSpectrumAnalyzer, AudioEffect);
 
 public:
     enum FFT_Size {

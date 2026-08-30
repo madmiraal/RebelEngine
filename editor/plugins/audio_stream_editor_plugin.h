@@ -14,7 +14,7 @@
 #include "scene/resources/texture.h"
 
 class AudioStreamEditor : public ColorRect {
-    GDCLASS(AudioStreamEditor, ColorRect);
+    REBEL_OBJECT(AudioStreamEditor, ColorRect);
 
     Ref<AudioStream> stream;
     AudioStreamPlayer* _player = nullptr;
@@ -49,7 +49,7 @@ public:
 };
 
 class AudioStreamEditorPlugin : public EditorPlugin {
-    GDCLASS(AudioStreamEditorPlugin, EditorPlugin);
+    REBEL_OBJECT(AudioStreamEditorPlugin, EditorPlugin);
 
     AudioStreamEditor* audio_editor;
     EditorNode* editor;

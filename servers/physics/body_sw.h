@@ -516,7 +516,7 @@ void BodySW::add_contact(
 }
 
 class PhysicsDirectBodyStateSW : public PhysicsDirectBodyState {
-    GDCLASS(PhysicsDirectBodyStateSW, PhysicsDirectBodyState);
+    REBEL_OBJECT(PhysicsDirectBodyStateSW, PhysicsDirectBodyState);
 
 public:
     static PhysicsDirectBodyStateSW* singleton;

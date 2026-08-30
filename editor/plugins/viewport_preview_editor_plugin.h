@@ -14,7 +14,10 @@
 
 class EditorInspectorPluginViewportPreview :
     public EditorInspectorPluginTexture {
-    GDCLASS(EditorInspectorPluginViewportPreview, EditorInspectorPluginTexture);
+    REBEL_OBJECT(
+        EditorInspectorPluginViewportPreview,
+        EditorInspectorPluginTexture
+    );
 
 public:
     bool can_handle(Object* p_object) override;
@@ -22,7 +25,7 @@ public:
 };
 
 class ViewportPreviewEditorPlugin : public EditorPlugin {
-    GDCLASS(ViewportPreviewEditorPlugin, EditorPlugin);
+    REBEL_OBJECT(ViewportPreviewEditorPlugin, EditorPlugin);
 
 public:
     String get_name() const override {

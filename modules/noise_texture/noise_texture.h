@@ -14,7 +14,7 @@
 #include "scene/resources/texture.h"
 
 class NoiseTexture : public Texture {
-    GDCLASS(NoiseTexture, Texture);
+    REBEL_OBJECT(NoiseTexture, Texture);
 
 public:
     NoiseTexture();

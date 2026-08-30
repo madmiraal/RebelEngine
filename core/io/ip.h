@@ -13,7 +13,7 @@
 struct _IP_ResolverPrivate;
 
 class IP : public Object {
-    GDCLASS(IP, Object);
+    REBEL_OBJECT(IP, Object);
 
 public:
     enum ResolverStatus {

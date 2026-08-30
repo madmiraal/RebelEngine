@@ -10,7 +10,7 @@
 #include "scene/gui/control.h"
 
 class Panel : public Control {
-    GDCLASS(Panel, Control);
+    REBEL_OBJECT(Panel, Control);
 
 protected:
     void _notification(int p_what);

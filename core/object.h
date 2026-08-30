@@ -20,7 +20,7 @@
 
 #include <atomic>
 
-#define GDCLASS(m_class, m_inherits)                                           \
+#define REBEL_OBJECT(m_class, m_inherits)                                      \
                                                                                \
 private:                                                                       \
     void operator=(const m_class&) = delete;                                   \

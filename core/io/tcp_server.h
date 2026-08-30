@@ -13,7 +13,7 @@
 #include "core/io/stream_peer_tcp.h"
 
 class TCP_Server : public Reference {
-    GDCLASS(TCP_Server, Reference);
+    REBEL_OBJECT(TCP_Server, Reference);
 
 protected:
     enum {

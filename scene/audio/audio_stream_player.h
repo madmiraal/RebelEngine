@@ -12,7 +12,7 @@
 #include "servers/audio/audio_stream.h"
 
 class AudioStreamPlayer : public Node {
-    GDCLASS(AudioStreamPlayer, Node);
+    REBEL_OBJECT(AudioStreamPlayer, Node);
 
 public:
     enum MixTarget {

@@ -12,7 +12,7 @@
 #include "core/vector.h"
 
 class OccluderShape : public Resource {
-    GDCLASS(OccluderShape, Resource);
+    REBEL_OBJECT(OccluderShape, Resource);
     OBJ_SAVE_TYPE(OccluderShape);
     RES_BASE_EXTENSION("occ");
     RID _shape;
@@ -46,7 +46,7 @@ public:
 };
 
 class OccluderShapeSphere : public OccluderShape {
-    GDCLASS(OccluderShapeSphere, OccluderShape);
+    REBEL_OBJECT(OccluderShapeSphere, OccluderShape);
 
     // We bandit a plane to store position / radius
     Vector<Plane> _spheres;

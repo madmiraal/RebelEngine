@@ -15,7 +15,7 @@
 #include "core/variant.h"
 
 class JNISingleton : public Object {
-    GDCLASS(JNISingleton, Object);
+    REBEL_OBJECT(JNISingleton, Object);
 
 public:
     Variant call(

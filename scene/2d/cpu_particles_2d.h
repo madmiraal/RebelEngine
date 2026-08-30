@@ -13,7 +13,7 @@
 
 class CPUParticles2D : public Node2D {
 private:
-    GDCLASS(CPUParticles2D, Node2D);
+    REBEL_OBJECT(CPUParticles2D, Node2D);
 
 public:
     enum DrawOrder {

@@ -10,7 +10,7 @@
 #include "core/reference.h"
 
 class HashingContext : public Reference {
-    GDCLASS(HashingContext, Reference);
+    REBEL_OBJECT(HashingContext, Reference);
 
 public:
     enum HashType {

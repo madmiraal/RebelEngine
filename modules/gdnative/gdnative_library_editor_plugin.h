@@ -12,7 +12,7 @@
 #include "gdnative.h"
 
 class GDNativeLibraryEditor : public Control {
-    GDCLASS(GDNativeLibraryEditor, Control);
+    REBEL_OBJECT(GDNativeLibraryEditor, Control);
 
     struct NativePlatformConfig {
         String name;
@@ -73,7 +73,7 @@ public:
 };
 
 class GDNativeLibraryEditorPlugin : public EditorPlugin {
-    GDCLASS(GDNativeLibraryEditorPlugin, EditorPlugin);
+    REBEL_OBJECT(GDNativeLibraryEditorPlugin, EditorPlugin);
 
     GDNativeLibraryEditor* library_editor;
     EditorNode* editor;

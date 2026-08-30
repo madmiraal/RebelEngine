@@ -15,7 +15,7 @@
 #include "scene/gui/tree.h"
 
 class VersionControlEditorPlugin : public EditorPlugin {
-    GDCLASS(VersionControlEditorPlugin, EditorPlugin)
+    REBEL_OBJECT(VersionControlEditorPlugin, EditorPlugin)
 
 public:
     enum ChangeType {

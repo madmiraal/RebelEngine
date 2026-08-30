@@ -83,7 +83,7 @@ class ScriptInstance;
 class PlaceHolderScriptInstance;
 
 class Script : public Resource {
-    GDCLASS(Script, Resource);
+    REBEL_OBJECT(Script, Resource);
     OBJ_SAVE_TYPE(Script);
 
 protected:

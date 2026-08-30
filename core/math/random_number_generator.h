@@ -11,7 +11,7 @@
 #include "core/reference.h"
 
 class RandomNumberGenerator : public Reference {
-    GDCLASS(RandomNumberGenerator, Reference);
+    REBEL_OBJECT(RandomNumberGenerator, Reference);
 
 protected:
     RandomPCG randbase;

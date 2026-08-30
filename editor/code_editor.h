@@ -17,7 +17,7 @@
 #include "scene/main/timer.h"
 
 class GotoLineDialog : public ConfirmationDialog {
-    GDCLASS(GotoLineDialog, ConfirmationDialog);
+    REBEL_OBJECT(GotoLineDialog, ConfirmationDialog);
 
     Label* line_label;
     LineEdit* line;
@@ -34,7 +34,7 @@ public:
 };
 
 class FindReplaceBar : public HBoxContainer {
-    GDCLASS(FindReplaceBar, HBoxContainer);
+    REBEL_OBJECT(FindReplaceBar, HBoxContainer);
 
     LineEdit* search_text;
     Label* matches_label;
@@ -115,7 +115,7 @@ typedef void (*CodeTextEditorCodeCompleteFunc)(
 );
 
 class CodeTextEditor : public VBoxContainer {
-    GDCLASS(CodeTextEditor, VBoxContainer);
+    REBEL_OBJECT(CodeTextEditor, VBoxContainer);
 
     TextEdit* text_editor;
     FindReplaceBar* find_replace_bar;

@@ -30,7 +30,7 @@
 class EditorNode;
 
 class SceneTreeDock : public VBoxContainer {
-    GDCLASS(SceneTreeDock, VBoxContainer);
+    REBEL_OBJECT(SceneTreeDock, VBoxContainer);
 
     enum Tool {
         TOOL_NEW,

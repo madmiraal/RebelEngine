@@ -11,7 +11,7 @@
 #include "gltf_document.h"
 
 class GLTFTexture : public Resource {
-    GDCLASS(GLTFTexture, Resource);
+    REBEL_OBJECT(GLTFTexture, Resource);
 
 private:
     GLTFImageIndex src_image = 0;

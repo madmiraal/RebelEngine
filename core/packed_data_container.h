@@ -10,7 +10,7 @@
 #include "core/resource.h"
 
 class PackedDataContainer : public Resource {
-    GDCLASS(PackedDataContainer, Resource);
+    REBEL_OBJECT(PackedDataContainer, Resource);
 
     enum {
         TYPE_DICT  = 0xFFFFFFFF,
@@ -65,7 +65,7 @@ public:
 };
 
 class PackedDataContainerRef : public Reference {
-    GDCLASS(PackedDataContainerRef, Reference);
+    REBEL_OBJECT(PackedDataContainerRef, Reference);
 
     friend class PackedDataContainer;
     uint32_t offset;

@@ -17,7 +17,7 @@
 #include "scene/gui/tree.h"
 
 class EditorProfiler : public VBoxContainer {
-    GDCLASS(EditorProfiler, VBoxContainer);
+    REBEL_OBJECT(EditorProfiler, VBoxContainer);
 
 public:
     struct Metric {

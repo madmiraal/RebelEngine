@@ -11,7 +11,7 @@
 #include "core/io/packet_peer_dtls.h"
 
 class DTLSServer : public Reference {
-    GDCLASS(DTLSServer, Reference);
+    REBEL_OBJECT(DTLSServer, Reference);
 
 protected:
     static DTLSServer* (*_create)();

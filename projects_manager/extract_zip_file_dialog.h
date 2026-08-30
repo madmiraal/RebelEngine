@@ -16,7 +16,7 @@
 #include "scene/gui/texture_rect.h"
 
 class ExtractZipFileDialog : public ConfirmationDialog {
-    GDCLASS(ExtractZipFileDialog, ConfirmationDialog);
+    REBEL_OBJECT(ExtractZipFileDialog, ConfirmationDialog);
 
 public:
     ExtractZipFileDialog();

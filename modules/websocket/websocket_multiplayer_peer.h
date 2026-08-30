@@ -13,7 +13,7 @@
 #include "websocket_peer.h"
 
 class WebSocketMultiplayerPeer : public NetworkedMultiplayerPeer {
-    GDCLASS(WebSocketMultiplayerPeer, NetworkedMultiplayerPeer);
+    REBEL_OBJECT(WebSocketMultiplayerPeer, NetworkedMultiplayerPeer);
 
 private:
     PoolVector<uint8_t> _make_pkt(

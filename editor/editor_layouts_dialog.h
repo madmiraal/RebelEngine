@@ -13,7 +13,7 @@ class LineEdit;
 class ItemList;
 
 class EditorLayoutsDialog : public ConfirmationDialog {
-    GDCLASS(EditorLayoutsDialog, ConfirmationDialog);
+    REBEL_OBJECT(EditorLayoutsDialog, ConfirmationDialog);
 
     LineEdit* name;
     ItemList* layout_names;

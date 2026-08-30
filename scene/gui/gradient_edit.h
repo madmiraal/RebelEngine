@@ -13,7 +13,7 @@
 #include "scene/resources/gradient.h"
 
 class GradientEdit : public Control {
-    GDCLASS(GradientEdit, Control);
+    REBEL_OBJECT(GradientEdit, Control);
 
     PopupPanel* popup;
     ColorPicker* picker;

@@ -12,7 +12,7 @@
 #include "webxr_interface.h"
 
 class WebXRInterfaceJS : public WebXRInterface {
-    GDCLASS(WebXRInterfaceJS, WebXRInterface);
+    REBEL_OBJECT(WebXRInterfaceJS, WebXRInterface);
 
 private:
     bool initialized;

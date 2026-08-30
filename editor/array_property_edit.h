@@ -10,7 +10,7 @@
 #include "scene/main/node.h"
 
 class ArrayPropertyEdit : public Reference {
-    GDCLASS(ArrayPropertyEdit, Reference);
+    REBEL_OBJECT(ArrayPropertyEdit, Reference);
 
     int page;
     ObjectID obj;

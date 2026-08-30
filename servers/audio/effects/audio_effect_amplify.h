@@ -12,7 +12,7 @@
 class AudioEffectAmplify;
 
 class AudioEffectAmplifyInstance : public AudioEffectInstance {
-    GDCLASS(AudioEffectAmplifyInstance, AudioEffectInstance);
+    REBEL_OBJECT(AudioEffectAmplifyInstance, AudioEffectInstance);
     friend class AudioEffectAmplify;
     Ref<AudioEffectAmplify> base;
 
@@ -27,7 +27,7 @@ public:
 };
 
 class AudioEffectAmplify : public AudioEffect {
-    GDCLASS(AudioEffectAmplify, AudioEffect);
+    REBEL_OBJECT(AudioEffectAmplify, AudioEffect);
 
     friend class AudioEffectAmplifyInstance;
     float volume_db;

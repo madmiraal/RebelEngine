@@ -14,7 +14,7 @@
 #include "core/resource.h"
 
 class CryptoKey : public Resource {
-    GDCLASS(CryptoKey, Resource);
+    REBEL_OBJECT(CryptoKey, Resource);
 
 protected:
     static void _bind_methods();
@@ -33,7 +33,7 @@ public:
 };
 
 class X509Certificate : public Resource {
-    GDCLASS(X509Certificate, Resource);
+    REBEL_OBJECT(X509Certificate, Resource);
 
 protected:
     static void _bind_methods();
@@ -47,7 +47,7 @@ public:
 };
 
 class HMACContext : public Reference {
-    GDCLASS(HMACContext, Reference);
+    REBEL_OBJECT(HMACContext, Reference);
 
 protected:
     static void _bind_methods();
@@ -69,7 +69,7 @@ public:
 };
 
 class Crypto : public Reference {
-    GDCLASS(Crypto, Reference);
+    REBEL_OBJECT(Crypto, Reference);
 
 protected:
     static void _bind_methods();

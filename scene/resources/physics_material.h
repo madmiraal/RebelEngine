@@ -11,7 +11,7 @@
 #include "servers/physics_server.h"
 
 class PhysicsMaterial : public Resource {
-    GDCLASS(PhysicsMaterial, Resource);
+    REBEL_OBJECT(PhysicsMaterial, Resource);
     OBJ_SAVE_TYPE(PhysicsMaterial);
     RES_BASE_EXTENSION("phymat");
 

@@ -13,7 +13,7 @@
 class AudioEffectEQ;
 
 class AudioEffectEQInstance : public AudioEffectInstance {
-    GDCLASS(AudioEffectEQInstance, AudioEffectInstance);
+    REBEL_OBJECT(AudioEffectEQInstance, AudioEffectInstance);
     friend class AudioEffectEQ;
     Ref<AudioEffectEQ> base;
 
@@ -29,7 +29,7 @@ public:
 };
 
 class AudioEffectEQ : public AudioEffect {
-    GDCLASS(AudioEffectEQ, AudioEffect);
+    REBEL_OBJECT(AudioEffectEQ, AudioEffect);
 
     friend class AudioEffectEQInstance;
 
@@ -55,21 +55,21 @@ public:
 };
 
 class AudioEffectEQ6 : public AudioEffectEQ {
-    GDCLASS(AudioEffectEQ6, AudioEffectEQ);
+    REBEL_OBJECT(AudioEffectEQ6, AudioEffectEQ);
 
 public:
     AudioEffectEQ6() : AudioEffectEQ(EQ::PRESET_6_BANDS) {}
 };
 
 class AudioEffectEQ10 : public AudioEffectEQ {
-    GDCLASS(AudioEffectEQ10, AudioEffectEQ);
+    REBEL_OBJECT(AudioEffectEQ10, AudioEffectEQ);
 
 public:
     AudioEffectEQ10() : AudioEffectEQ(EQ::PRESET_10_BANDS) {}
 };
 
 class AudioEffectEQ21 : public AudioEffectEQ {
-    GDCLASS(AudioEffectEQ21, AudioEffectEQ);
+    REBEL_OBJECT(AudioEffectEQ21, AudioEffectEQ);
 
 public:
     AudioEffectEQ21() : AudioEffectEQ(EQ::PRESET_21_BANDS) {}

@@ -13,7 +13,7 @@
 #include "servers/visual_server.h"
 
 class CameraFeed : public Reference {
-    GDCLASS(CameraFeed, Reference);
+    REBEL_OBJECT(CameraFeed, Reference);
 
 public:
     enum FeedDataType {

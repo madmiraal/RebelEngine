@@ -15,7 +15,7 @@
 #include "servers/visual_server.h"
 
 class Mesh : public Resource {
-    GDCLASS(Mesh, Resource);
+    REBEL_OBJECT(Mesh, Resource);
 
     mutable Ref<TriangleMesh> triangle_mesh; // cached
     mutable Vector<Vector3> debug_lines;
@@ -147,7 +147,7 @@ public:
 };
 
 class ArrayMesh : public Mesh {
-    GDCLASS(ArrayMesh, Mesh);
+    REBEL_OBJECT(ArrayMesh, Mesh);
     RES_BASE_EXTENSION("mesh");
 
 private:

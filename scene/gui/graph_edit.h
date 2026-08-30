@@ -19,7 +19,7 @@
 class GraphEdit;
 
 class GraphEditFilter : public Control {
-    GDCLASS(GraphEditFilter, Control);
+    REBEL_OBJECT(GraphEditFilter, Control);
 
     friend class GraphEdit;
     friend class GraphEditMinimap;
@@ -31,7 +31,7 @@ public:
 };
 
 class GraphEditMinimap : public Control {
-    GDCLASS(GraphEditMinimap, Control);
+    REBEL_OBJECT(GraphEditMinimap, Control);
 
     friend class GraphEdit;
     friend class GraphEditFilter;
@@ -70,7 +70,7 @@ private:
 };
 
 class GraphEdit : public Control {
-    GDCLASS(GraphEdit, Control);
+    REBEL_OBJECT(GraphEdit, Control);
 
 public:
     struct Connection {

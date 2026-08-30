@@ -14,7 +14,7 @@
 class CanvasItem;
 
 class StyleBox : public Resource {
-    GDCLASS(StyleBox, Resource);
+    REBEL_OBJECT(StyleBox, Resource);
     RES_BASE_EXTENSION("stylebox");
     OBJ_SAVE_TYPE(StyleBox);
     float margin[4];
@@ -43,7 +43,7 @@ public:
 };
 
 class StyleBoxEmpty : public StyleBox {
-    GDCLASS(StyleBoxEmpty, StyleBox);
+    REBEL_OBJECT(StyleBoxEmpty, StyleBox);
 
     float get_style_margin(Margin p_margin) const override {
         return 0;
@@ -54,7 +54,7 @@ public:
 };
 
 class StyleBoxTexture : public StyleBox {
-    GDCLASS(StyleBoxTexture, StyleBox);
+    REBEL_OBJECT(StyleBoxTexture, StyleBox);
 
 public:
     enum AxisStretchMode {
@@ -124,7 +124,7 @@ public:
 VARIANT_ENUM_CAST(StyleBoxTexture::AxisStretchMode)
 
 class StyleBoxFlat : public StyleBox {
-    GDCLASS(StyleBoxFlat, StyleBox);
+    REBEL_OBJECT(StyleBoxFlat, StyleBox);
 
     Color bg_color;
     Color shadow_color;
@@ -216,7 +216,7 @@ public:
 
 // Just used to draw lines.
 class StyleBoxLine : public StyleBox {
-    GDCLASS(StyleBoxLine, StyleBox);
+    REBEL_OBJECT(StyleBoxLine, StyleBox);
     Color color;
     int thickness;
     bool vertical;

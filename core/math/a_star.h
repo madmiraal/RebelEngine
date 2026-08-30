@@ -11,7 +11,7 @@
 #include "core/reference.h"
 
 class AStar : public Reference {
-    GDCLASS(AStar, Reference);
+    REBEL_OBJECT(AStar, Reference);
     friend class AStar2D;
 
     struct Point {
@@ -147,7 +147,7 @@ public:
 };
 
 class AStar2D : public Reference {
-    GDCLASS(AStar2D, Reference);
+    REBEL_OBJECT(AStar2D, Reference);
     AStar astar;
 
     bool _solve(AStar::Point* begin_point, AStar::Point* end_point);

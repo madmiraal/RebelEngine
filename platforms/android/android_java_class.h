@@ -14,7 +14,7 @@
 class JavaObject;
 
 class JavaClass : public Reference {
-    GDCLASS(JavaClass, Reference);
+    REBEL_OBJECT(JavaClass, Reference);
 
     enum ArgumentType {
         ARG_TYPE_VOID,
@@ -174,7 +174,7 @@ public:
 };
 
 class JavaObject : public Reference {
-    GDCLASS(JavaObject, Reference);
+    REBEL_OBJECT(JavaObject, Reference);
 
 public:
     Ref<JavaClass> base_class;
@@ -192,7 +192,7 @@ public:
 };
 
 class JavaClassWrapper : public Object {
-    GDCLASS(JavaClassWrapper, Object);
+    REBEL_OBJECT(JavaClassWrapper, Object);
     Map<String, Ref<JavaClass>> class_cache;
     friend class JavaClass;
 

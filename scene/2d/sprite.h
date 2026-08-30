@@ -11,7 +11,7 @@
 #include "scene/resources/texture.h"
 
 class Sprite : public Node2D {
-    GDCLASS(Sprite, Node2D);
+    REBEL_OBJECT(Sprite, Node2D);
 
     Ref<Texture> texture;
     Ref<Texture> normal_map;

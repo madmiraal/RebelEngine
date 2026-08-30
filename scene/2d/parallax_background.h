@@ -12,7 +12,7 @@
 #include "scene/main/canvas_layer.h"
 
 class ParallaxBackground : public CanvasLayer {
-    GDCLASS(ParallaxBackground, CanvasLayer);
+    REBEL_OBJECT(ParallaxBackground, CanvasLayer);
 
     Point2 offset;
     float scale;

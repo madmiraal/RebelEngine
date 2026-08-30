@@ -10,7 +10,7 @@
 #include "core/object.h"
 
 class iOS : public Object {
-    GDCLASS(iOS, Object);
+    REBEL_OBJECT(iOS, Object);
 
     static void _bind_methods();
 

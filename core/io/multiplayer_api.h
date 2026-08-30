@@ -11,7 +11,7 @@
 #include "core/reference.h"
 
 class MultiplayerAPI : public Reference {
-    GDCLASS(MultiplayerAPI, Reference);
+    REBEL_OBJECT(MultiplayerAPI, Reference);
 
 public:
     struct ProfilingInfo {

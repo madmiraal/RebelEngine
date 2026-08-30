@@ -10,7 +10,7 @@
 #include "core/io/resource_importer.h"
 
 class ResourceImporterWAV : public ResourceImporter {
-    GDCLASS(ResourceImporterWAV, ResourceImporter);
+    REBEL_OBJECT(ResourceImporterWAV, ResourceImporter);
 
 public:
     String get_importer_name() const override;

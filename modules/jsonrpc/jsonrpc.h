@@ -16,7 +16,7 @@ class String;
 class Variant;
 
 class JSONRPC : public Object {
-    GDCLASS(JSONRPC, Object)
+    REBEL_OBJECT(JSONRPC, Object)
 
 public:
     enum ErrorCode {

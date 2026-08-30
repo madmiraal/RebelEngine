@@ -12,7 +12,7 @@
 #undef CursorShape
 
 class InputDefault : public Input {
-    GDCLASS(InputDefault, Input);
+    REBEL_OBJECT(InputDefault, Input);
     _THREAD_SAFE_CLASS_
 
     int mouse_button_mask;

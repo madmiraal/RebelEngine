@@ -11,7 +11,7 @@
 #include "core/io/resource_importer.h"
 
 class ResourceImporterOGGVorbis : public ResourceImporter {
-    GDCLASS(ResourceImporterOGGVorbis, ResourceImporter);
+    REBEL_OBJECT(ResourceImporterOGGVorbis, ResourceImporter);
 
 public:
     String get_importer_name() const override;

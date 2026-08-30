@@ -26,7 +26,7 @@
 #include <sys/stat.h>
 
 class IosEditorExportPlatform : public EditorExportPlatform {
-    GDCLASS(IosEditorExportPlatform, EditorExportPlatform);
+    REBEL_OBJECT(IosEditorExportPlatform, EditorExportPlatform);
 
     int version_code;
 

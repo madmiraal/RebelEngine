@@ -13,7 +13,7 @@
 class Camera;
 
 class LightSpatialGizmoPlugin : public EditorSpatialGizmoPlugin {
-    GDCLASS(LightSpatialGizmoPlugin, EditorSpatialGizmoPlugin);
+    REBEL_OBJECT(LightSpatialGizmoPlugin, EditorSpatialGizmoPlugin);
 
 public:
     bool has_gizmo(Spatial* p_spatial) override;
@@ -42,7 +42,10 @@ public:
 };
 
 class AudioStreamPlayer3DSpatialGizmoPlugin : public EditorSpatialGizmoPlugin {
-    GDCLASS(AudioStreamPlayer3DSpatialGizmoPlugin, EditorSpatialGizmoPlugin);
+    REBEL_OBJECT(
+        AudioStreamPlayer3DSpatialGizmoPlugin,
+        EditorSpatialGizmoPlugin
+    );
 
 public:
     bool has_gizmo(Spatial* p_spatial) override;
@@ -71,7 +74,7 @@ public:
 };
 
 class ListenerSpatialGizmoPlugin : public EditorSpatialGizmoPlugin {
-    GDCLASS(ListenerSpatialGizmoPlugin, EditorSpatialGizmoPlugin);
+    REBEL_OBJECT(ListenerSpatialGizmoPlugin, EditorSpatialGizmoPlugin);
 
 public:
     bool has_gizmo(Spatial* p_spatial) override;
@@ -84,7 +87,7 @@ public:
 };
 
 class CameraSpatialGizmoPlugin : public EditorSpatialGizmoPlugin {
-    GDCLASS(CameraSpatialGizmoPlugin, EditorSpatialGizmoPlugin);
+    REBEL_OBJECT(CameraSpatialGizmoPlugin, EditorSpatialGizmoPlugin);
 
 public:
     bool has_gizmo(Spatial* p_spatial) override;
@@ -113,7 +116,7 @@ public:
 };
 
 class MeshInstanceSpatialGizmoPlugin : public EditorSpatialGizmoPlugin {
-    GDCLASS(MeshInstanceSpatialGizmoPlugin, EditorSpatialGizmoPlugin);
+    REBEL_OBJECT(MeshInstanceSpatialGizmoPlugin, EditorSpatialGizmoPlugin);
 
 public:
     bool has_gizmo(Spatial* p_spatial) override;
@@ -126,7 +129,7 @@ public:
 };
 
 class Sprite3DSpatialGizmoPlugin : public EditorSpatialGizmoPlugin {
-    GDCLASS(Sprite3DSpatialGizmoPlugin, EditorSpatialGizmoPlugin);
+    REBEL_OBJECT(Sprite3DSpatialGizmoPlugin, EditorSpatialGizmoPlugin);
 
 public:
     bool has_gizmo(Spatial* p_spatial) override;
@@ -139,7 +142,7 @@ public:
 };
 
 class Position3DSpatialGizmoPlugin : public EditorSpatialGizmoPlugin {
-    GDCLASS(Position3DSpatialGizmoPlugin, EditorSpatialGizmoPlugin);
+    REBEL_OBJECT(Position3DSpatialGizmoPlugin, EditorSpatialGizmoPlugin);
 
     Ref<ArrayMesh> pos3d_mesh;
     Vector<Vector3> cursor_points;
@@ -154,7 +157,7 @@ public:
 };
 
 class SkeletonSpatialGizmoPlugin : public EditorSpatialGizmoPlugin {
-    GDCLASS(SkeletonSpatialGizmoPlugin, EditorSpatialGizmoPlugin);
+    REBEL_OBJECT(SkeletonSpatialGizmoPlugin, EditorSpatialGizmoPlugin);
 
 public:
     bool has_gizmo(Spatial* p_spatial) override;
@@ -166,7 +169,7 @@ public:
 };
 
 class PhysicalBoneSpatialGizmoPlugin : public EditorSpatialGizmoPlugin {
-    GDCLASS(PhysicalBoneSpatialGizmoPlugin, EditorSpatialGizmoPlugin);
+    REBEL_OBJECT(PhysicalBoneSpatialGizmoPlugin, EditorSpatialGizmoPlugin);
 
 public:
     bool has_gizmo(Spatial* p_spatial) override;
@@ -178,7 +181,7 @@ public:
 };
 
 class RayCastSpatialGizmoPlugin : public EditorSpatialGizmoPlugin {
-    GDCLASS(RayCastSpatialGizmoPlugin, EditorSpatialGizmoPlugin);
+    REBEL_OBJECT(RayCastSpatialGizmoPlugin, EditorSpatialGizmoPlugin);
 
 public:
     bool has_gizmo(Spatial* p_spatial) override;
@@ -190,7 +193,7 @@ public:
 };
 
 class SpringArmSpatialGizmoPlugin : public EditorSpatialGizmoPlugin {
-    GDCLASS(SpringArmSpatialGizmoPlugin, EditorSpatialGizmoPlugin);
+    REBEL_OBJECT(SpringArmSpatialGizmoPlugin, EditorSpatialGizmoPlugin);
 
 public:
     bool has_gizmo(Spatial* p_spatial) override;
@@ -202,7 +205,7 @@ public:
 };
 
 class VehicleWheelSpatialGizmoPlugin : public EditorSpatialGizmoPlugin {
-    GDCLASS(VehicleWheelSpatialGizmoPlugin, EditorSpatialGizmoPlugin);
+    REBEL_OBJECT(VehicleWheelSpatialGizmoPlugin, EditorSpatialGizmoPlugin);
 
 public:
     bool has_gizmo(Spatial* p_spatial) override;
@@ -214,7 +217,7 @@ public:
 };
 
 class SoftBodySpatialGizmoPlugin : public EditorSpatialGizmoPlugin {
-    GDCLASS(SoftBodySpatialGizmoPlugin, EditorSpatialGizmoPlugin);
+    REBEL_OBJECT(SoftBodySpatialGizmoPlugin, EditorSpatialGizmoPlugin);
 
 public:
     bool has_gizmo(Spatial* p_spatial) override;
@@ -240,7 +243,7 @@ public:
 };
 
 class VisibilityNotifierGizmoPlugin : public EditorSpatialGizmoPlugin {
-    GDCLASS(VisibilityNotifierGizmoPlugin, EditorSpatialGizmoPlugin);
+    REBEL_OBJECT(VisibilityNotifierGizmoPlugin, EditorSpatialGizmoPlugin);
 
 public:
     bool has_gizmo(Spatial* p_spatial) override;
@@ -269,7 +272,7 @@ public:
 };
 
 class CPUParticlesGizmoPlugin : public EditorSpatialGizmoPlugin {
-    GDCLASS(CPUParticlesGizmoPlugin, EditorSpatialGizmoPlugin);
+    REBEL_OBJECT(CPUParticlesGizmoPlugin, EditorSpatialGizmoPlugin);
 
 public:
     bool has_gizmo(Spatial* p_spatial) override;
@@ -281,7 +284,7 @@ public:
 };
 
 class ParticlesGizmoPlugin : public EditorSpatialGizmoPlugin {
-    GDCLASS(ParticlesGizmoPlugin, EditorSpatialGizmoPlugin);
+    REBEL_OBJECT(ParticlesGizmoPlugin, EditorSpatialGizmoPlugin);
 
 public:
     bool has_gizmo(Spatial* p_spatial) override;
@@ -311,7 +314,7 @@ public:
 };
 
 class ReflectionProbeGizmoPlugin : public EditorSpatialGizmoPlugin {
-    GDCLASS(ReflectionProbeGizmoPlugin, EditorSpatialGizmoPlugin);
+    REBEL_OBJECT(ReflectionProbeGizmoPlugin, EditorSpatialGizmoPlugin);
 
 public:
     bool has_gizmo(Spatial* p_spatial) override;
@@ -340,7 +343,7 @@ public:
 };
 
 class GIProbeGizmoPlugin : public EditorSpatialGizmoPlugin {
-    GDCLASS(GIProbeGizmoPlugin, EditorSpatialGizmoPlugin);
+    REBEL_OBJECT(GIProbeGizmoPlugin, EditorSpatialGizmoPlugin);
 
 public:
     bool has_gizmo(Spatial* p_spatial) override;
@@ -369,7 +372,7 @@ public:
 };
 
 class BakedIndirectLightGizmoPlugin : public EditorSpatialGizmoPlugin {
-    GDCLASS(BakedIndirectLightGizmoPlugin, EditorSpatialGizmoPlugin);
+    REBEL_OBJECT(BakedIndirectLightGizmoPlugin, EditorSpatialGizmoPlugin);
 
 public:
     bool has_gizmo(Spatial* p_spatial) override;
@@ -398,7 +401,7 @@ public:
 };
 
 class CollisionObjectGizmoPlugin : public EditorSpatialGizmoPlugin {
-    GDCLASS(CollisionObjectGizmoPlugin, EditorSpatialGizmoPlugin);
+    REBEL_OBJECT(CollisionObjectGizmoPlugin, EditorSpatialGizmoPlugin);
 
 public:
     bool has_gizmo(Spatial* p_spatial) override;
@@ -410,7 +413,7 @@ public:
 };
 
 class CollisionShapeSpatialGizmoPlugin : public EditorSpatialGizmoPlugin {
-    GDCLASS(CollisionShapeSpatialGizmoPlugin, EditorSpatialGizmoPlugin);
+    REBEL_OBJECT(CollisionShapeSpatialGizmoPlugin, EditorSpatialGizmoPlugin);
 
 public:
     bool has_gizmo(Spatial* p_spatial) override;
@@ -439,7 +442,7 @@ public:
 };
 
 class CollisionPolygonSpatialGizmoPlugin : public EditorSpatialGizmoPlugin {
-    GDCLASS(CollisionPolygonSpatialGizmoPlugin, EditorSpatialGizmoPlugin);
+    REBEL_OBJECT(CollisionPolygonSpatialGizmoPlugin, EditorSpatialGizmoPlugin);
 
 public:
     bool has_gizmo(Spatial* p_spatial) override;
@@ -450,7 +453,7 @@ public:
 };
 
 class NavigationMeshSpatialGizmoPlugin : public EditorSpatialGizmoPlugin {
-    GDCLASS(NavigationMeshSpatialGizmoPlugin, EditorSpatialGizmoPlugin);
+    REBEL_OBJECT(NavigationMeshSpatialGizmoPlugin, EditorSpatialGizmoPlugin);
 
     struct _EdgeKey {
         Vector3 from;
@@ -518,7 +521,7 @@ public:
 };
 
 class JointSpatialGizmoPlugin : public EditorSpatialGizmoPlugin {
-    GDCLASS(JointSpatialGizmoPlugin, EditorSpatialGizmoPlugin);
+    REBEL_OBJECT(JointSpatialGizmoPlugin, EditorSpatialGizmoPlugin);
 
     Timer* update_timer;
     uint64_t update_idx = 0;
@@ -607,7 +610,7 @@ public:
 class Room;
 
 class RoomSpatialGizmo : public EditorSpatialGizmo {
-    GDCLASS(RoomSpatialGizmo, EditorSpatialGizmo);
+    REBEL_OBJECT(RoomSpatialGizmo, EditorSpatialGizmo);
 
     Room* _room = nullptr;
 
@@ -627,7 +630,7 @@ public:
 };
 
 class RoomGizmoPlugin : public EditorSpatialGizmoPlugin {
-    GDCLASS(RoomGizmoPlugin, EditorSpatialGizmoPlugin);
+    REBEL_OBJECT(RoomGizmoPlugin, EditorSpatialGizmoPlugin);
 
 protected:
     bool has_gizmo(Spatial* p_spatial) override;
@@ -642,7 +645,7 @@ public:
 class Portal;
 
 class PortalSpatialGizmo : public EditorSpatialGizmo {
-    GDCLASS(PortalSpatialGizmo, EditorSpatialGizmo);
+    REBEL_OBJECT(PortalSpatialGizmo, EditorSpatialGizmo);
 
     Portal* _portal = nullptr;
     Color _color_portal_front;
@@ -664,7 +667,7 @@ public:
 };
 
 class PortalGizmoPlugin : public EditorSpatialGizmoPlugin {
-    GDCLASS(PortalGizmoPlugin, EditorSpatialGizmoPlugin);
+    REBEL_OBJECT(PortalGizmoPlugin, EditorSpatialGizmoPlugin);
 
 protected:
     bool has_gizmo(Spatial* p_spatial) override;
@@ -680,7 +683,7 @@ class Occluder;
 class OccluderShapeSphere;
 
 class OccluderSpatialGizmo : public EditorSpatialGizmo {
-    GDCLASS(OccluderSpatialGizmo, EditorSpatialGizmo);
+    REBEL_OBJECT(OccluderSpatialGizmo, EditorSpatialGizmo);
 
     Occluder* _occluder = nullptr;
 
@@ -703,7 +706,7 @@ public:
 };
 
 class OccluderGizmoPlugin : public EditorSpatialGizmoPlugin {
-    GDCLASS(OccluderGizmoPlugin, EditorSpatialGizmoPlugin);
+    REBEL_OBJECT(OccluderGizmoPlugin, EditorSpatialGizmoPlugin);
 
 protected:
     bool has_gizmo(Spatial* p_spatial) override;

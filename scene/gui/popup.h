@@ -10,7 +10,7 @@
 #include "scene/gui/control.h"
 
 class Popup : public Control {
-    GDCLASS(Popup, Control);
+    REBEL_OBJECT(Popup, Control);
 
     bool exclusive;
     bool popped_up;
@@ -52,7 +52,7 @@ public:
 };
 
 class PopupPanel : public Popup {
-    GDCLASS(PopupPanel, Popup);
+    REBEL_OBJECT(PopupPanel, Popup);
 
 protected:
     void _update_child_rects();

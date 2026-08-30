@@ -13,7 +13,7 @@
 #include "websocket_peer.h"
 
 class WebSocketClient : public WebSocketMultiplayerPeer {
-    GDCLASS(WebSocketClient, WebSocketMultiplayerPeer);
+    REBEL_OBJECT(WebSocketClient, WebSocketMultiplayerPeer);
     GDCICLASS(WebSocketClient);
 
 protected:

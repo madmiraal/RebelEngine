@@ -11,7 +11,7 @@
 #include "scene/resources/shape_2d.h"
 
 class CollisionObject2D : public Node2D {
-    GDCLASS(CollisionObject2D, Node2D);
+    REBEL_OBJECT(CollisionObject2D, Node2D);
 
     uint32_t collision_layer = 1;
     uint32_t collision_mask  = 1;

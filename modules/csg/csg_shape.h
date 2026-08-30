@@ -16,7 +16,7 @@
 #include "third-party/misc/mikktspace.h"
 
 class CSGShape : public GeometryInstance {
-    GDCLASS(CSGShape, GeometryInstance);
+    REBEL_OBJECT(CSGShape, GeometryInstance);
 
 public:
     enum Operation {
@@ -160,7 +160,7 @@ public:
 VARIANT_ENUM_CAST(CSGShape::Operation)
 
 class CSGCombiner : public CSGShape {
-    GDCLASS(CSGCombiner, CSGShape);
+    REBEL_OBJECT(CSGCombiner, CSGShape);
 
 private:
     CSGBrush* _build_brush() override;
@@ -170,7 +170,7 @@ public:
 };
 
 class CSGPrimitive : public CSGShape {
-    GDCLASS(CSGPrimitive, CSGShape);
+    REBEL_OBJECT(CSGPrimitive, CSGShape);
 
 protected:
     bool invert_faces;
@@ -190,7 +190,7 @@ public:
 };
 
 class CSGMesh : public CSGPrimitive {
-    GDCLASS(CSGMesh, CSGPrimitive);
+    REBEL_OBJECT(CSGMesh, CSGPrimitive);
 
     CSGBrush* _build_brush() override;
 
@@ -211,7 +211,7 @@ public:
 };
 
 class CSGSphere : public CSGPrimitive {
-    GDCLASS(CSGSphere, CSGPrimitive);
+    REBEL_OBJECT(CSGSphere, CSGPrimitive);
     CSGBrush* _build_brush() override;
 
     Ref<Material> material;
@@ -243,7 +243,7 @@ public:
 };
 
 class CSGBox : public CSGPrimitive {
-    GDCLASS(CSGBox, CSGPrimitive);
+    REBEL_OBJECT(CSGBox, CSGPrimitive);
     CSGBrush* _build_brush() override;
 
     Ref<Material> material;
@@ -271,7 +271,7 @@ public:
 };
 
 class CSGCylinder : public CSGPrimitive {
-    GDCLASS(CSGCylinder, CSGPrimitive);
+    REBEL_OBJECT(CSGCylinder, CSGPrimitive);
     CSGBrush* _build_brush() override;
 
     Ref<Material> material;
@@ -307,7 +307,7 @@ public:
 };
 
 class CSGTorus : public CSGPrimitive {
-    GDCLASS(CSGTorus, CSGPrimitive);
+    REBEL_OBJECT(CSGTorus, CSGPrimitive);
     CSGBrush* _build_brush() override;
 
     Ref<Material> material;
@@ -343,7 +343,7 @@ public:
 };
 
 class CSGPolygon : public CSGPrimitive {
-    GDCLASS(CSGPolygon, CSGPrimitive);
+    REBEL_OBJECT(CSGPolygon, CSGPrimitive);
 
 public:
     enum Mode {

@@ -24,7 +24,7 @@ enum Error;
 typedef PoolVector<String> PoolStringArray;
 
 class ConfigFile : public Reference {
-    GDCLASS(ConfigFile, Reference);
+    REBEL_OBJECT(ConfigFile, Reference);
 
 public:
     Variant get_value(

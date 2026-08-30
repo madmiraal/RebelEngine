@@ -12,7 +12,7 @@
 #include "scene/resources/mesh.h"
 
 class GLTFMesh : public Resource {
-    GDCLASS(GLTFMesh, Resource);
+    REBEL_OBJECT(GLTFMesh, Resource);
 
 private:
     Ref<ArrayMesh> mesh;

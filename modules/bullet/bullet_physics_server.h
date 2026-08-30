@@ -17,7 +17,7 @@
 #include "space_bullet.h"
 
 class BulletPhysicsServer : public PhysicsServer {
-    GDCLASS(BulletPhysicsServer, PhysicsServer);
+    REBEL_OBJECT(BulletPhysicsServer, PhysicsServer);
 
     friend class BulletPhysicsDirectSpaceState;
 

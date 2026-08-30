@@ -20,7 +20,7 @@
 class ImportDockParameters;
 
 class ImportDock : public VBoxContainer {
-    GDCLASS(ImportDock, VBoxContainer);
+    REBEL_OBJECT(ImportDock, VBoxContainer);
 
     Label* imported;
     OptionButton* import_as;

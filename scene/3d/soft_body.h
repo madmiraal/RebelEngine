@@ -43,7 +43,7 @@ public:
 };
 
 class SoftBody : public MeshInstance {
-    GDCLASS(SoftBody, MeshInstance);
+    REBEL_OBJECT(SoftBody, MeshInstance);
 
 public:
     struct PinnedPoint {

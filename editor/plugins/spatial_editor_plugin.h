@@ -22,7 +22,7 @@ class ViewportContainer;
 class SpatialEditorViewport;
 
 class EditorSpatialGizmo : public SpatialGizmo {
-    GDCLASS(EditorSpatialGizmo, SpatialGizmo);
+    REBEL_OBJECT(EditorSpatialGizmo, SpatialGizmo);
 
     bool selected;
     bool instanced;
@@ -173,7 +173,7 @@ public:
 };
 
 class ViewportRotationControl : public Control {
-    GDCLASS(ViewportRotationControl, Control);
+    REBEL_OBJECT(ViewportRotationControl, Control);
 
     struct Axis2D {
         Vector2 screen_point;
@@ -211,7 +211,7 @@ public:
 };
 
 class SpatialEditorViewport : public Control {
-    GDCLASS(SpatialEditorViewport, Control);
+    REBEL_OBJECT(SpatialEditorViewport, Control);
     friend class SpatialEditor;
     friend class ViewportRotationControl;
 
@@ -589,7 +589,7 @@ public:
 };
 
 class SpatialEditorSelectedItem : public Object {
-    GDCLASS(SpatialEditorSelectedItem, Object);
+    REBEL_OBJECT(SpatialEditorSelectedItem, Object);
 
 public:
     AABB aabb;
@@ -612,7 +612,7 @@ public:
 };
 
 class SpatialEditorViewportContainer : public Container {
-    GDCLASS(SpatialEditorViewportContainer, Container);
+    REBEL_OBJECT(SpatialEditorViewportContainer, Container);
 
 public:
     enum View {
@@ -652,7 +652,7 @@ public:
 };
 
 class SpatialEditor : public VBoxContainer {
-    GDCLASS(SpatialEditor, VBoxContainer);
+    REBEL_OBJECT(SpatialEditor, VBoxContainer);
 
 public:
     static const unsigned int VIEWPORTS_COUNT = 4;
@@ -989,7 +989,7 @@ public:
 };
 
 class SpatialEditorPlugin : public EditorPlugin {
-    GDCLASS(SpatialEditorPlugin, EditorPlugin);
+    REBEL_OBJECT(SpatialEditorPlugin, EditorPlugin);
 
     SpatialEditor* spatial_editor;
     EditorNode* editor;
@@ -1030,7 +1030,7 @@ public:
 };
 
 class EditorSpatialGizmoPlugin : public Resource {
-    GDCLASS(EditorSpatialGizmoPlugin, Resource);
+    REBEL_OBJECT(EditorSpatialGizmoPlugin, Resource);
 
 public:
     static const int VISIBLE = 0;

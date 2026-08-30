@@ -10,7 +10,7 @@
 #include "scene/gui/button.h"
 
 class ToolButton : public Button {
-    GDCLASS(ToolButton, Button);
+    REBEL_OBJECT(ToolButton, Button);
 
 public:
     ToolButton();

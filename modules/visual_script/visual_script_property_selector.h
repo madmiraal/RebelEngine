@@ -12,7 +12,7 @@
 #include "scene/gui/rich_text_label.h"
 
 class VisualScriptPropertySelector : public ConfirmationDialog {
-    GDCLASS(VisualScriptPropertySelector, ConfirmationDialog);
+    REBEL_OBJECT(VisualScriptPropertySelector, ConfirmationDialog);
 
     LineEdit* search_box;
     Tree* search_options;

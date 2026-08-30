@@ -12,7 +12,7 @@
 #include "core/script_language.h"
 
 class MainLoop : public Object {
-    GDCLASS(MainLoop, Object);
+    REBEL_OBJECT(MainLoop, Object);
 
     Ref<Script> init_script;
 

@@ -21,7 +21,7 @@ class Font;
 class StyleBox;
 
 class CanvasItemMaterial : public Material {
-    GDCLASS(CanvasItemMaterial, Material);
+    REBEL_OBJECT(CanvasItemMaterial, Material);
 
 public:
     enum BlendMode {
@@ -136,7 +136,7 @@ VARIANT_ENUM_CAST(CanvasItemMaterial::BlendMode)
 VARIANT_ENUM_CAST(CanvasItemMaterial::LightMode)
 
 class CanvasItem : public Node {
-    GDCLASS(CanvasItem, Node);
+    REBEL_OBJECT(CanvasItem, Node);
 
 public:
     enum BlendMode {

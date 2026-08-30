@@ -10,7 +10,7 @@
 #include "animation_track_editor.h"
 
 class AnimationBezierTrackEdit : public Control {
-    GDCLASS(AnimationBezierTrackEdit, Control);
+    REBEL_OBJECT(AnimationBezierTrackEdit, Control);
 
     enum HandleMode {
         HANDLE_MODE_FREE,

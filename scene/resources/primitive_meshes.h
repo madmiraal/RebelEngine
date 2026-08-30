@@ -10,7 +10,7 @@
 #include "scene/resources/mesh.h"
 
 class PrimitiveMesh : public Mesh {
-    GDCLASS(PrimitiveMesh, Mesh);
+    REBEL_OBJECT(PrimitiveMesh, Mesh);
 
 private:
     RID mesh;
@@ -67,7 +67,7 @@ public:
     Mesh for a simple capsule
 */
 class CapsuleMesh : public PrimitiveMesh {
-    GDCLASS(CapsuleMesh, PrimitiveMesh);
+    REBEL_OBJECT(CapsuleMesh, PrimitiveMesh);
 
 private:
     float radius;
@@ -100,7 +100,7 @@ public:
    coordinates
 */
 class CubeMesh : public PrimitiveMesh {
-    GDCLASS(CubeMesh, PrimitiveMesh);
+    REBEL_OBJECT(CubeMesh, PrimitiveMesh);
 
 private:
     Vector3 size;
@@ -133,7 +133,7 @@ public:
 */
 
 class CylinderMesh : public PrimitiveMesh {
-    GDCLASS(CylinderMesh, PrimitiveMesh);
+    REBEL_OBJECT(CylinderMesh, PrimitiveMesh);
 
 private:
     float top_radius;
@@ -169,7 +169,7 @@ public:
     Similar to quadmesh but with tessellation support
 */
 class PlaneMesh : public PrimitiveMesh {
-    GDCLASS(PlaneMesh, PrimitiveMesh);
+    REBEL_OBJECT(PlaneMesh, PrimitiveMesh);
 
 private:
     Size2 size;
@@ -201,7 +201,7 @@ public:
     A prism shapen, handy for ramps, triangles, etc.
 */
 class PrismMesh : public PrimitiveMesh {
-    GDCLASS(PrismMesh, PrimitiveMesh);
+    REBEL_OBJECT(PrismMesh, PrimitiveMesh);
 
 private:
     float left_to_right;
@@ -238,7 +238,7 @@ public:
 */
 
 class QuadMesh : public PrimitiveMesh {
-    GDCLASS(QuadMesh, PrimitiveMesh);
+    REBEL_OBJECT(QuadMesh, PrimitiveMesh);
 
 private:
     Size2 size;
@@ -262,7 +262,7 @@ public:
     A sphere..
 */
 class SphereMesh : public PrimitiveMesh {
-    GDCLASS(SphereMesh, PrimitiveMesh);
+    REBEL_OBJECT(SphereMesh, PrimitiveMesh);
 
 private:
     float radius;
@@ -299,7 +299,7 @@ public:
 */
 
 class PointMesh : public PrimitiveMesh {
-    GDCLASS(PointMesh, PrimitiveMesh)
+    REBEL_OBJECT(PointMesh, PrimitiveMesh)
 
 protected:
     void _create_mesh_array(Array& p_arr) const override;

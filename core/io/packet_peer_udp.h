@@ -14,7 +14,7 @@
 class UDPServer;
 
 class PacketPeerUDP : public PacketPeer {
-    GDCLASS(PacketPeerUDP, PacketPeer);
+    REBEL_OBJECT(PacketPeerUDP, PacketPeer);
 
 protected:
     enum {

@@ -11,7 +11,7 @@
 #include "scene/gui/scroll_container.h"
 
 class Polygon2DEditor : public AbstractPolygon2DEditor {
-    GDCLASS(Polygon2DEditor, AbstractPolygon2DEditor);
+    REBEL_OBJECT(Polygon2DEditor, AbstractPolygon2DEditor);
 
     enum Mode {
         MODE_EDIT_UV = MODE_CONT,
@@ -143,7 +143,7 @@ public:
 };
 
 class Polygon2DEditorPlugin : public AbstractPolygon2DEditorPlugin {
-    GDCLASS(Polygon2DEditorPlugin, AbstractPolygon2DEditorPlugin);
+    REBEL_OBJECT(Polygon2DEditorPlugin, AbstractPolygon2DEditorPlugin);
 
 public:
     Polygon2DEditorPlugin(EditorNode* p_node);

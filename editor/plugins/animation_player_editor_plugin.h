@@ -19,7 +19,7 @@ class AnimationTrackEditor;
 class AnimationPlayerEditorPlugin;
 
 class AnimationPlayerEditor : public VBoxContainer {
-    GDCLASS(AnimationPlayerEditor, VBoxContainer);
+    REBEL_OBJECT(AnimationPlayerEditor, VBoxContainer);
 
     EditorNode* editor;
     AnimationPlayerEditorPlugin* plugin;
@@ -240,7 +240,7 @@ public:
 };
 
 class AnimationPlayerEditorPlugin : public EditorPlugin {
-    GDCLASS(AnimationPlayerEditorPlugin, EditorPlugin);
+    REBEL_OBJECT(AnimationPlayerEditorPlugin, EditorPlugin);
 
     AnimationPlayerEditor* anim_editor;
     EditorNode* editor;

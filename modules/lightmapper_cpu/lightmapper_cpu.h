@@ -15,7 +15,7 @@
 #include <atomic>
 
 class LightmapperCPU : public Lightmapper {
-    GDCLASS(LightmapperCPU, Lightmapper)
+    REBEL_OBJECT(LightmapperCPU, Lightmapper)
 
     struct MeshInstance {
         MeshData data;

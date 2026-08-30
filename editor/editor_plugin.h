@@ -33,7 +33,7 @@ class FileSystemDock;
 class ScriptEditor;
 
 class EditorInterface : public Node {
-    GDCLASS(EditorInterface, Node);
+    REBEL_OBJECT(EditorInterface, Node);
 
 protected:
     static void _bind_methods();
@@ -112,7 +112,7 @@ public:
 };
 
 class EditorPlugin : public Node {
-    GDCLASS(EditorPlugin, Node);
+    REBEL_OBJECT(EditorPlugin, Node);
     friend class EditorData;
     UndoRedo* undo_redo;
 

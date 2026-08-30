@@ -12,7 +12,7 @@
 #include "lsp.hpp"
 
 class GDScriptTextDocument : public Reference {
-    GDCLASS(GDScriptTextDocument, Reference)
+    REBEL_OBJECT(GDScriptTextDocument, Reference)
 
 protected:
     static void _bind_methods();

@@ -13,7 +13,7 @@
 #include "core/io/stream_peer.h"
 
 class StreamPeerTCP : public StreamPeer {
-    GDCLASS(StreamPeerTCP, StreamPeer);
+    REBEL_OBJECT(StreamPeerTCP, StreamPeer);
 
 public:
     enum Status {

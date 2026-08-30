@@ -11,7 +11,7 @@
 #include "core/os/input_event.h"
 
 class InputMap : public Object {
-    GDCLASS(InputMap, Object);
+    REBEL_OBJECT(InputMap, Object);
 
 public:
     /**

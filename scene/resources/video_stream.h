@@ -10,7 +10,7 @@
 #include "scene/resources/texture.h"
 
 class VideoStreamPlayback : public Resource {
-    GDCLASS(VideoStreamPlayback, Resource);
+    REBEL_OBJECT(VideoStreamPlayback, Resource);
 
 public:
     typedef int (*AudioMixCallback)(
@@ -49,7 +49,7 @@ public:
 };
 
 class VideoStream : public Resource {
-    GDCLASS(VideoStream, Resource);
+    REBEL_OBJECT(VideoStream, Resource);
     OBJ_SAVE_TYPE(VideoStream
     ); // Saves derived classes with common type so they can be interchanged.
 

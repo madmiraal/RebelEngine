@@ -10,7 +10,7 @@
 #include "scene/gui/control.h"
 
 class Container : public Control {
-    GDCLASS(Container, Control);
+    REBEL_OBJECT(Container, Control);
 
     bool pending_sort;
     void _sort_children();

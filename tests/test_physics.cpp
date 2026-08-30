@@ -16,7 +16,7 @@
 #include "servers/visual_server.h"
 
 class TestPhysicsMainLoop : public MainLoop {
-    GDCLASS(TestPhysicsMainLoop, MainLoop);
+    REBEL_OBJECT(TestPhysicsMainLoop, MainLoop);
 
     enum {
         LINK_COUNT = 20,

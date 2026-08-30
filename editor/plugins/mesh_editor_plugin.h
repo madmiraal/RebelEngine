@@ -16,7 +16,7 @@
 #include "scene/resources/material.h"
 
 class MeshEditor : public ViewportContainer {
-    GDCLASS(MeshEditor, ViewportContainer);
+    REBEL_OBJECT(MeshEditor, ViewportContainer);
 
     float rot_x;
     float rot_y;
@@ -49,7 +49,7 @@ public:
 };
 
 class EditorInspectorPluginMesh : public EditorInspectorPlugin {
-    GDCLASS(EditorInspectorPluginMesh, EditorInspectorPlugin);
+    REBEL_OBJECT(EditorInspectorPluginMesh, EditorInspectorPlugin);
 
 public:
     bool can_handle(Object* p_object) override;
@@ -57,7 +57,7 @@ public:
 };
 
 class MeshEditorPlugin : public EditorPlugin {
-    GDCLASS(MeshEditorPlugin, EditorPlugin);
+    REBEL_OBJECT(MeshEditorPlugin, EditorPlugin);
 
 public:
     String get_name() const override {

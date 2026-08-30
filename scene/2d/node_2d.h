@@ -10,7 +10,7 @@
 #include "scene/2d/canvas_item.h"
 
 class Node2D : public CanvasItem {
-    GDCLASS(Node2D, CanvasItem);
+    REBEL_OBJECT(Node2D, CanvasItem);
 
     Point2 pos;
     float angle;

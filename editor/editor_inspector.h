@@ -43,7 +43,7 @@ public:
 };
 
 class EditorProperty : public Container {
-    GDCLASS(EditorProperty, Container);
+    REBEL_OBJECT(EditorProperty, Container);
 
 private:
     String label;
@@ -177,7 +177,7 @@ public:
 };
 
 class EditorInspectorPlugin : public Reference {
-    GDCLASS(EditorInspectorPlugin, Reference);
+    REBEL_OBJECT(EditorInspectorPlugin, Reference);
 
     friend class EditorInspector;
 
@@ -219,7 +219,7 @@ public:
 };
 
 class EditorInspectorCategory : public Control {
-    GDCLASS(EditorInspectorCategory, Control);
+    REBEL_OBJECT(EditorInspectorCategory, Control);
 
     friend class EditorInspector;
     Ref<Texture> icon;
@@ -241,7 +241,7 @@ public:
 };
 
 class EditorInspectorSection : public Container {
-    GDCLASS(EditorInspectorSection, Container);
+    REBEL_OBJECT(EditorInspectorSection, Container);
 
     String label;
     String section;
@@ -277,7 +277,7 @@ public:
 };
 
 class EditorInspector : public ScrollContainer {
-    GDCLASS(EditorInspector, ScrollContainer);
+    REBEL_OBJECT(EditorInspector, ScrollContainer);
 
     UndoRedo* undo_redo;
 

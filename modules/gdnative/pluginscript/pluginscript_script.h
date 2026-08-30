@@ -15,7 +15,7 @@
 #include <pluginscript/rebel_pluginscript.h>
 
 class PluginScript : public Script {
-    GDCLASS(PluginScript, Script);
+    REBEL_OBJECT(PluginScript, Script);
 
     friend class PluginScriptInstance;
     friend class PluginScriptLanguage;

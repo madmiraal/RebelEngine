@@ -19,7 +19,7 @@
 #define LSP_MAX_CLIENTS     8
 
 class GDScriptLanguageProtocol : public JSONRPC {
-    GDCLASS(GDScriptLanguageProtocol, JSONRPC)
+    REBEL_OBJECT(GDScriptLanguageProtocol, JSONRPC)
 
 private:
     struct LSPeer : Reference {

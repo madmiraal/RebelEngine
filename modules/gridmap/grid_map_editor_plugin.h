@@ -15,7 +15,7 @@
 class SpatialEditorPlugin;
 
 class GridMapEditor : public VBoxContainer {
-    GDCLASS(GridMapEditor, VBoxContainer);
+    REBEL_OBJECT(GridMapEditor, VBoxContainer);
 
     enum {
         GRID_CURSOR_SIZE = 50
@@ -229,7 +229,7 @@ public:
 };
 
 class GridMapEditorPlugin : public EditorPlugin {
-    GDCLASS(GridMapEditorPlugin, EditorPlugin);
+    REBEL_OBJECT(GridMapEditorPlugin, EditorPlugin);
 
     GridMapEditor* grid_map_editor;
     EditorNode* editor;

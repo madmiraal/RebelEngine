@@ -10,7 +10,7 @@
 #include "scene/gui/control.h"
 
 class ColorRect : public Control {
-    GDCLASS(ColorRect, Control);
+    REBEL_OBJECT(ColorRect, Control);
 
     Color color;
 

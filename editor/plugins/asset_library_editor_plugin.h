@@ -26,7 +26,7 @@
 #include "scene/main/http_request.h"
 
 class EditorAssetLibraryItem : public PanelContainer {
-    GDCLASS(EditorAssetLibraryItem, PanelContainer);
+    REBEL_OBJECT(EditorAssetLibraryItem, PanelContainer);
 
     TextureButton* icon;
     LinkButton* title;
@@ -64,7 +64,7 @@ public:
 };
 
 class EditorAssetLibraryItemDescription : public ConfirmationDialog {
-    GDCLASS(EditorAssetLibraryItemDescription, ConfirmationDialog);
+    REBEL_OBJECT(EditorAssetLibraryItemDescription, ConfirmationDialog);
 
     EditorAssetLibraryItem* item;
     RichTextLabel* description;
@@ -140,7 +140,7 @@ public:
 };
 
 class EditorAssetLibraryItemDownload : public PanelContainer {
-    GDCLASS(EditorAssetLibraryItemDownload, PanelContainer);
+    REBEL_OBJECT(EditorAssetLibraryItemDownload, PanelContainer);
 
     TextureRect* icon;
     Label* title;
@@ -197,7 +197,7 @@ public:
 };
 
 class EditorAssetLibrary : public PanelContainer {
-    GDCLASS(EditorAssetLibrary, PanelContainer);
+    REBEL_OBJECT(EditorAssetLibrary, PanelContainer);
 
     String host;
 
@@ -366,7 +366,7 @@ public:
 };
 
 class AssetLibraryEditorPlugin : public EditorPlugin {
-    GDCLASS(AssetLibraryEditorPlugin, EditorPlugin);
+    REBEL_OBJECT(AssetLibraryEditorPlugin, EditorPlugin);
 
     EditorAssetLibrary* addon_library;
     EditorNode* editor;

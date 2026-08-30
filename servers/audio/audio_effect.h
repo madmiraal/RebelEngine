@@ -11,7 +11,7 @@
 #include "core/resource.h"
 
 class AudioEffectInstance : public Reference {
-    GDCLASS(AudioEffectInstance, Reference);
+    REBEL_OBJECT(AudioEffectInstance, Reference);
 
 public:
     virtual void process(
@@ -26,7 +26,7 @@ public:
 };
 
 class AudioEffect : public Resource {
-    GDCLASS(AudioEffect, Resource);
+    REBEL_OBJECT(AudioEffect, Resource);
 
 public:
     virtual Ref<AudioEffectInstance> instance() = 0;

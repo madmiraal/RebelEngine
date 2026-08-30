@@ -10,7 +10,7 @@
 #include "core/reference.h"
 
 class StreamPeer : public Reference {
-    GDCLASS(StreamPeer, Reference);
+    REBEL_OBJECT(StreamPeer, Reference);
 
 protected:
     static void _bind_methods();
@@ -85,7 +85,7 @@ public:
 };
 
 class StreamPeerBuffer : public StreamPeer {
-    GDCLASS(StreamPeerBuffer, StreamPeer);
+    REBEL_OBJECT(StreamPeerBuffer, StreamPeer);
 
     PoolVector<uint8_t> data;
     int pointer;

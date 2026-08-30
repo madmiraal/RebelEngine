@@ -10,7 +10,7 @@
 #include "scene/gui/range.h"
 
 class TextureProgress : public Range {
-    GDCLASS(TextureProgress, Range);
+    REBEL_OBJECT(TextureProgress, Range);
 
     Ref<Texture> under;
     Ref<Texture> progress;

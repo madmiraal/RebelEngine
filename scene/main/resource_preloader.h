@@ -10,7 +10,7 @@
 #include "scene/main/node.h"
 
 class ResourcePreloader : public Node {
-    GDCLASS(ResourcePreloader, Node);
+    REBEL_OBJECT(ResourcePreloader, Node);
 
     Map<StringName, RES> resources;
 

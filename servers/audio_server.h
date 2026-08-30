@@ -158,7 +158,7 @@ public:
 class AudioBusLayout;
 
 class AudioServer : public Object {
-    GDCLASS(AudioServer, Object);
+    REBEL_OBJECT(AudioServer, Object);
 
 public:
     // re-expose this here, as AudioDriver is not exposed to script
@@ -408,7 +408,7 @@ public:
 VARIANT_ENUM_CAST(AudioServer::SpeakerMode)
 
 class AudioBusLayout : public Resource {
-    GDCLASS(AudioBusLayout, Resource);
+    REBEL_OBJECT(AudioBusLayout, Resource);
 
     friend class AudioServer;
 

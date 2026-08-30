@@ -13,7 +13,7 @@
 #include "scene/gui/line_edit.h"
 
 class RunSettingsDialog : public AcceptDialog {
-    GDCLASS(RunSettingsDialog, AcceptDialog);
+    REBEL_OBJECT(RunSettingsDialog, AcceptDialog);
 
 public:
     enum RunMode {

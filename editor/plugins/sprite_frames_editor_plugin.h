@@ -17,7 +17,7 @@
 #include "scene/gui/tree.h"
 
 class SpriteFramesEditor : public HSplitContainer {
-    GDCLASS(SpriteFramesEditor, HSplitContainer);
+    REBEL_OBJECT(SpriteFramesEditor, HSplitContainer);
 
     ToolButton* load;
     ToolButton* load_sheet;
@@ -145,7 +145,7 @@ public:
 };
 
 class SpriteFramesEditorPlugin : public EditorPlugin {
-    GDCLASS(SpriteFramesEditorPlugin, EditorPlugin);
+    REBEL_OBJECT(SpriteFramesEditorPlugin, EditorPlugin);
 
     SpriteFramesEditor* frames_editor;
     EditorNode* editor;

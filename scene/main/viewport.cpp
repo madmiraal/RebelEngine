@@ -174,14 +174,14 @@ ViewportTexture::~ViewportTexture() {
 // is only relevant for default tooltips.
 
 class TooltipPanel : public PanelContainer {
-    GDCLASS(TooltipPanel, PanelContainer);
+    REBEL_OBJECT(TooltipPanel, PanelContainer);
 
 public:
     TooltipPanel(){};
 };
 
 class TooltipLabel : public Label {
-    GDCLASS(TooltipLabel, Label);
+    REBEL_OBJECT(TooltipLabel, Label);
 
 public:
     TooltipLabel(){};

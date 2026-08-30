@@ -10,7 +10,7 @@
 #include "core/reference.h"
 
 class UndoRedo : public Object {
-    GDCLASS(UndoRedo, Object);
+    REBEL_OBJECT(UndoRedo, Object);
     OBJ_SAVE_TYPE(UndoRedo);
 
 public:

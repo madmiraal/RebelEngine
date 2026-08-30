@@ -12,7 +12,7 @@
 #include "scene/resources/texture.h"
 
 class Font : public Resource {
-    GDCLASS(Font, Resource);
+    REBEL_OBJECT(Font, Resource);
 
 protected:
     static void _bind_methods();
@@ -126,7 +126,7 @@ public:
 };
 
 class BitmapFont : public Font {
-    GDCLASS(BitmapFont, Font);
+    REBEL_OBJECT(BitmapFont, Font);
     RES_BASE_EXTENSION("font");
 
     Vector<Ref<Texture>> textures;

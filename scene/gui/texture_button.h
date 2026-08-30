@@ -11,7 +11,7 @@
 #include "scene/resources/bit_map.h"
 
 class TextureButton : public BaseButton {
-    GDCLASS(TextureButton, BaseButton);
+    REBEL_OBJECT(TextureButton, BaseButton);
 
 public:
     enum StretchMode {

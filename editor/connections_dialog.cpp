@@ -33,7 +33,7 @@ static Node* _find_first_script(Node* p_root, Node* p_node) {
 }
 
 class ConnectDialogBinds : public Object {
-    GDCLASS(ConnectDialogBinds, Object);
+    REBEL_OBJECT(ConnectDialogBinds, Object);
 
 public:
     Vector<Variant> params;

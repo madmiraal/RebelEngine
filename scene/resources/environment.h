@@ -13,7 +13,7 @@
 #include "servers/visual_server.h"
 
 class Environment : public Resource {
-    GDCLASS(Environment, Resource);
+    REBEL_OBJECT(Environment, Resource);
 
 public:
     enum BGMode {

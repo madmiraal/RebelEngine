@@ -11,7 +11,7 @@
 #include "core/io/packet_peer_udp.h"
 
 class PacketPeerDTLS : public PacketPeer {
-    GDCLASS(PacketPeerDTLS, PacketPeer);
+    REBEL_OBJECT(PacketPeerDTLS, PacketPeer);
 
 protected:
     static PacketPeerDTLS* (*_create)();

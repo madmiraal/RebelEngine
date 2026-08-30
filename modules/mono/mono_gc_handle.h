@@ -12,7 +12,7 @@
 #include <mono/jit/jit.h>
 
 class MonoGCHandle : public Reference {
-    GDCLASS(MonoGCHandle, Reference);
+    REBEL_OBJECT(MonoGCHandle, Reference);
 
     bool released;
     bool weak;

@@ -10,7 +10,7 @@
 #include "scene/gui/control.h"
 
 class PaneDrag : public Control {
-    GDCLASS(PaneDrag, Control);
+    REBEL_OBJECT(PaneDrag, Control);
 
     bool mouse_over;
 

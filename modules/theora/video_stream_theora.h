@@ -22,7 +22,7 @@
 // #define THEORA_USE_THREAD_STREAMING
 
 class VideoStreamPlaybackTheora : public VideoStreamPlayback {
-    GDCLASS(VideoStreamPlaybackTheora, VideoStreamPlayback);
+    REBEL_OBJECT(VideoStreamPlaybackTheora, VideoStreamPlayback);
 
     enum {
         MAX_FRAMES = 4,
@@ -138,7 +138,7 @@ public:
 };
 
 class VideoStreamTheora : public VideoStream {
-    GDCLASS(VideoStreamTheora, VideoStream);
+    REBEL_OBJECT(VideoStreamTheora, VideoStream);
 
     String file;
     int audio_track;

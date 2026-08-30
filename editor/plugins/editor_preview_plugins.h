@@ -13,7 +13,7 @@
 void post_process_preview(Ref<Image> p_image);
 
 class EditorTexturePreviewPlugin : public EditorResourcePreviewGenerator {
-    GDCLASS(EditorTexturePreviewPlugin, EditorResourcePreviewGenerator);
+    REBEL_OBJECT(EditorTexturePreviewPlugin, EditorResourcePreviewGenerator);
 
 public:
     bool handles(const String& p_type) const override;
@@ -25,7 +25,7 @@ public:
 };
 
 class EditorImagePreviewPlugin : public EditorResourcePreviewGenerator {
-    GDCLASS(EditorImagePreviewPlugin, EditorResourcePreviewGenerator);
+    REBEL_OBJECT(EditorImagePreviewPlugin, EditorResourcePreviewGenerator);
 
 public:
     bool handles(const String& p_type) const override;
@@ -37,7 +37,7 @@ public:
 };
 
 class EditorBitmapPreviewPlugin : public EditorResourcePreviewGenerator {
-    GDCLASS(EditorBitmapPreviewPlugin, EditorResourcePreviewGenerator);
+    REBEL_OBJECT(EditorBitmapPreviewPlugin, EditorResourcePreviewGenerator);
 
 public:
     bool handles(const String& p_type) const override;
@@ -60,7 +60,7 @@ public:
 };
 
 class EditorMaterialPreviewPlugin : public EditorResourcePreviewGenerator {
-    GDCLASS(EditorMaterialPreviewPlugin, EditorResourcePreviewGenerator);
+    REBEL_OBJECT(EditorMaterialPreviewPlugin, EditorResourcePreviewGenerator);
 
     RID scenario;
     RID sphere;
@@ -108,7 +108,7 @@ public:
 };
 
 class EditorMeshPreviewPlugin : public EditorResourcePreviewGenerator {
-    GDCLASS(EditorMeshPreviewPlugin, EditorResourcePreviewGenerator);
+    REBEL_OBJECT(EditorMeshPreviewPlugin, EditorResourcePreviewGenerator);
 
     RID scenario;
     RID mesh_instance;
@@ -136,7 +136,7 @@ public:
 };
 
 class EditorFontPreviewPlugin : public EditorResourcePreviewGenerator {
-    GDCLASS(EditorFontPreviewPlugin, EditorResourcePreviewGenerator);
+    REBEL_OBJECT(EditorFontPreviewPlugin, EditorResourcePreviewGenerator);
 
     RID viewport;
     RID viewport_texture;

@@ -11,7 +11,7 @@
 #include "webrtc_peer_connection.h"
 
 class WebRTCMultiplayer : public NetworkedMultiplayerPeer {
-    GDCLASS(WebRTCMultiplayer, NetworkedMultiplayerPeer);
+    REBEL_OBJECT(WebRTCMultiplayer, NetworkedMultiplayerPeer);
 
 protected:
     static void _bind_methods();

@@ -11,7 +11,7 @@
 #include "scene/2d/navigation_polygon.h"
 
 class NavigationPolygonEditor : public AbstractPolygon2DEditor {
-    GDCLASS(NavigationPolygonEditor, AbstractPolygon2DEditor);
+    REBEL_OBJECT(NavigationPolygonEditor, AbstractPolygon2DEditor);
 
     NavigationPolygonInstance* node;
 
@@ -41,7 +41,7 @@ public:
 };
 
 class NavigationPolygonEditorPlugin : public AbstractPolygon2DEditorPlugin {
-    GDCLASS(NavigationPolygonEditorPlugin, AbstractPolygon2DEditorPlugin);
+    REBEL_OBJECT(NavigationPolygonEditorPlugin, AbstractPolygon2DEditorPlugin);
 
 public:
     NavigationPolygonEditorPlugin(EditorNode* p_node);

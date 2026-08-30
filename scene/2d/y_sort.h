@@ -10,7 +10,7 @@
 #include "scene/2d/node_2d.h"
 
 class YSort : public Node2D {
-    GDCLASS(YSort, Node2D);
+    REBEL_OBJECT(YSort, Node2D);
     bool sort_enabled;
     static void _bind_methods();
 

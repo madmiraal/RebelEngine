@@ -14,7 +14,7 @@
 #include "scene/gui/text_edit.h"
 
 class PluginConfigDialog : public ConfirmationDialog {
-    GDCLASS(PluginConfigDialog, ConfirmationDialog);
+    REBEL_OBJECT(PluginConfigDialog, ConfirmationDialog);
 
     LineEdit* name_edit;
     LineEdit* subfolder_edit;

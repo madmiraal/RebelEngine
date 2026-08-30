@@ -11,7 +11,7 @@
 #include "scene/resources/texture.h"
 
 class Sky : public Resource {
-    GDCLASS(Sky, Resource);
+    REBEL_OBJECT(Sky, Resource);
 
 public:
     enum RadianceSize {
@@ -41,7 +41,7 @@ public:
 VARIANT_ENUM_CAST(Sky::RadianceSize)
 
 class PanoramaSky : public Sky {
-    GDCLASS(PanoramaSky, Sky);
+    REBEL_OBJECT(PanoramaSky, Sky);
 
 private:
     RID sky;
@@ -62,7 +62,7 @@ public:
 };
 
 class ProceduralSky : public Sky {
-    GDCLASS(ProceduralSky, Sky);
+    REBEL_OBJECT(ProceduralSky, Sky);
 
 public:
     enum TextureSize {

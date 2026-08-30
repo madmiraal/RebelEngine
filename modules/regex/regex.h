@@ -15,7 +15,7 @@
 #include "core/vector.h"
 
 class RegExMatch : public Reference {
-    GDCLASS(RegExMatch, Reference);
+    REBEL_OBJECT(RegExMatch, Reference);
 
     struct Range {
         int start;
@@ -45,7 +45,7 @@ public:
 };
 
 class RegEx : public Reference {
-    GDCLASS(RegEx, Reference);
+    REBEL_OBJECT(RegEx, Reference);
 
     void* general_ctx;
     void* code;

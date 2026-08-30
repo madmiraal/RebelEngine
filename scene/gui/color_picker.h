@@ -20,7 +20,7 @@
 #include "scene/gui/tool_button.h"
 
 class ColorPicker : public BoxContainer {
-    GDCLASS(ColorPicker, BoxContainer);
+    REBEL_OBJECT(ColorPicker, BoxContainer);
 
 private:
     static List<Color> preset_cache;
@@ -122,7 +122,7 @@ public:
 };
 
 class ColorPickerButton : public Button {
-    GDCLASS(ColorPickerButton, Button);
+    REBEL_OBJECT(ColorPickerButton, Button);
 
     PopupPanel* popup;
     ColorPicker* picker;

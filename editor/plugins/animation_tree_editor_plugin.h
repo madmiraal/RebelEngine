@@ -17,7 +17,7 @@
 #include "scene/gui/tree.h"
 
 class AnimationTreeNodeEditorPlugin : public VBoxContainer {
-    GDCLASS(AnimationTreeNodeEditorPlugin, VBoxContainer);
+    REBEL_OBJECT(AnimationTreeNodeEditorPlugin, VBoxContainer);
 
 public:
     virtual bool can_edit(const Ref<AnimationNode>& p_node) = 0;
@@ -25,7 +25,7 @@ public:
 };
 
 class AnimationTreeEditor : public VBoxContainer {
-    GDCLASS(AnimationTreeEditor, VBoxContainer);
+    REBEL_OBJECT(AnimationTreeEditor, VBoxContainer);
 
     ScrollContainer* path_edit;
     HBoxContainer* path_hb;
@@ -77,7 +77,7 @@ public:
 };
 
 class AnimationTreeEditorPlugin : public EditorPlugin {
-    GDCLASS(AnimationTreeEditorPlugin, EditorPlugin);
+    REBEL_OBJECT(AnimationTreeEditorPlugin, EditorPlugin);
 
     AnimationTreeEditor* anim_tree_editor;
     EditorNode* editor;

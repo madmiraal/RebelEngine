@@ -16,7 +16,7 @@
 #include "scene/gui/tree.h"
 
 class CreateDialog : public ConfirmationDialog {
-    GDCLASS(CreateDialog, ConfirmationDialog);
+    REBEL_OBJECT(CreateDialog, ConfirmationDialog);
 
     Vector<String> favorite_list;
     Tree* favorites;

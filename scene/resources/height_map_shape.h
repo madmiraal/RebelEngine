@@ -10,7 +10,7 @@
 #include "scene/resources/shape.h"
 
 class HeightMapShape : public Shape {
-    GDCLASS(HeightMapShape, Shape);
+    REBEL_OBJECT(HeightMapShape, Shape);
 
     int map_width;
     int map_depth;

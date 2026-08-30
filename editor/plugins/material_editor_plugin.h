@@ -19,7 +19,7 @@
 class ViewportContainer;
 
 class MaterialEditor : public Control {
-    GDCLASS(MaterialEditor, Control);
+    REBEL_OBJECT(MaterialEditor, Control);
 
     ViewportContainer* vc;
     Viewport* viewport;
@@ -54,7 +54,7 @@ public:
 };
 
 class EditorInspectorPluginMaterial : public EditorInspectorPlugin {
-    GDCLASS(EditorInspectorPluginMaterial, EditorInspectorPlugin);
+    REBEL_OBJECT(EditorInspectorPluginMaterial, EditorInspectorPlugin);
     Ref<Environment> env;
 
 public:
@@ -65,7 +65,7 @@ public:
 };
 
 class MaterialEditorPlugin : public EditorPlugin {
-    GDCLASS(MaterialEditorPlugin, EditorPlugin);
+    REBEL_OBJECT(MaterialEditorPlugin, EditorPlugin);
 
 public:
     String get_name() const override {
@@ -76,7 +76,10 @@ public:
 };
 
 class SpatialMaterialConversionPlugin : public EditorResourceConversionPlugin {
-    GDCLASS(SpatialMaterialConversionPlugin, EditorResourceConversionPlugin);
+    REBEL_OBJECT(
+        SpatialMaterialConversionPlugin,
+        EditorResourceConversionPlugin
+    );
 
 public:
     String converts_to() const override;
@@ -86,7 +89,10 @@ public:
 
 class ParticlesMaterialConversionPlugin :
     public EditorResourceConversionPlugin {
-    GDCLASS(ParticlesMaterialConversionPlugin, EditorResourceConversionPlugin);
+    REBEL_OBJECT(
+        ParticlesMaterialConversionPlugin,
+        EditorResourceConversionPlugin
+    );
 
 public:
     String converts_to() const override;
@@ -96,7 +102,10 @@ public:
 
 class CanvasItemMaterialConversionPlugin :
     public EditorResourceConversionPlugin {
-    GDCLASS(CanvasItemMaterialConversionPlugin, EditorResourceConversionPlugin);
+    REBEL_OBJECT(
+        CanvasItemMaterialConversionPlugin,
+        EditorResourceConversionPlugin
+    );
 
 public:
     String converts_to() const override;

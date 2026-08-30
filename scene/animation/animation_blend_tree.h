@@ -10,7 +10,7 @@
 #include "scene/animation/animation_tree.h"
 
 class AnimationNodeAnimation : public AnimationRootNode {
-    GDCLASS(AnimationNodeAnimation, AnimationRootNode);
+    REBEL_OBJECT(AnimationNodeAnimation, AnimationRootNode);
 
     StringName animation;
     StringName time;
@@ -38,7 +38,7 @@ public:
 };
 
 class AnimationNodeOneShot : public AnimationNode {
-    GDCLASS(AnimationNodeOneShot, AnimationNode);
+    REBEL_OBJECT(AnimationNodeOneShot, AnimationNode);
 
 public:
     enum MixMode {
@@ -107,7 +107,7 @@ public:
 VARIANT_ENUM_CAST(AnimationNodeOneShot::MixMode)
 
 class AnimationNodeAdd2 : public AnimationNode {
-    GDCLASS(AnimationNodeAdd2, AnimationNode);
+    REBEL_OBJECT(AnimationNodeAdd2, AnimationNode);
 
     StringName add_amount;
     bool sync;
@@ -132,7 +132,7 @@ public:
 };
 
 class AnimationNodeAdd3 : public AnimationNode {
-    GDCLASS(AnimationNodeAdd3, AnimationNode);
+    REBEL_OBJECT(AnimationNodeAdd3, AnimationNode);
 
     StringName add_amount;
     bool sync;
@@ -157,7 +157,7 @@ public:
 };
 
 class AnimationNodeBlend2 : public AnimationNode {
-    GDCLASS(AnimationNodeBlend2, AnimationNode);
+    REBEL_OBJECT(AnimationNodeBlend2, AnimationNode);
 
     StringName blend_amount;
     bool sync;
@@ -181,7 +181,7 @@ public:
 };
 
 class AnimationNodeBlend3 : public AnimationNode {
-    GDCLASS(AnimationNodeBlend3, AnimationNode);
+    REBEL_OBJECT(AnimationNodeBlend3, AnimationNode);
 
     StringName blend_amount;
     bool sync;
@@ -204,7 +204,7 @@ public:
 };
 
 class AnimationNodeTimeScale : public AnimationNode {
-    GDCLASS(AnimationNodeTimeScale, AnimationNode);
+    REBEL_OBJECT(AnimationNodeTimeScale, AnimationNode);
 
     StringName scale;
 
@@ -224,7 +224,7 @@ public:
 };
 
 class AnimationNodeTimeSeek : public AnimationNode {
-    GDCLASS(AnimationNodeTimeSeek, AnimationNode);
+    REBEL_OBJECT(AnimationNodeTimeSeek, AnimationNode);
 
     StringName seek_pos;
 
@@ -244,7 +244,7 @@ public:
 };
 
 class AnimationNodeTransition : public AnimationNode {
-    GDCLASS(AnimationNodeTransition, AnimationNode);
+    REBEL_OBJECT(AnimationNodeTransition, AnimationNode);
 
     enum {
         MAX_INPUTS = 32
@@ -308,7 +308,7 @@ public:
 };
 
 class AnimationNodeOutput : public AnimationNode {
-    GDCLASS(AnimationNodeOutput, AnimationNode);
+    REBEL_OBJECT(AnimationNodeOutput, AnimationNode);
 
 public:
     String get_caption() const override;
@@ -319,7 +319,7 @@ public:
 /////
 
 class AnimationNodeBlendTree : public AnimationRootNode {
-    GDCLASS(AnimationNodeBlendTree, AnimationRootNode);
+    REBEL_OBJECT(AnimationNodeBlendTree, AnimationRootNode);
 
     struct Node {
         Ref<AnimationNode> node;

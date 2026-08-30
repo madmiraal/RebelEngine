@@ -12,7 +12,7 @@
 #include "editor/editor_plugin.h"
 
 class WebToolsEditorPlugin : public EditorPlugin {
-    GDCLASS(WebToolsEditorPlugin, EditorPlugin);
+    REBEL_OBJECT(WebToolsEditorPlugin, EditorPlugin);
 
 private:
     void _zip_file(String p_path, String p_base_path, zipFile p_zip);

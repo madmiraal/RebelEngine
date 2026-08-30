@@ -10,7 +10,7 @@
 #include "editor/animation_track_editor.h"
 
 class AnimationTrackEditBool : public AnimationTrackEdit {
-    GDCLASS(AnimationTrackEditBool, AnimationTrackEdit);
+    REBEL_OBJECT(AnimationTrackEditBool, AnimationTrackEdit);
     Ref<Texture> icon_checked;
     Ref<Texture> icon_unchecked;
 
@@ -29,7 +29,7 @@ public:
 };
 
 class AnimationTrackEditColor : public AnimationTrackEdit {
-    GDCLASS(AnimationTrackEditColor, AnimationTrackEdit);
+    REBEL_OBJECT(AnimationTrackEditColor, AnimationTrackEdit);
 
 public:
     int get_key_height() const override;
@@ -54,7 +54,7 @@ public:
 };
 
 class AnimationTrackEditAudio : public AnimationTrackEdit {
-    GDCLASS(AnimationTrackEditAudio, AnimationTrackEdit);
+    REBEL_OBJECT(AnimationTrackEditAudio, AnimationTrackEdit);
 
     ObjectID id;
 
@@ -82,7 +82,7 @@ public:
 };
 
 class AnimationTrackEditSpriteFrame : public AnimationTrackEdit {
-    GDCLASS(AnimationTrackEditSpriteFrame, AnimationTrackEdit);
+    REBEL_OBJECT(AnimationTrackEditSpriteFrame, AnimationTrackEdit);
 
     ObjectID id;
     bool is_coords;
@@ -109,7 +109,7 @@ public:
 };
 
 class AnimationTrackEditSubAnim : public AnimationTrackEdit {
-    GDCLASS(AnimationTrackEditSubAnim, AnimationTrackEdit);
+    REBEL_OBJECT(AnimationTrackEditSubAnim, AnimationTrackEdit);
 
     ObjectID id;
 
@@ -130,7 +130,7 @@ public:
 };
 
 class AnimationTrackEditTypeAudio : public AnimationTrackEdit {
-    GDCLASS(AnimationTrackEditTypeAudio, AnimationTrackEdit);
+    REBEL_OBJECT(AnimationTrackEditTypeAudio, AnimationTrackEdit);
 
     void _preview_changed(ObjectID p_which);
 
@@ -166,7 +166,7 @@ public:
 };
 
 class AnimationTrackEditTypeAnimation : public AnimationTrackEdit {
-    GDCLASS(AnimationTrackEditTypeAnimation, AnimationTrackEdit);
+    REBEL_OBJECT(AnimationTrackEditTypeAnimation, AnimationTrackEdit);
 
     ObjectID id;
 
@@ -188,7 +188,7 @@ public:
 };
 
 class AnimationTrackEditVolumeDB : public AnimationTrackEdit {
-    GDCLASS(AnimationTrackEditVolumeDB, AnimationTrackEdit);
+    REBEL_OBJECT(AnimationTrackEditVolumeDB, AnimationTrackEdit);
 
 public:
     void draw_bg(int p_clip_left, int p_clip_right) override;
@@ -205,7 +205,7 @@ public:
 };
 
 class AnimationTrackEditDefaultPlugin : public AnimationTrackEditPlugin {
-    GDCLASS(AnimationTrackEditDefaultPlugin, AnimationTrackEditPlugin);
+    REBEL_OBJECT(AnimationTrackEditDefaultPlugin, AnimationTrackEditPlugin);
 
 public:
     AnimationTrackEdit* create_value_track_edit(

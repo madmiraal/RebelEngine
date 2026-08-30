@@ -18,7 +18,7 @@
 #include "servers/visual/shader_language.h"
 
 class ShaderTextEditor : public CodeTextEditor {
-    GDCLASS(ShaderTextEditor, CodeTextEditor);
+    REBEL_OBJECT(ShaderTextEditor, CodeTextEditor);
 
     Ref<Shader> shader;
 
@@ -44,7 +44,7 @@ public:
 };
 
 class ShaderEditor : public PanelContainer {
-    GDCLASS(ShaderEditor, PanelContainer);
+    REBEL_OBJECT(ShaderEditor, PanelContainer);
 
     enum {
         EDIT_UNDO,
@@ -122,7 +122,7 @@ public:
 };
 
 class ShaderEditorPlugin : public EditorPlugin {
-    GDCLASS(ShaderEditorPlugin, EditorPlugin);
+    REBEL_OBJECT(ShaderEditorPlugin, EditorPlugin);
 
     bool _2d;
     ShaderEditor* shader_editor;

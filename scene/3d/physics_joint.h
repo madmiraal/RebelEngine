@@ -11,7 +11,7 @@
 #include "scene/3d/spatial.h"
 
 class Joint : public Spatial {
-    GDCLASS(Joint, Spatial);
+    REBEL_OBJECT(Joint, Spatial);
 
     RID ba, bb;
 
@@ -60,7 +60,7 @@ public:
 ///////////////////////////////////////////
 
 class PinJoint : public Joint {
-    GDCLASS(PinJoint, Joint);
+    REBEL_OBJECT(PinJoint, Joint);
 
 public:
     enum Param {
@@ -84,7 +84,7 @@ public:
 VARIANT_ENUM_CAST(PinJoint::Param);
 
 class HingeJoint : public Joint {
-    GDCLASS(HingeJoint, Joint);
+    REBEL_OBJECT(HingeJoint, Joint);
 
 public:
     enum Param {
@@ -132,7 +132,7 @@ VARIANT_ENUM_CAST(HingeJoint::Param);
 VARIANT_ENUM_CAST(HingeJoint::Flag);
 
 class SliderJoint : public Joint {
-    GDCLASS(SliderJoint, Joint);
+    REBEL_OBJECT(SliderJoint, Joint);
 
 public:
     enum Param {
@@ -205,7 +205,7 @@ public:
 VARIANT_ENUM_CAST(SliderJoint::Param);
 
 class ConeTwistJoint : public Joint {
-    GDCLASS(ConeTwistJoint, Joint);
+    REBEL_OBJECT(ConeTwistJoint, Joint);
 
 public:
     enum Param {
@@ -238,7 +238,7 @@ public:
 VARIANT_ENUM_CAST(ConeTwistJoint::Param);
 
 class Generic6DOFJoint : public Joint {
-    GDCLASS(Generic6DOFJoint, Joint);
+    REBEL_OBJECT(Generic6DOFJoint, Joint);
 
 public:
     enum Param {

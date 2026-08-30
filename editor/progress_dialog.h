@@ -14,7 +14,7 @@
 #include "scene/gui/progress_bar.h"
 
 class BackgroundProgress : public HBoxContainer {
-    GDCLASS(BackgroundProgress, HBoxContainer);
+    REBEL_OBJECT(BackgroundProgress, HBoxContainer);
 
     _THREAD_SAFE_CLASS_
 
@@ -43,7 +43,7 @@ public:
 };
 
 class ProgressDialog : public Popup {
-    GDCLASS(ProgressDialog, Popup);
+    REBEL_OBJECT(ProgressDialog, Popup);
 
     struct Task {
         String task;

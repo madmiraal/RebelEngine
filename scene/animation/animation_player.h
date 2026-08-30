@@ -14,7 +14,7 @@
 
 #ifdef TOOLS_ENABLED
 class AnimatedValuesBackup : public Reference {
-    GDCLASS(AnimatedValuesBackup, Reference);
+    REBEL_OBJECT(AnimatedValuesBackup, Reference);
 
     struct Entry {
         Object* object;
@@ -37,7 +37,7 @@ public:
 #endif
 
 class AnimationPlayer : public Node {
-    GDCLASS(AnimationPlayer, Node);
+    REBEL_OBJECT(AnimationPlayer, Node);
 
 public:
     enum AnimationProcessMode {

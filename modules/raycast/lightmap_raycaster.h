@@ -11,7 +11,7 @@
 #include <embree4/rtcore.h>
 
 class LightmapRaycasterEmbree : public LightmapRaycaster {
-    GDCLASS(LightmapRaycasterEmbree, LightmapRaycaster);
+    REBEL_OBJECT(LightmapRaycasterEmbree, LightmapRaycaster);
 
 private:
     struct AlphaTextureData {

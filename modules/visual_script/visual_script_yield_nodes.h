@@ -10,7 +10,7 @@
 #include "visual_script.h"
 
 class VisualScriptYield : public VisualScriptNode {
-    GDCLASS(VisualScriptYield, VisualScriptNode);
+    REBEL_OBJECT(VisualScriptYield, VisualScriptNode);
 
 public:
     enum YieldMode {
@@ -62,7 +62,7 @@ public:
 VARIANT_ENUM_CAST(VisualScriptYield::YieldMode)
 
 class VisualScriptYieldSignal : public VisualScriptNode {
-    GDCLASS(VisualScriptYieldSignal, VisualScriptNode);
+    REBEL_OBJECT(VisualScriptYieldSignal, VisualScriptNode);
 
 public:
     enum CallMode {

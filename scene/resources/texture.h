@@ -19,7 +19,7 @@
 #include "servers/visual_server.h"
 
 class Texture : public Resource {
-    GDCLASS(Texture, Resource);
+    REBEL_OBJECT(Texture, Resource);
     OBJ_SAVE_TYPE(Texture
     ); // Saves derived classes with common type so they can be interchanged.
 
@@ -93,7 +93,7 @@ VARIANT_ENUM_CAST(Texture::Flags);
 class BitMap;
 
 class ImageTexture : public Texture {
-    GDCLASS(ImageTexture, Texture);
+    REBEL_OBJECT(ImageTexture, Texture);
     RES_BASE_EXTENSION("tex");
 
 public:
@@ -195,7 +195,7 @@ public:
 };
 
 class StreamTexture : public Texture {
-    GDCLASS(StreamTexture, Texture);
+    REBEL_OBJECT(StreamTexture, Texture);
 
 public:
     enum FormatBits {
@@ -305,7 +305,7 @@ public:
 VARIANT_ENUM_CAST(ImageTexture::Storage);
 
 class AtlasTexture : public Texture {
-    GDCLASS(AtlasTexture, Texture);
+    REBEL_OBJECT(AtlasTexture, Texture);
     RES_BASE_EXTENSION("atlastex");
 
 protected:
@@ -379,7 +379,7 @@ public:
 class Mesh;
 
 class MeshTexture : public Texture {
-    GDCLASS(MeshTexture, Texture);
+    REBEL_OBJECT(MeshTexture, Texture);
     RES_BASE_EXTENSION("meshtex");
 
     Ref<Texture> base_texture;
@@ -445,7 +445,7 @@ public:
 };
 
 class LargeTexture : public Texture {
-    GDCLASS(LargeTexture, Texture);
+    REBEL_OBJECT(LargeTexture, Texture);
     RES_BASE_EXTENSION("largetex");
 
 protected:
@@ -514,7 +514,7 @@ public:
 };
 
 class CubeMap : public Resource {
-    GDCLASS(CubeMap, Resource);
+    REBEL_OBJECT(CubeMap, Resource);
     RES_BASE_EXTENSION("cubemap");
 
 public:
@@ -595,7 +595,7 @@ VARIANT_ENUM_CAST(CubeMap::Side)
 VARIANT_ENUM_CAST(CubeMap::Storage)
 
 class TextureLayered : public Resource {
-    GDCLASS(TextureLayered, Resource);
+    REBEL_OBJECT(TextureLayered, Resource);
 
 public:
     enum Flags {
@@ -672,7 +672,7 @@ public:
 VARIANT_ENUM_CAST(TextureLayered::Flags)
 
 class Texture3D : public TextureLayered {
-    GDCLASS(Texture3D, TextureLayered);
+    REBEL_OBJECT(Texture3D, TextureLayered);
 
 protected:
     static void _bind_methods();
@@ -692,7 +692,7 @@ public:
 };
 
 class TextureArray : public TextureLayered {
-    GDCLASS(TextureArray, TextureLayered);
+    REBEL_OBJECT(TextureArray, TextureLayered);
 
 protected:
     static void _bind_methods();
@@ -724,7 +724,7 @@ public:
 };
 
 class CurveTexture : public Texture {
-    GDCLASS(CurveTexture, Texture);
+    REBEL_OBJECT(CurveTexture, Texture);
     RES_BASE_EXTENSION("curvetex")
 
 private:
@@ -767,7 +767,7 @@ public:
 };
 
 class GradientTexture : public Texture {
-    GDCLASS(GradientTexture, Texture);
+    REBEL_OBJECT(GradientTexture, Texture);
 
 public:
     struct Point {
@@ -823,7 +823,7 @@ public:
 };
 
 class ProxyTexture : public Texture {
-    GDCLASS(ProxyTexture, Texture);
+    REBEL_OBJECT(ProxyTexture, Texture);
 
 private:
     RID proxy;
@@ -850,7 +850,7 @@ public:
 };
 
 class AnimatedTexture : public Texture {
-    GDCLASS(AnimatedTexture, Texture);
+    REBEL_OBJECT(AnimatedTexture, Texture);
 
     // use readers writers lock for this, since its far more times read than
     // written to
@@ -930,7 +930,7 @@ public:
 };
 
 class CameraTexture : public Texture {
-    GDCLASS(CameraTexture, Texture);
+    REBEL_OBJECT(CameraTexture, Texture);
 
 private:
     int camera_feed_id;
@@ -966,7 +966,7 @@ public:
 // External textures as defined by
 // https://www.khronos.org/registry/OpenGL/extensions/OES/OES_EGL_image_external.txt
 class ExternalTexture : public Texture {
-    GDCLASS(ExternalTexture, Texture);
+    REBEL_OBJECT(ExternalTexture, Texture);
 
 private:
     RID texture;

@@ -12,7 +12,7 @@
 #include "core/ring_buffer.h"
 
 class PacketPeer : public Reference {
-    GDCLASS(PacketPeer, Reference);
+    REBEL_OBJECT(PacketPeer, Reference);
 
     Variant _bnd_get_var(bool p_allow_objects = false);
 
@@ -57,7 +57,7 @@ public:
 };
 
 class PacketPeerStream : public PacketPeer {
-    GDCLASS(PacketPeerStream, PacketPeer);
+    REBEL_OBJECT(PacketPeerStream, PacketPeer);
 
     // the way the buffers work sucks, will change later
 

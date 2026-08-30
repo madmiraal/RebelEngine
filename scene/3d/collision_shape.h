@@ -12,7 +12,7 @@
 class CollisionObject;
 
 class CollisionShape : public Spatial {
-    GDCLASS(CollisionShape, Spatial);
+    REBEL_OBJECT(CollisionShape, Spatial);
 
     Ref<Shape> shape;
 

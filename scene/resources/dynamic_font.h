@@ -23,7 +23,7 @@ class DynamicFontAtSize;
 class DynamicFont;
 
 class DynamicFontData : public Resource {
-    GDCLASS(DynamicFontData, Resource);
+    REBEL_OBJECT(DynamicFontData, Resource);
 
 public:
     struct CacheID {
@@ -90,7 +90,7 @@ public:
 VARIANT_ENUM_CAST(DynamicFontData::Hinting);
 
 class DynamicFontAtSize : public Reference {
-    GDCLASS(DynamicFontAtSize, Reference);
+    REBEL_OBJECT(DynamicFontAtSize, Reference);
 
     _THREAD_SAFE_CLASS_
 
@@ -210,7 +210,7 @@ public:
 ///////////////
 
 class DynamicFont : public Font {
-    GDCLASS(DynamicFont, Font);
+    REBEL_OBJECT(DynamicFont, Font);
 
 public:
     enum SpacingType {

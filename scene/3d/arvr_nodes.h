@@ -13,7 +13,7 @@
 #include "servers/arvr/arvr_positional_tracker.h"
 
 class ARVRCamera : public Camera {
-    GDCLASS(ARVRCamera, Camera);
+    REBEL_OBJECT(ARVRCamera, Camera);
 
 protected:
     void _notification(int p_what);
@@ -39,7 +39,7 @@ public:
 */
 
 class ARVRController : public Spatial {
-    GDCLASS(ARVRController, Spatial);
+    REBEL_OBJECT(ARVRController, Spatial);
 
 private:
     int controller_id;
@@ -81,7 +81,7 @@ public:
 */
 
 class ARVRAnchor : public Spatial {
-    GDCLASS(ARVRAnchor, Spatial);
+    REBEL_OBJECT(ARVRAnchor, Spatial);
 
 private:
     int anchor_id;
@@ -125,7 +125,7 @@ public:
    tracked controllers.
 */
 class ARVROrigin : public Spatial {
-    GDCLASS(ARVROrigin, Spatial);
+    REBEL_OBJECT(ARVROrigin, Spatial);
 
 private:
     ARVRCamera* tracked_camera;

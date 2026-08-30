@@ -12,7 +12,7 @@
 class AudioStreamSample;
 
 class AudioStreamPlaybackSample : public AudioStreamPlayback {
-    GDCLASS(AudioStreamPlaybackSample, AudioStreamPlayback);
+    REBEL_OBJECT(AudioStreamPlaybackSample, AudioStreamPlayback);
 
     enum {
         MIX_FRAC_BITS = 13,
@@ -63,7 +63,7 @@ public:
 };
 
 class AudioStreamSample : public AudioStream {
-    GDCLASS(AudioStreamSample, AudioStream);
+    REBEL_OBJECT(AudioStreamSample, AudioStream);
     RES_BASE_EXTENSION("sample")
 
 public:

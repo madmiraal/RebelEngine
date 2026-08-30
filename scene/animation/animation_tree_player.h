@@ -13,7 +13,7 @@
 #include "scene/resources/animation.h"
 
 class AnimationTreePlayer : public Node {
-    GDCLASS(AnimationTreePlayer, Node);
+    REBEL_OBJECT(AnimationTreePlayer, Node);
 
 public:
     enum AnimationProcessMode {

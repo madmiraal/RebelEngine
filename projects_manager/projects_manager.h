@@ -31,7 +31,7 @@
 #include "scene/gui/tab_container.h"
 
 class ProjectsManager : public Panel {
-    GDCLASS(ProjectsManager, Panel);
+    REBEL_OBJECT(ProjectsManager, Panel);
 
 public:
     ProjectsManager();

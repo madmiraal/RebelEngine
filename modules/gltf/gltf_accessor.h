@@ -11,7 +11,7 @@
 #include "gltf_document.h"
 
 struct GLTFAccessor : public Resource {
-    GDCLASS(GLTFAccessor, Resource);
+    REBEL_OBJECT(GLTFAccessor, Resource);
     friend class GLTFDocument;
 
 private:

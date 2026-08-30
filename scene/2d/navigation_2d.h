@@ -11,7 +11,7 @@
 #include "scene/2d/node_2d.h"
 
 class Navigation2D : public Node2D {
-    GDCLASS(Navigation2D, Node2D);
+    REBEL_OBJECT(Navigation2D, Node2D);
 
     union Point {
         struct {
