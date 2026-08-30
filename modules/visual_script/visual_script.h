@@ -15,7 +15,7 @@ class VisualScriptNodeInstance;
 class VisualScript;
 
 class VisualScriptNode : public Resource {
-    GDCLASS(VisualScriptNode, Resource);
+    REBEL_OBJECT(VisualScriptNode, Resource);
 
     friend class VisualScript;
 
@@ -169,7 +169,7 @@ public:
 };
 
 class VisualScript : public Script {
-    GDCLASS(VisualScript, Script);
+    REBEL_OBJECT(VisualScript, Script);
 
     RES_BASE_EXTENSION("vs");
 
@@ -593,7 +593,7 @@ public:
 };
 
 class VisualScriptFunctionState : public Reference {
-    GDCLASS(VisualScriptFunctionState, Reference);
+    REBEL_OBJECT(VisualScriptFunctionState, Reference);
     friend class VisualScriptInstance;
 
     ObjectID instance_id;

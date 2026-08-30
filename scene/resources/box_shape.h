@@ -10,7 +10,7 @@
 #include "scene/resources/shape.h"
 
 class BoxShape : public Shape {
-    GDCLASS(BoxShape, Shape);
+    REBEL_OBJECT(BoxShape, Shape);
     Vector3 extents;
 
 protected:

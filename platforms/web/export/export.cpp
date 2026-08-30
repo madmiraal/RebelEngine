@@ -255,7 +255,7 @@ public:
 };
 
 class WebEditorExportPlatform : public EditorExportPlatform {
-    GDCLASS(WebEditorExportPlatform, EditorExportPlatform);
+    REBEL_OBJECT(WebEditorExportPlatform, EditorExportPlatform);
 
     Ref<ImageTexture> logo;
     Ref<ImageTexture> run_icon;

@@ -15,7 +15,7 @@ class VisualShaderNodeUniform;
 class VisualShaderNode;
 
 class VisualShader : public Shader {
-    GDCLASS(VisualShader, Shader);
+    REBEL_OBJECT(VisualShader, Shader);
 
 public:
     enum Type {
@@ -214,7 +214,7 @@ VARIANT_ENUM_CAST(VisualShader::Type)
 ///
 
 class VisualShaderNode : public Resource {
-    GDCLASS(VisualShaderNode, Resource);
+    REBEL_OBJECT(VisualShaderNode, Resource);
 
     int port_preview;
 
@@ -313,7 +313,7 @@ public:
 VARIANT_ENUM_CAST(VisualShaderNode::PortType)
 
 class VisualShaderNodeCustom : public VisualShaderNode {
-    GDCLASS(VisualShaderNodeCustom, VisualShaderNode);
+    REBEL_OBJECT(VisualShaderNodeCustom, VisualShaderNode);
 
     struct Port {
         String name;
@@ -371,7 +371,7 @@ public:
 /////
 
 class VisualShaderNodeInput : public VisualShaderNode {
-    GDCLASS(VisualShaderNodeInput, VisualShaderNode);
+    REBEL_OBJECT(VisualShaderNodeInput, VisualShaderNode);
 
     friend class VisualShader;
     VisualShader::Type shader_type;
@@ -432,7 +432,7 @@ public:
 ///
 
 class VisualShaderNodeOutput : public VisualShaderNode {
-    GDCLASS(VisualShaderNodeOutput, VisualShaderNode);
+    REBEL_OBJECT(VisualShaderNodeOutput, VisualShaderNode);
 
 public:
     friend class VisualShader;
@@ -476,7 +476,7 @@ public:
 };
 
 class VisualShaderNodeUniform : public VisualShaderNode {
-    GDCLASS(VisualShaderNodeUniform, VisualShaderNode);
+    REBEL_OBJECT(VisualShaderNodeUniform, VisualShaderNode);
 
 private:
     String uniform_name;
@@ -496,7 +496,7 @@ public:
 };
 
 class VisualShaderNodeUniformRef : public VisualShaderNode {
-    GDCLASS(VisualShaderNodeUniformRef, VisualShaderNode);
+    REBEL_OBJECT(VisualShaderNodeUniformRef, VisualShaderNode);
 
 public:
     enum UniformType {
@@ -558,7 +558,7 @@ public:
 };
 
 class VisualShaderNodeGroupBase : public VisualShaderNode {
-    GDCLASS(VisualShaderNodeGroupBase, VisualShaderNode);
+    REBEL_OBJECT(VisualShaderNodeGroupBase, VisualShaderNode);
 
 private:
     void _apply_port_changes();
@@ -639,7 +639,7 @@ public:
 };
 
 class VisualShaderNodeExpression : public VisualShaderNodeGroupBase {
-    GDCLASS(VisualShaderNodeExpression, VisualShaderNodeGroupBase);
+    REBEL_OBJECT(VisualShaderNodeExpression, VisualShaderNodeGroupBase);
 
 protected:
     String expression;
@@ -665,7 +665,7 @@ public:
 };
 
 class VisualShaderNodeGlobalExpression : public VisualShaderNodeExpression {
-    GDCLASS(VisualShaderNodeGlobalExpression, VisualShaderNodeExpression);
+    REBEL_OBJECT(VisualShaderNodeGlobalExpression, VisualShaderNodeExpression);
 
 public:
     String get_caption() const override;

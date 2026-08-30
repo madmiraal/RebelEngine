@@ -14,7 +14,7 @@
 #include "scene/resources/style_box.h"
 
 class StyleBoxPreview : public VBoxContainer {
-    GDCLASS(StyleBoxPreview, VBoxContainer);
+    REBEL_OBJECT(StyleBoxPreview, VBoxContainer);
 
     Control* preview;
     Ref<StyleBox> stylebox;
@@ -32,7 +32,7 @@ public:
 };
 
 class EditorInspectorPluginStyleBox : public EditorInspectorPlugin {
-    GDCLASS(EditorInspectorPluginStyleBox, EditorInspectorPlugin);
+    REBEL_OBJECT(EditorInspectorPluginStyleBox, EditorInspectorPlugin);
 
 public:
     bool can_handle(Object* p_object) override;
@@ -49,7 +49,7 @@ public:
 };
 
 class StyleBoxEditorPlugin : public EditorPlugin {
-    GDCLASS(StyleBoxEditorPlugin, EditorPlugin);
+    REBEL_OBJECT(StyleBoxEditorPlugin, EditorPlugin);
 
 public:
     String get_name() const override {

@@ -12,7 +12,7 @@
 #include "core/resource.h"
 
 class BitMap : public Resource {
-    GDCLASS(BitMap, Resource);
+    REBEL_OBJECT(BitMap, Resource);
     OBJ_SAVE_TYPE(BitMap);
 
     Vector<uint8_t> bitmask;

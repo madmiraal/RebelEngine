@@ -13,7 +13,7 @@
 #include "script_editor_plugin.h"
 
 class ConnectionInfoDialog : public AcceptDialog {
-    GDCLASS(ConnectionInfoDialog, AcceptDialog);
+    REBEL_OBJECT(ConnectionInfoDialog, AcceptDialog);
 
     Label* method;
     Tree* tree;
@@ -27,7 +27,7 @@ public:
 };
 
 class ScriptTextEditor : public ScriptEditorBase {
-    GDCLASS(ScriptTextEditor, ScriptEditorBase);
+    REBEL_OBJECT(ScriptTextEditor, ScriptEditorBase);
 
     CodeTextEditor* code_editor;
     RichTextLabel* warnings_panel;

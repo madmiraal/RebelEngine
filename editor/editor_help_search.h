@@ -15,7 +15,7 @@
 #include "scene/gui/tree.h"
 
 class EditorHelpSearch : public ConfirmationDialog {
-    GDCLASS(EditorHelpSearch, ConfirmationDialog);
+    REBEL_OBJECT(EditorHelpSearch, ConfirmationDialog);
 
     enum SearchFlags {
         SEARCH_CLASSES     = 1 << 0,

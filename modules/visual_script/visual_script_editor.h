@@ -20,7 +20,7 @@ class VisualScriptEditorVariableEdit;
 #ifdef TOOLS_ENABLED
 
 class VisualScriptEditor : public ScriptEditorBase {
-    GDCLASS(VisualScriptEditor, ScriptEditorBase);
+    REBEL_OBJECT(VisualScriptEditor, ScriptEditorBase);
 
     enum {
         TYPE_SEQUENCE       = 1000,
@@ -394,7 +394,7 @@ public:
 
 // Singleton
 class _VisualScriptEditor : public Object {
-    GDCLASS(_VisualScriptEditor, Object);
+    REBEL_OBJECT(_VisualScriptEditor, Object);
 
     friend class VisualScriptLanguage;
 

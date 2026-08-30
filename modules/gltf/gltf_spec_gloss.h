@@ -11,7 +11,7 @@
 #include "core/resource.h"
 
 class GLTFSpecGloss : public Resource {
-    GDCLASS(GLTFSpecGloss, Resource);
+    REBEL_OBJECT(GLTFSpecGloss, Resource);
     friend class GLTFDocument;
 
 private:

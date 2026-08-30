@@ -10,7 +10,7 @@
 #include "scene/resources/shape.h"
 
 class SphereShape : public Shape {
-    GDCLASS(SphereShape, Shape);
+    REBEL_OBJECT(SphereShape, Shape);
     float radius;
 
 protected:

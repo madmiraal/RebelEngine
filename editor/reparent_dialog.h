@@ -15,7 +15,7 @@
 #include "scene/gui/line_edit.h"
 
 class ReparentDialog : public ConfirmationDialog {
-    GDCLASS(ReparentDialog, ConfirmationDialog);
+    REBEL_OBJECT(ReparentDialog, ConfirmationDialog);
 
     SceneTreeEditor* tree;
     CheckBox* keep_transform;

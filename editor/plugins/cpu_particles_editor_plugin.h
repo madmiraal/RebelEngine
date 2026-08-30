@@ -11,7 +11,7 @@
 #include "scene/3d/cpu_particles.h"
 
 class CPUParticlesEditor : public ParticlesEditorBase {
-    GDCLASS(CPUParticlesEditor, ParticlesEditorBase);
+    REBEL_OBJECT(CPUParticlesEditor, ParticlesEditorBase);
 
     enum Menu {
         MENU_OPTION_CREATE_EMISSION_VOLUME_FROM_NODE,
@@ -39,7 +39,7 @@ public:
 };
 
 class CPUParticlesEditorPlugin : public EditorPlugin {
-    GDCLASS(CPUParticlesEditorPlugin, EditorPlugin);
+    REBEL_OBJECT(CPUParticlesEditorPlugin, EditorPlugin);
 
     CPUParticlesEditor* particles_editor;
     EditorNode* editor;

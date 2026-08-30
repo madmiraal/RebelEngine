@@ -10,7 +10,7 @@
 #include "scene/3d/skeleton.h"
 
 class BoneAttachment : public Spatial {
-    GDCLASS(BoneAttachment, Spatial);
+    REBEL_OBJECT(BoneAttachment, Spatial);
 
     bool bound;
     String bone_name;

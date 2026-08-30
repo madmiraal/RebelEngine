@@ -13,7 +13,7 @@
 
 class Particles : public GeometryInstance {
 private:
-    GDCLASS(Particles, GeometryInstance);
+    REBEL_OBJECT(Particles, GeometryInstance);
 
 public:
     enum DrawOrder {

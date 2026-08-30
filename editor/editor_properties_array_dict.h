@@ -13,7 +13,7 @@
 #include "scene/gui/button.h"
 
 class EditorPropertyArrayObject : public Reference {
-    GDCLASS(EditorPropertyArrayObject, Reference);
+    REBEL_OBJECT(EditorPropertyArrayObject, Reference);
 
     Variant array;
 
@@ -29,7 +29,7 @@ public:
 };
 
 class EditorPropertyDictionaryObject : public Reference {
-    GDCLASS(EditorPropertyDictionaryObject, Reference);
+    REBEL_OBJECT(EditorPropertyDictionaryObject, Reference);
 
     Variant new_item_key;
     Variant new_item_value;
@@ -53,7 +53,7 @@ public:
 };
 
 class EditorPropertyArray : public EditorProperty {
-    GDCLASS(EditorPropertyArray, EditorProperty);
+    REBEL_OBJECT(EditorPropertyArray, EditorProperty);
 
     PopupMenu* change_type;
     bool updating;
@@ -122,7 +122,7 @@ public:
 };
 
 class EditorPropertyDictionary : public EditorProperty {
-    GDCLASS(EditorPropertyDictionary, EditorProperty);
+    REBEL_OBJECT(EditorPropertyDictionary, EditorProperty);
 
     PopupMenu* change_type;
     bool updating;

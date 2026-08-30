@@ -12,7 +12,7 @@
 class AudioEffectPanner;
 
 class AudioEffectPannerInstance : public AudioEffectInstance {
-    GDCLASS(AudioEffectPannerInstance, AudioEffectInstance);
+    REBEL_OBJECT(AudioEffectPannerInstance, AudioEffectInstance);
     friend class AudioEffectPanner;
     Ref<AudioEffectPanner> base;
 
@@ -25,7 +25,7 @@ public:
 };
 
 class AudioEffectPanner : public AudioEffect {
-    GDCLASS(AudioEffectPanner, AudioEffect);
+    REBEL_OBJECT(AudioEffectPanner, AudioEffect);
 
     friend class AudioEffectPannerInstance;
     float pan;

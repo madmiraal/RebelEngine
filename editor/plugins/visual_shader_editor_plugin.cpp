@@ -6491,7 +6491,7 @@ VisualShaderEditorPlugin::~VisualShaderEditorPlugin() {}
 ////////////////
 
 class VisualShaderNodePluginInputEditor : public OptionButton {
-    GDCLASS(VisualShaderNodePluginInputEditor, OptionButton);
+    REBEL_OBJECT(VisualShaderNodePluginInputEditor, OptionButton);
 
     Ref<VisualShaderNodeInput> input;
 
@@ -6561,7 +6561,7 @@ public:
 ////////////////
 
 class VisualShaderNodePluginUniformRefEditor : public OptionButton {
-    GDCLASS(VisualShaderNodePluginUniformRefEditor, OptionButton);
+    REBEL_OBJECT(VisualShaderNodePluginUniformRefEditor, OptionButton);
 
     Ref<VisualShaderNodeUniformRef> uniform_ref;
 
@@ -6640,7 +6640,7 @@ public:
 ////////////////
 
 class VisualShaderNodePluginDefaultEditor : public VBoxContainer {
-    GDCLASS(VisualShaderNodePluginDefaultEditor, VBoxContainer);
+    REBEL_OBJECT(VisualShaderNodePluginDefaultEditor, VBoxContainer);
     Ref<Resource> parent_resource;
 
 public:

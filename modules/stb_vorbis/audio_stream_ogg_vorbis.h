@@ -14,7 +14,7 @@
 class AudioStreamOGGVorbis;
 
 class AudioStreamPlaybackOGGVorbis : public AudioStreamPlaybackResampled {
-    GDCLASS(AudioStreamPlaybackOGGVorbis, AudioStreamPlaybackResampled);
+    REBEL_OBJECT(AudioStreamPlaybackOGGVorbis, AudioStreamPlaybackResampled);
 
     stb_vorbis* ogg_stream;
     stb_vorbis_alloc ogg_alloc;
@@ -46,7 +46,7 @@ public:
 };
 
 class AudioStreamOGGVorbis : public AudioStream {
-    GDCLASS(AudioStreamOGGVorbis, AudioStream);
+    REBEL_OBJECT(AudioStreamOGGVorbis, AudioStream);
     OBJ_SAVE_TYPE(AudioStream
     ); // Saves derived classes with common type so they can be interchanged.
     RES_BASE_EXTENSION("oggstr");

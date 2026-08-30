@@ -17,7 +17,7 @@
 #include "scene/gui/tab_container.h"
 
 class ProjectSettingsEditor : public AcceptDialog {
-    GDCLASS(ProjectSettingsEditor, AcceptDialog);
+    REBEL_OBJECT(ProjectSettingsEditor, AcceptDialog);
 
     enum InputType {
         INPUT_KEY_PHYSICAL,

@@ -10,7 +10,7 @@
 #include "scene/gui/control.h"
 
 class NinePatchRect : public Control {
-    GDCLASS(NinePatchRect, Control);
+    REBEL_OBJECT(NinePatchRect, Control);
 
 public:
     enum AxisStretchMode {

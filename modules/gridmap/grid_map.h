@@ -13,7 +13,7 @@
 #include "scene/resources/multimesh.h"
 
 class GridMap : public Spatial {
-    GDCLASS(GridMap, Spatial);
+    REBEL_OBJECT(GridMap, Spatial);
 
     enum {
         MAP_DIRTY_TRANSFORMS = 1,

@@ -108,7 +108,7 @@ public:
 };
 
 class ResourceImporter : public Reference {
-    GDCLASS(ResourceImporter, Reference);
+    REBEL_OBJECT(ResourceImporter, Reference);
 
 protected:
     static void _bind_methods();

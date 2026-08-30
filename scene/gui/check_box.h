@@ -10,7 +10,7 @@
 #include "scene/gui/button.h"
 
 class CheckBox : public Button {
-    GDCLASS(CheckBox, Button);
+    REBEL_OBJECT(CheckBox, Button);
 
 protected:
     Size2 get_icon_size() const;

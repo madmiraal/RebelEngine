@@ -11,7 +11,7 @@
 #include "scene/3d/spatial.h"
 
 class Navigation : public Spatial {
-    GDCLASS(Navigation, Spatial);
+    REBEL_OBJECT(Navigation, Spatial);
 
     union Point {
         struct {

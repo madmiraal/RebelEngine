@@ -11,7 +11,7 @@
 #include "visual_script_builtin_funcs.h"
 
 class VisualScriptExpression : public VisualScriptNode {
-    GDCLASS(VisualScriptExpression, VisualScriptNode);
+    REBEL_OBJECT(VisualScriptExpression, VisualScriptNode);
     friend class VisualScriptNodeInstanceExpression;
 
     struct Input {

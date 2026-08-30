@@ -11,7 +11,7 @@
 #include "servers/arvr/arvr_positional_tracker.h"
 
 class MobileVRInterface : public ARVRInterface {
-    GDCLASS(MobileVRInterface, ARVRInterface);
+    REBEL_OBJECT(MobileVRInterface, ARVRInterface);
 
 private:
     bool initialized;

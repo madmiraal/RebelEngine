@@ -19,7 +19,7 @@ class GDNativeLibraryResourceLoader;
 class GDNative;
 
 class GDNativeLibrary : public Resource {
-    GDCLASS(GDNativeLibrary, Resource);
+    REBEL_OBJECT(GDNativeLibrary, Resource);
 
     static Map<String, Vector<Ref<GDNative>>> loaded_libraries;
 
@@ -120,7 +120,7 @@ struct GDNativeCallRegistry {
 };
 
 class GDNative : public Reference {
-    GDCLASS(GDNative, Reference);
+    REBEL_OBJECT(GDNative, Reference);
 
     Ref<GDNativeLibrary> library;
 

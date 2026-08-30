@@ -10,7 +10,7 @@
 #include "scene/gui/control.h"
 
 class Range : public Control {
-    GDCLASS(Range, Control);
+    REBEL_OBJECT(Range, Control);
 
     struct Shared {
         double val, min, max;

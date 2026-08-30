@@ -32,7 +32,7 @@ class EditorNetworkProfiler;
 class ScriptEditorDebuggerInspectedObject;
 
 class ScriptEditorDebugger : public MarginContainer {
-    GDCLASS(ScriptEditorDebugger, MarginContainer);
+    REBEL_OBJECT(ScriptEditorDebugger, MarginContainer);
 
 public:
     enum CameraOverride {

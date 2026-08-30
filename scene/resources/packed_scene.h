@@ -11,7 +11,7 @@
 #include "scene/main/node.h"
 
 class SceneState : public Reference {
-    GDCLASS(SceneState, Reference);
+    REBEL_OBJECT(SceneState, Reference);
 
     Vector<StringName> names;
     Vector<Variant> variants;
@@ -218,7 +218,7 @@ public:
 VARIANT_ENUM_CAST(SceneState::GenEditState)
 
 class PackedScene : public Resource {
-    GDCLASS(PackedScene, Resource);
+    REBEL_OBJECT(PackedScene, Resource);
     RES_BASE_EXTENSION("scn");
 
     Ref<SceneState> state;

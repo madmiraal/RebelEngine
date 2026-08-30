@@ -10,7 +10,7 @@
 #include "scene/main/node.h"
 
 class Timer : public Node {
-    GDCLASS(Timer, Node);
+    REBEL_OBJECT(Timer, Node);
 
     float wait_time;
     bool one_shot;

@@ -10,7 +10,7 @@
 #include "core/resource.h"
 
 class PolygonPathFinder : public Resource {
-    GDCLASS(PolygonPathFinder, Resource);
+    REBEL_OBJECT(PolygonPathFinder, Resource);
 
     struct Point {
         Vector2 pos;

@@ -13,7 +13,7 @@
 class Viewport;
 
 class CanvasLayer : public Node {
-    GDCLASS(CanvasLayer, Node);
+    REBEL_OBJECT(CanvasLayer, Node);
 
     bool locrotscale_dirty;
     Vector2 ofs;

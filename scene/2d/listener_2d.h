@@ -11,7 +11,7 @@
 #include "scene/main/viewport.h"
 
 class Listener2D : public Node2D {
-    GDCLASS(Listener2D, Node2D);
+    REBEL_OBJECT(Listener2D, Node2D);
 
 private:
     bool current = false;

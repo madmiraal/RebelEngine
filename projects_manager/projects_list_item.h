@@ -14,7 +14,7 @@
 #include "scene/gui/texture_rect.h"
 
 class ProjectsListItem : public HBoxContainer {
-    GDCLASS(ProjectsListItem, HBoxContainer)
+    REBEL_OBJECT(ProjectsListItem, HBoxContainer)
 
 public:
     enum class SortOrder {

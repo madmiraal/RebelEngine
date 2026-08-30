@@ -12,7 +12,7 @@
 class AudioEffectDelay;
 
 class AudioEffectDelayInstance : public AudioEffectInstance {
-    GDCLASS(AudioEffectDelayInstance, AudioEffectInstance);
+    REBEL_OBJECT(AudioEffectDelayInstance, AudioEffectInstance);
     friend class AudioEffectDelay;
     Ref<AudioEffectDelay> base;
 
@@ -42,7 +42,7 @@ public:
 };
 
 class AudioEffectDelay : public AudioEffect {
-    GDCLASS(AudioEffectDelay, AudioEffect);
+    REBEL_OBJECT(AudioEffectDelay, AudioEffect);
 
     friend class AudioEffectDelayInstance;
 

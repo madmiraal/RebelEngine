@@ -10,7 +10,7 @@
 #include "scene/resources/shape_2d.h"
 
 class CapsuleShape2D : public Shape2D {
-    GDCLASS(CapsuleShape2D, Shape2D);
+    REBEL_OBJECT(CapsuleShape2D, Shape2D);
 
     real_t height;
     real_t radius;

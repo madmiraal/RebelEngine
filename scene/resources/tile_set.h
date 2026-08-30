@@ -16,7 +16,7 @@
 #include "scene/resources/texture.h"
 
 class TileSet : public Resource {
-    GDCLASS(TileSet, Resource);
+    REBEL_OBJECT(TileSet, Resource);
 
 public:
     struct ShapeData {

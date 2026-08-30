@@ -16,7 +16,7 @@
 #include "scene/resources/material.h"
 
 class RoomManagerEditorPlugin : public EditorPlugin {
-    GDCLASS(RoomManagerEditorPlugin, EditorPlugin);
+    REBEL_OBJECT(RoomManagerEditorPlugin, EditorPlugin);
 
     RoomManager* _room_manager;
 
@@ -48,7 +48,7 @@ public:
 ///////////////////////
 
 class RoomEditorPlugin : public EditorPlugin {
-    GDCLASS(RoomEditorPlugin, EditorPlugin);
+    REBEL_OBJECT(RoomEditorPlugin, EditorPlugin);
 
     Room* _room;
     ToolButton* button_generate;
@@ -80,7 +80,7 @@ public:
 ///////////////////////
 
 class PortalEditorPlugin : public EditorPlugin {
-    GDCLASS(PortalEditorPlugin, EditorPlugin);
+    REBEL_OBJECT(PortalEditorPlugin, EditorPlugin);
 
     Portal* _portal;
     ToolButton* button_flip;
@@ -111,7 +111,7 @@ public:
 ///////////////////////
 
 class OccluderEditorPlugin : public EditorPlugin {
-    GDCLASS(OccluderEditorPlugin, EditorPlugin);
+    REBEL_OBJECT(OccluderEditorPlugin, EditorPlugin);
 
     Occluder* _occluder;
     ToolButton* button_center;

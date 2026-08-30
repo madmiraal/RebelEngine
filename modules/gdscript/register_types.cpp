@@ -30,7 +30,7 @@ Ref<ResourceFormatSaverGDScript> resource_saver_gd;
 #endif // !GDSCRIPT_NO_LSP
 
 class EditorExportGDScript : public EditorExportPlugin {
-    GDCLASS(EditorExportGDScript, EditorExportPlugin);
+    REBEL_OBJECT(EditorExportGDScript, EditorExportPlugin);
 
 public:
     void _export_file(

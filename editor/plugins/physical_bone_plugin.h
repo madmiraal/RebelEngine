@@ -10,7 +10,7 @@
 #include "editor/editor_node.h"
 
 class PhysicalBoneEditor : public Object {
-    GDCLASS(PhysicalBoneEditor, Object);
+    REBEL_OBJECT(PhysicalBoneEditor, Object);
 
     EditorNode* editor;
     HBoxContainer* spatial_editor_hb;
@@ -36,7 +36,7 @@ public:
 };
 
 class PhysicalBonePlugin : public EditorPlugin {
-    GDCLASS(PhysicalBonePlugin, EditorPlugin);
+    REBEL_OBJECT(PhysicalBonePlugin, EditorPlugin);
 
     EditorNode* editor;
     PhysicalBone* selected;

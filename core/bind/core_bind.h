@@ -19,7 +19,7 @@
 #include "core/safe_refcount.h"
 
 class _ResourceLoader : public Object {
-    GDCLASS(_ResourceLoader, Object);
+    REBEL_OBJECT(_ResourceLoader, Object);
 
 protected:
     static void _bind_methods();
@@ -52,7 +52,7 @@ public:
 };
 
 class _ResourceSaver : public Object {
-    GDCLASS(_ResourceSaver, Object);
+    REBEL_OBJECT(_ResourceSaver, Object);
 
 protected:
     static void _bind_methods();
@@ -84,7 +84,7 @@ VARIANT_ENUM_CAST(_ResourceSaver::SaverFlags);
 class MainLoop;
 
 class _OS : public Object {
-    GDCLASS(_OS, Object);
+    REBEL_OBJECT(_OS, Object);
 
 protected:
     static void _bind_methods();
@@ -421,7 +421,7 @@ VARIANT_ENUM_CAST(_OS::ScreenOrientation);
 VARIANT_ENUM_CAST(_OS::HandleType);
 
 class _Geometry : public Object {
-    GDCLASS(_Geometry, Object);
+    REBEL_OBJECT(_Geometry, Object);
 
     static _Geometry* singleton;
 
@@ -624,7 +624,7 @@ VARIANT_ENUM_CAST(_Geometry::PolyJoinType);
 VARIANT_ENUM_CAST(_Geometry::PolyEndType);
 
 class _File : public Reference {
-    GDCLASS(_File, Reference);
+    REBEL_OBJECT(_File, Reference);
     FileAccess* f;
     bool eswap;
 
@@ -744,7 +744,7 @@ VARIANT_ENUM_CAST(_File::ModeFlags);
 VARIANT_ENUM_CAST(_File::CompressionMode);
 
 class _Directory : public Reference {
-    GDCLASS(_Directory, Reference);
+    REBEL_OBJECT(_Directory, Reference);
     DirAccess* d;
 
 protected:
@@ -791,7 +791,7 @@ private:
 };
 
 class _Marshalls : public Object {
-    GDCLASS(_Marshalls, Object);
+    REBEL_OBJECT(_Marshalls, Object);
 
     static _Marshalls* singleton;
 
@@ -823,7 +823,7 @@ public:
 };
 
 class _Mutex : public Reference {
-    GDCLASS(_Mutex, Reference);
+    REBEL_OBJECT(_Mutex, Reference);
     Mutex mutex;
 
     static void _bind_methods();
@@ -835,7 +835,7 @@ public:
 };
 
 class _Semaphore : public Reference {
-    GDCLASS(_Semaphore, Reference);
+    REBEL_OBJECT(_Semaphore, Reference);
     Semaphore semaphore;
 
     static void _bind_methods();
@@ -846,7 +846,7 @@ public:
 };
 
 class _Thread : public Reference {
-    GDCLASS(_Thread, Reference);
+    REBEL_OBJECT(_Thread, Reference);
 
 protected:
     Variant ret;
@@ -884,7 +884,7 @@ public:
 VARIANT_ENUM_CAST(_Thread::Priority);
 
 class _ClassDB : public Object {
-    GDCLASS(_ClassDB, Object);
+    REBEL_OBJECT(_ClassDB, Object);
 
 protected:
     static void _bind_methods();
@@ -965,7 +965,7 @@ public:
 };
 
 class _Engine : public Object {
-    GDCLASS(_Engine, Object);
+    REBEL_OBJECT(_Engine, Object);
 
 protected:
     static void _bind_methods();
@@ -1021,7 +1021,7 @@ public:
 class _JSON;
 
 class JSONParseResult : public Reference {
-    GDCLASS(JSONParseResult, Reference);
+    REBEL_OBJECT(JSONParseResult, Reference);
 
     friend class _JSON;
 
@@ -1051,7 +1051,7 @@ public:
 };
 
 class _JSON : public Object {
-    GDCLASS(_JSON, Object);
+    REBEL_OBJECT(_JSON, Object);
 
 protected:
     static void _bind_methods();

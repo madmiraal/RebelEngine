@@ -12,7 +12,7 @@
 #include "webrtc_data_channel.h"
 
 class WebRTCDataChannelJS : public WebRTCDataChannel {
-    GDCLASS(WebRTCDataChannelJS, WebRTCDataChannel);
+    REBEL_OBJECT(WebRTCDataChannelJS, WebRTCDataChannel);
 
 private:
     String _label;

@@ -27,7 +27,7 @@
 class EditorAudioBuses;
 
 class EditorAudioBus : public PanelContainer {
-    GDCLASS(EditorAudioBus, PanelContainer);
+    REBEL_OBJECT(EditorAudioBus, PanelContainer);
 
     Ref<Texture> disabled_vu;
     LineEdit* track_name;
@@ -129,7 +129,7 @@ public:
 };
 
 class EditorAudioBusDrop : public Control {
-    GDCLASS(EditorAudioBusDrop, Control);
+    REBEL_OBJECT(EditorAudioBusDrop, Control);
 
     bool can_drop_data(const Point2& p_point, const Variant& p_data)
         const override;
@@ -146,7 +146,7 @@ public:
 };
 
 class EditorAudioBuses : public VBoxContainer {
-    GDCLASS(EditorAudioBuses, VBoxContainer);
+    REBEL_OBJECT(EditorAudioBuses, VBoxContainer);
 
     HBoxContainer* top_hb;
 
@@ -204,7 +204,7 @@ public:
 };
 
 class EditorAudioMeterNotches : public Control {
-    GDCLASS(EditorAudioMeterNotches, Control);
+    REBEL_OBJECT(EditorAudioMeterNotches, Control);
 
 private:
     struct AudioNotch {
@@ -261,7 +261,7 @@ public:
 };
 
 class AudioBusesEditorPlugin : public EditorPlugin {
-    GDCLASS(AudioBusesEditorPlugin, EditorPlugin);
+    REBEL_OBJECT(AudioBusesEditorPlugin, EditorPlugin);
 
     EditorAudioBuses* audio_bus_editor;
 

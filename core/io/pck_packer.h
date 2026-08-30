@@ -12,7 +12,7 @@
 class FileAccess;
 
 class PCKPacker : public Reference {
-    GDCLASS(PCKPacker, Reference);
+    REBEL_OBJECT(PCKPacker, Reference);
 
     FileAccess* file;
     int alignment;

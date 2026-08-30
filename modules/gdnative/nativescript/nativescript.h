@@ -76,7 +76,7 @@ struct NativeScriptDesc {
 };
 
 class NativeScript : public Script {
-    GDCLASS(NativeScript, Script);
+    REBEL_OBJECT(NativeScript, Script);
 
 #ifdef TOOLS_ENABLED
     Set<PlaceHolderScriptInstance*> placeholders;
@@ -438,7 +438,7 @@ inline NativeScriptDesc* NativeScript::get_script_desc() const {
 }
 
 class NativeReloadNode : public Node {
-    GDCLASS(NativeReloadNode, Node);
+    REBEL_OBJECT(NativeReloadNode, Node);
     bool unloaded;
 
 public:

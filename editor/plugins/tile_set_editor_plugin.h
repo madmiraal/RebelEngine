@@ -20,7 +20,7 @@ class TileSetEditor : public HSplitContainer {
     friend class TileSetEditorPlugin;
     friend class TilesetEditorContext;
 
-    GDCLASS(TileSetEditor, HSplitContainer);
+    REBEL_OBJECT(TileSetEditor, HSplitContainer);
 
     enum TextureToolButtons {
         TOOL_TILESET_ADD_TEXTURE,
@@ -250,7 +250,7 @@ private:
 
 class TilesetEditorContext : public Object {
     friend class TileSetEditor;
-    GDCLASS(TilesetEditorContext, Object);
+    REBEL_OBJECT(TilesetEditorContext, Object);
 
     Ref<TileSet> tileset;
     TileSetEditor* tileset_editor;
@@ -277,7 +277,7 @@ public:
 };
 
 class TileSetEditorPlugin : public EditorPlugin {
-    GDCLASS(TileSetEditorPlugin, EditorPlugin);
+    REBEL_OBJECT(TileSetEditorPlugin, EditorPlugin);
 
     TileSetEditor* tileset_editor;
     Button* tileset_editor_button;

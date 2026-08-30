@@ -12,7 +12,7 @@
 #include "gdscript_language_protocol.h"
 
 class GDScriptLanguageServer : public EditorPlugin {
-    GDCLASS(GDScriptLanguageServer, EditorPlugin);
+    REBEL_OBJECT(GDScriptLanguageServer, EditorPlugin);
 
     GDScriptLanguageProtocol protocol;
 

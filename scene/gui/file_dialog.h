@@ -16,7 +16,7 @@
 #include "scene/gui/tree.h"
 
 class FileDialog : public ConfirmationDialog {
-    GDCLASS(FileDialog, ConfirmationDialog);
+    REBEL_OBJECT(FileDialog, ConfirmationDialog);
 
 public:
     enum Access {
@@ -155,7 +155,7 @@ public:
 };
 
 class LineEditFileChooser : public HBoxContainer {
-    GDCLASS(LineEditFileChooser, HBoxContainer);
+    REBEL_OBJECT(LineEditFileChooser, HBoxContainer);
     Button* button;
     LineEdit* line_edit;
     FileDialog* dialog;

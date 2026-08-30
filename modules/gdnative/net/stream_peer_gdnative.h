@@ -12,7 +12,7 @@
 #include "modules/gdnative/include/net/rebel_net.h"
 
 class StreamPeerGDNative : public StreamPeer {
-    GDCLASS(StreamPeerGDNative, StreamPeer);
+    REBEL_OBJECT(StreamPeerGDNative, StreamPeer);
 
 protected:
     static void _bind_methods();

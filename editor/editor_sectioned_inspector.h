@@ -14,7 +14,7 @@
 class SectionedInspectorFilter;
 
 class SectionedInspector : public HSplitContainer {
-    GDCLASS(SectionedInspector, HSplitContainer);
+    REBEL_OBJECT(SectionedInspector, HSplitContainer);
 
     ObjectID obj;
 

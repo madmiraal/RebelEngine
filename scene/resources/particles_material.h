@@ -11,7 +11,7 @@
 #define PARTICLES_MATERIAL_H
 
 class ParticlesMaterial : public Material {
-    GDCLASS(ParticlesMaterial, Material);
+    REBEL_OBJECT(ParticlesMaterial, Material);
 
 public:
     enum Parameter {

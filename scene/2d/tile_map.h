@@ -16,7 +16,7 @@
 class CollisionObject2D;
 
 class TileMap : public Node2D {
-    GDCLASS(TileMap, Node2D);
+    REBEL_OBJECT(TileMap, Node2D);
 
 public:
     enum Mode {

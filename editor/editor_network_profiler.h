@@ -14,7 +14,7 @@
 #include "scene/gui/tree.h"
 
 class EditorNetworkProfiler : public VBoxContainer {
-    GDCLASS(EditorNetworkProfiler, VBoxContainer)
+    REBEL_OBJECT(EditorNetworkProfiler, VBoxContainer)
 
 private:
     Button* activate;

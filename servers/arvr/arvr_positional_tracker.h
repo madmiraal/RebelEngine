@@ -12,7 +12,7 @@
 #include "servers/arvr_server.h"
 
 class ARVRPositionalTracker : public Reference {
-    GDCLASS(ARVRPositionalTracker, Reference);
+    REBEL_OBJECT(ARVRPositionalTracker, Reference);
     _THREAD_SAFE_CLASS_
 
 public:

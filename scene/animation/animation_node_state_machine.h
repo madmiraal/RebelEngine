@@ -10,7 +10,7 @@
 #include "scene/animation/animation_tree.h"
 
 class AnimationNodeStateMachineTransition : public Resource {
-    GDCLASS(AnimationNodeStateMachineTransition, Resource);
+    REBEL_OBJECT(AnimationNodeStateMachineTransition, Resource);
 
 public:
     enum SwitchMode {
@@ -60,7 +60,7 @@ VARIANT_ENUM_CAST(AnimationNodeStateMachineTransition::SwitchMode)
 class AnimationNodeStateMachine;
 
 class AnimationNodeStateMachinePlayback : public Resource {
-    GDCLASS(AnimationNodeStateMachinePlayback, Resource);
+    REBEL_OBJECT(AnimationNodeStateMachinePlayback, Resource);
 
     friend class AnimationNodeStateMachine;
 
@@ -117,7 +117,7 @@ public:
 };
 
 class AnimationNodeStateMachine : public AnimationRootNode {
-    GDCLASS(AnimationNodeStateMachine, AnimationRootNode);
+    REBEL_OBJECT(AnimationNodeStateMachine, AnimationRootNode);
 
 private:
     friend class AnimationNodeStateMachinePlayback;

@@ -16,7 +16,7 @@
 #include "scene/gui/popup_menu.h"
 
 class ItemListPlugin : public Object {
-    GDCLASS(ItemListPlugin, Object);
+    REBEL_OBJECT(ItemListPlugin, Object);
 
 protected:
     bool _set(const StringName& p_name, const Variant& p_value);
@@ -95,7 +95,7 @@ public:
 ///////////////////////////////////////////////////////////////
 
 class ItemListOptionButtonPlugin : public ItemListPlugin {
-    GDCLASS(ItemListOptionButtonPlugin, ItemListPlugin);
+    REBEL_OBJECT(ItemListOptionButtonPlugin, ItemListPlugin);
 
     OptionButton* ob;
 
@@ -144,7 +144,7 @@ public:
 };
 
 class ItemListPopupMenuPlugin : public ItemListPlugin {
-    GDCLASS(ItemListPopupMenuPlugin, ItemListPlugin);
+    REBEL_OBJECT(ItemListPopupMenuPlugin, ItemListPlugin);
 
     PopupMenu* pp;
 
@@ -227,7 +227,7 @@ public:
 ///////////////////////////////////////////////////////////////
 
 class ItemListItemListPlugin : public ItemListPlugin {
-    GDCLASS(ItemListItemListPlugin, ItemListPlugin);
+    REBEL_OBJECT(ItemListItemListPlugin, ItemListPlugin);
 
     ItemList* pp;
 
@@ -270,7 +270,7 @@ public:
 ///////////////////////////////////////////////////////////////
 
 class ItemListEditor : public HBoxContainer {
-    GDCLASS(ItemListEditor, HBoxContainer);
+    REBEL_OBJECT(ItemListEditor, HBoxContainer);
 
     Node* item_list;
 
@@ -310,7 +310,7 @@ public:
 };
 
 class ItemListEditorPlugin : public EditorPlugin {
-    GDCLASS(ItemListEditorPlugin, EditorPlugin);
+    REBEL_OBJECT(ItemListEditorPlugin, EditorPlugin);
 
     ItemListEditor* item_list_editor;
     EditorNode* editor;

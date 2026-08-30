@@ -675,7 +675,7 @@ def generate_cpp_hint_file(filename):
     else:
         try:
             with open(filename, "w") as fd:
-                fd.write("#define GDCLASS(m_class, m_inherits)\n")
+                fd.write("#define REBEL_OBJECT(m_class, m_inherits)\n")
         except IOError:
             print("Could not write cpp.hint file.")
 

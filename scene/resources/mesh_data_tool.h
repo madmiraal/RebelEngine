@@ -10,7 +10,7 @@
 #include "scene/resources/mesh.h"
 
 class MeshDataTool : public Reference {
-    GDCLASS(MeshDataTool, Reference);
+    REBEL_OBJECT(MeshDataTool, Reference);
 
     int format;
 

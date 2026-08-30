@@ -11,7 +11,7 @@
 #include "gltf_document.h"
 
 class GLTFSkin : public Resource {
-    GDCLASS(GLTFSkin, Resource);
+    REBEL_OBJECT(GLTFSkin, Resource);
     friend class GLTFDocument;
 
 private:

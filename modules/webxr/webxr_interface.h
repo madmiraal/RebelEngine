@@ -11,7 +11,7 @@
 #include "servers/arvr/arvr_positional_tracker.h"
 
 class WebXRInterface : public ARVRInterface {
-    GDCLASS(WebXRInterface, ARVRInterface);
+    REBEL_OBJECT(WebXRInterface, ARVRInterface);
 
 protected:
     static void _bind_methods();

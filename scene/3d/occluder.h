@@ -11,7 +11,7 @@
 #include "scene/resources/occluder_shape.h"
 
 class Occluder : public Spatial {
-    GDCLASS(Occluder, Spatial);
+    REBEL_OBJECT(Occluder, Spatial);
 
     friend class OccluderSpatialGizmo;
     friend class OccluderEditorPlugin;

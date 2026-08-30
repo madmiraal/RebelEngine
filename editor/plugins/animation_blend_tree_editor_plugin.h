@@ -20,7 +20,7 @@
 class ProgressBar;
 
 class AnimationNodeBlendTreeEditor : public AnimationTreeNodeEditorPlugin {
-    GDCLASS(AnimationNodeBlendTreeEditor, AnimationTreeNodeEditorPlugin);
+    REBEL_OBJECT(AnimationNodeBlendTreeEditor, AnimationTreeNodeEditorPlugin);
 
     Ref<AnimationNodeBlendTree> blend_tree;
     GraphEdit* graph;

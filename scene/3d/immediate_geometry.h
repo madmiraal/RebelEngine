@@ -11,7 +11,7 @@
 #include "scene/resources/mesh.h"
 
 class ImmediateGeometry : public GeometryInstance {
-    GDCLASS(ImmediateGeometry, GeometryInstance);
+    REBEL_OBJECT(ImmediateGeometry, GeometryInstance);
 
     RID im;
     // a list of textures drawn need to be kept, to avoid references

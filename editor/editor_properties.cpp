@@ -619,7 +619,7 @@ EditorPropertyFlags::EditorPropertyFlags() {
 ///////////////////// LAYERS /////////////////////////
 
 class EditorPropertyLayersGrid : public Control {
-    GDCLASS(EditorPropertyLayersGrid, Control);
+    REBEL_OBJECT(EditorPropertyLayersGrid, Control);
 
 private:
     Vector<Rect2> flag_rects;

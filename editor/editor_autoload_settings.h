@@ -11,7 +11,7 @@
 #include "scene/gui/tree.h"
 
 class EditorAutoloadSettings : public VBoxContainer {
-    GDCLASS(EditorAutoloadSettings, VBoxContainer);
+    REBEL_OBJECT(EditorAutoloadSettings, VBoxContainer);
 
     enum {
         BUTTON_OPEN,

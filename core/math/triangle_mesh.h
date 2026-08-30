@@ -11,7 +11,7 @@
 #include "core/reference.h"
 
 class TriangleMesh : public Reference {
-    GDCLASS(TriangleMesh, Reference);
+    REBEL_OBJECT(TriangleMesh, Reference);
 
 public:
     struct Triangle {

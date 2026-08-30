@@ -22,7 +22,7 @@
 
 #ifdef TOOLS_ENABLED
 class VisualScriptEditorSignalEdit : public Object {
-    GDCLASS(VisualScriptEditorSignalEdit, Object);
+    REBEL_OBJECT(VisualScriptEditorSignalEdit, Object);
 
     StringName sig;
 
@@ -233,7 +233,7 @@ public:
 };
 
 class VisualScriptEditorVariableEdit : public Object {
-    GDCLASS(VisualScriptEditorVariableEdit, Object);
+    REBEL_OBJECT(VisualScriptEditorVariableEdit, Object);
 
     StringName var;
 

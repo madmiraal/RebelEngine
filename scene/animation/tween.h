@@ -10,7 +10,7 @@
 #include "scene/main/node.h"
 
 class Tween : public Node {
-    GDCLASS(Tween, Node);
+    REBEL_OBJECT(Tween, Node);
 
 public:
     enum TweenProcessMode {

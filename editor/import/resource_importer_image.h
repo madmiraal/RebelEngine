@@ -11,7 +11,7 @@
 #include "core/io/resource_importer.h"
 
 class ResourceImporterImage : public ResourceImporter {
-    GDCLASS(ResourceImporterImage, ResourceImporter);
+    REBEL_OBJECT(ResourceImporterImage, ResourceImporter);
 
 public:
     String get_importer_name() const override;

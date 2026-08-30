@@ -11,7 +11,7 @@
 #include "scene/3d/visual_instance.h"
 
 class GIProbeData : public Resource {
-    GDCLASS(GIProbeData, Resource);
+    REBEL_OBJECT(GIProbeData, Resource);
 
     RID probe;
 
@@ -59,7 +59,7 @@ public:
 };
 
 class GIProbe : public VisualInstance {
-    GDCLASS(GIProbe, VisualInstance);
+    REBEL_OBJECT(GIProbe, VisualInstance);
 
 public:
     enum Subdiv {

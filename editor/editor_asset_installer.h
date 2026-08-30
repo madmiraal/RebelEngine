@@ -11,7 +11,7 @@
 #include "scene/gui/tree.h"
 
 class EditorAssetInstaller : public ConfirmationDialog {
-    GDCLASS(EditorAssetInstaller, ConfirmationDialog);
+    REBEL_OBJECT(EditorAssetInstaller, ConfirmationDialog);
 
     Tree* tree;
     Label* asset_contents;

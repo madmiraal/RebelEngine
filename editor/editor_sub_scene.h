@@ -12,7 +12,7 @@
 #include "scene/gui/tree.h"
 
 class EditorSubScene : public ConfirmationDialog {
-    GDCLASS(EditorSubScene, ConfirmationDialog);
+    REBEL_OBJECT(EditorSubScene, ConfirmationDialog);
 
     List<Node*> selection;
     LineEdit* path;

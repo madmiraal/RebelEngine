@@ -14,7 +14,7 @@
 #include "scene/3d/visual_instance.h"
 
 class BakedLightmapData : public Resource {
-    GDCLASS(BakedLightmapData, Resource);
+    REBEL_OBJECT(BakedLightmapData, Resource);
     RES_BASE_EXTENSION("lmbake")
 
     RID baked_light;
@@ -86,7 +86,7 @@ public:
 };
 
 class BakedLightmap : public VisualInstance {
-    GDCLASS(BakedLightmap, VisualInstance);
+    REBEL_OBJECT(BakedLightmap, VisualInstance);
 
 public:
     enum BakeQuality {

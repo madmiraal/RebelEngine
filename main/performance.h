@@ -13,7 +13,7 @@
 #define PERF_WARN_PROCESS_SYNC
 
 class Performance : public Object {
-    GDCLASS(Performance, Object);
+    REBEL_OBJECT(Performance, Object);
 
     static Performance* singleton;
     static void _bind_methods();

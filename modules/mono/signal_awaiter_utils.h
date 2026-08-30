@@ -21,7 +21,7 @@ Error connect_signal_awaiter(
 } // namespace SignalAwaiterUtils
 
 class SignalAwaiterHandle : public MonoGCHandle {
-    GDCLASS(SignalAwaiterHandle, MonoGCHandle);
+    REBEL_OBJECT(SignalAwaiterHandle, MonoGCHandle);
 
     bool completed;
 

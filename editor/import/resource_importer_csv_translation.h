@@ -10,7 +10,7 @@
 #include "core/io/resource_importer.h"
 
 class ResourceImporterCSVTranslation : public ResourceImporter {
-    GDCLASS(ResourceImporterCSVTranslation, ResourceImporter);
+    REBEL_OBJECT(ResourceImporterCSVTranslation, ResourceImporter);
 
 public:
     String get_importer_name() const override;

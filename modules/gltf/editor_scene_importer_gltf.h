@@ -32,7 +32,7 @@ class EditorSceneImporterMeshNode3D;
 
 #ifdef TOOLS_ENABLED
 class EditorSceneImporterGLTF : public EditorSceneImporter {
-    GDCLASS(EditorSceneImporterGLTF, EditorSceneImporter);
+    REBEL_OBJECT(EditorSceneImporterGLTF, EditorSceneImporter);
 
 public:
     uint32_t get_import_flags() const override;
@@ -54,7 +54,7 @@ public:
 #endif
 
 class PackedSceneGLTF : public PackedScene {
-    GDCLASS(PackedSceneGLTF, PackedScene);
+    REBEL_OBJECT(PackedSceneGLTF, PackedScene);
 
 protected:
     static void _bind_methods();

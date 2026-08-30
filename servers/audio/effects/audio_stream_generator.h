@@ -11,7 +11,7 @@
 #include "servers/audio/audio_stream.h"
 
 class AudioStreamGenerator : public AudioStream {
-    GDCLASS(AudioStreamGenerator, AudioStream);
+    REBEL_OBJECT(AudioStreamGenerator, AudioStream);
 
     float mix_rate;
     float buffer_len;
@@ -34,7 +34,7 @@ public:
 };
 
 class AudioStreamGeneratorPlayback : public AudioStreamPlaybackResampled {
-    GDCLASS(AudioStreamGeneratorPlayback, AudioStreamPlaybackResampled);
+    REBEL_OBJECT(AudioStreamGeneratorPlayback, AudioStreamPlaybackResampled);
     friend class AudioStreamGenerator;
     RingBuffer<AudioFrame> buffer;
     int skips;

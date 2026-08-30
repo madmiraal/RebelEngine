@@ -20,7 +20,7 @@
 #include "scene/gui/tool_button.h"
 
 class EditorLog : public VBoxContainer {
-    GDCLASS(EditorLog, VBoxContainer);
+    REBEL_OBJECT(EditorLog, VBoxContainer);
 
     Button* clearbutton;
     Button* copybutton;

@@ -17,7 +17,7 @@
 #include "scene/gui/line_edit.h"
 
 class EditorPropertyNil : public EditorProperty {
-    GDCLASS(EditorPropertyNil, EditorProperty);
+    REBEL_OBJECT(EditorPropertyNil, EditorProperty);
     LineEdit* text;
 
 public:
@@ -26,7 +26,7 @@ public:
 };
 
 class EditorPropertyText : public EditorProperty {
-    GDCLASS(EditorPropertyText, EditorProperty);
+    REBEL_OBJECT(EditorPropertyText, EditorProperty);
     LineEdit* text;
 
     bool updating;
@@ -43,7 +43,7 @@ public:
 };
 
 class EditorPropertyMultilineText : public EditorProperty {
-    GDCLASS(EditorPropertyMultilineText, EditorProperty);
+    REBEL_OBJECT(EditorPropertyMultilineText, EditorProperty);
     TextEdit* text;
 
     AcceptDialog* big_text_dialog;
@@ -64,7 +64,7 @@ public:
 };
 
 class EditorPropertyTextEnum : public EditorProperty {
-    GDCLASS(EditorPropertyTextEnum, EditorProperty);
+    REBEL_OBJECT(EditorPropertyTextEnum, EditorProperty);
     OptionButton* options;
 
     void _option_selected(int p_which);
@@ -79,7 +79,7 @@ public:
 };
 
 class EditorPropertyPath : public EditorProperty {
-    GDCLASS(EditorPropertyPath, EditorProperty);
+    REBEL_OBJECT(EditorPropertyPath, EditorProperty);
     Vector<String> extensions;
     bool folder;
     bool global;
@@ -108,7 +108,7 @@ public:
 };
 
 class EditorPropertyClassName : public EditorProperty {
-    GDCLASS(EditorPropertyClassName, EditorProperty);
+    REBEL_OBJECT(EditorPropertyClassName, EditorProperty);
 
 private:
     CreateDialog* dialog;
@@ -128,7 +128,7 @@ public:
 };
 
 class EditorPropertyMember : public EditorProperty {
-    GDCLASS(EditorPropertyMember, EditorProperty);
+    REBEL_OBJECT(EditorPropertyMember, EditorProperty);
 
 public:
     enum Type {
@@ -161,7 +161,7 @@ public:
 };
 
 class EditorPropertyCheck : public EditorProperty {
-    GDCLASS(EditorPropertyCheck, EditorProperty);
+    REBEL_OBJECT(EditorPropertyCheck, EditorProperty);
     CheckBox* checkbox;
 
     void _checkbox_pressed();
@@ -175,7 +175,7 @@ public:
 };
 
 class EditorPropertyEnum : public EditorProperty {
-    GDCLASS(EditorPropertyEnum, EditorProperty);
+    REBEL_OBJECT(EditorPropertyEnum, EditorProperty);
     OptionButton* options;
 
     void _option_selected(int p_which);
@@ -191,7 +191,7 @@ public:
 };
 
 class EditorPropertyFlags : public EditorProperty {
-    GDCLASS(EditorPropertyFlags, EditorProperty);
+    REBEL_OBJECT(EditorPropertyFlags, EditorProperty);
     VBoxContainer* vbox;
     Vector<CheckBox*> flags;
     Vector<int> flag_indices;
@@ -210,7 +210,7 @@ public:
 class EditorPropertyLayersGrid;
 
 class EditorPropertyLayers : public EditorProperty {
-    GDCLASS(EditorPropertyLayers, EditorProperty);
+    REBEL_OBJECT(EditorPropertyLayers, EditorProperty);
 
 public:
     enum LayerType {
@@ -240,7 +240,7 @@ public:
 };
 
 class EditorPropertyInteger : public EditorProperty {
-    GDCLASS(EditorPropertyInteger, EditorProperty);
+    REBEL_OBJECT(EditorPropertyInteger, EditorProperty);
     EditorSpinSlider* spin;
     bool setting;
     void _value_changed(int64_t p_val);
@@ -261,7 +261,7 @@ public:
 };
 
 class EditorPropertyObjectID : public EditorProperty {
-    GDCLASS(EditorPropertyObjectID, EditorProperty);
+    REBEL_OBJECT(EditorPropertyObjectID, EditorProperty);
     Button* edit;
     String base_type;
     void _edit_pressed();
@@ -276,7 +276,7 @@ public:
 };
 
 class EditorPropertyFloat : public EditorProperty {
-    GDCLASS(EditorPropertyFloat, EditorProperty);
+    REBEL_OBJECT(EditorPropertyFloat, EditorProperty);
     EditorSpinSlider* spin;
     bool setting;
     void _value_changed(double p_val);
@@ -299,7 +299,7 @@ public:
 };
 
 class EditorPropertyEasing : public EditorProperty {
-    GDCLASS(EditorPropertyEasing, EditorProperty);
+    REBEL_OBJECT(EditorPropertyEasing, EditorProperty);
     Control* easing_draw;
     PopupMenu* preset;
     EditorSpinSlider* spin;
@@ -339,7 +339,7 @@ public:
 };
 
 class EditorPropertyVector2 : public EditorProperty {
-    GDCLASS(EditorPropertyVector2, EditorProperty);
+    REBEL_OBJECT(EditorPropertyVector2, EditorProperty);
     EditorSpinSlider* spin[2];
     bool setting;
     void _value_changed(double p_val, const String& p_name);
@@ -355,7 +355,7 @@ public:
 };
 
 class EditorPropertyRect2 : public EditorProperty {
-    GDCLASS(EditorPropertyRect2, EditorProperty);
+    REBEL_OBJECT(EditorPropertyRect2, EditorProperty);
     EditorSpinSlider* spin[4];
     bool setting;
     void _value_changed(double p_val, const String& p_name);
@@ -371,7 +371,7 @@ public:
 };
 
 class EditorPropertyVector3 : public EditorProperty {
-    GDCLASS(EditorPropertyVector3, EditorProperty);
+    REBEL_OBJECT(EditorPropertyVector3, EditorProperty);
     EditorSpinSlider* spin[3];
     bool setting;
     void _value_changed(double p_val, const String& p_name);
@@ -387,7 +387,7 @@ public:
 };
 
 class EditorPropertyPlane : public EditorProperty {
-    GDCLASS(EditorPropertyPlane, EditorProperty);
+    REBEL_OBJECT(EditorPropertyPlane, EditorProperty);
     EditorSpinSlider* spin[4];
     bool setting;
     void _value_changed(double p_val, const String& p_name);
@@ -403,7 +403,7 @@ public:
 };
 
 class EditorPropertyQuat : public EditorProperty {
-    GDCLASS(EditorPropertyQuat, EditorProperty);
+    REBEL_OBJECT(EditorPropertyQuat, EditorProperty);
     EditorSpinSlider* spin[4];
     bool setting;
     void _value_changed(double p_val, const String& p_name);
@@ -419,7 +419,7 @@ public:
 };
 
 class EditorPropertyAABB : public EditorProperty {
-    GDCLASS(EditorPropertyAABB, EditorProperty);
+    REBEL_OBJECT(EditorPropertyAABB, EditorProperty);
     EditorSpinSlider* spin[6];
     bool setting;
     void _value_changed(double p_val, const String& p_name);
@@ -435,7 +435,7 @@ public:
 };
 
 class EditorPropertyTransform2D : public EditorProperty {
-    GDCLASS(EditorPropertyTransform2D, EditorProperty);
+    REBEL_OBJECT(EditorPropertyTransform2D, EditorProperty);
     EditorSpinSlider* spin[6];
     bool setting;
     void _value_changed(double p_val, const String& p_name);
@@ -451,7 +451,7 @@ public:
 };
 
 class EditorPropertyBasis : public EditorProperty {
-    GDCLASS(EditorPropertyBasis, EditorProperty);
+    REBEL_OBJECT(EditorPropertyBasis, EditorProperty);
     EditorSpinSlider* spin[9];
     bool setting;
     void _value_changed(double p_val, const String& p_name);
@@ -467,7 +467,7 @@ public:
 };
 
 class EditorPropertyTransform : public EditorProperty {
-    GDCLASS(EditorPropertyTransform, EditorProperty);
+    REBEL_OBJECT(EditorPropertyTransform, EditorProperty);
     EditorSpinSlider* spin[12];
     bool setting;
     void _value_changed(double p_val, const String& p_name);
@@ -483,7 +483,7 @@ public:
 };
 
 class EditorPropertyColor : public EditorProperty {
-    GDCLASS(EditorPropertyColor, EditorProperty);
+    REBEL_OBJECT(EditorPropertyColor, EditorProperty);
     ColorPickerButton* picker;
     void _color_changed(const Color& p_color);
     void _popup_closed();
@@ -502,7 +502,7 @@ public:
 };
 
 class EditorPropertyNodePath : public EditorProperty {
-    GDCLASS(EditorPropertyNodePath, EditorProperty);
+    REBEL_OBJECT(EditorPropertyNodePath, EditorProperty);
     Button* assign;
     Button* clear;
     SceneTreeDialog* scene_tree;
@@ -529,7 +529,7 @@ public:
 };
 
 class EditorPropertyRID : public EditorProperty {
-    GDCLASS(EditorPropertyRID, EditorProperty);
+    REBEL_OBJECT(EditorPropertyRID, EditorProperty);
     Label* label;
 
 public:
@@ -538,7 +538,7 @@ public:
 };
 
 class EditorPropertyResource : public EditorProperty {
-    GDCLASS(EditorPropertyResource, EditorProperty);
+    REBEL_OBJECT(EditorPropertyResource, EditorProperty);
 
     EditorResourcePicker* resource_picker = nullptr;
     SceneTreeDialog* scene_tree           = nullptr;
@@ -594,7 +594,7 @@ public:
 /// \brief The EditorInspectorDefaultPlugin class
 ///
 class EditorInspectorDefaultPlugin : public EditorInspectorPlugin {
-    GDCLASS(EditorInspectorDefaultPlugin, EditorInspectorPlugin);
+    REBEL_OBJECT(EditorInspectorDefaultPlugin, EditorInspectorPlugin);
 
 public:
     bool can_handle(Object* p_object) override;

@@ -13,7 +13,7 @@
 #include "gdscript_function.h"
 
 class GDScriptNativeClass : public Reference {
-    GDCLASS(GDScriptNativeClass, Reference);
+    REBEL_OBJECT(GDScriptNativeClass, Reference);
 
     StringName name;
 
@@ -32,7 +32,7 @@ public:
 };
 
 class GDScript : public Script {
-    GDCLASS(GDScript, Script);
+    REBEL_OBJECT(GDScript, Script);
     bool tool;
     bool valid;
 

@@ -242,7 +242,7 @@ public:
 };
 
 class EditorSelection : public Object {
-    GDCLASS(EditorSelection, Object);
+    REBEL_OBJECT(EditorSelection, Object);
 
 private:
     Map<Node*, Object*> selection;

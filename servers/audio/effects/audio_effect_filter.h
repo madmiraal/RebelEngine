@@ -13,7 +13,7 @@
 class AudioEffectFilter;
 
 class AudioEffectFilterInstance : public AudioEffectInstance {
-    GDCLASS(AudioEffectFilterInstance, AudioEffectInstance);
+    REBEL_OBJECT(AudioEffectFilterInstance, AudioEffectInstance);
     friend class AudioEffectFilter;
 
     Ref<AudioEffectFilter> base;
@@ -39,7 +39,7 @@ public:
 };
 
 class AudioEffectFilter : public AudioEffect {
-    GDCLASS(AudioEffectFilter, AudioEffect);
+    REBEL_OBJECT(AudioEffectFilter, AudioEffect);
 
 public:
     enum FilterDB {
@@ -80,7 +80,7 @@ public:
 VARIANT_ENUM_CAST(AudioEffectFilter::FilterDB)
 
 class AudioEffectLowPassFilter : public AudioEffectFilter {
-    GDCLASS(AudioEffectLowPassFilter, AudioEffectFilter);
+    REBEL_OBJECT(AudioEffectLowPassFilter, AudioEffectFilter);
 
     void _validate_property(PropertyInfo& property) const override {
         if (property.name == "gain") {
@@ -93,7 +93,7 @@ public:
 };
 
 class AudioEffectHighPassFilter : public AudioEffectFilter {
-    GDCLASS(AudioEffectHighPassFilter, AudioEffectFilter);
+    REBEL_OBJECT(AudioEffectHighPassFilter, AudioEffectFilter);
 
     void _validate_property(PropertyInfo& property) const override {
         if (property.name == "gain") {
@@ -106,7 +106,7 @@ public:
 };
 
 class AudioEffectBandPassFilter : public AudioEffectFilter {
-    GDCLASS(AudioEffectBandPassFilter, AudioEffectFilter);
+    REBEL_OBJECT(AudioEffectBandPassFilter, AudioEffectFilter);
 
     void _validate_property(PropertyInfo& property) const override {
         if (property.name == "gain") {
@@ -119,14 +119,14 @@ public:
 };
 
 class AudioEffectNotchFilter : public AudioEffectFilter {
-    GDCLASS(AudioEffectNotchFilter, AudioEffectFilter);
+    REBEL_OBJECT(AudioEffectNotchFilter, AudioEffectFilter);
 
 public:
     AudioEffectNotchFilter() : AudioEffectFilter(AudioFilterSW::NOTCH) {}
 };
 
 class AudioEffectBandLimitFilter : public AudioEffectFilter {
-    GDCLASS(AudioEffectBandLimitFilter, AudioEffectFilter);
+    REBEL_OBJECT(AudioEffectBandLimitFilter, AudioEffectFilter);
 
 public:
     AudioEffectBandLimitFilter() :
@@ -134,14 +134,14 @@ public:
 };
 
 class AudioEffectLowShelfFilter : public AudioEffectFilter {
-    GDCLASS(AudioEffectLowShelfFilter, AudioEffectFilter);
+    REBEL_OBJECT(AudioEffectLowShelfFilter, AudioEffectFilter);
 
 public:
     AudioEffectLowShelfFilter() : AudioEffectFilter(AudioFilterSW::LOWSHELF) {}
 };
 
 class AudioEffectHighShelfFilter : public AudioEffectFilter {
-    GDCLASS(AudioEffectHighShelfFilter, AudioEffectFilter);
+    REBEL_OBJECT(AudioEffectHighShelfFilter, AudioEffectFilter);
 
 public:
     AudioEffectHighShelfFilter() :

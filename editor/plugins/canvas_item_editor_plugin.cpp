@@ -41,7 +41,7 @@
 #define SCALE_HANDLE_DISTANCE 25
 
 class SnapDialog : public ConfirmationDialog {
-    GDCLASS(SnapDialog, ConfirmationDialog);
+    REBEL_OBJECT(SnapDialog, ConfirmationDialog);
 
     friend class CanvasItemEditor;
 

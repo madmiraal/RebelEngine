@@ -46,7 +46,7 @@ struct LauncherIcon {
 };
 
 class EditorExportPlatformAndroid : public EditorExportPlatform {
-    GDCLASS(EditorExportPlatformAndroid, EditorExportPlatform);
+    REBEL_OBJECT(EditorExportPlatformAndroid, EditorExportPlatform);
 
     Ref<ImageTexture> logo;
     Ref<ImageTexture> run_icon;

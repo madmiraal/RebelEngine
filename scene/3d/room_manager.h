@@ -20,7 +20,7 @@ class VisualInstance;
 #define GODOT_PORTAL_WILDCARD ('*')
 
 class RoomManager : public Spatial {
-    GDCLASS(RoomManager, Spatial);
+    REBEL_OBJECT(RoomManager, Spatial);
 
 public:
     enum PVSMode {

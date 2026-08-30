@@ -10,7 +10,7 @@
 #include "scene/resources/shape.h"
 
 class CylinderShape : public Shape {
-    GDCLASS(CylinderShape, Shape);
+    REBEL_OBJECT(CylinderShape, Shape);
     float radius;
     float height;
 

@@ -10,7 +10,7 @@
 #include "core/resource.h"
 
 class Skin : public Resource {
-    GDCLASS(Skin, Resource)
+    REBEL_OBJECT(Skin, Resource)
 
     struct Bind {
         int bone = -1;

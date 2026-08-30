@@ -14,7 +14,7 @@
 class NavigationMeshEditor : public Control {
     friend class NavigationMeshEditorPlugin;
 
-    GDCLASS(NavigationMeshEditor, Control);
+    REBEL_OBJECT(NavigationMeshEditor, Control);
 
     AcceptDialog* err_dialog;
 
@@ -40,7 +40,7 @@ public:
 };
 
 class NavigationMeshEditorPlugin : public EditorPlugin {
-    GDCLASS(NavigationMeshEditorPlugin, EditorPlugin);
+    REBEL_OBJECT(NavigationMeshEditorPlugin, EditorPlugin);
 
     NavigationMeshEditor* navigation_mesh_editor;
     EditorNode* editor;

@@ -13,7 +13,7 @@
 class Room;
 
 class RoomGroup : public Spatial {
-    GDCLASS(RoomGroup, Spatial);
+    REBEL_OBJECT(RoomGroup, Spatial);
 
     friend class RoomManager;
 

@@ -17,7 +17,7 @@
 #include "scene/gui/scroll_container.h"
 
 class ProjectsList : public VBoxContainer {
-    GDCLASS(ProjectsList, VBoxContainer)
+    REBEL_OBJECT(ProjectsList, VBoxContainer)
 
 public:
     enum MenuOptions {

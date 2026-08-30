@@ -27,7 +27,7 @@ class CreateDialog;
 class PropertySelector;
 
 class EditorResourceConversionPlugin : public Reference {
-    GDCLASS(EditorResourceConversionPlugin, Reference);
+    REBEL_OBJECT(EditorResourceConversionPlugin, Reference);
 
 protected:
     static void _bind_methods();
@@ -39,7 +39,7 @@ public:
 };
 
 class CustomPropertyEditor : public Popup {
-    GDCLASS(CustomPropertyEditor, Popup);
+    REBEL_OBJECT(CustomPropertyEditor, Popup);
 
     enum {
         MAX_VALUE_EDITORS            = 12,

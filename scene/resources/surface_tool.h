@@ -11,7 +11,7 @@
 #include "third-party/misc/mikktspace.h"
 
 class SurfaceTool : public Reference {
-    GDCLASS(SurfaceTool, Reference);
+    REBEL_OBJECT(SurfaceTool, Reference);
 
 public:
     struct Vertex {

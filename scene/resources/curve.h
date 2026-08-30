@@ -11,7 +11,7 @@
 
 // y(x) curve
 class Curve : public Resource {
-    GDCLASS(Curve, Resource);
+    REBEL_OBJECT(Curve, Resource);
 
 public:
     static const int MIN_X = 0.f;
@@ -141,7 +141,7 @@ private:
 VARIANT_ENUM_CAST(Curve::TangentMode)
 
 class Curve2D : public Resource {
-    GDCLASS(Curve2D, Resource);
+    REBEL_OBJECT(Curve2D, Resource);
 
     struct Point {
         Vector2 in;
@@ -218,7 +218,7 @@ public:
 };
 
 class Curve3D : public Resource {
-    GDCLASS(Curve3D, Resource);
+    REBEL_OBJECT(Curve3D, Resource);
 
     struct Point {
         Vector3 in;

@@ -12,7 +12,7 @@
 #include "core/os/thread_safe.h"
 
 class Input : public Object {
-    GDCLASS(Input, Object);
+    REBEL_OBJECT(Input, Object);
 
     static Input* singleton;
 

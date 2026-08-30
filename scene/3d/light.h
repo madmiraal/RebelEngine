@@ -12,7 +12,7 @@
 #include "servers/visual_server.h"
 
 class Light : public VisualInstance {
-    GDCLASS(Light, VisualInstance);
+    REBEL_OBJECT(Light, VisualInstance);
 
 public:
     enum Param {
@@ -108,7 +108,7 @@ VARIANT_ENUM_CAST(Light::Param);
 VARIANT_ENUM_CAST(Light::BakeMode);
 
 class DirectionalLight : public Light {
-    GDCLASS(DirectionalLight, Light);
+    REBEL_OBJECT(DirectionalLight, Light);
 
 public:
     enum ShadowMode {
@@ -149,7 +149,7 @@ VARIANT_ENUM_CAST(DirectionalLight::ShadowMode)
 VARIANT_ENUM_CAST(DirectionalLight::ShadowDepthRange)
 
 class OmniLight : public Light {
-    GDCLASS(OmniLight, Light);
+    REBEL_OBJECT(OmniLight, Light);
 
 public:
     // omni light
@@ -185,7 +185,7 @@ VARIANT_ENUM_CAST(OmniLight::ShadowMode)
 VARIANT_ENUM_CAST(OmniLight::ShadowDetail)
 
 class SpotLight : public Light {
-    GDCLASS(SpotLight, Light);
+    REBEL_OBJECT(SpotLight, Light);
 
 protected:
     static void _bind_methods();

@@ -11,7 +11,7 @@
 #include "scene/main/viewport.h"
 
 class Listener : public Spatial {
-    GDCLASS(Listener, Spatial);
+    REBEL_OBJECT(Listener, Spatial);
 
 private:
     bool force_change;

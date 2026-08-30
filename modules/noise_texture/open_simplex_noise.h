@@ -12,7 +12,7 @@
 #include "third-party/open_simplex_noise/open-simplex-noise.h"
 
 class OpenSimplexNoise : public Resource {
-    GDCLASS(OpenSimplexNoise, Resource);
+    REBEL_OBJECT(OpenSimplexNoise, Resource);
     OBJ_SAVE_TYPE(OpenSimplexNoise);
 
 public:

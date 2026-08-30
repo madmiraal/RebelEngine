@@ -13,7 +13,7 @@
 #include <Recast.h>
 
 class EditorNavigationMeshGenerator : public Object {
-    GDCLASS(EditorNavigationMeshGenerator, Object);
+    REBEL_OBJECT(EditorNavigationMeshGenerator, Object);
 
     static EditorNavigationMeshGenerator* singleton;
 

@@ -11,7 +11,7 @@
 #include "scene/resources/animation.h"
 
 class AnimationCache : public Object {
-    GDCLASS(AnimationCache, Object);
+    REBEL_OBJECT(AnimationCache, Object);
 
     struct Path {
         RES resource;

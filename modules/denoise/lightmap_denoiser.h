@@ -13,7 +13,7 @@
 struct OIDNDeviceImpl;
 
 class LightmapDenoiserOIDN : public LightmapDenoiser {
-    GDCLASS(LightmapDenoiserOIDN, LightmapDenoiser);
+    REBEL_OBJECT(LightmapDenoiserOIDN, LightmapDenoiser);
 
 protected:
     void* device = nullptr;

@@ -12,7 +12,7 @@
 class PackedScene;
 
 class InstancePlaceholder : public Node {
-    GDCLASS(InstancePlaceholder, Node);
+    REBEL_OBJECT(InstancePlaceholder, Node);
 
     String path;
 

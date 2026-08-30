@@ -18,7 +18,7 @@
 */
 
 class XMLParser : public Reference {
-    GDCLASS(XMLParser, Reference);
+    REBEL_OBJECT(XMLParser, Reference);
 
 public:
     //! Enumeration of all supported source text file formats

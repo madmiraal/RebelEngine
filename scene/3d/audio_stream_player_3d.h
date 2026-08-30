@@ -17,7 +17,7 @@
 class Camera;
 
 class AudioStreamPlayer3D : public Spatial {
-    GDCLASS(AudioStreamPlayer3D, Spatial);
+    REBEL_OBJECT(AudioStreamPlayer3D, Spatial);
 
 public:
     enum AttenuationModel {

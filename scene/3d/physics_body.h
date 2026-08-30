@@ -14,7 +14,7 @@
 #include "skeleton.h"
 
 class PhysicsBody : public CollisionObject {
-    GDCLASS(PhysicsBody, CollisionObject);
+    REBEL_OBJECT(PhysicsBody, CollisionObject);
 
     void _set_layers(uint32_t p_mask);
     uint32_t _get_layers() const;
@@ -37,7 +37,7 @@ public:
 };
 
 class StaticBody : public PhysicsBody {
-    GDCLASS(StaticBody, PhysicsBody);
+    REBEL_OBJECT(StaticBody, PhysicsBody);
 
     Vector3 constant_linear_velocity;
     Vector3 constant_angular_velocity;
@@ -75,7 +75,7 @@ private:
 };
 
 class RigidBody : public PhysicsBody {
-    GDCLASS(RigidBody, PhysicsBody);
+    REBEL_OBJECT(RigidBody, PhysicsBody);
 
 public:
     enum Mode {
@@ -253,7 +253,7 @@ VARIANT_ENUM_CAST(RigidBody::Mode);
 class KinematicCollision;
 
 class KinematicBody : public PhysicsBody {
-    GDCLASS(KinematicBody, PhysicsBody);
+    REBEL_OBJECT(KinematicBody, PhysicsBody);
 
 public:
     struct Collision {
@@ -384,7 +384,7 @@ public:
 };
 
 class KinematicCollision : public Reference {
-    GDCLASS(KinematicCollision, Reference);
+    REBEL_OBJECT(KinematicCollision, Reference);
 
     KinematicBody* owner;
     friend class KinematicBody;
@@ -413,7 +413,7 @@ public:
 };
 
 class PhysicalBone : public PhysicsBody {
-    GDCLASS(PhysicalBone, PhysicsBody);
+    REBEL_OBJECT(PhysicalBone, PhysicsBody);
 
 public:
     enum JointType {

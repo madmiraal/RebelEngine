@@ -12,7 +12,7 @@
 class Skeleton2D;
 
 class Bone2D : public Node2D {
-    GDCLASS(Bone2D, Node2D);
+    REBEL_OBJECT(Bone2D, Node2D);
 
     friend class Skeleton2D;
 #ifdef TOOLS_ENABLED
@@ -47,7 +47,7 @@ public:
 };
 
 class Skeleton2D : public Node2D {
-    GDCLASS(Skeleton2D, Node2D);
+    REBEL_OBJECT(Skeleton2D, Node2D);
 
     friend class Bone2D;
 #ifdef TOOLS_ENABLED

@@ -13,7 +13,7 @@
 #include "webrtc_peer_connection.h"
 
 class WebRTCPeerConnectionGDNative : public WebRTCPeerConnection {
-    GDCLASS(WebRTCPeerConnectionGDNative, WebRTCPeerConnection);
+    REBEL_OBJECT(WebRTCPeerConnectionGDNative, WebRTCPeerConnection);
 
 protected:
     static void _bind_methods();

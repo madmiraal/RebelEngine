@@ -18,7 +18,7 @@
 class VisualServerCallbacks;
 
 class VisualServer : public Object {
-    GDCLASS(VisualServer, Object);
+    REBEL_OBJECT(VisualServer, Object);
 
     static VisualServer* singleton;
 

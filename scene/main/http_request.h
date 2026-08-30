@@ -15,7 +15,7 @@
 #include "scene/main/timer.h"
 
 class HTTPRequest : public Node {
-    GDCLASS(HTTPRequest, Node);
+    REBEL_OBJECT(HTTPRequest, Node);
 
 public:
     enum Result {

@@ -15,7 +15,7 @@
 #include "scene/main/resource_preloader.h"
 
 class ResourcePreloaderEditor : public PanelContainer {
-    GDCLASS(ResourcePreloaderEditor, PanelContainer);
+    REBEL_OBJECT(ResourcePreloaderEditor, PanelContainer);
 
     enum {
         BUTTON_OPEN_SCENE,
@@ -71,7 +71,7 @@ public:
 };
 
 class ResourcePreloaderEditorPlugin : public EditorPlugin {
-    GDCLASS(ResourcePreloaderEditorPlugin, EditorPlugin);
+    REBEL_OBJECT(ResourcePreloaderEditorPlugin, EditorPlugin);
 
     ResourcePreloaderEditor* preloader_editor;
     EditorNode* editor;

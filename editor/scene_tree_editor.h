@@ -15,7 +15,7 @@
 #include "scene/gui/tree.h"
 
 class SceneTreeEditor : public Control {
-    GDCLASS(SceneTreeEditor, Control);
+    REBEL_OBJECT(SceneTreeEditor, Control);
 
     EditorSelection* editor_selection;
 
@@ -176,7 +176,7 @@ public:
 };
 
 class SceneTreeDialog : public ConfirmationDialog {
-    GDCLASS(SceneTreeDialog, ConfirmationDialog);
+    REBEL_OBJECT(SceneTreeDialog, ConfirmationDialog);
 
     SceneTreeEditor* tree;
     // Button *select;

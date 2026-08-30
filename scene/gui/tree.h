@@ -16,7 +16,7 @@
 class Tree;
 
 class TreeItem : public Object {
-    GDCLASS(TreeItem, Object);
+    REBEL_OBJECT(TreeItem, Object);
 
 public:
     enum TreeCellMode {
@@ -306,7 +306,7 @@ VARIANT_ENUM_CAST(TreeItem::TreeCellMode);
 VARIANT_ENUM_CAST(TreeItem::TextAlign);
 
 class Tree : public Control {
-    GDCLASS(Tree, Control);
+    REBEL_OBJECT(Tree, Control);
 
 public:
     enum SelectMode {

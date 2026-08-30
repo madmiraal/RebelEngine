@@ -9,7 +9,7 @@
 #include "editor_scale.h"
 
 class SectionedInspectorFilter : public Object {
-    GDCLASS(SectionedInspectorFilter, Object);
+    REBEL_OBJECT(SectionedInspectorFilter, Object);
 
     Object* edited;
     String section;

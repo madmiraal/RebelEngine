@@ -10,7 +10,7 @@
 #include "scene/gui/container.h"
 
 class MarginContainer : public Container {
-    GDCLASS(MarginContainer, Container);
+    REBEL_OBJECT(MarginContainer, Container);
 
 protected:
     void _notification(int p_what);

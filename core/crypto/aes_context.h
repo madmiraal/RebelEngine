@@ -11,7 +11,7 @@
 #include "core/reference.h"
 
 class AESContext : public Reference {
-    GDCLASS(AESContext, Reference);
+    REBEL_OBJECT(AESContext, Reference);
 
 public:
     enum Mode {

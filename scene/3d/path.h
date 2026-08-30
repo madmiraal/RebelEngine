@@ -11,7 +11,7 @@
 #include "scene/resources/curve.h"
 
 class Path : public Spatial {
-    GDCLASS(Path, Spatial);
+    REBEL_OBJECT(Path, Spatial);
 
     Ref<Curve3D> curve;
 
@@ -29,7 +29,7 @@ public:
 };
 
 class PathFollow : public Spatial {
-    GDCLASS(PathFollow, Spatial);
+    REBEL_OBJECT(PathFollow, Spatial);
 
 public:
     enum RotationMode {

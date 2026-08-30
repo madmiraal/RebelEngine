@@ -10,7 +10,7 @@
 #include "scene/gui/container.h"
 
 class GraphNode : public Container {
-    GDCLASS(GraphNode, Container);
+    REBEL_OBJECT(GraphNode, Container);
 
 public:
     enum Overlay {

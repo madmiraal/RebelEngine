@@ -13,7 +13,7 @@
 #include "servers/visual_server.h"
 
 class ReflectionProbe : public VisualInstance {
-    GDCLASS(ReflectionProbe, VisualInstance);
+    REBEL_OBJECT(ReflectionProbe, VisualInstance);
 
 public:
     enum UpdateMode {

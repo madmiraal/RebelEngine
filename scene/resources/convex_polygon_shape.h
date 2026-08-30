@@ -10,7 +10,7 @@
 #include "scene/resources/shape.h"
 
 class ConvexPolygonShape : public Shape {
-    GDCLASS(ConvexPolygonShape, Shape);
+    REBEL_OBJECT(ConvexPolygonShape, Shape);
     PoolVector<Vector3> points;
 
 protected:

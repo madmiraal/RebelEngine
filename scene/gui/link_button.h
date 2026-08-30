@@ -11,7 +11,7 @@
 #include "scene/resources/bit_map.h"
 
 class LinkButton : public BaseButton {
-    GDCLASS(LinkButton, BaseButton);
+    REBEL_OBJECT(LinkButton, BaseButton);
 
 public:
     enum UnderlineMode {

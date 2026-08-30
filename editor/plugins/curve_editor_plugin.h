@@ -14,7 +14,7 @@
 
 // Edits a y(x) curve
 class CurveEditor : public Control {
-    GDCLASS(CurveEditor, Control);
+    REBEL_OBJECT(CurveEditor, Control);
 
 public:
     CurveEditor();
@@ -96,7 +96,7 @@ private:
 };
 
 class EditorInspectorPluginCurve : public EditorInspectorPlugin {
-    GDCLASS(EditorInspectorPluginCurve, EditorInspectorPlugin);
+    REBEL_OBJECT(EditorInspectorPluginCurve, EditorInspectorPlugin);
 
 public:
     bool can_handle(Object* p_object) override;
@@ -104,7 +104,7 @@ public:
 };
 
 class CurveEditorPlugin : public EditorPlugin {
-    GDCLASS(CurveEditorPlugin, EditorPlugin);
+    REBEL_OBJECT(CurveEditorPlugin, EditorPlugin);
 
 public:
     CurveEditorPlugin(EditorNode* p_node);
@@ -115,7 +115,7 @@ public:
 };
 
 class CurvePreviewGenerator : public EditorResourcePreviewGenerator {
-    GDCLASS(CurvePreviewGenerator, EditorResourcePreviewGenerator);
+    REBEL_OBJECT(CurvePreviewGenerator, EditorResourcePreviewGenerator);
 
 public:
     bool handles(const String& p_type) const override;

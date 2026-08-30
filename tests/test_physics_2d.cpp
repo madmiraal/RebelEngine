@@ -134,7 +134,7 @@ static const unsigned char convex_png[] = {
 };
 
 class TestPhysics2DMainLoop : public MainLoop {
-    GDCLASS(TestPhysics2DMainLoop, MainLoop);
+    REBEL_OBJECT(TestPhysics2DMainLoop, MainLoop);
 
     RID circle_img;
     RID circle_shape;

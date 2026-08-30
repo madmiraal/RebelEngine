@@ -23,7 +23,7 @@
 class EditorNode;
 
 class InspectorDock : public VBoxContainer {
-    GDCLASS(InspectorDock, VBoxContainer);
+    REBEL_OBJECT(InspectorDock, VBoxContainer);
 
     enum MenuOptions {
         RESOURCE_LOAD,

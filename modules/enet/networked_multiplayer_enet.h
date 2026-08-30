@@ -14,7 +14,7 @@
 #include <enet/enet.h>
 
 class NetworkedMultiplayerENet : public NetworkedMultiplayerPeer {
-    GDCLASS(NetworkedMultiplayerENet, NetworkedMultiplayerPeer);
+    REBEL_OBJECT(NetworkedMultiplayerENet, NetworkedMultiplayerPeer);
 
 public:
     enum CompressionMode {

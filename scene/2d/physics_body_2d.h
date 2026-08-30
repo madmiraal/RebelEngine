@@ -15,7 +15,7 @@
 class KinematicCollision2D;
 
 class PhysicsBody2D : public CollisionObject2D {
-    GDCLASS(PhysicsBody2D, CollisionObject2D);
+    REBEL_OBJECT(PhysicsBody2D, CollisionObject2D);
 
     void _set_layers(uint32_t p_mask);
     uint32_t _get_layers() const;
@@ -35,7 +35,7 @@ public:
 };
 
 class StaticBody2D : public PhysicsBody2D {
-    GDCLASS(StaticBody2D, PhysicsBody2D);
+    REBEL_OBJECT(StaticBody2D, PhysicsBody2D);
 
     Vector2 constant_linear_velocity;
     real_t constant_angular_velocity;
@@ -72,7 +72,7 @@ private:
 };
 
 class RigidBody2D : public PhysicsBody2D {
-    GDCLASS(RigidBody2D, PhysicsBody2D);
+    REBEL_OBJECT(RigidBody2D, PhysicsBody2D);
 
 public:
     enum Mode {
@@ -262,7 +262,7 @@ VARIANT_ENUM_CAST(RigidBody2D::Mode);
 VARIANT_ENUM_CAST(RigidBody2D::CCDMode);
 
 class KinematicBody2D : public PhysicsBody2D {
-    GDCLASS(KinematicBody2D, PhysicsBody2D);
+    REBEL_OBJECT(KinematicBody2D, PhysicsBody2D);
 
 public:
     struct Collision {
@@ -388,7 +388,7 @@ public:
 };
 
 class KinematicCollision2D : public Reference {
-    GDCLASS(KinematicCollision2D, Reference);
+    REBEL_OBJECT(KinematicCollision2D, Reference);
 
     KinematicBody2D* owner;
     friend class KinematicBody2D;

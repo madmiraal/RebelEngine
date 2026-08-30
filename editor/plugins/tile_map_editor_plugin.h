@@ -17,7 +17,7 @@
 #include "scene/gui/tool_button.h"
 
 class TileMapEditor : public VBoxContainer {
-    GDCLASS(TileMapEditor, VBoxContainer);
+    REBEL_OBJECT(TileMapEditor, VBoxContainer);
 
     enum Tool {
         TOOL_NONE,
@@ -254,7 +254,7 @@ public:
 };
 
 class TileMapEditorPlugin : public EditorPlugin {
-    GDCLASS(TileMapEditorPlugin, EditorPlugin);
+    REBEL_OBJECT(TileMapEditorPlugin, EditorPlugin);
 
     TileMapEditor* tile_map_editor;
 

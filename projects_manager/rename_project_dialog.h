@@ -14,7 +14,7 @@
 #include "scene/gui/texture_rect.h"
 
 class RenameProjectDialog : public ConfirmationDialog {
-    GDCLASS(RenameProjectDialog, ConfirmationDialog);
+    REBEL_OBJECT(RenameProjectDialog, ConfirmationDialog);
 
 public:
     RenameProjectDialog();

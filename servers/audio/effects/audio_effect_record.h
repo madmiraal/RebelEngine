@@ -19,7 +19,7 @@
 class AudioEffectRecord;
 
 class AudioEffectRecordInstance : public AudioEffectInstance {
-    GDCLASS(AudioEffectRecordInstance, AudioEffectInstance);
+    REBEL_OBJECT(AudioEffectRecordInstance, AudioEffectInstance);
     friend class AudioEffectRecord;
     Ref<AudioEffectRecord> base;
 
@@ -56,7 +56,7 @@ public:
 };
 
 class AudioEffectRecord : public AudioEffect {
-    GDCLASS(AudioEffectRecord, AudioEffect);
+    REBEL_OBJECT(AudioEffectRecord, AudioEffect);
 
     friend class AudioEffectRecordInstance;
 

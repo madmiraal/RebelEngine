@@ -27,7 +27,7 @@
 class AnimationTrackEdit;
 
 class AnimationTimelineEdit : public Range {
-    GDCLASS(AnimationTimelineEdit, Range);
+    REBEL_OBJECT(AnimationTimelineEdit, Range);
 
     Ref<Animation> animation;
     AnimationTrackEdit* track_edit;
@@ -106,7 +106,7 @@ public:
 class AnimationTrackEditor;
 
 class AnimationTrackEdit : public Control {
-    GDCLASS(AnimationTrackEdit, Control);
+    REBEL_OBJECT(AnimationTrackEdit, Control);
 
     enum {
         MENU_CALL_MODE_CONTINUOUS,
@@ -265,7 +265,7 @@ public:
 };
 
 class AnimationTrackEditPlugin : public Reference {
-    GDCLASS(AnimationTrackEditPlugin, Reference);
+    REBEL_OBJECT(AnimationTrackEditPlugin, Reference);
 
 public:
     virtual AnimationTrackEdit* create_value_track_edit(
@@ -285,7 +285,7 @@ class AnimationMultiTrackKeyEdit;
 class AnimationBezierTrackEdit;
 
 class AnimationTrackEditGroup : public Control {
-    GDCLASS(AnimationTrackEditGroup, Control);
+    REBEL_OBJECT(AnimationTrackEditGroup, Control);
     Ref<Texture> icon;
     String node_name;
     NodePath node;
@@ -312,7 +312,7 @@ public:
 };
 
 class AnimationTrackEditor : public VBoxContainer {
-    GDCLASS(AnimationTrackEditor, VBoxContainer);
+    REBEL_OBJECT(AnimationTrackEditor, VBoxContainer);
 
     Ref<Animation> animation;
     Node* root;

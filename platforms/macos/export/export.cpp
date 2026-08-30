@@ -22,7 +22,7 @@
 #include <sys/stat.h>
 
 class MacOSEditorExportPlatform : public EditorExportPlatform {
-    GDCLASS(MacOSEditorExportPlatform, EditorExportPlatform);
+    REBEL_OBJECT(MacOSEditorExportPlatform, EditorExportPlatform);
 
     int version_code;
 

@@ -10,7 +10,7 @@
 #include "scene/main/node.h"
 
 class DictionaryPropertyEdit : public Reference {
-    GDCLASS(DictionaryPropertyEdit, Reference);
+    REBEL_OBJECT(DictionaryPropertyEdit, Reference);
 
     ObjectID obj;
     StringName property;

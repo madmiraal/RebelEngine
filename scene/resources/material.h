@@ -15,7 +15,7 @@
 #include "servers/visual_server.h"
 
 class Material : public Resource {
-    GDCLASS(Material, Resource);
+    REBEL_OBJECT(Material, Resource);
     RES_BASE_EXTENSION("material")
     OBJ_SAVE_TYPE(Material);
 
@@ -56,7 +56,7 @@ public:
 };
 
 class ShaderMaterial : public Material {
-    GDCLASS(ShaderMaterial, Material);
+    REBEL_OBJECT(ShaderMaterial, Material);
     Ref<Shader> shader;
 
 protected:
@@ -92,7 +92,7 @@ public:
 };
 
 class SpatialMaterial : public Material {
-    GDCLASS(SpatialMaterial, Material);
+    REBEL_OBJECT(SpatialMaterial, Material);
 
 public:
     enum TextureParam {

@@ -11,7 +11,7 @@
 class ArrayMesh;
 
 class Shape : public Resource {
-    GDCLASS(Shape, Resource);
+    REBEL_OBJECT(Shape, Resource);
     OBJ_SAVE_TYPE(Shape);
     RES_BASE_EXTENSION("shape");
     RID shape;

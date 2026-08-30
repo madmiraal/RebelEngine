@@ -11,7 +11,7 @@
 #include "scene/gui/popup.h"
 
 class TabContainer : public Container {
-    GDCLASS(TabContainer, Container);
+    REBEL_OBJECT(TabContainer, Container);
 
 public:
     enum TabAlign {

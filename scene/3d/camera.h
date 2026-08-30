@@ -13,7 +13,7 @@
 #include "scene/resources/environment.h"
 
 class Camera : public Spatial {
-    GDCLASS(Camera, Spatial);
+    REBEL_OBJECT(Camera, Spatial);
 
 public:
     enum Projection {
@@ -157,7 +157,7 @@ VARIANT_ENUM_CAST(Camera::KeepAspect);
 VARIANT_ENUM_CAST(Camera::DopplerTracking);
 
 class ClippedCamera : public Camera {
-    GDCLASS(ClippedCamera, Camera);
+    REBEL_OBJECT(ClippedCamera, Camera);
 
 public:
     enum ProcessMode {

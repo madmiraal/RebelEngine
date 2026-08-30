@@ -14,7 +14,7 @@
 #include "shape.h"
 
 class MeshLibrary : public Resource {
-    GDCLASS(MeshLibrary, Resource);
+    REBEL_OBJECT(MeshLibrary, Resource);
     RES_BASE_EXTENSION("meshlib");
 
 public:

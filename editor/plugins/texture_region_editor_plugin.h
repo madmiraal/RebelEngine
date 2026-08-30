@@ -17,7 +17,7 @@
 #include "scene/resources/texture.h"
 
 class TextureRegionEditor : public VBoxContainer {
-    GDCLASS(TextureRegionEditor, VBoxContainer);
+    REBEL_OBJECT(TextureRegionEditor, VBoxContainer);
 
     enum SnapMode {
         SNAP_NONE,
@@ -115,7 +115,7 @@ public:
 };
 
 class TextureRegionEditorPlugin : public EditorPlugin {
-    GDCLASS(TextureRegionEditorPlugin, EditorPlugin);
+    REBEL_OBJECT(TextureRegionEditorPlugin, EditorPlugin);
 
     bool manually_hidden;
     Button* texture_region_button;

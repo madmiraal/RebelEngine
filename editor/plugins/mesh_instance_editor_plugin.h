@@ -13,7 +13,7 @@
 #include "scene/gui/spin_box.h"
 
 class MeshInstanceEditor : public Control {
-    GDCLASS(MeshInstanceEditor, Control);
+    REBEL_OBJECT(MeshInstanceEditor, Control);
 
     enum Menu {
         MENU_OPTION_CREATE_STATIC_TRIMESH_BODY,
@@ -59,7 +59,7 @@ public:
 };
 
 class MeshInstanceEditorPlugin : public EditorPlugin {
-    GDCLASS(MeshInstanceEditorPlugin, EditorPlugin);
+    REBEL_OBJECT(MeshInstanceEditorPlugin, EditorPlugin);
 
     MeshInstanceEditor* mesh_editor;
     EditorNode* editor;

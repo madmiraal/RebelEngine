@@ -16,7 +16,7 @@ class MeshInstance;
 class Room;
 
 class Portal : public Spatial {
-    GDCLASS(Portal, Spatial);
+    REBEL_OBJECT(Portal, Spatial);
 
     RID _portal_rid;
 

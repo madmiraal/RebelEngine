@@ -12,7 +12,7 @@
 #include "modules/gdnative/include/net/rebel_net.h"
 
 class PacketPeerGDNative : public PacketPeer {
-    GDCLASS(PacketPeerGDNative, PacketPeer);
+    REBEL_OBJECT(PacketPeerGDNative, PacketPeer);
 
 protected:
     static void _bind_methods();

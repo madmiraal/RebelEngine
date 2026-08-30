@@ -10,7 +10,7 @@
 #include "scene/gui/container.h"
 
 class ViewportContainer : public Container {
-    GDCLASS(ViewportContainer, Container);
+    REBEL_OBJECT(ViewportContainer, Container);
 
     bool stretch;
     int shrink;

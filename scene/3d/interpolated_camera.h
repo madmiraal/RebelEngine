@@ -10,7 +10,7 @@
 #include "scene/3d/camera.h"
 
 class InterpolatedCamera : public Camera {
-    GDCLASS(InterpolatedCamera, Camera);
+    REBEL_OBJECT(InterpolatedCamera, Camera);
 
     bool enabled;
     real_t speed;

@@ -13,7 +13,7 @@
 class PhysicsDirectSpaceState;
 
 class PhysicsDirectBodyState : public Object {
-    GDCLASS(PhysicsDirectBodyState, Object);
+    REBEL_OBJECT(PhysicsDirectBodyState, Object);
 
 protected:
     static void _bind_methods();
@@ -77,7 +77,7 @@ public:
 };
 
 class PhysicsShapeQueryParameters : public Reference {
-    GDCLASS(PhysicsShapeQueryParameters, Reference);
+    REBEL_OBJECT(PhysicsShapeQueryParameters, Reference);
     friend class PhysicsDirectSpaceState;
 
     RID shape;
@@ -119,7 +119,7 @@ public:
 };
 
 class PhysicsDirectSpaceState : public Object {
-    GDCLASS(PhysicsDirectSpaceState, Object);
+    REBEL_OBJECT(PhysicsDirectSpaceState, Object);
 
 private:
     Dictionary _intersect_ray(
@@ -265,7 +265,7 @@ public:
 class PhysicsTestMotionResult;
 
 class PhysicsServer : public Object {
-    GDCLASS(PhysicsServer, Object);
+    REBEL_OBJECT(PhysicsServer, Object);
 
     static PhysicsServer* singleton;
 
@@ -1087,7 +1087,7 @@ public:
 };
 
 class PhysicsTestMotionResult : public Reference {
-    GDCLASS(PhysicsTestMotionResult, Reference);
+    REBEL_OBJECT(PhysicsTestMotionResult, Reference);
 
     PhysicsServer::MotionResult result;
     bool colliding = false;

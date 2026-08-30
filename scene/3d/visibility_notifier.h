@@ -13,7 +13,7 @@ class World;
 class Camera;
 
 class VisibilityNotifier : public CullInstance {
-    GDCLASS(VisibilityNotifier, CullInstance);
+    REBEL_OBJECT(VisibilityNotifier, CullInstance);
 
     Ref<World> world;
     Set<Camera*> cameras;
@@ -48,7 +48,7 @@ public:
 };
 
 class VisibilityEnabler : public VisibilityNotifier {
-    GDCLASS(VisibilityEnabler, VisibilityNotifier);
+    REBEL_OBJECT(VisibilityEnabler, VisibilityNotifier);
 
 public:
     enum Enabler {

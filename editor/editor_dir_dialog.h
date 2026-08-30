@@ -13,7 +13,7 @@
 #include "scene/gui/tree.h"
 
 class EditorDirDialog : public ConfirmationDialog {
-    GDCLASS(EditorDirDialog, ConfirmationDialog);
+    REBEL_OBJECT(EditorDirDialog, ConfirmationDialog);
 
     ConfirmationDialog* makedialog;
     LineEdit* makedirname;

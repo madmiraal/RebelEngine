@@ -10,7 +10,7 @@
 #include "scene/3d/spatial.h"
 
 class RemoteTransform : public Spatial {
-    GDCLASS(RemoteTransform, Spatial);
+    REBEL_OBJECT(RemoteTransform, Spatial);
 
     NodePath remote_node;
 

@@ -15,7 +15,7 @@
 class Material;
 
 class EditorSceneImporter : public Reference {
-    GDCLASS(EditorSceneImporter, Reference);
+    REBEL_OBJECT(EditorSceneImporter, Reference);
 
 protected:
     static void _bind_methods();
@@ -68,7 +68,7 @@ public:
 };
 
 class EditorScenePostImport : public Reference {
-    GDCLASS(EditorScenePostImport, Reference);
+    REBEL_OBJECT(EditorScenePostImport, Reference);
 
     String source_folder;
     String source_file;
@@ -88,7 +88,7 @@ public:
 };
 
 class ResourceImporterScene : public ResourceImporter {
-    GDCLASS(ResourceImporterScene, ResourceImporter);
+    REBEL_OBJECT(ResourceImporterScene, ResourceImporter);
 
     Set<Ref<EditorSceneImporter>> importers;
 
@@ -220,7 +220,7 @@ public:
 };
 
 class EditorSceneImporterESCN : public EditorSceneImporter {
-    GDCLASS(EditorSceneImporterESCN, EditorSceneImporter);
+    REBEL_OBJECT(EditorSceneImporterESCN, EditorSceneImporter);
 
 public:
     uint32_t get_import_flags() const override;

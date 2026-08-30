@@ -13,7 +13,7 @@
 #include "scene/animation/animation_tree.h"
 
 class EditorPropertyRootMotion : public EditorProperty {
-    GDCLASS(EditorPropertyRootMotion, EditorProperty);
+    REBEL_OBJECT(EditorPropertyRootMotion, EditorProperty);
     Button* assign;
     Button* clear;
     NodePath base_hint;
@@ -36,7 +36,7 @@ public:
 };
 
 class EditorInspectorRootMotionPlugin : public EditorInspectorPlugin {
-    GDCLASS(EditorInspectorRootMotionPlugin, EditorInspectorPlugin);
+    REBEL_OBJECT(EditorInspectorRootMotionPlugin, EditorInspectorPlugin);
 
 public:
     bool can_handle(Object* p_object) override;
