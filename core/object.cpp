@@ -80,14 +80,13 @@ PropertyInfo PropertyInfo::from_dict(const Dictionary& p_dict) {
     return pi;
 }
 
-Array convert_property_list(const List<PropertyInfo>* p_list) {
-    Array va;
-    for (const List<PropertyInfo>::Element* E = p_list->front(); E;
-         E                                    = E->next()) {
-        va.push_back(Dictionary(E->get()));
+static Array convert_property_list(const List<PropertyInfo>* list) {
+    Array array;
+    for (const List<PropertyInfo>::Element* item = list->front(); item;
+         item                                    = item->next()) {
+        array.push_back(Dictionary(item->get()));
     }
-
-    return va;
+    return array;
 }
 
 MethodInfo::operator Dictionary() const {
