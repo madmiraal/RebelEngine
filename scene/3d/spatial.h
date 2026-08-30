@@ -23,7 +23,6 @@ public:
 
 class Spatial : public Node {
     GDCLASS(Spatial, Node);
-    OBJ_CATEGORY("3D");
 
 public:
     enum SpatialFlags {

@@ -14,7 +14,6 @@
 
 class VisualInstance : public CullInstance {
     GDCLASS(VisualInstance, CullInstance);
-    OBJ_CATEGORY("3D Visual Nodes");
 
     RID base;
     RID instance;

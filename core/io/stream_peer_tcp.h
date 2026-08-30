@@ -14,7 +14,6 @@
 
 class StreamPeerTCP : public StreamPeer {
     GDCLASS(StreamPeerTCP, StreamPeer);
-    OBJ_CATEGORY("Networking");
 
 public:
     enum Status {

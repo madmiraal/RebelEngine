@@ -38,7 +38,6 @@ public:
 
 class AnimationPlayer : public Node {
     GDCLASS(AnimationPlayer, Node);
-    OBJ_CATEGORY("Animation Nodes");
 
 public:
     enum AnimationProcessMode {

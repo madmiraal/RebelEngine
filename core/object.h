@@ -50,14 +50,6 @@ public:                                                                        \
         m_inherits::get_inheritance_list_static(p_inheritance_list);           \
         p_inheritance_list->push_back(String(#m_class));                       \
     }                                                                          \
-    static String get_category_static() {                                      \
-        String category = m_inherits::get_category_static();                   \
-        if (_get_category != m_inherits::_get_category) {                      \
-            if (category != "") category += "/";                               \
-            category += _get_category();                                       \
-        }                                                                      \
-        return category;                                                       \
-    }                                                                          \
     static String inherits_static() {                                          \
         return String(#m_inherits);                                            \
     }                                                                          \
@@ -162,15 +154,6 @@ protected:                                                                     \
         }                                                                      \
         if (p_reversed)                                                        \
             m_inherits::_notificationv(p_notification, p_reversed);            \
-    }                                                                          \
-                                                                               \
-private:
-
-#define OBJ_CATEGORY(m_category)                                               \
-                                                                               \
-protected:                                                                     \
-    _FORCE_INLINE_ static String _get_category() {                             \
-        return m_category;                                                     \
     }                                                                          \
                                                                                \
 private:
@@ -324,10 +307,6 @@ protected:
         bool p_reversed
     ) const {};
     virtual void _notificationv(int p_notification, bool p_reversed) {};
-
-    static String _get_category() {
-        return "";
-    }
 
     static void _bind_methods();
 
@@ -497,10 +476,6 @@ public:
     }
 
     static String get_parent_class_static() {
-        return String();
-    }
-
-    static String get_category_static() {
         return String();
     }
 
