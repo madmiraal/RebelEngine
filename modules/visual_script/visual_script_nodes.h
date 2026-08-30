@@ -10,7 +10,7 @@
 #include "visual_script.h"
 
 class VisualScriptFunction : public VisualScriptNode {
-    GDCLASS(VisualScriptFunction, VisualScriptNode);
+    REBEL_OBJECT(VisualScriptFunction, VisualScriptNode);
 
     struct Argument {
         String name;
@@ -83,7 +83,7 @@ public:
 };
 
 class VisualScriptLists : public VisualScriptNode {
-    GDCLASS(VisualScriptLists, VisualScriptNode)
+    REBEL_OBJECT(VisualScriptLists, VisualScriptNode)
 
     struct Port {
         String name;
@@ -162,7 +162,7 @@ public:
 };
 
 class VisualScriptComposeArray : public VisualScriptLists {
-    GDCLASS(VisualScriptComposeArray, VisualScriptLists)
+    REBEL_OBJECT(VisualScriptComposeArray, VisualScriptLists)
 
 public:
     int get_output_sequence_port_count() const override;
@@ -190,7 +190,7 @@ public:
 };
 
 class VisualScriptOperator : public VisualScriptNode {
-    GDCLASS(VisualScriptOperator, VisualScriptNode);
+    REBEL_OBJECT(VisualScriptOperator, VisualScriptNode);
 
     Variant::Type typed;
     Variant::Operator op;
@@ -229,7 +229,7 @@ public:
 };
 
 class VisualScriptSelect : public VisualScriptNode {
-    GDCLASS(VisualScriptSelect, VisualScriptNode);
+    REBEL_OBJECT(VisualScriptSelect, VisualScriptNode);
 
     Variant::Type typed;
 
@@ -265,7 +265,7 @@ public:
 };
 
 class VisualScriptVariableGet : public VisualScriptNode {
-    GDCLASS(VisualScriptVariableGet, VisualScriptNode);
+    REBEL_OBJECT(VisualScriptVariableGet, VisualScriptNode);
 
     StringName variable;
 
@@ -301,7 +301,7 @@ public:
 };
 
 class VisualScriptVariableSet : public VisualScriptNode {
-    GDCLASS(VisualScriptVariableSet, VisualScriptNode);
+    REBEL_OBJECT(VisualScriptVariableSet, VisualScriptNode);
 
     StringName variable;
 
@@ -337,7 +337,7 @@ public:
 };
 
 class VisualScriptConstant : public VisualScriptNode {
-    GDCLASS(VisualScriptConstant, VisualScriptNode);
+    REBEL_OBJECT(VisualScriptConstant, VisualScriptNode);
 
     Variant::Type type;
     Variant value;
@@ -377,7 +377,7 @@ public:
 };
 
 class VisualScriptPreload : public VisualScriptNode {
-    GDCLASS(VisualScriptPreload, VisualScriptNode);
+    REBEL_OBJECT(VisualScriptPreload, VisualScriptNode);
 
     Ref<Resource> preload;
 
@@ -412,7 +412,7 @@ public:
 };
 
 class VisualScriptIndexGet : public VisualScriptNode {
-    GDCLASS(VisualScriptIndexGet, VisualScriptNode);
+    REBEL_OBJECT(VisualScriptIndexGet, VisualScriptNode);
 
 public:
     int get_output_sequence_port_count() const override;
@@ -439,7 +439,7 @@ public:
 };
 
 class VisualScriptIndexSet : public VisualScriptNode {
-    GDCLASS(VisualScriptIndexSet, VisualScriptNode);
+    REBEL_OBJECT(VisualScriptIndexSet, VisualScriptNode);
 
 public:
     int get_output_sequence_port_count() const override;
@@ -466,7 +466,7 @@ public:
 };
 
 class VisualScriptGlobalConstant : public VisualScriptNode {
-    GDCLASS(VisualScriptGlobalConstant, VisualScriptNode);
+    REBEL_OBJECT(VisualScriptGlobalConstant, VisualScriptNode);
 
     int index;
 
@@ -500,7 +500,7 @@ public:
 };
 
 class VisualScriptClassConstant : public VisualScriptNode {
-    GDCLASS(VisualScriptClassConstant, VisualScriptNode);
+    REBEL_OBJECT(VisualScriptClassConstant, VisualScriptNode);
 
     StringName base_type;
     StringName name;
@@ -540,7 +540,7 @@ public:
 };
 
 class VisualScriptBasicTypeConstant : public VisualScriptNode {
-    GDCLASS(VisualScriptBasicTypeConstant, VisualScriptNode);
+    REBEL_OBJECT(VisualScriptBasicTypeConstant, VisualScriptNode);
 
     Variant::Type type;
     StringName name;
@@ -581,7 +581,7 @@ public:
 };
 
 class VisualScriptMathConstant : public VisualScriptNode {
-    GDCLASS(VisualScriptMathConstant, VisualScriptNode);
+    REBEL_OBJECT(VisualScriptMathConstant, VisualScriptNode);
 
 public:
     enum MathConstant {
@@ -634,7 +634,7 @@ public:
 VARIANT_ENUM_CAST(VisualScriptMathConstant::MathConstant)
 
 class VisualScriptEngineSingleton : public VisualScriptNode {
-    GDCLASS(VisualScriptEngineSingleton, VisualScriptNode);
+    REBEL_OBJECT(VisualScriptEngineSingleton, VisualScriptNode);
 
     String singleton;
 
@@ -674,7 +674,7 @@ public:
 };
 
 class VisualScriptSceneNode : public VisualScriptNode {
-    GDCLASS(VisualScriptSceneNode, VisualScriptNode);
+    REBEL_OBJECT(VisualScriptSceneNode, VisualScriptNode);
 
     NodePath path;
 
@@ -713,7 +713,7 @@ public:
 };
 
 class VisualScriptSceneTree : public VisualScriptNode {
-    GDCLASS(VisualScriptSceneTree, VisualScriptNode);
+    REBEL_OBJECT(VisualScriptSceneTree, VisualScriptNode);
 
 protected:
     void _validate_property(PropertyInfo& property) const override;
@@ -747,7 +747,7 @@ public:
 };
 
 class VisualScriptResourcePath : public VisualScriptNode {
-    GDCLASS(VisualScriptResourcePath, VisualScriptNode);
+    REBEL_OBJECT(VisualScriptResourcePath, VisualScriptNode);
 
     String path;
 
@@ -782,7 +782,7 @@ public:
 };
 
 class VisualScriptSelf : public VisualScriptNode {
-    GDCLASS(VisualScriptSelf, VisualScriptNode);
+    REBEL_OBJECT(VisualScriptSelf, VisualScriptNode);
 
 protected:
     static void _bind_methods();
@@ -815,7 +815,7 @@ public:
 };
 
 class VisualScriptCustomNode : public VisualScriptNode {
-    GDCLASS(VisualScriptCustomNode, VisualScriptNode);
+    REBEL_OBJECT(VisualScriptCustomNode, VisualScriptNode);
 
 protected:
     static void _bind_methods();
@@ -868,7 +868,7 @@ public:
 VARIANT_ENUM_CAST(VisualScriptCustomNode::StartMode);
 
 class VisualScriptSubCall : public VisualScriptNode {
-    GDCLASS(VisualScriptSubCall, VisualScriptNode);
+    REBEL_OBJECT(VisualScriptSubCall, VisualScriptNode);
 
 protected:
     static void _bind_methods();
@@ -896,7 +896,7 @@ public:
 };
 
 class VisualScriptComment : public VisualScriptNode {
-    GDCLASS(VisualScriptComment, VisualScriptNode);
+    REBEL_OBJECT(VisualScriptComment, VisualScriptNode);
 
     String title;
     String description;
@@ -937,7 +937,7 @@ public:
 };
 
 class VisualScriptConstructor : public VisualScriptNode {
-    GDCLASS(VisualScriptConstructor, VisualScriptNode);
+    REBEL_OBJECT(VisualScriptConstructor, VisualScriptNode);
 
     Variant::Type type;
     MethodInfo constructor;
@@ -973,7 +973,7 @@ public:
 };
 
 class VisualScriptLocalVar : public VisualScriptNode {
-    GDCLASS(VisualScriptLocalVar, VisualScriptNode);
+    REBEL_OBJECT(VisualScriptLocalVar, VisualScriptNode);
 
     StringName name;
     Variant::Type type;
@@ -1009,7 +1009,7 @@ public:
 };
 
 class VisualScriptLocalVarSet : public VisualScriptNode {
-    GDCLASS(VisualScriptLocalVarSet, VisualScriptNode);
+    REBEL_OBJECT(VisualScriptLocalVarSet, VisualScriptNode);
 
     StringName name;
     Variant::Type type;
@@ -1046,7 +1046,7 @@ public:
 };
 
 class VisualScriptInputAction : public VisualScriptNode {
-    GDCLASS(VisualScriptInputAction, VisualScriptNode);
+    REBEL_OBJECT(VisualScriptInputAction, VisualScriptNode);
 
 public:
     enum Mode {
@@ -1094,7 +1094,7 @@ public:
 VARIANT_ENUM_CAST(VisualScriptInputAction::Mode)
 
 class VisualScriptDeconstruct : public VisualScriptNode {
-    GDCLASS(VisualScriptDeconstruct, VisualScriptNode);
+    REBEL_OBJECT(VisualScriptDeconstruct, VisualScriptNode);
 
     struct Element {
         StringName name;

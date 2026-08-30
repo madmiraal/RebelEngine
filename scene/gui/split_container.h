@@ -10,7 +10,7 @@
 #include "scene/gui/container.h"
 
 class SplitContainer : public Container {
-    GDCLASS(SplitContainer, Container);
+    REBEL_OBJECT(SplitContainer, Container);
 
 public:
     enum DraggerVisibility {
@@ -62,14 +62,14 @@ public:
 VARIANT_ENUM_CAST(SplitContainer::DraggerVisibility);
 
 class HSplitContainer : public SplitContainer {
-    GDCLASS(HSplitContainer, SplitContainer);
+    REBEL_OBJECT(HSplitContainer, SplitContainer);
 
 public:
     HSplitContainer() : SplitContainer(false) {}
 };
 
 class VSplitContainer : public SplitContainer {
-    GDCLASS(VSplitContainer, SplitContainer);
+    REBEL_OBJECT(VSplitContainer, SplitContainer);
 
 public:
     VSplitContainer() : SplitContainer(true) {}

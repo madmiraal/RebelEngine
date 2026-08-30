@@ -17,7 +17,7 @@
 #include "scene/resources/visual_shader.h"
 
 class VisualShaderNodePlugin : public Reference {
-    GDCLASS(VisualShaderNodePlugin, Reference);
+    REBEL_OBJECT(VisualShaderNodePlugin, Reference);
 
 protected:
     static void _bind_methods();
@@ -30,7 +30,7 @@ public:
 };
 
 class VisualShaderEditor : public VBoxContainer {
-    GDCLASS(VisualShaderEditor, VBoxContainer);
+    REBEL_OBJECT(VisualShaderEditor, VBoxContainer);
 
     CustomPropertyEditor* property_editor;
     int editing_node;
@@ -356,7 +356,7 @@ public:
 };
 
 class VisualShaderEditorPlugin : public EditorPlugin {
-    GDCLASS(VisualShaderEditorPlugin, EditorPlugin);
+    REBEL_OBJECT(VisualShaderEditorPlugin, EditorPlugin);
 
     VisualShaderEditor* visual_shader_editor;
     EditorNode* editor;
@@ -380,7 +380,7 @@ public:
 };
 
 class VisualShaderNodePluginDefault : public VisualShaderNodePlugin {
-    GDCLASS(VisualShaderNodePluginDefault, VisualShaderNodePlugin);
+    REBEL_OBJECT(VisualShaderNodePluginDefault, VisualShaderNodePlugin);
 
 public:
     Control* create_editor(
@@ -390,7 +390,7 @@ public:
 };
 
 class EditorPropertyShaderMode : public EditorProperty {
-    GDCLASS(EditorPropertyShaderMode, EditorProperty);
+    REBEL_OBJECT(EditorPropertyShaderMode, EditorProperty);
     OptionButton* options;
 
     void _option_selected(int p_which);
@@ -406,7 +406,7 @@ public:
 };
 
 class EditorInspectorShaderModePlugin : public EditorInspectorPlugin {
-    GDCLASS(EditorInspectorShaderModePlugin, EditorInspectorPlugin);
+    REBEL_OBJECT(EditorInspectorShaderModePlugin, EditorInspectorPlugin);
 
 public:
     bool can_handle(Object* p_object) override;
@@ -423,7 +423,7 @@ public:
 };
 
 class VisualShaderNodePortPreview : public Control {
-    GDCLASS(VisualShaderNodePortPreview, Control);
+    REBEL_OBJECT(VisualShaderNodePortPreview, Control);
     Ref<VisualShader> shader;
     VisualShader::Type type;
     int node;
@@ -446,7 +446,7 @@ public:
 };
 
 class VisualShaderConversionPlugin : public EditorResourceConversionPlugin {
-    GDCLASS(VisualShaderConversionPlugin, EditorResourceConversionPlugin);
+    REBEL_OBJECT(VisualShaderConversionPlugin, EditorResourceConversionPlugin);
 
 public:
     String converts_to() const override;

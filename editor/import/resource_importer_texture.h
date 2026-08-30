@@ -13,7 +13,7 @@
 class StreamTexture;
 
 class ResourceImporterTexture : public ResourceImporter {
-    GDCLASS(ResourceImporterTexture, ResourceImporter);
+    REBEL_OBJECT(ResourceImporterTexture, ResourceImporter);
 
 protected:
     enum {

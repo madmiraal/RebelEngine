@@ -11,7 +11,7 @@
 #include "scene/gui/popup_menu.h"
 
 class LineEdit : public Control {
-    GDCLASS(LineEdit, Control);
+    REBEL_OBJECT(LineEdit, Control);
 
 public:
     enum Align {

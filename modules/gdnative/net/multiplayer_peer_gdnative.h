@@ -12,7 +12,7 @@
 #include "modules/gdnative/include/net/rebel_net.h"
 
 class MultiplayerPeerGDNative : public NetworkedMultiplayerPeer {
-    GDCLASS(MultiplayerPeerGDNative, NetworkedMultiplayerPeer);
+    REBEL_OBJECT(MultiplayerPeerGDNative, NetworkedMultiplayerPeer);
 
 protected:
     static void _bind_methods();

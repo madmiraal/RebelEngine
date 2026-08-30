@@ -13,7 +13,7 @@
 #include "servers/audio/audio_stream.h"
 
 class AudioStreamPreview : public Reference {
-    GDCLASS(AudioStreamPreview, Reference);
+    REBEL_OBJECT(AudioStreamPreview, Reference);
     friend class AudioStream;
     Vector<uint8_t> preview;
     float length;
@@ -29,7 +29,7 @@ public:
 };
 
 class AudioStreamPreviewGenerator : public Node {
-    GDCLASS(AudioStreamPreviewGenerator, Node);
+    REBEL_OBJECT(AudioStreamPreviewGenerator, Node);
 
     static AudioStreamPreviewGenerator* singleton;
 

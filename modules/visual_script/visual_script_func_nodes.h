@@ -10,7 +10,7 @@
 #include "visual_script.h"
 
 class VisualScriptFunctionCall : public VisualScriptNode {
-    GDCLASS(VisualScriptFunctionCall, VisualScriptNode);
+    REBEL_OBJECT(VisualScriptFunctionCall, VisualScriptNode);
 
 public:
     enum CallMode {
@@ -117,7 +117,7 @@ VARIANT_ENUM_CAST(VisualScriptFunctionCall::CallMode);
 VARIANT_ENUM_CAST(VisualScriptFunctionCall::RPCCallMode);
 
 class VisualScriptPropertySet : public VisualScriptNode {
-    GDCLASS(VisualScriptPropertySet, VisualScriptNode);
+    REBEL_OBJECT(VisualScriptPropertySet, VisualScriptNode);
 
 public:
     enum CallMode {
@@ -226,7 +226,7 @@ VARIANT_ENUM_CAST(VisualScriptPropertySet::CallMode);
 VARIANT_ENUM_CAST(VisualScriptPropertySet::AssignOp);
 
 class VisualScriptPropertyGet : public VisualScriptNode {
-    GDCLASS(VisualScriptPropertyGet, VisualScriptNode);
+    REBEL_OBJECT(VisualScriptPropertyGet, VisualScriptNode);
 
 public:
     enum CallMode {
@@ -312,7 +312,7 @@ public:
 VARIANT_ENUM_CAST(VisualScriptPropertyGet::CallMode);
 
 class VisualScriptEmitSignal : public VisualScriptNode {
-    GDCLASS(VisualScriptEmitSignal, VisualScriptNode);
+    REBEL_OBJECT(VisualScriptEmitSignal, VisualScriptNode);
 
 private:
     StringName name;

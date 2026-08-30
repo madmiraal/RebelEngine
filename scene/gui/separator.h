@@ -10,7 +10,7 @@
 #include "scene/gui/control.h"
 
 class Separator : public Control {
-    GDCLASS(Separator, Control);
+    REBEL_OBJECT(Separator, Control);
 
 protected:
     Orientation orientation;
@@ -24,14 +24,14 @@ public:
 };
 
 class VSeparator : public Separator {
-    GDCLASS(VSeparator, Separator);
+    REBEL_OBJECT(VSeparator, Separator);
 
 public:
     VSeparator();
 };
 
 class HSeparator : public Separator {
-    GDCLASS(HSeparator, Separator);
+    REBEL_OBJECT(HSeparator, Separator);
 
 public:
     HSeparator();

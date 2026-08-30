@@ -11,7 +11,7 @@
 #include "scene/gui/scroll_bar.h"
 
 class RichTextLabel : public Control {
-    GDCLASS(RichTextLabel, Control);
+    REBEL_OBJECT(RichTextLabel, Control);
 
 public:
     enum Align {

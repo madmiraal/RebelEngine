@@ -10,7 +10,7 @@
 #include "core/io/packet_peer.h"
 
 class NetworkedMultiplayerPeer : public PacketPeer {
-    GDCLASS(NetworkedMultiplayerPeer, PacketPeer);
+    REBEL_OBJECT(NetworkedMultiplayerPeer, PacketPeer);
 
 protected:
     static void _bind_methods();

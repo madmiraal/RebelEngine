@@ -12,7 +12,7 @@
 #include "editor/project_settings_editor.h"
 
 class GDNativeLibrarySingletonEditor : public VBoxContainer {
-    GDCLASS(GDNativeLibrarySingletonEditor, VBoxContainer);
+    REBEL_OBJECT(GDNativeLibrarySingletonEditor, VBoxContainer);
 
 private:
     Tree* libraries;

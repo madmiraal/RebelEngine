@@ -17,7 +17,7 @@ class TextureRect;
 class String;
 
 class ImportProjectDialog : public ConfirmationDialog {
-    GDCLASS(ImportProjectDialog, ConfirmationDialog);
+    REBEL_OBJECT(ImportProjectDialog, ConfirmationDialog);
 
 public:
     ImportProjectDialog();

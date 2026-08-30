@@ -14,7 +14,7 @@
 #include "core/os/thread.h"
 
 class EditorFileServer : public Object {
-    GDCLASS(EditorFileServer, Object);
+    REBEL_OBJECT(EditorFileServer, Object);
 
     enum Command {
         CMD_NONE,

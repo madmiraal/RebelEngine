@@ -11,7 +11,7 @@
 #include "core/io/packet_peer_udp.h"
 
 class UDPServer : public Reference {
-    GDCLASS(UDPServer, Reference);
+    REBEL_OBJECT(UDPServer, Reference);
 
 protected:
     enum {

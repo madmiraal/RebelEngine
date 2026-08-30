@@ -11,7 +11,7 @@
 #include "groups_editor.h"
 
 class NodeDock : public VBoxContainer {
-    GDCLASS(NodeDock, VBoxContainer);
+    REBEL_OBJECT(NodeDock, VBoxContainer);
 
     ToolButton* connections_button;
     ToolButton* groups_button;

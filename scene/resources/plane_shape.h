@@ -10,7 +10,7 @@
 #include "scene/resources/shape.h"
 
 class PlaneShape : public Shape {
-    GDCLASS(PlaneShape, Shape);
+    REBEL_OBJECT(PlaneShape, Shape);
     Plane plane;
 
 protected:

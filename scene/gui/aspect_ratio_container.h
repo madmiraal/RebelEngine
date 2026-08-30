@@ -10,7 +10,7 @@
 #include "scene/gui/container.h"
 
 class AspectRatioContainer : public Container {
-    GDCLASS(AspectRatioContainer, Container);
+    REBEL_OBJECT(AspectRatioContainer, Container);
 
 protected:
     void _notification(int p_what);

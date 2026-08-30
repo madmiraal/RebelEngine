@@ -13,7 +13,7 @@
 #include "scene/gui/spin_box.h"
 
 class ParticlesEditorBase : public Control {
-    GDCLASS(ParticlesEditorBase, Control);
+    REBEL_OBJECT(ParticlesEditorBase, Control);
 
 protected:
     Spatial* base_node;
@@ -41,7 +41,7 @@ public:
 };
 
 class ParticlesEditor : public ParticlesEditorBase {
-    GDCLASS(ParticlesEditor, ParticlesEditorBase);
+    REBEL_OBJECT(ParticlesEditor, ParticlesEditorBase);
 
     ConfirmationDialog* generate_aabb;
     SpinBox* generate_seconds;
@@ -75,7 +75,7 @@ public:
 };
 
 class ParticlesEditorPlugin : public EditorPlugin {
-    GDCLASS(ParticlesEditorPlugin, EditorPlugin);
+    REBEL_OBJECT(ParticlesEditorPlugin, EditorPlugin);
 
     ParticlesEditor* particles_editor;
     EditorNode* editor;

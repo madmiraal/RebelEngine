@@ -21,7 +21,7 @@
 class DependencyRemoveDialog;
 
 class EditorFileDialog : public ConfirmationDialog {
-    GDCLASS(EditorFileDialog, ConfirmationDialog);
+    REBEL_OBJECT(EditorFileDialog, ConfirmationDialog);
 
 public:
     enum DisplayMode {
@@ -235,7 +235,7 @@ public:
 };
 
 class EditorLineEditFileChooser : public HBoxContainer {
-    GDCLASS(EditorLineEditFileChooser, HBoxContainer);
+    REBEL_OBJECT(EditorLineEditFileChooser, HBoxContainer);
     Button* button;
     LineEdit* line_edit;
     EditorFileDialog* dialog;

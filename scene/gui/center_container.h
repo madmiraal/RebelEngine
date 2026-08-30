@@ -10,7 +10,7 @@
 #include "scene/gui/container.h"
 
 class CenterContainer : public Container {
-    GDCLASS(CenterContainer, Container);
+    REBEL_OBJECT(CenterContainer, Container);
 
     bool use_top_left;
 

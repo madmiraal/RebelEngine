@@ -351,7 +351,7 @@ public:
     (void)__gdmono__scope__exit__domain__unload__;
 
 class _RebelSharp : public Object {
-    GDCLASS(_RebelSharp, Object);
+    REBEL_OBJECT(_RebelSharp, Object);
 
     friend class GDMono;
 

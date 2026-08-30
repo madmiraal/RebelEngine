@@ -12,7 +12,7 @@
 #include "scene/resources/texture.h"
 
 class TexturePreview : public MarginContainer {
-    GDCLASS(TexturePreview, MarginContainer);
+    REBEL_OBJECT(TexturePreview, MarginContainer);
 
 private:
     TextureRect* texture_display = nullptr;
@@ -32,7 +32,7 @@ public:
 };
 
 class EditorInspectorPluginTexture : public EditorInspectorPlugin {
-    GDCLASS(EditorInspectorPluginTexture, EditorInspectorPlugin);
+    REBEL_OBJECT(EditorInspectorPluginTexture, EditorInspectorPlugin);
 
 public:
     bool can_handle(Object* p_object) override;
@@ -40,7 +40,7 @@ public:
 };
 
 class TextureEditorPlugin : public EditorPlugin {
-    GDCLASS(TextureEditorPlugin, EditorPlugin);
+    REBEL_OBJECT(TextureEditorPlugin, EditorPlugin);
 
 public:
     String get_name() const override {

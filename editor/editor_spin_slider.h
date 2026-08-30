@@ -12,7 +12,7 @@
 #include "scene/gui/texture_rect.h"
 
 class EditorSpinSlider : public Range {
-    GDCLASS(EditorSpinSlider, Range);
+    REBEL_OBJECT(EditorSpinSlider, Range);
 
     String label;
     int updown_offset;

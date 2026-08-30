@@ -11,7 +11,7 @@
 #include "scene/gui/popup_menu.h"
 
 class OptionButton : public Button {
-    GDCLASS(OptionButton, Button);
+    REBEL_OBJECT(OptionButton, Button);
 
     PopupMenu* popup;
     int current;

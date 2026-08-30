@@ -14,7 +14,7 @@
 #include "scene/gui/dialogs.h"
 
 class EditorPluginSettings : public VBoxContainer {
-    GDCLASS(EditorPluginSettings, VBoxContainer);
+    REBEL_OBJECT(EditorPluginSettings, VBoxContainer);
 
     enum {
         BUTTON_PLUGIN_EDIT

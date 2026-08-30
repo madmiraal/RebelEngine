@@ -17,7 +17,7 @@
 #include "servers/audio/audio_stream.h"
 
 class AnimationTrackKeyEdit : public Object {
-    GDCLASS(AnimationTrackKeyEdit, Object);
+    REBEL_OBJECT(AnimationTrackKeyEdit, Object);
 
 public:
     bool setting;
@@ -933,7 +933,7 @@ public:
 };
 
 class AnimationMultiTrackKeyEdit : public Object {
-    GDCLASS(AnimationMultiTrackKeyEdit, Object);
+    REBEL_OBJECT(AnimationMultiTrackKeyEdit, Object);
 
 public:
     bool setting;

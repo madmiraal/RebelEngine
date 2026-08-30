@@ -14,7 +14,7 @@
 #include "step_2d_sw.h"
 
 class Physics2DServerSW : public Physics2DServer {
-    GDCLASS(Physics2DServerSW, Physics2DServer);
+    REBEL_OBJECT(Physics2DServerSW, Physics2DServer);
 
     friend class Physics2DDirectSpaceStateSW;
     friend class Physics2DDirectBodyStateSW;

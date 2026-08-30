@@ -127,7 +127,7 @@ public:
 };
 
 class SkeletonIK : public Node {
-    GDCLASS(SkeletonIK, Node);
+    REBEL_OBJECT(SkeletonIK, Node);
 
     StringName root_bone;
     StringName tip_bone;

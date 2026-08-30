@@ -11,7 +11,7 @@
 #include "scene/resources/mesh_library.h"
 
 class MeshLibraryEditor : public Control {
-    GDCLASS(MeshLibraryEditor, Control);
+    REBEL_OBJECT(MeshLibraryEditor, Control);
 
     Ref<MeshLibrary> mesh_library;
 
@@ -64,7 +64,7 @@ public:
 };
 
 class MeshLibraryEditorPlugin : public EditorPlugin {
-    GDCLASS(MeshLibraryEditorPlugin, EditorPlugin);
+    REBEL_OBJECT(MeshLibraryEditorPlugin, EditorPlugin);
 
     MeshLibraryEditor* mesh_library_editor;
     EditorNode* editor;

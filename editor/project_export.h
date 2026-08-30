@@ -32,7 +32,7 @@
 class EditorNode;
 
 class ProjectExportDialog : public ConfirmationDialog {
-    GDCLASS(ProjectExportDialog, ConfirmationDialog);
+    REBEL_OBJECT(ProjectExportDialog, ConfirmationDialog);
 
 private:
     TabContainer* sections;

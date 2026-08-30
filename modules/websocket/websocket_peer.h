@@ -12,7 +12,7 @@
 #include "websocket_macros.h"
 
 class WebSocketPeer : public PacketPeer {
-    GDCLASS(WebSocketPeer, PacketPeer);
+    REBEL_OBJECT(WebSocketPeer, PacketPeer);
     GDCICLASS(WebSocketPeer);
 
 public:

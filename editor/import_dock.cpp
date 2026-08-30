@@ -10,7 +10,7 @@
 #include "editor_resource_preview.h"
 
 class ImportDockParameters : public Object {
-    GDCLASS(ImportDockParameters, Object);
+    REBEL_OBJECT(ImportDockParameters, Object);
 
 public:
     Map<StringName, Variant> values;

@@ -10,7 +10,7 @@
 #include "core/resource.h"
 
 class Gradient : public Resource {
-    GDCLASS(Gradient, Resource);
+    REBEL_OBJECT(Gradient, Resource);
     OBJ_SAVE_TYPE(Gradient);
 
 public:

@@ -88,7 +88,7 @@ public:
 };
 
 class VideoStreamPlaybackGDNative : public VideoStreamPlayback {
-    GDCLASS(VideoStreamPlaybackGDNative, VideoStreamPlayback);
+    REBEL_OBJECT(VideoStreamPlaybackGDNative, VideoStreamPlayback);
 
     Ref<ImageTexture> texture;
     bool playing;
@@ -157,7 +157,7 @@ public:
 };
 
 class VideoStreamGDNative : public VideoStream {
-    GDCLASS(VideoStreamGDNative, VideoStream);
+    REBEL_OBJECT(VideoStreamGDNative, VideoStream);
 
     String file;
     int audio_track;

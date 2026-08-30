@@ -15,7 +15,7 @@
 #include "scene/gui/texture_button.h"
 
 class WindowDialog : public Popup {
-    GDCLASS(WindowDialog, Popup);
+    REBEL_OBJECT(WindowDialog, Popup);
 
     enum DRAG_TYPE {
         DRAG_NONE          = 0,
@@ -67,7 +67,7 @@ public:
 };
 
 class PopupDialog : public Popup {
-    GDCLASS(PopupDialog, Popup);
+    REBEL_OBJECT(PopupDialog, Popup);
 
 protected:
     void _notification(int p_what);
@@ -80,7 +80,7 @@ public:
 class LineEdit;
 
 class AcceptDialog : public WindowDialog {
-    GDCLASS(AcceptDialog, WindowDialog);
+    REBEL_OBJECT(AcceptDialog, WindowDialog);
 
     HBoxContainer* hbc;
     Label* label;
@@ -143,7 +143,7 @@ public:
 };
 
 class ConfirmationDialog : public AcceptDialog {
-    GDCLASS(ConfirmationDialog, AcceptDialog);
+    REBEL_OBJECT(ConfirmationDialog, AcceptDialog);
     Button* cancel;
 
 protected:

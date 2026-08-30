@@ -43,7 +43,7 @@ using GLTFSkinIndex       = int;
 using GLTFTextureIndex    = int;
 
 class GLTFDocument : public Resource {
-    GDCLASS(GLTFDocument, Resource);
+    REBEL_OBJECT(GLTFDocument, Resource);
     friend class GLTFState;
     friend class GLTFSkin;
     friend class GLTFSkeleton;

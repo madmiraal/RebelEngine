@@ -11,7 +11,7 @@
 #include "core/io/stream_peer.h"
 
 class StreamPeerSSL : public StreamPeer {
-    GDCLASS(StreamPeerSSL, StreamPeer);
+    REBEL_OBJECT(StreamPeerSSL, StreamPeer);
 
 protected:
     static StreamPeerSSL* (*_create)();

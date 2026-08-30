@@ -10,7 +10,7 @@
 #include "core/io/resource_importer.h"
 
 class EditorImportPlugin : public ResourceImporter {
-    GDCLASS(EditorImportPlugin, ResourceImporter);
+    REBEL_OBJECT(EditorImportPlugin, ResourceImporter);
 
 protected:
     static void _bind_methods();

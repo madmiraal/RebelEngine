@@ -12,7 +12,7 @@
 #include "scene/main/timer.h"
 
 class SpinBox : public Range {
-    GDCLASS(SpinBox, Range);
+    REBEL_OBJECT(SpinBox, Range);
 
     LineEdit* line_edit;
     int last_w;

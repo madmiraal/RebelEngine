@@ -14,7 +14,7 @@
 #include "scene/resources/texture.h"
 
 class EditorResourcePreviewGenerator : public Reference {
-    GDCLASS(EditorResourcePreviewGenerator, Reference);
+    REBEL_OBJECT(EditorResourcePreviewGenerator, Reference);
 
 protected:
     static void _bind_methods();
@@ -34,7 +34,7 @@ public:
 };
 
 class EditorResourcePreview : public Node {
-    GDCLASS(EditorResourcePreview, Node);
+    REBEL_OBJECT(EditorResourcePreview, Node);
 
     static EditorResourcePreview* singleton;
 

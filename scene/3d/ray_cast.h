@@ -10,7 +10,7 @@
 #include "scene/3d/spatial.h"
 
 class RayCast : public Spatial {
-    GDCLASS(RayCast, Spatial);
+    REBEL_OBJECT(RayCast, Spatial);
 
     bool enabled;
     bool collided;

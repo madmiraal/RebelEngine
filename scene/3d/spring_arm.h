@@ -10,7 +10,7 @@
 #include "scene/3d/spatial.h"
 
 class SpringArm : public Spatial {
-    GDCLASS(SpringArm, Spatial);
+    REBEL_OBJECT(SpringArm, Spatial);
 
     Ref<Shape> shape;
     Set<RID> excluded_objects;

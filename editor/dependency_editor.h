@@ -17,7 +17,7 @@ class EditorFileSystemDirectory;
 class EditorNode;
 
 class DependencyEditor : public AcceptDialog {
-    GDCLASS(DependencyEditor, AcceptDialog);
+    REBEL_OBJECT(DependencyEditor, AcceptDialog);
 
     Tree* tree;
     Button* fixdeps;
@@ -49,7 +49,7 @@ public:
 };
 
 class DependencyEditorOwners : public AcceptDialog {
-    GDCLASS(DependencyEditorOwners, AcceptDialog);
+    REBEL_OBJECT(DependencyEditorOwners, AcceptDialog);
 
     ItemList* owners;
     PopupMenu* file_options;
@@ -74,7 +74,7 @@ public:
 };
 
 class DependencyRemoveDialog : public ConfirmationDialog {
-    GDCLASS(DependencyRemoveDialog, ConfirmationDialog);
+    REBEL_OBJECT(DependencyRemoveDialog, ConfirmationDialog);
 
     Label* text;
     Tree* owners;
@@ -121,7 +121,7 @@ public:
 };
 
 class DependencyErrorDialog : public ConfirmationDialog {
-    GDCLASS(DependencyErrorDialog, ConfirmationDialog);
+    REBEL_OBJECT(DependencyErrorDialog, ConfirmationDialog);
 
 public:
     enum Mode {
@@ -148,7 +148,7 @@ public:
 };
 
 class OrphanResourcesDialog : public ConfirmationDialog {
-    GDCLASS(OrphanResourcesDialog, ConfirmationDialog);
+    REBEL_OBJECT(OrphanResourcesDialog, ConfirmationDialog);
 
     DependencyEditor* dep_edit;
     Tree* files;

@@ -10,7 +10,7 @@
 #include "core/resource.h"
 
 class RichTextEffect : public Resource {
-    GDCLASS(RichTextEffect, Resource);
+    REBEL_OBJECT(RichTextEffect, Resource);
     OBJ_SAVE_TYPE(RichTextEffect);
 
 protected:
@@ -24,7 +24,7 @@ public:
 };
 
 class CharFXTransform : public Reference {
-    GDCLASS(CharFXTransform, Reference);
+    REBEL_OBJECT(CharFXTransform, Reference);
 
 protected:
     static void _bind_methods();

@@ -20,7 +20,7 @@
 #endif
 
 class LightmapDenoiser : public Reference {
-    GDCLASS(LightmapDenoiser, Reference)
+    REBEL_OBJECT(LightmapDenoiser, Reference)
 
 protected:
     static LightmapDenoiser* (*create_function)();
@@ -31,7 +31,7 @@ public:
 };
 
 class LightmapRaycaster : public Reference {
-    GDCLASS(LightmapRaycaster, Reference)
+    REBEL_OBJECT(LightmapRaycaster, Reference)
 
 protected:
     static LightmapRaycaster* (*create_function)();
@@ -111,7 +111,7 @@ public:
 };
 
 class Lightmapper : public Reference {
-    GDCLASS(Lightmapper, Reference)
+    REBEL_OBJECT(Lightmapper, Reference)
 
 public:
     enum LightType {

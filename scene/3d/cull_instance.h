@@ -10,7 +10,7 @@
 #include "scene/3d/spatial.h"
 
 class CullInstance : public Spatial {
-    GDCLASS(CullInstance, Spatial);
+    REBEL_OBJECT(CullInstance, Spatial);
 
 public:
     enum PortalMode {

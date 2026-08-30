@@ -14,7 +14,7 @@
 class Portal;
 
 class Room : public Spatial {
-    GDCLASS(Room, Spatial);
+    REBEL_OBJECT(Room, Spatial);
 
     friend class RoomManager;
     friend class RoomGroup;

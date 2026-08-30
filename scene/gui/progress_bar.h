@@ -10,7 +10,7 @@
 #include "scene/gui/range.h"
 
 class ProgressBar : public Range {
-    GDCLASS(ProgressBar, Range);
+    REBEL_OBJECT(ProgressBar, Range);
 
     bool percent_visible;
 

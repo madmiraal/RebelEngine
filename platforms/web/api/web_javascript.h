@@ -12,7 +12,7 @@
 
 class JavaScriptObject : public Reference {
 private:
-    GDCLASS(JavaScriptObject, Reference);
+    REBEL_OBJECT(JavaScriptObject, Reference);
 
 protected:
     virtual bool _set(const StringName& p_name, const Variant& p_value) {
@@ -28,7 +28,7 @@ protected:
 
 class JavaScript : public Object {
 private:
-    GDCLASS(JavaScript, Object);
+    REBEL_OBJECT(JavaScript, Object);
 
     static JavaScript* singleton;
 

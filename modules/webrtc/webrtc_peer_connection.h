@@ -11,7 +11,7 @@
 #include "modules/webrtc/webrtc_data_channel.h"
 
 class WebRTCPeerConnection : public Reference {
-    GDCLASS(WebRTCPeerConnection, Reference);
+    REBEL_OBJECT(WebRTCPeerConnection, Reference);
 
 public:
     enum ConnectionState {

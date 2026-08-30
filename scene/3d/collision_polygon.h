@@ -13,7 +13,7 @@
 class CollisionObject;
 
 class CollisionPolygon : public Spatial {
-    GDCLASS(CollisionPolygon, Spatial);
+    REBEL_OBJECT(CollisionPolygon, Spatial);
     real_t margin = 0.04f;
 
 protected:

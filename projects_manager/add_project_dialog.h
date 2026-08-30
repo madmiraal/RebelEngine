@@ -15,7 +15,7 @@
 #include "scene/gui/texture_rect.h"
 
 class AddProjectDialog : public ConfirmationDialog {
-    GDCLASS(AddProjectDialog, ConfirmationDialog);
+    REBEL_OBJECT(AddProjectDialog, ConfirmationDialog);
 
 public:
     AddProjectDialog();

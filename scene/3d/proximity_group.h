@@ -10,7 +10,7 @@
 #include "spatial.h"
 
 class ProximityGroup : public Spatial {
-    GDCLASS(ProximityGroup, Spatial);
+    REBEL_OBJECT(ProximityGroup, Spatial);
 
 public:
     enum DispatchMode {

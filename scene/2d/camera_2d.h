@@ -11,7 +11,7 @@
 #include "scene/main/viewport.h"
 
 class Camera2D : public Node2D {
-    GDCLASS(Camera2D, Node2D);
+    REBEL_OBJECT(Camera2D, Node2D);
 
 public:
     enum AnchorMode {

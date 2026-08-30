@@ -10,7 +10,7 @@
 #include "scene/gui/range.h"
 
 class Slider : public Range {
-    GDCLASS(Slider, Range);
+    REBEL_OBJECT(Slider, Range);
 
     struct Grab {
         int pos;
@@ -53,7 +53,7 @@ public:
 };
 
 class HSlider : public Slider {
-    GDCLASS(HSlider, Slider);
+    REBEL_OBJECT(HSlider, Slider);
 
 public:
     HSlider() : Slider(HORIZONTAL) {
@@ -62,7 +62,7 @@ public:
 };
 
 class VSlider : public Slider {
-    GDCLASS(VSlider, Slider);
+    REBEL_OBJECT(VSlider, Slider);
 
 public:
     VSlider() : Slider(VERTICAL) {

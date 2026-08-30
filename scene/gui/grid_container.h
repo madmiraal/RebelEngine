@@ -10,7 +10,7 @@
 #include "scene/gui/container.h"
 
 class GridContainer : public Container {
-    GDCLASS(GridContainer, Container);
+    REBEL_OBJECT(GridContainer, Container);
 
     int columns;
 

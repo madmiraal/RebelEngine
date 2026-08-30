@@ -10,7 +10,7 @@
 #include "editor/import/resource_importer_scene.h"
 
 class EditorSceneImporterCollada : public EditorSceneImporter {
-    GDCLASS(EditorSceneImporterCollada, EditorSceneImporter);
+    REBEL_OBJECT(EditorSceneImporterCollada, EditorSceneImporter);
 
 public:
     uint32_t get_import_flags() const override;

@@ -13,7 +13,7 @@
 #include "webrtc_data_channel.h"
 
 class WebRTCDataChannelGDNative : public WebRTCDataChannel {
-    GDCLASS(WebRTCDataChannelGDNative, WebRTCDataChannel);
+    REBEL_OBJECT(WebRTCDataChannelGDNative, WebRTCDataChannel);
 
 protected:
     static void _bind_methods();

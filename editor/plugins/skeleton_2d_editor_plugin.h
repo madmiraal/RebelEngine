@@ -13,7 +13,7 @@
 #include "scene/gui/spin_box.h"
 
 class Skeleton2DEditor : public Control {
-    GDCLASS(Skeleton2DEditor, Control);
+    REBEL_OBJECT(Skeleton2DEditor, Control);
 
     enum Menu {
         MENU_OPTION_SET_REST,
@@ -39,7 +39,7 @@ public:
 };
 
 class Skeleton2DEditorPlugin : public EditorPlugin {
-    GDCLASS(Skeleton2DEditorPlugin, EditorPlugin);
+    REBEL_OBJECT(Skeleton2DEditorPlugin, EditorPlugin);
 
     Skeleton2DEditor* sprite_editor;
     EditorNode* editor;

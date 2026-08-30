@@ -10,7 +10,7 @@
 #include "scene/gui/range.h"
 
 class ScrollBar : public Range {
-    GDCLASS(ScrollBar, Range);
+    REBEL_OBJECT(ScrollBar, Range);
 
     enum HighlightStatus {
         HIGHLIGHT_NONE,
@@ -90,7 +90,7 @@ public:
 };
 
 class HScrollBar : public ScrollBar {
-    GDCLASS(HScrollBar, ScrollBar);
+    REBEL_OBJECT(HScrollBar, ScrollBar);
 
 public:
     HScrollBar() : ScrollBar(HORIZONTAL) {
@@ -99,7 +99,7 @@ public:
 };
 
 class VScrollBar : public ScrollBar {
-    GDCLASS(VScrollBar, ScrollBar);
+    REBEL_OBJECT(VScrollBar, ScrollBar);
 
 public:
     VScrollBar() : ScrollBar(VERTICAL) {

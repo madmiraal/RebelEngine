@@ -64,7 +64,7 @@ class ToolButton;
 class VSplitContainer;
 
 class EditorNode : public Node {
-    GDCLASS(EditorNode, Node);
+    REBEL_OBJECT(EditorNode, Node);
 
 public:
     enum DockSlot {

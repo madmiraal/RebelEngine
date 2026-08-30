@@ -14,7 +14,7 @@
 #include "step_sw.h"
 
 class PhysicsServerSW : public PhysicsServer {
-    GDCLASS(PhysicsServerSW, PhysicsServer);
+    REBEL_OBJECT(PhysicsServerSW, PhysicsServer);
 
     friend class PhysicsDirectSpaceStateSW;
     bool active;

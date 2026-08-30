@@ -12,7 +12,7 @@
 #include "scene/gui/panel_container.h"
 
 class EditorVCSInterface : public Object {
-    GDCLASS(EditorVCSInterface, Object)
+    REBEL_OBJECT(EditorVCSInterface, Object)
 
     bool is_initialized;
 

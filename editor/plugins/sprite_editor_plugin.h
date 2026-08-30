@@ -13,7 +13,7 @@
 #include "scene/gui/spin_box.h"
 
 class SpriteEditor : public Control {
-    GDCLASS(SpriteEditor, Control);
+    REBEL_OBJECT(SpriteEditor, Control);
 
     enum Menu {
         MENU_OPTION_CONVERT_TO_MESH_2D,
@@ -72,7 +72,7 @@ public:
 };
 
 class SpriteEditorPlugin : public EditorPlugin {
-    GDCLASS(SpriteEditorPlugin, EditorPlugin);
+    REBEL_OBJECT(SpriteEditorPlugin, EditorPlugin);
 
     SpriteEditor* sprite_editor;
     EditorNode* editor;

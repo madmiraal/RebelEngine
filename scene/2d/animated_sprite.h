@@ -11,7 +11,7 @@
 #include "scene/resources/texture.h"
 
 class SpriteFrames : public Resource {
-    GDCLASS(SpriteFrames, Resource);
+    REBEL_OBJECT(SpriteFrames, Resource);
 
     struct Anim {
         float speed;
@@ -124,7 +124,7 @@ public:
 };
 
 class AnimatedSprite : public Node2D {
-    GDCLASS(AnimatedSprite, Node2D);
+    REBEL_OBJECT(AnimatedSprite, Node2D);
 
     Ref<SpriteFrames> frames;
     bool playing;

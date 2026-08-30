@@ -18,7 +18,7 @@
 class AudioEffectCapture;
 
 class AudioEffectCaptureInstance : public AudioEffectInstance {
-    GDCLASS(AudioEffectCaptureInstance, AudioEffectInstance);
+    REBEL_OBJECT(AudioEffectCaptureInstance, AudioEffectInstance);
     friend class AudioEffectCapture;
     Ref<AudioEffectCapture> base;
 
@@ -32,7 +32,7 @@ public:
 };
 
 class AudioEffectCapture : public AudioEffect {
-    GDCLASS(AudioEffectCapture, AudioEffect)
+    REBEL_OBJECT(AudioEffectCapture, AudioEffect)
     friend class AudioEffectCaptureInstance;
 
     RingBuffer<AudioFrame> buffer;

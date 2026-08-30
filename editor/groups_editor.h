@@ -18,7 +18,7 @@
 #include "scene/gui/tree.h"
 
 class GroupDialog : public WindowDialog {
-    GDCLASS(GroupDialog, WindowDialog);
+    REBEL_OBJECT(GroupDialog, WindowDialog);
 
     ConfirmationDialog* error;
 
@@ -87,7 +87,7 @@ public:
 };
 
 class GroupsEditor : public VBoxContainer {
-    GDCLASS(GroupsEditor, VBoxContainer);
+    REBEL_OBJECT(GroupsEditor, VBoxContainer);
 
     Node* node;
 

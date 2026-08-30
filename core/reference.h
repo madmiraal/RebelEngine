@@ -13,7 +13,7 @@
 #include "core/safe_refcount.h"
 
 class Reference : public Object {
-    GDCLASS(Reference, Object);
+    REBEL_OBJECT(Reference, Object);
     friend class RefBase;
     SafeRefCount refcount;
     SafeRefCount refcount_init;
@@ -274,7 +274,7 @@ public:
 typedef Ref<Reference> REF;
 
 class WeakRef : public Reference {
-    GDCLASS(WeakRef, Reference);
+    REBEL_OBJECT(WeakRef, Reference);
 
     ObjectID ref;
 

@@ -10,7 +10,7 @@
 #include "core/resource.h"
 
 class GLTFAnimation : public Resource {
-    GDCLASS(GLTFAnimation, Resource);
+    REBEL_OBJECT(GLTFAnimation, Resource);
 
 protected:
     static void _bind_methods();

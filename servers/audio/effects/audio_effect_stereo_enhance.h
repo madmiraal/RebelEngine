@@ -12,7 +12,7 @@
 class AudioEffectStereoEnhance;
 
 class AudioEffectStereoEnhanceInstance : public AudioEffectInstance {
-    GDCLASS(AudioEffectStereoEnhanceInstance, AudioEffectInstance);
+    REBEL_OBJECT(AudioEffectStereoEnhanceInstance, AudioEffectInstance);
     friend class AudioEffectStereoEnhance;
     Ref<AudioEffectStereoEnhance> base;
 
@@ -35,7 +35,7 @@ public:
 };
 
 class AudioEffectStereoEnhance : public AudioEffect {
-    GDCLASS(AudioEffectStereoEnhance, AudioEffect);
+    REBEL_OBJECT(AudioEffectStereoEnhance, AudioEffect);
 
     friend class AudioEffectStereoEnhanceInstance;
     float volume_db;

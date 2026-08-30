@@ -16,7 +16,7 @@
 class CameraFeed;
 
 class CameraServer : public Object {
-    GDCLASS(CameraServer, Object);
+    REBEL_OBJECT(CameraServer, Object);
     _THREAD_SAFE_CLASS_
 
 public:

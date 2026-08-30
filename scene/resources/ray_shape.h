@@ -9,7 +9,7 @@
 #include "scene/resources/shape.h"
 
 class RayShape : public Shape {
-    GDCLASS(RayShape, Shape);
+    REBEL_OBJECT(RayShape, Shape);
     float length;
     bool slips_on_slope;
 

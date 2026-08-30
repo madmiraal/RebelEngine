@@ -19,7 +19,7 @@ class EditorFileSystemDirectory;
 struct EditorProgress;
 
 class EditorExportPreset : public Reference {
-    GDCLASS(EditorExportPreset, Reference);
+    REBEL_OBJECT(EditorExportPreset, Reference);
 
 public:
     enum ExportFilter {
@@ -124,7 +124,7 @@ struct SharedObject {
 };
 
 class EditorExportPlatform : public Reference {
-    GDCLASS(EditorExportPlatform, Reference);
+    REBEL_OBJECT(EditorExportPlatform, Reference);
 
 public:
     typedef Error (*EditorExportSaveFunction)(
@@ -365,7 +365,7 @@ public:
 };
 
 class EditorExportPlugin : public Reference {
-    GDCLASS(EditorExportPlugin, Reference);
+    REBEL_OBJECT(EditorExportPlugin, Reference);
 
     friend class EditorExportPlatform;
 
@@ -466,7 +466,7 @@ public:
 };
 
 class EditorExport : public Node {
-    GDCLASS(EditorExport, Node);
+    REBEL_OBJECT(EditorExport, Node);
 
     Vector<Ref<EditorExportPlatform>> export_platforms;
     Vector<Ref<EditorExportPreset>> export_presets;
@@ -518,7 +518,7 @@ public:
 };
 
 class EditorExportPlatformPC : public EditorExportPlatform {
-    GDCLASS(EditorExportPlatformPC, EditorExportPlatform);
+    REBEL_OBJECT(EditorExportPlatformPC, EditorExportPlatform);
 
 public:
     typedef Error (*FixUpEmbeddedPckFunc)(
@@ -608,7 +608,7 @@ public:
 };
 
 class EditorExportTextSceneToBinaryPlugin : public EditorExportPlugin {
-    GDCLASS(EditorExportTextSceneToBinaryPlugin, EditorExportPlugin);
+    REBEL_OBJECT(EditorExportTextSceneToBinaryPlugin, EditorExportPlugin);
 
 public:
     void _export_file(

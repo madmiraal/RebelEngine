@@ -56,7 +56,7 @@ public:
 class AudioEffectPitchShift;
 
 class AudioEffectPitchShiftInstance : public AudioEffectInstance {
-    GDCLASS(AudioEffectPitchShiftInstance, AudioEffectInstance);
+    REBEL_OBJECT(AudioEffectPitchShiftInstance, AudioEffectInstance);
     friend class AudioEffectPitchShift;
     Ref<AudioEffectPitchShift> base;
 
@@ -73,7 +73,7 @@ public:
 };
 
 class AudioEffectPitchShift : public AudioEffect {
-    GDCLASS(AudioEffectPitchShift, AudioEffect);
+    REBEL_OBJECT(AudioEffectPitchShift, AudioEffect);
 
 public:
     friend class AudioEffectPitchShiftInstance;

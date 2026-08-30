@@ -10,7 +10,7 @@
 #include "scene/resources/shape.h"
 
 class CapsuleShape : public Shape {
-    GDCLASS(CapsuleShape, Shape);
+    REBEL_OBJECT(CapsuleShape, Shape);
     float radius;
     float height;
 

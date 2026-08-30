@@ -14,7 +14,7 @@
 #include "core/reference.h"
 
 class JavaClass : public Reference {
-    GDCLASS(JavaClass, Reference);
+    REBEL_OBJECT(JavaClass, Reference);
 
 public:
     Variant call(
@@ -27,7 +27,7 @@ public:
 };
 
 class JavaObject : public Reference {
-    GDCLASS(JavaObject, Reference);
+    REBEL_OBJECT(JavaObject, Reference);
 
 public:
     Variant call(
@@ -39,7 +39,7 @@ public:
 };
 
 class JavaClassWrapper : public Object {
-    GDCLASS(JavaClassWrapper, Object);
+    REBEL_OBJECT(JavaClassWrapper, Object);
     static JavaClassWrapper* singleton;
 
 protected:

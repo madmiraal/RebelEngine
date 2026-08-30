@@ -11,7 +11,7 @@
 #include "scene/main/scene_tree.h"
 
 class SpatialGizmo : public Reference {
-    GDCLASS(SpatialGizmo, Reference);
+    REBEL_OBJECT(SpatialGizmo, Reference);
 
 public:
     virtual void create()    = 0;
@@ -22,7 +22,7 @@ public:
 };
 
 class Spatial : public Node {
-    GDCLASS(Spatial, Node);
+    REBEL_OBJECT(Spatial, Node);
 
 public:
     enum SpatialFlags {

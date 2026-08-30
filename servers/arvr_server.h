@@ -17,7 +17,7 @@ class ARVRInterface;
 class ARVRPositionalTracker;
 
 class ARVRServer : public Object {
-    GDCLASS(ARVRServer, Object);
+    REBEL_OBJECT(ARVRServer, Object);
     _THREAD_SAFE_CLASS_
 
 public:

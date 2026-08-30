@@ -30,7 +30,7 @@
 class EditorNode;
 
 class FileSystemDock : public VBoxContainer {
-    GDCLASS(FileSystemDock, VBoxContainer);
+    REBEL_OBJECT(FileSystemDock, VBoxContainer);
 
 public:
     enum FileListDisplayMode {

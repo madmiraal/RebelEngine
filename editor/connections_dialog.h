@@ -22,7 +22,7 @@ class PopupMenu;
 class ConnectDialogBinds;
 
 class ConnectDialog : public ConfirmationDialog {
-    GDCLASS(ConnectDialog, ConfirmationDialog);
+    REBEL_OBJECT(ConnectDialog, ConfirmationDialog);
 
     Label* connect_to_label;
     LineEdit* from_signal;
@@ -85,7 +85,7 @@ class ConnectionsDockTree : public Tree {
 };
 
 class ConnectionsDock : public VBoxContainer {
-    GDCLASS(ConnectionsDock, VBoxContainer);
+    REBEL_OBJECT(ConnectionsDock, VBoxContainer);
 
     // Right-click Pop-up Menu Options.
     enum SignalMenuOption {

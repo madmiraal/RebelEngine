@@ -7,7 +7,7 @@
 #include "import_defaults_editor.h"
 
 class ImportDefaultsEditorSettings : public Object {
-    GDCLASS(ImportDefaultsEditorSettings, Object)
+    REBEL_OBJECT(ImportDefaultsEditorSettings, Object)
     friend class ImportDefaultsEditor;
     List<PropertyInfo> properties;
     Map<StringName, Variant> values;

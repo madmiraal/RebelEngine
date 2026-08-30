@@ -15,7 +15,7 @@
 #include "scene/gui/file_dialog.h"
 
 class CPUParticles2DEditorPlugin : public EditorPlugin {
-    GDCLASS(CPUParticles2DEditorPlugin, EditorPlugin);
+    REBEL_OBJECT(CPUParticles2DEditorPlugin, EditorPlugin);
 
     enum {
         MENU_LOAD_EMISSION_MASK,

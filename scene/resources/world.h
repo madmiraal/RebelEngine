@@ -17,7 +17,7 @@ class VisibilityNotifier;
 struct SpatialIndexer;
 
 class World : public Resource {
-    GDCLASS(World, Resource);
+    REBEL_OBJECT(World, Resource);
     RES_BASE_EXTENSION("world");
 
 private:

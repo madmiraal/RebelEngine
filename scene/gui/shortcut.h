@@ -11,7 +11,7 @@
 #include "core/resource.h"
 
 class ShortCut : public Resource {
-    GDCLASS(ShortCut, Resource);
+    REBEL_OBJECT(ShortCut, Resource);
 
     Ref<InputEvent> shortcut;
 

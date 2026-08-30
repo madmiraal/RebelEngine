@@ -14,7 +14,7 @@
 ///////////////////////////////////////
 
 class VisualShaderNodeScalarConstant : public VisualShaderNode {
-    GDCLASS(VisualShaderNodeScalarConstant, VisualShaderNode);
+    REBEL_OBJECT(VisualShaderNodeScalarConstant, VisualShaderNode);
     float constant;
 
 protected:
@@ -51,7 +51,7 @@ public:
 ///////////////////////////////////////
 
 class VisualShaderNodeBooleanConstant : public VisualShaderNode {
-    GDCLASS(VisualShaderNodeBooleanConstant, VisualShaderNode);
+    REBEL_OBJECT(VisualShaderNodeBooleanConstant, VisualShaderNode);
     bool constant;
 
 protected:
@@ -88,7 +88,7 @@ public:
 ///////////////////////////////////////
 
 class VisualShaderNodeColorConstant : public VisualShaderNode {
-    GDCLASS(VisualShaderNodeColorConstant, VisualShaderNode);
+    REBEL_OBJECT(VisualShaderNodeColorConstant, VisualShaderNode);
     Color constant;
 
 protected:
@@ -125,7 +125,7 @@ public:
 ///////////////////////////////////////
 
 class VisualShaderNodeVec3Constant : public VisualShaderNode {
-    GDCLASS(VisualShaderNodeVec3Constant, VisualShaderNode);
+    REBEL_OBJECT(VisualShaderNodeVec3Constant, VisualShaderNode);
     Vector3 constant;
 
 protected:
@@ -162,7 +162,7 @@ public:
 ///////////////////////////////////////
 
 class VisualShaderNodeTransformConstant : public VisualShaderNode {
-    GDCLASS(VisualShaderNodeTransformConstant, VisualShaderNode);
+    REBEL_OBJECT(VisualShaderNodeTransformConstant, VisualShaderNode);
     Transform constant;
 
 protected:
@@ -201,7 +201,7 @@ public:
 ///////////////////////////////////////
 
 class VisualShaderNodeTexture : public VisualShaderNode {
-    GDCLASS(VisualShaderNodeTexture, VisualShaderNode);
+    REBEL_OBJECT(VisualShaderNodeTexture, VisualShaderNode);
     Ref<Texture> texture;
 
 public:
@@ -281,7 +281,7 @@ VARIANT_ENUM_CAST(VisualShaderNodeTexture::Source)
 ///////////////////////////////////////
 
 class VisualShaderNodeCubeMap : public VisualShaderNode {
-    GDCLASS(VisualShaderNodeCubeMap, VisualShaderNode);
+    REBEL_OBJECT(VisualShaderNodeCubeMap, VisualShaderNode);
     Ref<CubeMap> cube_map;
 
 public:
@@ -357,7 +357,7 @@ VARIANT_ENUM_CAST(VisualShaderNodeCubeMap::Source)
 ///////////////////////////////////////
 
 class VisualShaderNodeScalarOp : public VisualShaderNode {
-    GDCLASS(VisualShaderNodeScalarOp, VisualShaderNode);
+    REBEL_OBJECT(VisualShaderNodeScalarOp, VisualShaderNode);
 
 public:
     enum Operator {
@@ -409,7 +409,7 @@ public:
 VARIANT_ENUM_CAST(VisualShaderNodeScalarOp::Operator)
 
 class VisualShaderNodeVectorOp : public VisualShaderNode {
-    GDCLASS(VisualShaderNodeVectorOp, VisualShaderNode);
+    REBEL_OBJECT(VisualShaderNodeVectorOp, VisualShaderNode);
 
 public:
     enum Operator {
@@ -465,7 +465,7 @@ VARIANT_ENUM_CAST(VisualShaderNodeVectorOp::Operator)
 ///////////////////////////////////////
 
 class VisualShaderNodeColorOp : public VisualShaderNode {
-    GDCLASS(VisualShaderNodeColorOp, VisualShaderNode);
+    REBEL_OBJECT(VisualShaderNodeColorOp, VisualShaderNode);
 
 public:
     enum Operator {
@@ -520,7 +520,7 @@ VARIANT_ENUM_CAST(VisualShaderNodeColorOp::Operator)
 ///////////////////////////////////////
 
 class VisualShaderNodeTransformMult : public VisualShaderNode {
-    GDCLASS(VisualShaderNodeTransformMult, VisualShaderNode);
+    REBEL_OBJECT(VisualShaderNodeTransformMult, VisualShaderNode);
 
 public:
     enum Operator {
@@ -570,7 +570,7 @@ VARIANT_ENUM_CAST(VisualShaderNodeTransformMult::Operator)
 ///////////////////////////////////////
 
 class VisualShaderNodeTransformVecMult : public VisualShaderNode {
-    GDCLASS(VisualShaderNodeTransformVecMult, VisualShaderNode);
+    REBEL_OBJECT(VisualShaderNodeTransformVecMult, VisualShaderNode);
 
 public:
     enum Operator {
@@ -620,7 +620,7 @@ VARIANT_ENUM_CAST(VisualShaderNodeTransformVecMult::Operator)
 ///////////////////////////////////////
 
 class VisualShaderNodeScalarFunc : public VisualShaderNode {
-    GDCLASS(VisualShaderNodeScalarFunc, VisualShaderNode);
+    REBEL_OBJECT(VisualShaderNodeScalarFunc, VisualShaderNode);
 
 public:
     enum Function {
@@ -698,7 +698,7 @@ VARIANT_ENUM_CAST(VisualShaderNodeScalarFunc::Function)
 ///////////////////////////////////////
 
 class VisualShaderNodeVectorFunc : public VisualShaderNode {
-    GDCLASS(VisualShaderNodeVectorFunc, VisualShaderNode);
+    REBEL_OBJECT(VisualShaderNodeVectorFunc, VisualShaderNode);
 
 public:
     enum Function {
@@ -779,7 +779,7 @@ VARIANT_ENUM_CAST(VisualShaderNodeVectorFunc::Function)
 ///////////////////////////////////////
 
 class VisualShaderNodeColorFunc : public VisualShaderNode {
-    GDCLASS(VisualShaderNodeColorFunc, VisualShaderNode);
+    REBEL_OBJECT(VisualShaderNodeColorFunc, VisualShaderNode);
 
 public:
     enum Function {
@@ -827,7 +827,7 @@ VARIANT_ENUM_CAST(VisualShaderNodeColorFunc::Function)
 ///////////////////////////////////////
 
 class VisualShaderNodeTransformFunc : public VisualShaderNode {
-    GDCLASS(VisualShaderNodeTransformFunc, VisualShaderNode);
+    REBEL_OBJECT(VisualShaderNodeTransformFunc, VisualShaderNode);
 
 public:
     enum Function {
@@ -875,7 +875,7 @@ VARIANT_ENUM_CAST(VisualShaderNodeTransformFunc::Function)
 ///////////////////////////////////////
 
 class VisualShaderNodeDotProduct : public VisualShaderNode {
-    GDCLASS(VisualShaderNodeDotProduct, VisualShaderNode);
+    REBEL_OBJECT(VisualShaderNodeDotProduct, VisualShaderNode);
 
 public:
     String get_caption() const override;
@@ -905,7 +905,7 @@ public:
 ///////////////////////////////////////
 
 class VisualShaderNodeVectorLen : public VisualShaderNode {
-    GDCLASS(VisualShaderNodeVectorLen, VisualShaderNode);
+    REBEL_OBJECT(VisualShaderNodeVectorLen, VisualShaderNode);
 
 public:
     String get_caption() const override;
@@ -935,7 +935,7 @@ public:
 ///////////////////////////////////////
 
 class VisualShaderNodeDeterminant : public VisualShaderNode {
-    GDCLASS(VisualShaderNodeDeterminant, VisualShaderNode);
+    REBEL_OBJECT(VisualShaderNodeDeterminant, VisualShaderNode);
 
 public:
     String get_caption() const override;
@@ -965,7 +965,7 @@ public:
 ///////////////////////////////////////
 
 class VisualShaderNodeScalarClamp : public VisualShaderNode {
-    GDCLASS(VisualShaderNodeScalarClamp, VisualShaderNode);
+    REBEL_OBJECT(VisualShaderNodeScalarClamp, VisualShaderNode);
 
 public:
     String get_caption() const override;
@@ -993,7 +993,7 @@ public:
 ///////////////////////////////////////
 
 class VisualShaderNodeVectorClamp : public VisualShaderNode {
-    GDCLASS(VisualShaderNodeVectorClamp, VisualShaderNode);
+    REBEL_OBJECT(VisualShaderNodeVectorClamp, VisualShaderNode);
 
 public:
     String get_caption() const override;
@@ -1023,7 +1023,7 @@ public:
 ///////////////////////////////////////
 
 class VisualShaderNodeScalarDerivativeFunc : public VisualShaderNode {
-    GDCLASS(VisualShaderNodeScalarDerivativeFunc, VisualShaderNode);
+    REBEL_OBJECT(VisualShaderNodeScalarDerivativeFunc, VisualShaderNode);
 
 public:
     enum Function {
@@ -1070,7 +1070,7 @@ VARIANT_ENUM_CAST(VisualShaderNodeScalarDerivativeFunc::Function)
 ///////////////////////////////////////
 
 class VisualShaderNodeVectorDerivativeFunc : public VisualShaderNode {
-    GDCLASS(VisualShaderNodeVectorDerivativeFunc, VisualShaderNode);
+    REBEL_OBJECT(VisualShaderNodeVectorDerivativeFunc, VisualShaderNode);
 
 public:
     enum Function {
@@ -1119,7 +1119,7 @@ VARIANT_ENUM_CAST(VisualShaderNodeVectorDerivativeFunc::Function)
 ///////////////////////////////////////
 
 class VisualShaderNodeFaceForward : public VisualShaderNode {
-    GDCLASS(VisualShaderNodeFaceForward, VisualShaderNode);
+    REBEL_OBJECT(VisualShaderNodeFaceForward, VisualShaderNode);
 
 public:
     String get_caption() const override;
@@ -1149,7 +1149,7 @@ public:
 ///////////////////////////////////////
 
 class VisualShaderNodeOuterProduct : public VisualShaderNode {
-    GDCLASS(VisualShaderNodeOuterProduct, VisualShaderNode);
+    REBEL_OBJECT(VisualShaderNodeOuterProduct, VisualShaderNode);
 
 public:
     String get_caption() const override;
@@ -1179,7 +1179,7 @@ public:
 ///////////////////////////////////////
 
 class VisualShaderNodeVectorScalarStep : public VisualShaderNode {
-    GDCLASS(VisualShaderNodeVectorScalarStep, VisualShaderNode);
+    REBEL_OBJECT(VisualShaderNodeVectorScalarStep, VisualShaderNode);
 
 public:
     String get_caption() const override;
@@ -1209,7 +1209,7 @@ public:
 ///////////////////////////////////////
 
 class VisualShaderNodeScalarSmoothStep : public VisualShaderNode {
-    GDCLASS(VisualShaderNodeScalarSmoothStep, VisualShaderNode);
+    REBEL_OBJECT(VisualShaderNodeScalarSmoothStep, VisualShaderNode);
 
 public:
     String get_caption() const override;
@@ -1237,7 +1237,7 @@ public:
 ///////////////////////////////////////
 
 class VisualShaderNodeVectorSmoothStep : public VisualShaderNode {
-    GDCLASS(VisualShaderNodeVectorSmoothStep, VisualShaderNode);
+    REBEL_OBJECT(VisualShaderNodeVectorSmoothStep, VisualShaderNode);
 
 public:
     String get_caption() const override;
@@ -1265,7 +1265,7 @@ public:
 ///////////////////////////////////////
 
 class VisualShaderNodeVectorScalarSmoothStep : public VisualShaderNode {
-    GDCLASS(VisualShaderNodeVectorScalarSmoothStep, VisualShaderNode);
+    REBEL_OBJECT(VisualShaderNodeVectorScalarSmoothStep, VisualShaderNode);
 
 public:
     String get_caption() const override;
@@ -1295,7 +1295,7 @@ public:
 ///////////////////////////////////////
 
 class VisualShaderNodeVectorDistance : public VisualShaderNode {
-    GDCLASS(VisualShaderNodeVectorDistance, VisualShaderNode);
+    REBEL_OBJECT(VisualShaderNodeVectorDistance, VisualShaderNode);
 
 public:
     String get_caption() const override;
@@ -1325,7 +1325,7 @@ public:
 ///////////////////////////////////////
 
 class VisualShaderNodeVectorRefract : public VisualShaderNode {
-    GDCLASS(VisualShaderNodeVectorRefract, VisualShaderNode);
+    REBEL_OBJECT(VisualShaderNodeVectorRefract, VisualShaderNode);
 
 public:
     String get_caption() const override;
@@ -1355,7 +1355,7 @@ public:
 ///////////////////////////////////////
 
 class VisualShaderNodeScalarInterp : public VisualShaderNode {
-    GDCLASS(VisualShaderNodeScalarInterp, VisualShaderNode);
+    REBEL_OBJECT(VisualShaderNodeScalarInterp, VisualShaderNode);
 
 public:
     String get_caption() const override;
@@ -1383,7 +1383,7 @@ public:
 ///////////////////////////////////////
 
 class VisualShaderNodeVectorInterp : public VisualShaderNode {
-    GDCLASS(VisualShaderNodeVectorInterp, VisualShaderNode);
+    REBEL_OBJECT(VisualShaderNodeVectorInterp, VisualShaderNode);
 
 public:
     String get_caption() const override;
@@ -1411,7 +1411,7 @@ public:
 ///////////////////////////////////////
 
 class VisualShaderNodeVectorScalarMix : public VisualShaderNode {
-    GDCLASS(VisualShaderNodeVectorScalarMix, VisualShaderNode);
+    REBEL_OBJECT(VisualShaderNodeVectorScalarMix, VisualShaderNode);
 
 public:
     String get_caption() const override;
@@ -1441,7 +1441,7 @@ public:
 ///////////////////////////////////////
 
 class VisualShaderNodeVectorCompose : public VisualShaderNode {
-    GDCLASS(VisualShaderNodeVectorCompose, VisualShaderNode);
+    REBEL_OBJECT(VisualShaderNodeVectorCompose, VisualShaderNode);
 
 public:
     String get_caption() const override;
@@ -1469,7 +1469,7 @@ public:
 ///////////////////////////////////////
 
 class VisualShaderNodeTransformCompose : public VisualShaderNode {
-    GDCLASS(VisualShaderNodeTransformCompose, VisualShaderNode);
+    REBEL_OBJECT(VisualShaderNodeTransformCompose, VisualShaderNode);
 
 public:
     String get_caption() const override;
@@ -1499,7 +1499,7 @@ public:
 ///////////////////////////////////////
 
 class VisualShaderNodeVectorDecompose : public VisualShaderNode {
-    GDCLASS(VisualShaderNodeVectorDecompose, VisualShaderNode);
+    REBEL_OBJECT(VisualShaderNodeVectorDecompose, VisualShaderNode);
 
 public:
     String get_caption() const override;
@@ -1527,7 +1527,7 @@ public:
 ///////////////////////////////////////
 
 class VisualShaderNodeTransformDecompose : public VisualShaderNode {
-    GDCLASS(VisualShaderNodeTransformDecompose, VisualShaderNode);
+    REBEL_OBJECT(VisualShaderNodeTransformDecompose, VisualShaderNode);
 
 public:
     String get_caption() const override;
@@ -1557,7 +1557,7 @@ public:
 ///////////////////////////////////////
 
 class VisualShaderNodeScalarUniform : public VisualShaderNodeUniform {
-    GDCLASS(VisualShaderNodeScalarUniform, VisualShaderNodeUniform);
+    REBEL_OBJECT(VisualShaderNodeScalarUniform, VisualShaderNodeUniform);
 
 public:
     String get_caption() const override;
@@ -1590,7 +1590,7 @@ public:
 ///////////////////////////////////////
 
 class VisualShaderNodeBooleanUniform : public VisualShaderNodeUniform {
-    GDCLASS(VisualShaderNodeBooleanUniform, VisualShaderNodeUniform);
+    REBEL_OBJECT(VisualShaderNodeBooleanUniform, VisualShaderNodeUniform);
 
 public:
     String get_caption() const override;
@@ -1623,7 +1623,7 @@ public:
 ///////////////////////////////////////
 
 class VisualShaderNodeColorUniform : public VisualShaderNodeUniform {
-    GDCLASS(VisualShaderNodeColorUniform, VisualShaderNodeUniform);
+    REBEL_OBJECT(VisualShaderNodeColorUniform, VisualShaderNodeUniform);
 
 public:
     String get_caption() const override;
@@ -1656,7 +1656,7 @@ public:
 ///////////////////////////////////////
 
 class VisualShaderNodeVec3Uniform : public VisualShaderNodeUniform {
-    GDCLASS(VisualShaderNodeVec3Uniform, VisualShaderNodeUniform);
+    REBEL_OBJECT(VisualShaderNodeVec3Uniform, VisualShaderNodeUniform);
 
 public:
     String get_caption() const override;
@@ -1689,7 +1689,7 @@ public:
 ///////////////////////////////////////
 
 class VisualShaderNodeTransformUniform : public VisualShaderNodeUniform {
-    GDCLASS(VisualShaderNodeTransformUniform, VisualShaderNodeUniform);
+    REBEL_OBJECT(VisualShaderNodeTransformUniform, VisualShaderNodeUniform);
 
 public:
     String get_caption() const override;
@@ -1722,7 +1722,7 @@ public:
 ///////////////////////////////////////
 
 class VisualShaderNodeTextureUniform : public VisualShaderNodeUniform {
-    GDCLASS(VisualShaderNodeTextureUniform, VisualShaderNodeUniform);
+    REBEL_OBJECT(VisualShaderNodeTextureUniform, VisualShaderNodeUniform);
 
 public:
     enum TextureType {
@@ -1790,7 +1790,7 @@ VARIANT_ENUM_CAST(VisualShaderNodeTextureUniform::ColorDefault)
 
 class VisualShaderNodeTextureUniformTriplanar :
     public VisualShaderNodeTextureUniform {
-    GDCLASS(
+    REBEL_OBJECT(
         VisualShaderNodeTextureUniformTriplanar,
         VisualShaderNodeTextureUniform
     );
@@ -1829,7 +1829,10 @@ public:
 ///////////////////////////////////////
 
 class VisualShaderNodeCubeMapUniform : public VisualShaderNodeTextureUniform {
-    GDCLASS(VisualShaderNodeCubeMapUniform, VisualShaderNodeTextureUniform);
+    REBEL_OBJECT(
+        VisualShaderNodeCubeMapUniform,
+        VisualShaderNodeTextureUniform
+    );
 
 public:
     String get_caption() const override;
@@ -1865,7 +1868,7 @@ public:
 ///////////////////////////////////////
 
 class VisualShaderNodeIf : public VisualShaderNode {
-    GDCLASS(VisualShaderNodeIf, VisualShaderNode);
+    REBEL_OBJECT(VisualShaderNodeIf, VisualShaderNode);
 
 public:
     String get_caption() const override;
@@ -1895,7 +1898,7 @@ public:
 ///////////////////////////////////////
 
 class VisualShaderNodeSwitch : public VisualShaderNode {
-    GDCLASS(VisualShaderNodeSwitch, VisualShaderNode);
+    REBEL_OBJECT(VisualShaderNodeSwitch, VisualShaderNode);
 
 public:
     String get_caption() const override;
@@ -1921,7 +1924,7 @@ public:
 };
 
 class VisualShaderNodeScalarSwitch : public VisualShaderNodeSwitch {
-    GDCLASS(VisualShaderNodeScalarSwitch, VisualShaderNodeSwitch);
+    REBEL_OBJECT(VisualShaderNodeScalarSwitch, VisualShaderNodeSwitch);
 
 public:
     String get_caption() const override;
@@ -1937,7 +1940,7 @@ public:
 ///////////////////////////////////////
 
 class VisualShaderNodeFresnel : public VisualShaderNode {
-    GDCLASS(VisualShaderNodeFresnel, VisualShaderNode);
+    REBEL_OBJECT(VisualShaderNodeFresnel, VisualShaderNode);
 
 public:
     String get_caption() const override;
@@ -1969,7 +1972,7 @@ public:
 ///////////////////////////////////////
 
 class VisualShaderNodeIs : public VisualShaderNode {
-    GDCLASS(VisualShaderNodeIs, VisualShaderNode);
+    REBEL_OBJECT(VisualShaderNodeIs, VisualShaderNode);
 
 public:
     enum Function {
@@ -2018,7 +2021,7 @@ VARIANT_ENUM_CAST(VisualShaderNodeIs::Function)
 ///////////////////////////////////////
 
 class VisualShaderNodeCompare : public VisualShaderNode {
-    GDCLASS(VisualShaderNodeCompare, VisualShaderNode);
+    REBEL_OBJECT(VisualShaderNodeCompare, VisualShaderNode);
 
 public:
     enum ComparisonType {

@@ -10,7 +10,7 @@
 #include "core/resource.h"
 
 class GLTFCamera : public Resource {
-    GDCLASS(GLTFCamera, Resource);
+    REBEL_OBJECT(GLTFCamera, Resource);
 
 private:
     bool perspective = true;

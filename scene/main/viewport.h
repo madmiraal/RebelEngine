@@ -28,7 +28,7 @@ class CollisionObject;
 class SceneTreeTimer;
 
 class ViewportTexture : public Texture {
-    GDCLASS(ViewportTexture, Texture);
+    REBEL_OBJECT(ViewportTexture, Texture);
 
     NodePath path;
 
@@ -64,7 +64,7 @@ public:
 };
 
 class Viewport : public Node {
-    GDCLASS(Viewport, Node);
+    REBEL_OBJECT(Viewport, Node);
 
 public:
     enum UpdateMode {

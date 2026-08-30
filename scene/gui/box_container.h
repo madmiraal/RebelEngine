@@ -10,7 +10,7 @@
 #include "scene/gui/container.h"
 
 class BoxContainer : public Container {
-    GDCLASS(BoxContainer, Container);
+    REBEL_OBJECT(BoxContainer, Container);
 
 public:
     enum AlignMode {
@@ -42,7 +42,7 @@ public:
 };
 
 class HBoxContainer : public BoxContainer {
-    GDCLASS(HBoxContainer, BoxContainer);
+    REBEL_OBJECT(HBoxContainer, BoxContainer);
 
 public:
     HBoxContainer() : BoxContainer(false) {}
@@ -51,7 +51,7 @@ public:
 class MarginContainer;
 
 class VBoxContainer : public BoxContainer {
-    GDCLASS(VBoxContainer, BoxContainer);
+    REBEL_OBJECT(VBoxContainer, BoxContainer);
 
 public:
     MarginContainer* add_margin_child(

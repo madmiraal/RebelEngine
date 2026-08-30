@@ -18,7 +18,7 @@
 #include "scene/gui/spin_box.h"
 
 class RenameDialog : public ConfirmationDialog {
-    GDCLASS(RenameDialog, ConfirmationDialog);
+    REBEL_OBJECT(RenameDialog, ConfirmationDialog);
 
     void ok_pressed() override {
         rename();

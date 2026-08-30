@@ -11,7 +11,7 @@
 #include "scene/gui/scroll_bar.h"
 
 class ItemList : public Control {
-    GDCLASS(ItemList, Control);
+    REBEL_OBJECT(ItemList, Control);
 
 public:
     enum IconMode {

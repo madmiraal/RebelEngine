@@ -11,7 +11,7 @@
 #include "scene/3d/path.h"
 
 class PathSpatialGizmo : public EditorSpatialGizmo {
-    GDCLASS(PathSpatialGizmo, EditorSpatialGizmo);
+    REBEL_OBJECT(PathSpatialGizmo, EditorSpatialGizmo);
 
     Path* path;
     mutable Vector3 original;
@@ -34,7 +34,7 @@ public:
 };
 
 class PathSpatialGizmoPlugin : public EditorSpatialGizmoPlugin {
-    GDCLASS(PathSpatialGizmoPlugin, EditorSpatialGizmoPlugin);
+    REBEL_OBJECT(PathSpatialGizmoPlugin, EditorSpatialGizmoPlugin);
 
 protected:
     Ref<EditorSpatialGizmo> create_gizmo(Spatial* p_spatial) override;
@@ -46,7 +46,7 @@ public:
 };
 
 class PathEditorPlugin : public EditorPlugin {
-    GDCLASS(PathEditorPlugin, EditorPlugin);
+    REBEL_OBJECT(PathEditorPlugin, EditorPlugin);
 
     Separator* sep;
     ToolButton* curve_create;

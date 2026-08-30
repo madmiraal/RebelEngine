@@ -12,7 +12,7 @@
 #define WRTC_IN_BUF "network/limits/webrtc/max_channel_in_buffer_kb"
 
 class WebRTCDataChannel : public PacketPeer {
-    GDCLASS(WebRTCDataChannel, PacketPeer);
+    REBEL_OBJECT(WebRTCDataChannel, PacketPeer);
 
 public:
     enum WriteMode {

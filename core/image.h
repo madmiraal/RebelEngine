@@ -25,7 +25,7 @@ typedef Error (*SaveEXRFunc)(
 );
 
 class Image : public Resource {
-    GDCLASS(Image, Resource);
+    REBEL_OBJECT(Image, Resource);
 
 public:
     static SavePNGFunc save_png_func;

@@ -28,7 +28,7 @@
 #include "scene/resources/theme.h"
 
 class ThemeEditorPreview : public VBoxContainer {
-    GDCLASS(ThemeEditorPreview, VBoxContainer);
+    REBEL_OBJECT(ThemeEditorPreview, VBoxContainer);
 
     ScrollContainer* preview_container;
     ColorRect* preview_bg;
@@ -73,14 +73,14 @@ public:
 };
 
 class DefaultThemeEditorPreview : public ThemeEditorPreview {
-    GDCLASS(DefaultThemeEditorPreview, ThemeEditorPreview);
+    REBEL_OBJECT(DefaultThemeEditorPreview, ThemeEditorPreview);
 
 public:
     DefaultThemeEditorPreview();
 };
 
 class SceneThemeEditorPreview : public ThemeEditorPreview {
-    GDCLASS(SceneThemeEditorPreview, ThemeEditorPreview);
+    REBEL_OBJECT(SceneThemeEditorPreview, ThemeEditorPreview);
 
     Ref<PackedScene> loaded_scene;
 

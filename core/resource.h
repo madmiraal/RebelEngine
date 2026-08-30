@@ -27,7 +27,7 @@ public:                                                                        \
 private:
 
 class Resource : public Reference {
-    GDCLASS(Resource, Reference);
+    REBEL_OBJECT(Resource, Reference);
 
 public:
     static void register_custom_data_to_otdb() {

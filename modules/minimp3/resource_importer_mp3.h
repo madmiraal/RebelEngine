@@ -11,7 +11,7 @@
 #include "core/io/resource_importer.h"
 
 class ResourceImporterMP3 : public ResourceImporter {
-    GDCLASS(ResourceImporterMP3, ResourceImporter);
+    REBEL_OBJECT(ResourceImporterMP3, ResourceImporter);
 
 public:
     String get_importer_name() const override;

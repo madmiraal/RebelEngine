@@ -13,7 +13,7 @@
 #include "servers/arvr_server.h"
 
 class ARVRInterface : public Reference {
-    GDCLASS(ARVRInterface, Reference);
+    REBEL_OBJECT(ARVRInterface, Reference);
 
 public:
     enum Capabilities { /* purely meta data, provides some info about what this

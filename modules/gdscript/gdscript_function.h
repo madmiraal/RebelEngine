@@ -379,7 +379,7 @@ public:
 };
 
 class GDScriptFunctionState : public Reference {
-    GDCLASS(GDScriptFunctionState, Reference);
+    REBEL_OBJECT(GDScriptFunctionState, Reference);
     friend class GDScriptFunction;
     GDScriptFunction* function;
     GDScriptFunction::CallState state;

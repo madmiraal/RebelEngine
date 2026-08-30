@@ -11,7 +11,7 @@
 #include "editor_scene_importer_gltf.h"
 
 class SceneExporterGLTFPlugin : public EditorPlugin {
-    GDCLASS(SceneExporterGLTFPlugin, EditorPlugin);
+    REBEL_OBJECT(SceneExporterGLTFPlugin, EditorPlugin);
 
     Ref<PackedSceneGLTF> convert_gltf2;
     EditorNode* editor                = nullptr;

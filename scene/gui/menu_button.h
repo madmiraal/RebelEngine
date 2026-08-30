@@ -11,7 +11,7 @@
 #include "scene/gui/popup_menu.h"
 
 class MenuButton : public Button {
-    GDCLASS(MenuButton, Button);
+    REBEL_OBJECT(MenuButton, Button);
 
     bool clicked;
     bool switch_on_hover;

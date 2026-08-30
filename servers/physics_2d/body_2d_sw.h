@@ -482,7 +482,7 @@ void Body2DSW::add_contact(
 }
 
 class Physics2DDirectBodyStateSW : public Physics2DDirectBodyState {
-    GDCLASS(Physics2DDirectBodyStateSW, Physics2DDirectBodyState);
+    REBEL_OBJECT(Physics2DDirectBodyStateSW, Physics2DDirectBodyState);
 
 public:
     static Physics2DDirectBodyStateSW* singleton;

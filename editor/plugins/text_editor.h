@@ -10,7 +10,7 @@
 #include "script_editor_plugin.h"
 
 class TextEditor : public ScriptEditorBase {
-    GDCLASS(TextEditor, ScriptEditorBase);
+    REBEL_OBJECT(TextEditor, ScriptEditorBase);
 
 private:
     CodeTextEditor* code_editor;

@@ -12,7 +12,7 @@
 class VehicleBody;
 
 class VehicleWheel : public Spatial {
-    GDCLASS(VehicleWheel, Spatial);
+    REBEL_OBJECT(VehicleWheel, Spatial);
 
     friend class VehicleBody;
 
@@ -127,7 +127,7 @@ public:
 };
 
 class VehicleBody : public RigidBody {
-    GDCLASS(VehicleBody, RigidBody);
+    REBEL_OBJECT(VehicleBody, RigidBody);
 
     float engine_force;
     float brake;

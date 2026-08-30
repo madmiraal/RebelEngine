@@ -114,7 +114,7 @@ void ResourceInteractiveLoader::_bind_methods() {
 }
 
 class ResourceInteractiveLoaderDefault : public ResourceInteractiveLoader {
-    GDCLASS(ResourceInteractiveLoaderDefault, ResourceInteractiveLoader);
+    REBEL_OBJECT(ResourceInteractiveLoaderDefault, ResourceInteractiveLoader);
 
 public:
     Ref<Resource> resource;

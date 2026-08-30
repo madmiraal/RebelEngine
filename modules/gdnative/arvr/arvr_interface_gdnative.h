@@ -11,7 +11,7 @@
 #include "servers/arvr/arvr_interface.h"
 
 class ARVRInterfaceGDNative : public ARVRInterface {
-    GDCLASS(ARVRInterfaceGDNative, ARVRInterface);
+    REBEL_OBJECT(ARVRInterfaceGDNative, ARVRInterface);
 
     void cleanup();
 

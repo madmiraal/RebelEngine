@@ -19,7 +19,7 @@
 class CanvasItemEditorViewport;
 
 class CanvasItemEditorSelectedItem : public Object {
-    GDCLASS(CanvasItemEditorSelectedItem, Object);
+    REBEL_OBJECT(CanvasItemEditorSelectedItem, Object);
 
 public:
     Transform2D prev_xform;
@@ -42,7 +42,7 @@ public:
 };
 
 class CanvasItemEditor : public VBoxContainer {
-    GDCLASS(CanvasItemEditor, VBoxContainer);
+    REBEL_OBJECT(CanvasItemEditor, VBoxContainer);
 
 public:
     enum Tool {
@@ -760,7 +760,7 @@ public:
 };
 
 class CanvasItemEditorPlugin : public EditorPlugin {
-    GDCLASS(CanvasItemEditorPlugin, EditorPlugin);
+    REBEL_OBJECT(CanvasItemEditorPlugin, EditorPlugin);
 
     CanvasItemEditor* canvas_item_editor;
     EditorNode* editor;
@@ -789,7 +789,7 @@ public:
 };
 
 class CanvasItemEditorViewport : public Control {
-    GDCLASS(CanvasItemEditorViewport, Control);
+    REBEL_OBJECT(CanvasItemEditorViewport, Control);
 
     String default_type;
     Vector<String> types;

@@ -13,7 +13,7 @@
 #include "scene/gui/popup_menu.h"
 
 class EditorPath : public Button {
-    GDCLASS(EditorPath, Button);
+    REBEL_OBJECT(EditorPath, Button);
 
     EditorHistory* history;
 

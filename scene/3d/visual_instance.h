@@ -13,7 +13,7 @@
 #include "scene/resources/material.h"
 
 class VisualInstance : public CullInstance {
-    GDCLASS(VisualInstance, CullInstance);
+    REBEL_OBJECT(VisualInstance, CullInstance);
 
     RID base;
     RID instance;
@@ -55,7 +55,7 @@ public:
 };
 
 class GeometryInstance : public VisualInstance {
-    GDCLASS(GeometryInstance, VisualInstance);
+    REBEL_OBJECT(GeometryInstance, VisualInstance);
 
 public:
     enum Flags {

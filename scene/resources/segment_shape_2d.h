@@ -10,7 +10,7 @@
 #include "scene/resources/shape_2d.h"
 
 class SegmentShape2D : public Shape2D {
-    GDCLASS(SegmentShape2D, Shape2D);
+    REBEL_OBJECT(SegmentShape2D, Shape2D);
 
     Vector2 a;
     Vector2 b;
@@ -37,7 +37,7 @@ public:
 };
 
 class RayShape2D : public Shape2D {
-    GDCLASS(RayShape2D, Shape2D);
+    REBEL_OBJECT(RayShape2D, Shape2D);
 
     real_t length;
     bool slips_on_slope;

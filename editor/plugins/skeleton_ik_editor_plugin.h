@@ -13,7 +13,7 @@
 class SkeletonIK;
 
 class SkeletonIKEditorPlugin : public EditorPlugin {
-    GDCLASS(SkeletonIKEditorPlugin, EditorPlugin);
+    REBEL_OBJECT(SkeletonIKEditorPlugin, EditorPlugin);
 
     SkeletonIK* skeleton_ik;
 

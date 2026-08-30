@@ -11,7 +11,7 @@
 #include "scene/resources/multimesh.h"
 
 class MultiMeshInstance : public GeometryInstance {
-    GDCLASS(MultiMeshInstance, GeometryInstance);
+    REBEL_OBJECT(MultiMeshInstance, GeometryInstance);
 
     Ref<MultiMesh> multimesh;
 

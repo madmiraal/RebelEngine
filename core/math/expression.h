@@ -10,7 +10,7 @@
 #include "core/reference.h"
 
 class Expression : public Reference {
-    GDCLASS(Expression, Reference);
+    REBEL_OBJECT(Expression, Reference);
 
 public:
     enum BuiltinFunc {

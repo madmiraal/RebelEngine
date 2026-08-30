@@ -13,7 +13,7 @@
 class CollisionObject2D;
 
 class CollisionPolygon2D : public Node2D {
-    GDCLASS(CollisionPolygon2D, Node2D);
+    REBEL_OBJECT(CollisionPolygon2D, Node2D);
 
 public:
     enum BuildMode {

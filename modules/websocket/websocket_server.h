@@ -13,7 +13,7 @@
 #include "websocket_peer.h"
 
 class WebSocketServer : public WebSocketMultiplayerPeer {
-    GDCLASS(WebSocketServer, WebSocketMultiplayerPeer);
+    REBEL_OBJECT(WebSocketServer, WebSocketMultiplayerPeer);
     GDCICLASS(WebSocketServer);
 
     IP_Address bind_ip;

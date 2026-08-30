@@ -10,7 +10,7 @@
 #include "scene/3d/spatial.h"
 
 class WorldEnvironment : public Node {
-    GDCLASS(WorldEnvironment, Node);
+    REBEL_OBJECT(WorldEnvironment, Node);
 
     Ref<Environment> environment;
 

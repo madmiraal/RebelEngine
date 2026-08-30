@@ -11,7 +11,7 @@
 #include "core/resource.h"
 
 class GLTFLight : public Resource {
-    GDCLASS(GLTFLight, Resource)
+    REBEL_OBJECT(GLTFLight, Resource)
     friend class GLTFDocument;
 
 protected:

@@ -13,7 +13,7 @@
 
 class CPUParticles : public GeometryInstance {
 private:
-    GDCLASS(CPUParticles, GeometryInstance);
+    REBEL_OBJECT(CPUParticles, GeometryInstance);
 
 public:
     enum DrawOrder {

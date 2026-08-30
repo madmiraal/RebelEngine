@@ -13,7 +13,7 @@
 #include "servers/audio_server.h"
 
 class VideoPlayer : public Control {
-    GDCLASS(VideoPlayer, Control);
+    REBEL_OBJECT(VideoPlayer, Control);
 
     struct Output {
         AudioFrame vol;

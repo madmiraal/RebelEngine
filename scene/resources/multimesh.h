@@ -11,7 +11,7 @@
 #include "servers/visual_server.h"
 
 class MultiMesh : public Resource {
-    GDCLASS(MultiMesh, Resource);
+    REBEL_OBJECT(MultiMesh, Resource);
     RES_BASE_EXTENSION("multimesh");
 
 public:

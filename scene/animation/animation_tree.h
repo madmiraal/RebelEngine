@@ -17,7 +17,7 @@ class AnimationPlayer;
 class AnimationTree;
 
 class AnimationNode : public Resource {
-    GDCLASS(AnimationNode, Resource);
+    REBEL_OBJECT(AnimationNode, Resource);
 
 public:
     enum FilterAction {
@@ -167,14 +167,14 @@ VARIANT_ENUM_CAST(AnimationNode::FilterAction)
 
 // root node does not allow inputs
 class AnimationRootNode : public AnimationNode {
-    GDCLASS(AnimationRootNode, AnimationNode);
+    REBEL_OBJECT(AnimationRootNode, AnimationNode);
 
 public:
     AnimationRootNode() {}
 };
 
 class AnimationTree : public Node {
-    GDCLASS(AnimationTree, Node);
+    REBEL_OBJECT(AnimationTree, Node);
 
 public:
     enum AnimationProcessMode {

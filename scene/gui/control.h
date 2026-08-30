@@ -20,7 +20,7 @@ class Label;
 class Panel;
 
 class Control : public CanvasItem {
-    GDCLASS(Control, CanvasItem);
+    REBEL_OBJECT(Control, CanvasItem);
 
 public:
     enum Anchor {

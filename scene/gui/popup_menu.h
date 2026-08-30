@@ -10,7 +10,7 @@
 #include "scene/gui/popup.h"
 
 class PopupMenu : public Popup {
-    GDCLASS(PopupMenu, Popup);
+    REBEL_OBJECT(PopupMenu, Popup);
 
     struct Item {
         Ref<Texture> icon;

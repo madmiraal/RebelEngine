@@ -13,7 +13,7 @@
 #include "scene/resources/texture.h"
 
 class Shader : public Resource {
-    GDCLASS(Shader, Resource);
+    REBEL_OBJECT(Shader, Resource);
     OBJ_SAVE_TYPE(Shader);
 
 public:

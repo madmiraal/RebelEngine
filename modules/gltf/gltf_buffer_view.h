@@ -11,7 +11,7 @@
 #include "gltf_document.h"
 
 class GLTFBufferView : public Resource {
-    GDCLASS(GLTFBufferView, Resource);
+    REBEL_OBJECT(GLTFBufferView, Resource);
     friend class GLTFDocument;
 
 private:

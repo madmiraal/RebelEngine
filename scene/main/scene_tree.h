@@ -22,7 +22,7 @@ class Material;
 class Mesh;
 
 class SceneTreeTimer : public Reference {
-    GDCLASS(SceneTreeTimer, Reference);
+    REBEL_OBJECT(SceneTreeTimer, Reference);
 
     float time_left;
     bool process_pause;
@@ -49,7 +49,7 @@ public:
 class SceneTree : public MainLoop {
     _THREAD_SAFE_CLASS_
 
-    GDCLASS(SceneTree, MainLoop);
+    REBEL_OBJECT(SceneTree, MainLoop);
 
 public:
     typedef void (*IdleCallback)();

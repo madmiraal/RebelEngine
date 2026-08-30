@@ -10,7 +10,7 @@
 #include "core/io/ip.h"
 
 class DefaultIP : public IP {
-    GDCLASS(DefaultIP, IP);
+    REBEL_OBJECT(DefaultIP, IP);
 
     void _resolve_hostname(
         List<IP_Address>& r_addresses,

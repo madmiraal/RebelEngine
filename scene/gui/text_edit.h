@@ -15,7 +15,7 @@
 class SyntaxHighlighter;
 
 class TextEdit : public Control {
-    GDCLASS(TextEdit, Control);
+    REBEL_OBJECT(TextEdit, Control);
 
 public:
     struct HighlighterInfo {

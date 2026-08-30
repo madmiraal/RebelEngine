@@ -18,7 +18,7 @@
 class ExportTemplateVersion;
 
 class ExportTemplateManager : public AcceptDialog {
-    GDCLASS(ExportTemplateManager, AcceptDialog);
+    REBEL_OBJECT(ExportTemplateManager, AcceptDialog);
 
     bool current_version_exists   = false;
     bool downloads_available      = true;

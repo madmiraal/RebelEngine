@@ -11,7 +11,7 @@
 #include "core/resource.h"
 
 class ResourceInteractiveLoader : public Reference {
-    GDCLASS(ResourceInteractiveLoader, Reference);
+    REBEL_OBJECT(ResourceInteractiveLoader, Reference);
     friend class ResourceLoader;
     String path_loading;
     Thread::ID path_loading_thread;
@@ -34,7 +34,7 @@ public:
 };
 
 class ResourceFormatLoader : public Reference {
-    GDCLASS(ResourceFormatLoader, Reference);
+    REBEL_OBJECT(ResourceFormatLoader, Reference);
 
 protected:
     static void _bind_methods();

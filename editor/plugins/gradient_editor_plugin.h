@@ -12,7 +12,7 @@
 #include "scene/gui/gradient_edit.h"
 
 class GradientEditor : public GradientEdit {
-    GDCLASS(GradientEditor, GradientEdit);
+    REBEL_OBJECT(GradientEditor, GradientEdit);
 
     bool editing;
     Ref<Gradient> gradient;
@@ -30,7 +30,7 @@ public:
 };
 
 class EditorInspectorPluginGradient : public EditorInspectorPlugin {
-    GDCLASS(EditorInspectorPluginGradient, EditorInspectorPlugin);
+    REBEL_OBJECT(EditorInspectorPluginGradient, EditorInspectorPlugin);
 
 public:
     bool can_handle(Object* p_object) override;
@@ -38,7 +38,7 @@ public:
 };
 
 class GradientEditorPlugin : public EditorPlugin {
-    GDCLASS(GradientEditorPlugin, EditorPlugin);
+    REBEL_OBJECT(GradientEditorPlugin, EditorPlugin);
 
 public:
     String get_name() const override {

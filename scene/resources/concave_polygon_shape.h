@@ -10,7 +10,7 @@
 #include "scene/resources/shape.h"
 
 class ConcavePolygonShape : public Shape {
-    GDCLASS(ConcavePolygonShape, Shape);
+    REBEL_OBJECT(ConcavePolygonShape, Shape);
 
     struct DrawEdge {
         Vector3 a;

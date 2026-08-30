@@ -25,7 +25,7 @@
 #include "scene/resources/text_file.h"
 
 class ScriptEditorQuickOpen : public ConfirmationDialog {
-    GDCLASS(ScriptEditorQuickOpen, ConfirmationDialog);
+    REBEL_OBJECT(ScriptEditorQuickOpen, ConfirmationDialog);
 
     LineEdit* search_box;
     Tree* search_options;
@@ -54,7 +54,7 @@ public:
 class ScriptEditorDebugger;
 
 class ScriptEditorBase : public VBoxContainer {
-    GDCLASS(ScriptEditorBase, VBoxContainer);
+    REBEL_OBJECT(ScriptEditorBase, VBoxContainer);
 
 protected:
     static void _bind_methods();
@@ -117,7 +117,7 @@ class FindInFilesDialog;
 class FindInFilesPanel;
 
 class ScriptEditor : public PanelContainer {
-    GDCLASS(ScriptEditor, PanelContainer);
+    REBEL_OBJECT(ScriptEditor, PanelContainer);
 
     EditorNode* editor;
 
@@ -494,7 +494,7 @@ public:
 };
 
 class ScriptEditorPlugin : public EditorPlugin {
-    GDCLASS(ScriptEditorPlugin, EditorPlugin);
+    REBEL_OBJECT(ScriptEditorPlugin, EditorPlugin);
 
     ScriptEditor* script_editor;
     EditorNode* editor;

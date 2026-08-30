@@ -10,7 +10,7 @@
 #include "scene/main/node.h"
 
 class MultiNodeEdit : public Reference {
-    GDCLASS(MultiNodeEdit, Reference);
+    REBEL_OBJECT(MultiNodeEdit, Reference);
 
     List<NodePath> nodes;
 

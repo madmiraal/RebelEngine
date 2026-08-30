@@ -19,7 +19,7 @@ class Viewport;
 class SceneState;
 
 class Node : public Object {
-    GDCLASS(Node, Object);
+    REBEL_OBJECT(Node, Object);
 
 public:
     enum PauseMode {

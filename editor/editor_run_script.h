@@ -12,7 +12,7 @@
 class EditorNode;
 
 class EditorScript : public Reference {
-    GDCLASS(EditorScript, Reference);
+    REBEL_OBJECT(EditorScript, Reference);
 
     EditorNode* editor;
 

@@ -18,7 +18,7 @@
 #include "core/typedefs.h"
 
 class PhysicsDirectSpaceStateSW : public PhysicsDirectSpaceState {
-    GDCLASS(PhysicsDirectSpaceStateSW, PhysicsDirectSpaceState);
+    REBEL_OBJECT(PhysicsDirectSpaceStateSW, PhysicsDirectSpaceState);
 
 public:
     SpaceSW* space;

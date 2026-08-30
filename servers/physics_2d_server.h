@@ -14,7 +14,7 @@
 class Physics2DDirectSpaceState;
 
 class Physics2DDirectBodyState : public Object {
-    GDCLASS(Physics2DDirectBodyState, Object);
+    REBEL_OBJECT(Physics2DDirectBodyState, Object);
 
 protected:
     static void _bind_methods();
@@ -82,7 +82,7 @@ public:
 
 // used for script
 class Physics2DShapeQueryParameters : public Reference {
-    GDCLASS(Physics2DShapeQueryParameters, Reference);
+    REBEL_OBJECT(Physics2DShapeQueryParameters, Reference);
     friend class Physics2DDirectSpaceState;
     RID shape;
     Transform2D transform;
@@ -127,7 +127,7 @@ public:
 };
 
 class Physics2DDirectSpaceState : public Object {
-    GDCLASS(Physics2DDirectSpaceState, Object);
+    REBEL_OBJECT(Physics2DDirectSpaceState, Object);
 
     Dictionary _intersect_ray(
         const Vector2& p_from,
@@ -299,7 +299,7 @@ public:
 class Physics2DTestMotionResult;
 
 class Physics2DServer : public Object {
-    GDCLASS(Physics2DServer, Object);
+    REBEL_OBJECT(Physics2DServer, Object);
 
     static Physics2DServer* singleton;
 
@@ -860,7 +860,7 @@ public:
 };
 
 class Physics2DTestMotionResult : public Reference {
-    GDCLASS(Physics2DTestMotionResult, Reference);
+    REBEL_OBJECT(Physics2DTestMotionResult, Reference);
 
     Physics2DServer::MotionResult result;
     bool colliding = false;

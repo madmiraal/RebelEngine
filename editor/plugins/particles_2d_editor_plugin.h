@@ -15,7 +15,7 @@
 #include "scene/gui/file_dialog.h"
 
 class Particles2DEditorPlugin : public EditorPlugin {
-    GDCLASS(Particles2DEditorPlugin, EditorPlugin);
+    REBEL_OBJECT(Particles2DEditorPlugin, EditorPlugin);
 
     enum {
         MENU_GENERATE_VISIBILITY_RECT,

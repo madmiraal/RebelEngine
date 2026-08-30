@@ -13,7 +13,7 @@
 #include "scene/resources/material.h"
 
 class BakedLightmapEditorPlugin : public EditorPlugin {
-    GDCLASS(BakedLightmapEditorPlugin, EditorPlugin);
+    REBEL_OBJECT(BakedLightmapEditorPlugin, EditorPlugin);
 
     BakedLightmap* lightmap;
 

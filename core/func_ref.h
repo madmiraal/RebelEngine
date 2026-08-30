@@ -10,7 +10,7 @@
 #include "core/reference.h"
 
 class FuncRef : public Reference {
-    GDCLASS(FuncRef, Reference);
+    REBEL_OBJECT(FuncRef, Reference);
     ObjectID id;
     StringName function;
 

@@ -17,7 +17,7 @@
 #include "theme_editor_preview.h"
 
 class ThemeItemImportTree : public VBoxContainer {
-    GDCLASS(ThemeItemImportTree, VBoxContainer);
+    REBEL_OBJECT(ThemeItemImportTree, VBoxContainer);
 
     Ref<Theme> edited_theme;
     Ref<Theme> base_theme;
@@ -148,7 +148,7 @@ public:
 };
 
 class ThemeItemEditorDialog : public AcceptDialog {
-    GDCLASS(ThemeItemEditorDialog, AcceptDialog);
+    REBEL_OBJECT(ThemeItemEditorDialog, AcceptDialog);
 
     Ref<Theme> edited_theme;
 
@@ -246,7 +246,7 @@ public:
 };
 
 class ThemeTypeEditor : public MarginContainer {
-    GDCLASS(ThemeTypeEditor, MarginContainer);
+    REBEL_OBJECT(ThemeTypeEditor, MarginContainer);
 
     Ref<Theme> edited_theme;
     String edited_type;
@@ -358,7 +358,7 @@ public:
 };
 
 class ThemeEditor : public VBoxContainer {
-    GDCLASS(ThemeEditor, VBoxContainer);
+    REBEL_OBJECT(ThemeEditor, VBoxContainer);
 
     Ref<Theme> theme;
 
@@ -400,7 +400,7 @@ public:
 };
 
 class ThemeEditorPlugin : public EditorPlugin {
-    GDCLASS(ThemeEditorPlugin, EditorPlugin);
+    REBEL_OBJECT(ThemeEditorPlugin, EditorPlugin);
 
     ThemeEditor* theme_editor;
     EditorNode* editor;

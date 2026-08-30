@@ -17,7 +17,7 @@
 class CanvasItemEditor;
 
 class Polygon3DEditor : public HBoxContainer {
-    GDCLASS(Polygon3DEditor, HBoxContainer);
+    REBEL_OBJECT(Polygon3DEditor, HBoxContainer);
 
     UndoRedo* undo_redo;
 
@@ -74,7 +74,7 @@ public:
 };
 
 class Polygon3DEditorPlugin : public EditorPlugin {
-    GDCLASS(Polygon3DEditorPlugin, EditorPlugin);
+    REBEL_OBJECT(Polygon3DEditorPlugin, EditorPlugin);
 
     Polygon3DEditor* collision_polygon_editor;
     EditorNode* editor;

@@ -10,7 +10,7 @@
 #include "visual_script.h"
 
 class VisualScriptReturn : public VisualScriptNode {
-    GDCLASS(VisualScriptReturn, VisualScriptNode);
+    REBEL_OBJECT(VisualScriptReturn, VisualScriptNode);
 
     Variant::Type type;
     bool with_value;
@@ -50,7 +50,7 @@ public:
 };
 
 class VisualScriptCondition : public VisualScriptNode {
-    GDCLASS(VisualScriptCondition, VisualScriptNode);
+    REBEL_OBJECT(VisualScriptCondition, VisualScriptNode);
 
 protected:
     static void _bind_methods();
@@ -81,7 +81,7 @@ public:
 };
 
 class VisualScriptWhile : public VisualScriptNode {
-    GDCLASS(VisualScriptWhile, VisualScriptNode);
+    REBEL_OBJECT(VisualScriptWhile, VisualScriptNode);
 
 protected:
     static void _bind_methods();
@@ -112,7 +112,7 @@ public:
 };
 
 class VisualScriptIterator : public VisualScriptNode {
-    GDCLASS(VisualScriptIterator, VisualScriptNode);
+    REBEL_OBJECT(VisualScriptIterator, VisualScriptNode);
 
 protected:
     static void _bind_methods();
@@ -143,7 +143,7 @@ public:
 };
 
 class VisualScriptSequence : public VisualScriptNode {
-    GDCLASS(VisualScriptSequence, VisualScriptNode);
+    REBEL_OBJECT(VisualScriptSequence, VisualScriptNode);
 
     int steps;
 
@@ -179,7 +179,7 @@ public:
 };
 
 class VisualScriptSwitch : public VisualScriptNode {
-    GDCLASS(VisualScriptSwitch, VisualScriptNode);
+    REBEL_OBJECT(VisualScriptSwitch, VisualScriptNode);
 
     struct Case {
         Variant::Type type;
@@ -230,7 +230,7 @@ public:
 };
 
 class VisualScriptTypeCast : public VisualScriptNode {
-    GDCLASS(VisualScriptTypeCast, VisualScriptNode);
+    REBEL_OBJECT(VisualScriptTypeCast, VisualScriptNode);
 
     StringName base_type;
     String script;

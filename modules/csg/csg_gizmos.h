@@ -12,7 +12,7 @@
 #include "editor/spatial_editor_gizmos.h"
 
 class CSGShapeSpatialGizmoPlugin : public EditorSpatialGizmoPlugin {
-    GDCLASS(CSGShapeSpatialGizmoPlugin, EditorSpatialGizmoPlugin);
+    REBEL_OBJECT(CSGShapeSpatialGizmoPlugin, EditorSpatialGizmoPlugin);
 
 public:
     bool has_gizmo(Spatial* p_spatial) override;
@@ -42,7 +42,7 @@ public:
 };
 
 class EditorPluginCSG : public EditorPlugin {
-    GDCLASS(EditorPluginCSG, EditorPlugin);
+    REBEL_OBJECT(EditorPluginCSG, EditorPlugin);
 
 public:
     EditorPluginCSG(EditorNode* p_editor);

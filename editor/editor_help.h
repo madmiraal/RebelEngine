@@ -20,7 +20,7 @@
 #include "scene/main/timer.h"
 
 class FindBar : public HBoxContainer {
-    GDCLASS(FindBar, HBoxContainer);
+    REBEL_OBJECT(FindBar, HBoxContainer);
 
     LineEdit* search_text;
     ToolButton* find_prev;
@@ -61,7 +61,7 @@ public:
 };
 
 class EditorHelp : public VBoxContainer {
-    GDCLASS(EditorHelp, VBoxContainer);
+    REBEL_OBJECT(EditorHelp, VBoxContainer);
 
     enum Page {
         PAGE_CLASS_LIST,
@@ -173,7 +173,7 @@ public:
 };
 
 class EditorHelpBit : public PanelContainer {
-    GDCLASS(EditorHelpBit, PanelContainer);
+    REBEL_OBJECT(EditorHelpBit, PanelContainer);
 
     RichTextLabel* rich_text;
     void _go_to_help(String p_what);

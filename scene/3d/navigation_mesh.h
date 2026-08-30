@@ -13,7 +13,7 @@
 class Mesh;
 
 class NavigationMesh : public Resource {
-    GDCLASS(NavigationMesh, Resource);
+    REBEL_OBJECT(NavigationMesh, Resource);
 
     PoolVector<Vector3> vertices;
 
@@ -178,7 +178,7 @@ VARIANT_ENUM_CAST(NavigationMesh::SourceGeometryMode);
 class Navigation;
 
 class NavigationMeshInstance : public Spatial {
-    GDCLASS(NavigationMeshInstance, Spatial);
+    REBEL_OBJECT(NavigationMeshInstance, Spatial);
 
     bool enabled;
     int nav_id;

@@ -11,7 +11,7 @@
 #include "scroll_bar.h"
 
 class ScrollContainer : public Container {
-    GDCLASS(ScrollContainer, Container);
+    REBEL_OBJECT(ScrollContainer, Container);
 
     HScrollBar* h_scroll;
     VScrollBar* v_scroll;

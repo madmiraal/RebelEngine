@@ -13,7 +13,7 @@
 class StreamBitMap;
 
 class ResourceImporterBitMap : public ResourceImporter {
-    GDCLASS(ResourceImporterBitMap, ResourceImporter);
+    REBEL_OBJECT(ResourceImporterBitMap, ResourceImporter);
 
 public:
     String get_importer_name() const override;

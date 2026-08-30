@@ -36,7 +36,7 @@
 #include "scene/resources/packed_scene.h"
 
 class ScriptEditorDebuggerVariables : public Object {
-    GDCLASS(ScriptEditorDebuggerVariables, Object);
+    REBEL_OBJECT(ScriptEditorDebuggerVariables, Object);
 
     List<PropertyInfo> props;
     Map<StringName, Variant> values;
@@ -102,7 +102,7 @@ public:
 };
 
 class ScriptEditorDebuggerInspectedObject : public Object {
-    GDCLASS(ScriptEditorDebuggerInspectedObject, Object);
+    REBEL_OBJECT(ScriptEditorDebuggerInspectedObject, Object);
 
 protected:
     bool _set(const StringName& p_name, const Variant& p_value) {

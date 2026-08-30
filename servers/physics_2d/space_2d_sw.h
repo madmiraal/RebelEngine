@@ -18,7 +18,7 @@
 #include "core/typedefs.h"
 
 class Physics2DDirectSpaceStateSW : public Physics2DDirectSpaceState {
-    GDCLASS(Physics2DDirectSpaceStateSW, Physics2DDirectSpaceState);
+    REBEL_OBJECT(Physics2DDirectSpaceStateSW, Physics2DDirectSpaceState);
 
     int _intersect_point_impl(
         const Vector2& p_point,

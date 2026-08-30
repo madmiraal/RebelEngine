@@ -10,7 +10,7 @@
 #include "core/resource.h"
 
 class Shape2D : public Resource {
-    GDCLASS(Shape2D, Resource);
+    REBEL_OBJECT(Shape2D, Resource);
     OBJ_SAVE_TYPE(Shape2D);
 
     RID shape;

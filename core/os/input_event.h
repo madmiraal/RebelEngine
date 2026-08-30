@@ -160,7 +160,7 @@ enum MidiMessageList {
  */
 
 class InputEvent : public Resource {
-    GDCLASS(InputEvent, Resource);
+    REBEL_OBJECT(InputEvent, Resource);
 
     int device;
 
@@ -227,7 +227,7 @@ public:
 };
 
 class InputEventWithModifiers : public InputEvent {
-    GDCLASS(InputEventWithModifiers, InputEvent);
+    REBEL_OBJECT(InputEventWithModifiers, InputEvent);
 
     bool shift;
     bool alt;
@@ -275,7 +275,7 @@ public:
 };
 
 class InputEventKey : public InputEventWithModifiers {
-    GDCLASS(InputEventKey, InputEventWithModifiers);
+    REBEL_OBJECT(InputEventKey, InputEventWithModifiers);
 
     bool pressed; /// otherwise release
 
@@ -330,7 +330,7 @@ public:
 };
 
 class InputEventMouse : public InputEventWithModifiers {
-    GDCLASS(InputEventMouse, InputEventWithModifiers);
+    REBEL_OBJECT(InputEventMouse, InputEventWithModifiers);
 
     int button_mask;
 
@@ -354,7 +354,7 @@ public:
 };
 
 class InputEventMouseButton : public InputEventMouse {
-    GDCLASS(InputEventMouseButton, InputEventMouse);
+    REBEL_OBJECT(InputEventMouseButton, InputEventMouse);
 
     float factor;
     int button_index;
@@ -403,7 +403,7 @@ public:
 };
 
 class InputEventMouseMotion : public InputEventMouse {
-    GDCLASS(InputEventMouseMotion, InputEventMouse);
+    REBEL_OBJECT(InputEventMouseMotion, InputEventMouse);
 
     Vector2 tilt;
     float pressure;
@@ -438,7 +438,7 @@ public:
 };
 
 class InputEventJoypadMotion : public InputEvent {
-    GDCLASS(InputEventJoypadMotion, InputEvent);
+    REBEL_OBJECT(InputEventJoypadMotion, InputEvent);
     int axis;         ///< Joypad axis
     float axis_value; ///< -1 to 1
 
@@ -476,7 +476,7 @@ public:
 };
 
 class InputEventJoypadButton : public InputEvent {
-    GDCLASS(InputEventJoypadButton, InputEvent);
+    REBEL_OBJECT(InputEventJoypadButton, InputEvent);
 
     int button_index;
     bool pressed;
@@ -517,7 +517,7 @@ public:
 };
 
 class InputEventScreenTouch : public InputEvent {
-    GDCLASS(InputEventScreenTouch, InputEvent);
+    REBEL_OBJECT(InputEventScreenTouch, InputEvent);
     int index;
     Vector2 pos;
     bool pressed;
@@ -545,7 +545,7 @@ public:
 };
 
 class InputEventScreenDrag : public InputEvent {
-    GDCLASS(InputEventScreenDrag, InputEvent);
+    REBEL_OBJECT(InputEventScreenDrag, InputEvent);
     int index;
     Vector2 pos;
     Vector2 relative;
@@ -579,7 +579,7 @@ public:
 };
 
 class InputEventAction : public InputEvent {
-    GDCLASS(InputEventAction, InputEvent);
+    REBEL_OBJECT(InputEventAction, InputEvent);
 
     StringName action;
     bool pressed;
@@ -623,7 +623,7 @@ public:
 };
 
 class InputEventGesture : public InputEventWithModifiers {
-    GDCLASS(InputEventGesture, InputEventWithModifiers);
+    REBEL_OBJECT(InputEventGesture, InputEventWithModifiers);
 
     Vector2 pos;
 
@@ -636,7 +636,7 @@ public:
 };
 
 class InputEventMagnifyGesture : public InputEventGesture {
-    GDCLASS(InputEventMagnifyGesture, InputEventGesture);
+    REBEL_OBJECT(InputEventMagnifyGesture, InputEventGesture);
     real_t factor;
 
 protected:
@@ -656,7 +656,7 @@ public:
 };
 
 class InputEventPanGesture : public InputEventGesture {
-    GDCLASS(InputEventPanGesture, InputEventGesture);
+    REBEL_OBJECT(InputEventPanGesture, InputEventGesture);
     Vector2 delta;
 
 protected:
@@ -676,7 +676,7 @@ public:
 };
 
 class InputEventMIDI : public InputEvent {
-    GDCLASS(InputEventMIDI, InputEvent);
+    REBEL_OBJECT(InputEventMIDI, InputEvent);
 
     int channel;
     int message;

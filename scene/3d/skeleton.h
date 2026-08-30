@@ -20,7 +20,7 @@ class PhysicalBone;
 class Skeleton;
 
 class SkinReference : public Reference {
-    GDCLASS(SkinReference, Reference)
+    REBEL_OBJECT(SkinReference, Reference)
     friend class Skeleton;
 
     Skeleton* skeleton_node = nullptr;
@@ -43,7 +43,7 @@ public:
 };
 
 class Skeleton : public Spatial {
-    GDCLASS(Skeleton, Spatial);
+    REBEL_OBJECT(Skeleton, Spatial);
 
 private:
     friend class SkinReference;

@@ -19,7 +19,7 @@
 class CreateDialog;
 
 class ScriptCreateDialog : public ConfirmationDialog {
-    GDCLASS(ScriptCreateDialog, ConfirmationDialog);
+    REBEL_OBJECT(ScriptCreateDialog, ConfirmationDialog);
 
     LineEdit* class_name;
     Label* error_label;

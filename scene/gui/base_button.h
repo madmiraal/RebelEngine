@@ -12,7 +12,7 @@
 class ButtonGroup;
 
 class BaseButton : public Control {
-    GDCLASS(BaseButton, Control);
+    REBEL_OBJECT(BaseButton, Control);
 
 public:
     enum ActionMode {
@@ -112,7 +112,7 @@ VARIANT_ENUM_CAST(BaseButton::DrawMode)
 VARIANT_ENUM_CAST(BaseButton::ActionMode)
 
 class ButtonGroup : public Resource {
-    GDCLASS(ButtonGroup, Resource);
+    REBEL_OBJECT(ButtonGroup, Resource);
     friend class BaseButton;
     Set<BaseButton*> buttons;
 

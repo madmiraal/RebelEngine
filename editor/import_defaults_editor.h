@@ -18,7 +18,7 @@
 class ImportDefaultsEditorSettings;
 
 class ImportDefaultsEditor : public VBoxContainer {
-    GDCLASS(ImportDefaultsEditor, VBoxContainer)
+    REBEL_OBJECT(ImportDefaultsEditor, VBoxContainer)
 
     OptionButton* importers;
     Button* save_defaults;

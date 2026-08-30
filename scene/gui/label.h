@@ -10,7 +10,7 @@
 #include "scene/gui/control.h"
 
 class Label : public Control {
-    GDCLASS(Label, Control);
+    REBEL_OBJECT(Label, Control);
 
 public:
     enum Align {

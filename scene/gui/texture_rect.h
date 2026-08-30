@@ -10,7 +10,7 @@
 #include "scene/gui/control.h"
 
 class TextureRect : public Control {
-    GDCLASS(TextureRect, Control);
+    REBEL_OBJECT(TextureRect, Control);
 
 public:
     enum StretchMode {

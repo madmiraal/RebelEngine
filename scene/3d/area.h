@@ -11,7 +11,7 @@
 #include "scene/3d/collision_object.h"
 
 class Area : public CollisionObject {
-    GDCLASS(Area, CollisionObject);
+    REBEL_OBJECT(Area, CollisionObject);
 
 public:
     enum SpaceOverride {
