@@ -26,7 +26,7 @@ public:                                                                        \
     String get_class() const override {                                        \
         return String(#m_class);                                               \
     }                                                                          \
-    static _FORCE_INLINE_ String get_class_static() {                          \
+    static String get_class_static() {                                         \
         return String(#m_class);                                               \
     }                                                                          \
     const StringName* _get_class_namev() const override {                      \
@@ -36,7 +36,7 @@ public:                                                                        \
     static String inherits_static() {                                          \
         return String(#m_inherits);                                            \
     }                                                                          \
-    static _FORCE_INLINE_ String get_parent_class_static() {                   \
+    static String get_parent_class_static() {                                  \
         return m_inherits::get_class_static();                                 \
     }                                                                          \
     static void get_valid_parents_static(List<String>* p_parents) {            \
@@ -51,7 +51,7 @@ public:                                                                        \
         m_inherits::get_inheritance_list_static(p_inheritance_list);           \
         p_inheritance_list->push_back(String(#m_class));                       \
     }                                                                          \
-    static _FORCE_INLINE_ void* get_class_ptr_static() {                       \
+    static void* get_class_ptr_static() {                                      \
         static int ptr;                                                        \
         return &ptr;                                                           \
     }                                                                          \
@@ -74,11 +74,11 @@ public:                                                                        \
     }                                                                          \
                                                                                \
 protected:                                                                     \
-    _FORCE_INLINE_ static void (*_get_bind_methods())() {                      \
+    static void (*_get_bind_methods())() {                                     \
         return &m_class::_bind_methods;                                        \
     }                                                                          \
-    _FORCE_INLINE_ bool (Object::* _get_get(                                   \
-    ) const)(const StringName& p_name, Variant&) const {                       \
+    bool (Object::* _get_get() const)(const StringName& p_name, Variant&)      \
+        const {                                                                \
         return (bool(Object::*)(const StringName&, Variant&) const)            \
              & m_class::_get;                                                  \
     }                                                                          \
@@ -88,8 +88,8 @@ protected:                                                                     \
         }                                                                      \
         return m_inherits::_getv(p_name, r_ret);                               \
     }                                                                          \
-    _FORCE_INLINE_ bool (Object::* _get_set(                                   \
-    ) const)(const StringName& p_name, const Variant& p_property) {            \
+    bool (Object::* _get_set()                                                 \
+              const)(const StringName& p_name, const Variant& p_property) {    \
         return (bool(Object::*)(const StringName&, const Variant&))            \
              & m_class::_set;                                                  \
     }                                                                          \
@@ -100,8 +100,8 @@ protected:                                                                     \
         }                                                                      \
         return false;                                                          \
     }                                                                          \
-    _FORCE_INLINE_ void (Object::* _get_get_property_list()                    \
-                             const)(List<PropertyInfo> * p_list) const {       \
+    void (Object::* _get_get_property_list()                                   \
+              const)(List<PropertyInfo> * p_list) const {                      \
         return (void(Object::*)(List<PropertyInfo>*) const)                    \
              & m_class::_get_property_list;                                    \
     }                                                                          \
@@ -129,7 +129,7 @@ protected:                                                                     \
             m_inherits::_get_property_listv(p_list, p_reversed);               \
         }                                                                      \
     }                                                                          \
-    _FORCE_INLINE_ void (Object::* _get_notification() const)(int) {           \
+    void (Object::* _get_notification() const)(int) {                          \
         return (void(Object::*)(int)) & m_class::_notification;                \
     }                                                                          \
     void _notificationv(int p_notification, bool p_reversed) override {        \
@@ -209,7 +209,7 @@ private:
             ObjectID _id;
             StringName method;
 
-            _FORCE_INLINE_ bool operator<(const Target& p_target) const {
+            bool operator<(const Target& p_target) const {
                 return (_id == p_target._id) ? (method < p_target.method)
                                              : (_id < p_target._id);
             }
@@ -315,26 +315,26 @@ protected:
     void _get_property_list(List<PropertyInfo>* p_list) const {};
     void _notification(int p_notification) {};
 
-    _FORCE_INLINE_ static void (*_get_bind_methods())() {
+    static void (*_get_bind_methods())() {
         return &Object::_bind_methods;
     }
 
-    _FORCE_INLINE_ bool (Object::* _get_get(
-    ) const)(const StringName& p_name, Variant& r_ret) const {
+    bool (Object::* _get_get()
+              const)(const StringName& p_name, Variant& r_ret) const {
         return &Object::_get;
     }
 
-    _FORCE_INLINE_ bool (Object::* _get_set(
-    ) const)(const StringName& p_name, const Variant& p_property) {
+    bool (Object::* _get_set()
+              const)(const StringName& p_name, const Variant& p_property) {
         return &Object::_set;
     }
 
-    _FORCE_INLINE_ void (Object::* _get_get_property_list()
-                             const)(List<PropertyInfo>* p_list) const {
+    void (Object::* _get_get_property_list() const)(List<PropertyInfo>* p_list
+    ) const {
         return &Object::_get_property_list;
     }
 
-    _FORCE_INLINE_ void (Object::* _get_notification() const)(int) {
+    void (Object::* _get_notification() const)(int) {
         return &Object::_notification;
     }
 
@@ -389,11 +389,11 @@ protected:
 
 public: // should be protected, but bug in clang++
     static void initialize_class();
-    _FORCE_INLINE_ static void register_custom_data_to_otdb() {};
+    static void register_custom_data_to_otdb() {};
 
 public:
 #ifdef TOOLS_ENABLED
-    _FORCE_INLINE_ void _change_notify(const char* p_property = "") {
+    void _change_notify(const char* p_property = "") {
         _edited = true;
         for (Set<Object*>::Element* E = change_receptors.front(); E;
              E                        = E->next()) {
@@ -401,7 +401,7 @@ public:
         }
     }
 #else
-    _FORCE_INLINE_ void _change_notify(const char* p_what = "") {}
+    void _change_notify(const char* p_what = "") {}
 #endif
     static void* get_class_ptr_static() {
         static int ptr;
@@ -414,7 +414,7 @@ public:
         return false;
     }
 
-    _FORCE_INLINE_ ObjectID get_instance_id() const {
+    ObjectID get_instance_id() const {
         return _instance_id;
     }
 
@@ -489,7 +489,7 @@ public:
         return get_class_ptr_static() == p_ptr;
     }
 
-    _FORCE_INLINE_ const StringName& get_class_name() const {
+    const StringName& get_class_name() const {
         if (!_class_ptr) {
             return *_get_class_namev();
         } else {
@@ -582,7 +582,7 @@ public:
 
     void set_script_instance(ScriptInstance* p_instance);
 
-    _FORCE_INLINE_ ScriptInstance* get_script_instance() const {
+    ScriptInstance* get_script_instance() const {
         return script_instance;
     }
 
@@ -656,11 +656,11 @@ public:
     bool _is_queued_for_deletion; // set to true by SceneTree::queue_delete()
     bool is_queued_for_deletion() const;
 
-    _FORCE_INLINE_ void set_message_translation(bool p_enable) {
+    void set_message_translation(bool p_enable) {
         _can_translate = p_enable;
     }
 
-    _FORCE_INLINE_ bool can_translate_messages() const {
+    bool can_translate_messages() const {
         return _can_translate;
     }
 
@@ -694,7 +694,7 @@ void postinitialize_handler(Object* p_object);
 
 class ObjectDB {
     struct ObjectPtrHash {
-        static _FORCE_INLINE_ uint32_t hash(const Object* p_obj) {
+        static uint32_t hash(const Object* p_obj) {
             union {
                 const Object* p;
                 unsigned long i;
@@ -727,7 +727,7 @@ public:
 
     // This one may give false positives because a new object may be allocated
     // at the same memory of a previously freed one
-    _FORCE_INLINE_ static bool instance_validate(Object* p_ptr) {
+    static bool instance_validate(Object* p_ptr) {
         rw_lock.read_lock();
 
         bool exists = instance_checks.has(p_ptr);
