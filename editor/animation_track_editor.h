@@ -70,7 +70,7 @@ class AnimationTimelineEdit : public Range {
 
 protected:
     static void _bind_methods();
-    void _notification(int p_what);
+    void _notification(int p_what) override;
 
 public:
     int get_name_limit() const;
@@ -177,7 +177,7 @@ class AnimationTrackEdit : public Control {
 
 protected:
     static void _bind_methods();
-    void _notification(int p_what);
+    void _notification(int p_what) override;
 
     virtual void _gui_input(const Ref<InputEvent>& p_event);
 
@@ -296,7 +296,7 @@ class AnimationTrackEditGroup : public Control {
 
 protected:
     static void _bind_methods();
-    void _notification(int p_what);
+    void _notification(int p_what) override;
 
 public:
     void set_type_and_name(
@@ -552,7 +552,7 @@ class AnimationTrackEditor : public VBoxContainer {
 
 protected:
     static void _bind_methods();
-    void _notification(int p_what);
+    void _notification(int p_what) override;
 
 public:
     enum {

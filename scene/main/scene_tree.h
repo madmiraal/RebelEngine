@@ -309,7 +309,7 @@ private:
     void _call_idle_callbacks();
 
 protected:
-    void _notification(int p_notification);
+    void _notification(int p_notification) override;
     static void _bind_methods();
 
 public:

@@ -39,7 +39,7 @@ public:
 
 protected:
     static void _bind_methods();
-    void _notification(int p_what);
+    void _notification(int p_what) override;
 
 private:
     AcceptDialog* newer_settings_file_version_error;

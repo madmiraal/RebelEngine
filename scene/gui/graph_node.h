@@ -77,7 +77,7 @@ private:
 
 protected:
     void _gui_input(const Ref<InputEvent>& p_ev);
-    void _notification(int p_what);
+    void _notification(int p_what) override;
     static void _bind_methods();
 
     bool _set(const StringName& p_name, const Variant& p_value);

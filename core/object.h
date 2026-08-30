@@ -402,7 +402,7 @@ protected:
     };
 
     void _get_property_list(List<PropertyInfo>* p_list) const {};
-    void _notification(int p_notification) {};
+    virtual void _notification(int) {};
 
     _FORCE_INLINE_ static void (*_get_bind_methods())() {
         return &Object::_bind_methods;

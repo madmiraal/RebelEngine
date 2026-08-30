@@ -113,7 +113,7 @@ class EditorPropertyArray : public EditorProperty {
 
 protected:
     static void _bind_methods();
-    void _notification(int p_what);
+    void _notification(int p_what) override;
 
 public:
     void setup(Variant::Type p_array_type, const String& p_hint_string = "");
@@ -153,7 +153,7 @@ class EditorPropertyDictionary : public EditorProperty {
 
 protected:
     static void _bind_methods();
-    void _notification(int p_what);
+    void _notification(int p_what) override;
 
 public:
     void update_property() override;

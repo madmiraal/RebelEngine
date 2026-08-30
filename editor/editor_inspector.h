@@ -94,7 +94,7 @@ private:
     mutable String tooltip_text;
 
 protected:
-    void _notification(int p_what);
+    void _notification(int p_what) override;
     static void _bind_methods();
 
     void _gui_input(const Ref<InputEvent>& p_event);
@@ -228,7 +228,7 @@ class EditorInspectorCategory : public Control {
     mutable String tooltip_text;
 
 protected:
-    void _notification(int p_what);
+    void _notification(int p_what) override;
     static void _bind_methods();
 
 public:
@@ -254,7 +254,7 @@ class EditorInspectorSection : public Container {
     void _test_unfold();
 
 protected:
-    void _notification(int p_what);
+    void _notification(int p_what) override;
     static void _bind_methods();
     void _gui_input(const Ref<InputEvent>& p_event);
 
@@ -384,7 +384,7 @@ class EditorInspector : public ScrollContainer {
 
 protected:
     static void _bind_methods();
-    void _notification(int p_what);
+    void _notification(int p_what) override;
 
 public:
     static void add_inspector_plugin(const Ref<EditorInspectorPlugin>& p_plugin

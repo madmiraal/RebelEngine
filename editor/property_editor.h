@@ -136,7 +136,7 @@ class CustomPropertyEditor : public Popup {
     void _emit_changed_whole_or_field();
 
 protected:
-    void _notification(int p_what);
+    void _notification(int p_what) override;
     static void _bind_methods();
 
 public:

@@ -48,7 +48,7 @@ public:
     float get_progress() const;
 
 protected:
-    void _notification(int p_notification);
+    void _notification(int p_notification) override;
 
     static void _bind_methods();
 
@@ -99,7 +99,7 @@ public:
 protected:
     static void _bind_methods();
 
-    void _notification(int p_what);
+    void _notification(int p_what) override;
     void custom_action(const String& p_action) override;
 
 private:
@@ -146,7 +146,7 @@ public:
 protected:
     static void _bind_methods();
 
-    void _notification(int p_what);
+    void _notification(int p_what) override;
 
 private:
     void _on_result_found(

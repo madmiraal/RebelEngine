@@ -294,7 +294,7 @@ class ItemListEditor : public HBoxContainer {
     void _node_removed(Node* p_node);
 
 protected:
-    void _notification(int p_notification);
+    void _notification(int p_notification) override;
     static void _bind_methods();
 
 public:

@@ -96,7 +96,7 @@ class ShaderEditor : public PanelContainer {
     void _reload_shader_from_disk();
 
 protected:
-    void _notification(int p_what);
+    void _notification(int p_what) override;
     static void _bind_methods();
     void _make_context_menu(bool p_selection, Vector2 p_position);
     void _text_edit_gui_input(const Ref<InputEvent>& ev);

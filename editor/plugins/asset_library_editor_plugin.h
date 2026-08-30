@@ -46,7 +46,7 @@ class EditorAssetLibraryItem : public PanelContainer {
     void set_image(int p_type, int p_index, const Ref<Texture>& p_image);
 
 protected:
-    void _notification(int p_what);
+    void _notification(int p_what) override;
     static void _bind_methods();
 
 public:
@@ -95,7 +95,7 @@ class EditorAssetLibraryItemDescription : public ConfirmationDialog {
     void _preview_click(int p_id);
 
 protected:
-    void _notification(int p_what);
+    void _notification(int p_what) override;
     static void _bind_methods();
 
 public:
@@ -174,7 +174,7 @@ class EditorAssetLibraryItemDownload : public PanelContainer {
     );
 
 protected:
-    void _notification(int p_what);
+    void _notification(int p_what) override;
     static void _bind_methods();
 
 public:
@@ -357,7 +357,7 @@ class EditorAssetLibrary : public PanelContainer {
 
 protected:
     static void _bind_methods();
-    void _notification(int p_what);
+    void _notification(int p_what) override;
 
 public:
     void disable_community_support();

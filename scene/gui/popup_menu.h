@@ -93,7 +93,7 @@ protected:
     bool has_point(const Point2& p_point) const override;
 
     friend class MenuButton;
-    void _notification(int p_what);
+    void _notification(int p_what) override;
     static void _bind_methods();
 
 public:

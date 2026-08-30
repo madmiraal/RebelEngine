@@ -17,7 +17,7 @@ class InterpolatedCamera : public Camera {
     NodePath target;
 
 protected:
-    void _notification(int p_what);
+    void _notification(int p_what) override;
     static void _bind_methods();
     void _set_target(const Object* p_target);
 

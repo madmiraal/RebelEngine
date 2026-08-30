@@ -168,7 +168,7 @@ private:
 
 protected:
     static void _bind_methods();
-    void _notification(int p_what);
+    void _notification(int p_what) override;
     void _validate_property(PropertyInfo& property) const override;
 
 public:

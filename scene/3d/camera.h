@@ -69,7 +69,7 @@ protected:
     virtual void _request_camera_update();
     void _update_camera_mode();
 
-    void _notification(int p_what);
+    void _notification(int p_what) override;
     void _validate_property(PropertyInfo& p_property) const override;
 
     static void _bind_methods();
@@ -179,7 +179,7 @@ private:
     Vector<Vector3> points;
 
 protected:
-    void _notification(int p_what);
+    void _notification(int p_what) override;
     static void _bind_methods();
     Transform get_camera_transform() const override;
 

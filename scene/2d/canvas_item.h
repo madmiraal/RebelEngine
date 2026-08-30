@@ -214,7 +214,7 @@ protected:
 
     void item_rect_changed(bool p_size_changed = true);
 
-    void _notification(int p_what);
+    void _notification(int p_what) override;
     static void _bind_methods();
 
 public:

@@ -16,7 +16,7 @@ class ARVRCamera : public Camera {
     GDCLASS(ARVRCamera, Camera);
 
 protected:
-    void _notification(int p_what);
+    void _notification(int p_what) override;
 
 public:
     String get_configuration_warning() const override;
@@ -48,7 +48,7 @@ private:
     Ref<Mesh> mesh;
 
 protected:
-    void _notification(int p_what);
+    void _notification(int p_what) override;
     static void _bind_methods();
 
 public:
@@ -90,7 +90,7 @@ private:
     Ref<Mesh> mesh;
 
 protected:
-    void _notification(int p_what);
+    void _notification(int p_what) override;
     static void _bind_methods();
 
 public:
@@ -131,7 +131,7 @@ private:
     ARVRCamera* tracked_camera;
 
 protected:
-    void _notification(int p_what);
+    void _notification(int p_what) override;
     static void _bind_methods();
 
 public:

@@ -39,7 +39,7 @@ class PropertySelector : public ConfirmationDialog {
     Vector<Variant::Type> type_filter;
 
 protected:
-    void _notification(int p_what);
+    void _notification(int p_what) override;
     static void _bind_methods();
 
 public:

@@ -49,7 +49,7 @@ protected:
     virtual void _close_pressed() {}
 
     bool has_point(const Point2& p_point) const override;
-    void _notification(int p_what);
+    void _notification(int p_what) override;
     static void _bind_methods();
 
 public:
@@ -70,7 +70,7 @@ class PopupDialog : public Popup {
     GDCLASS(PopupDialog, Popup);
 
 protected:
-    void _notification(int p_what);
+    void _notification(int p_what) override;
 
 public:
     PopupDialog();
@@ -97,7 +97,7 @@ class AcceptDialog : public WindowDialog {
 
 protected:
     void _post_popup() override;
-    void _notification(int p_what);
+    void _notification(int p_what) override;
     static void _bind_methods();
 
     virtual void ok_pressed() {}

@@ -67,7 +67,7 @@ class LightOccluder2D : public Node2D {
     void _poly_changed();
 
 protected:
-    void _notification(int p_what);
+    void _notification(int p_what) override;
     static void _bind_methods();
 
 public:

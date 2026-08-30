@@ -132,7 +132,7 @@ class AnimationTreePlayerEditor : public Control {
     void _file_dialog_selected(String p_path);
 
 protected:
-    void _notification(int p_what);
+    void _notification(int p_what) override;
     void _gui_input(Ref<InputEvent> p_event);
     static void _bind_methods();
 

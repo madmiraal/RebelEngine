@@ -27,7 +27,7 @@ class EditorRunNative : public HBoxContainer {
 
 protected:
     static void _bind_methods();
-    void _notification(int p_what);
+    void _notification(int p_what) override;
 
 public:
     void set_deploy_dumb(bool p_enabled);

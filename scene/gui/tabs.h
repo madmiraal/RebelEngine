@@ -78,7 +78,7 @@ private:
 
 protected:
     void _gui_input(const Ref<InputEvent>& p_event);
-    void _notification(int p_what);
+    void _notification(int p_what) override;
     static void _bind_methods();
 
     Variant get_drag_data(const Point2& p_point) override;

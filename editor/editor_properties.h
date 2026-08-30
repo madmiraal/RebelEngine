@@ -55,7 +55,7 @@ class EditorPropertyMultilineText : public EditorProperty {
     void _open_big_text();
 
 protected:
-    void _notification(int p_what);
+    void _notification(int p_what) override;
     static void _bind_methods();
 
 public:
@@ -94,7 +94,7 @@ class EditorPropertyPath : public EditorProperty {
 
 protected:
     static void _bind_methods();
-    void _notification(int p_what);
+    void _notification(int p_what) override;
 
 public:
     void setup(
@@ -327,7 +327,7 @@ class EditorPropertyEasing : public EditorProperty {
     void _spin_value_changed(double p_value);
     void _spin_focus_exited();
 
-    void _notification(int p_what);
+    void _notification(int p_what) override;
 
 protected:
     static void _bind_methods();
@@ -345,7 +345,7 @@ class EditorPropertyVector2 : public EditorProperty {
     void _value_changed(double p_val, const String& p_name);
 
 protected:
-    void _notification(int p_what);
+    void _notification(int p_what) override;
     static void _bind_methods();
 
 public:
@@ -361,7 +361,7 @@ class EditorPropertyRect2 : public EditorProperty {
     void _value_changed(double p_val, const String& p_name);
 
 protected:
-    void _notification(int p_what);
+    void _notification(int p_what) override;
     static void _bind_methods();
 
 public:
@@ -377,7 +377,7 @@ class EditorPropertyVector3 : public EditorProperty {
     void _value_changed(double p_val, const String& p_name);
 
 protected:
-    void _notification(int p_what);
+    void _notification(int p_what) override;
     static void _bind_methods();
 
 public:
@@ -393,7 +393,7 @@ class EditorPropertyPlane : public EditorProperty {
     void _value_changed(double p_val, const String& p_name);
 
 protected:
-    void _notification(int p_what);
+    void _notification(int p_what) override;
     static void _bind_methods();
 
 public:
@@ -409,7 +409,7 @@ class EditorPropertyQuat : public EditorProperty {
     void _value_changed(double p_val, const String& p_name);
 
 protected:
-    void _notification(int p_what);
+    void _notification(int p_what) override;
     static void _bind_methods();
 
 public:
@@ -425,7 +425,7 @@ class EditorPropertyAABB : public EditorProperty {
     void _value_changed(double p_val, const String& p_name);
 
 protected:
-    void _notification(int p_what);
+    void _notification(int p_what) override;
     static void _bind_methods();
 
 public:
@@ -441,7 +441,7 @@ class EditorPropertyTransform2D : public EditorProperty {
     void _value_changed(double p_val, const String& p_name);
 
 protected:
-    void _notification(int p_what);
+    void _notification(int p_what) override;
     static void _bind_methods();
 
 public:
@@ -457,7 +457,7 @@ class EditorPropertyBasis : public EditorProperty {
     void _value_changed(double p_val, const String& p_name);
 
 protected:
-    void _notification(int p_what);
+    void _notification(int p_what) override;
     static void _bind_methods();
 
 public:
@@ -473,7 +473,7 @@ class EditorPropertyTransform : public EditorProperty {
     void _value_changed(double p_val, const String& p_name);
 
 protected:
-    void _notification(int p_what);
+    void _notification(int p_what) override;
     static void _bind_methods();
 
 public:
@@ -516,7 +516,7 @@ class EditorPropertyNodePath : public EditorProperty {
 
 protected:
     static void _bind_methods();
-    void _notification(int p_what);
+    void _notification(int p_what) override;
 
 public:
     void update_property() override;
@@ -572,7 +572,7 @@ class EditorPropertyResource : public EditorProperty {
 
 protected:
     static void _bind_methods();
-    void _notification(int p_what);
+    void _notification(int p_what) override;
 
 public:
     void update_property() override;

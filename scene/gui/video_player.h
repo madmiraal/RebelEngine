@@ -57,7 +57,7 @@ class VideoPlayer : public Control {
 
 protected:
     static void _bind_methods();
-    void _notification(int p_notification);
+    void _notification(int p_notification) override;
     void _validate_property(PropertyInfo& p_property) const override;
 
 public:

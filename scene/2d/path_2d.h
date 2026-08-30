@@ -18,7 +18,7 @@ class Path2D : public Node2D {
     void _curve_changed();
 
 protected:
-    void _notification(int p_what);
+    void _notification(int p_what) override;
     static void _bind_methods();
 
 public:
@@ -55,7 +55,7 @@ private:
 protected:
     void _validate_property(PropertyInfo& property) const override;
 
-    void _notification(int p_what);
+    void _notification(int p_what) override;
     static void _bind_methods();
 
 public:

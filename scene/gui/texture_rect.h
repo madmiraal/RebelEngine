@@ -34,7 +34,7 @@ private:
     void _texture_changed();
 
 protected:
-    void _notification(int p_what);
+    void _notification(int p_what) override;
     Size2 get_minimum_size() const override;
     static void _bind_methods();
 

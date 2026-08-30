@@ -167,7 +167,7 @@ class TileSetEditor : public HSplitContainer {
 
 protected:
     static void _bind_methods();
-    void _notification(int p_what);
+    void _notification(int p_what) override;
 
 public:
     void edit(const Ref<TileSet>& p_tileset);

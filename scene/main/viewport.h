@@ -418,7 +418,7 @@ private:
     void _own_world_changed();
 
 protected:
-    void _notification(int p_what);
+    void _notification(int p_what) override;
     void _process_picking(bool p_ignore_paused);
     static void _bind_methods();
     void _validate_property(PropertyInfo& property) const override;

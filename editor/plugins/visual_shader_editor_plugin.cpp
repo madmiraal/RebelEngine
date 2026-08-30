@@ -6504,7 +6504,7 @@ protected:
     }
 
 public:
-    void _notification(int p_what) {
+    void _notification(int p_what) override {
         if (p_what == NOTIFICATION_READY) {
             connect("item_selected", this, "_item_selected");
         }
@@ -6574,7 +6574,7 @@ protected:
     }
 
 public:
-    void _notification(int p_what) {
+    void _notification(int p_what) override {
         if (p_what == NOTIFICATION_READY) {
             connect("item_selected", this, "_item_selected");
         }

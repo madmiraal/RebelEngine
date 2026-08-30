@@ -437,7 +437,7 @@ private:
     bool fit_content_height;
 
 protected:
-    void _notification(int p_what);
+    void _notification(int p_what) override;
 
 public:
     String get_text();

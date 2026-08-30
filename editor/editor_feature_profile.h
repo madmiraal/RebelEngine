@@ -160,7 +160,7 @@ class EditorFeatureProfileManager : public AcceptDialog {
 
 protected:
     static void _bind_methods();
-    void _notification(int p_what);
+    void _notification(int p_what) override;
 
 public:
     Ref<EditorFeatureProfile> get_current_profile();

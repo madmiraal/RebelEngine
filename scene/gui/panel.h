@@ -13,7 +13,7 @@ class Panel : public Control {
     GDCLASS(Panel, Control);
 
 protected:
-    void _notification(int p_what);
+    void _notification(int p_what) override;
 
 public:
     Panel();

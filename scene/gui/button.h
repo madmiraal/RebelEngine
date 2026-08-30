@@ -31,7 +31,7 @@ private:
 
 protected:
     void _set_internal_margin(Margin p_margin, float p_value);
-    void _notification(int p_what);
+    void _notification(int p_what) override;
     static void _bind_methods();
 
 public:

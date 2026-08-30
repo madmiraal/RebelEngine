@@ -36,7 +36,7 @@ private:
     void _proximity_group_broadcast(String p_method, Variant p_parameters);
 
 protected:
-    void _notification(int p_what);
+    void _notification(int p_what) override;
 
     static void _bind_methods();
 

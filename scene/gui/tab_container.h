@@ -54,7 +54,7 @@ private:
 protected:
     void _child_renamed_callback();
     void _gui_input(const Ref<InputEvent>& p_event);
-    void _notification(int p_what);
+    void _notification(int p_what) override;
     void add_child_notify(Node* p_child) override;
     void move_child_notify(Node* p_child) override;
     void remove_child_notify(Node* p_child) override;

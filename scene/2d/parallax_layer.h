@@ -22,7 +22,7 @@ class ParallaxLayer : public Node2D {
     Point2 screen_offset;
 
 protected:
-    void _notification(int p_what);
+    void _notification(int p_what) override;
     static void _bind_methods();
 
 public:

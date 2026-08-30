@@ -128,7 +128,7 @@ class AnimationBezierTrackEdit : public Control {
 
 protected:
     static void _bind_methods();
-    void _notification(int p_what);
+    void _notification(int p_what) override;
 
 public:
     String get_tooltip(const Point2& p_pos) const override;

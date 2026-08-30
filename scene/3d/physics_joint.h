@@ -29,7 +29,7 @@ protected:
     void _body_exit_tree();
     void _update_joint(bool p_only_free = false);
 
-    void _notification(int p_what);
+    void _notification(int p_what) override;
 
     virtual RID _configure_joint(PhysicsBody* body_a, PhysicsBody* body_b) = 0;
 

@@ -638,7 +638,7 @@ private:
     friend class CanvasItemEditorPlugin;
 
 protected:
-    void _notification(int p_what);
+    void _notification(int p_what) override;
 
     static void _bind_methods();
 
@@ -836,7 +836,7 @@ class CanvasItemEditorViewport : public Control {
     static void _bind_methods();
 
 protected:
-    void _notification(int p_what);
+    void _notification(int p_what) override;
 
 public:
     bool can_drop_data(const Point2& p_point, const Variant& p_data)

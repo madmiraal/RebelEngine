@@ -623,7 +623,7 @@ protected:
     );
     void _insert_text_at_cursor(const String& p_text);
     void _gui_input(const Ref<InputEvent>& p_gui_input);
-    void _notification(int p_what);
+    void _notification(int p_what) override;
 
     void _consume_pair_symbol(CharType ch);
     void _consume_backspace_for_pair_symbol(int prev_line, int prev_column);

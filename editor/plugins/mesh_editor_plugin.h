@@ -39,7 +39,7 @@ class MeshEditor : public ViewportContainer {
     void _update_rotation();
 
 protected:
-    void _notification(int p_what);
+    void _notification(int p_what) override;
     void _gui_input(Ref<InputEvent> p_event);
     static void _bind_methods();
 

@@ -15,7 +15,7 @@ class CanvasModulate : public Node2D {
     Color color;
 
 protected:
-    void _notification(int p_what);
+    void _notification(int p_what) override;
     static void _bind_methods();
 
 public:

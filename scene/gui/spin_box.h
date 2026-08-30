@@ -43,7 +43,7 @@ class SpinBox : public Range {
 protected:
     void _gui_input(const Ref<InputEvent>& p_event);
 
-    void _notification(int p_what);
+    void _notification(int p_what) override;
 
     static void _bind_methods();
 

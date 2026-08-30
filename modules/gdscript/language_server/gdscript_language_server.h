@@ -25,7 +25,7 @@ class GDScriptLanguageServer : public EditorPlugin {
     static void thread_main(void* p_userdata);
 
 private:
-    void _notification(int p_what);
+    void _notification(int p_what) override;
 
 public:
     GDScriptLanguageServer();

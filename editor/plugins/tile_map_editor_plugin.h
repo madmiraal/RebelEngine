@@ -226,7 +226,7 @@ class TileMapEditor : public VBoxContainer {
     void _rotate(int steps);
 
 protected:
-    void _notification(int p_what);
+    void _notification(int p_what) override;
     void _node_removed(Node* p_node);
     static void _bind_methods();
     CellOp _get_op_from_cell(const Point2i& p_pos);
@@ -259,7 +259,7 @@ class TileMapEditorPlugin : public EditorPlugin {
     TileMapEditor* tile_map_editor;
 
 protected:
-    void _notification(int p_what);
+    void _notification(int p_what) override;
 
 public:
     bool forward_canvas_gui_input(const Ref<InputEvent>& p_event) override {

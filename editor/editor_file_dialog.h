@@ -186,7 +186,7 @@ private:
     bool _is_open_should_be_disabled();
 
 protected:
-    void _notification(int p_what);
+    void _notification(int p_what) override;
     static void _bind_methods();
     // bind helpers
 
@@ -244,7 +244,7 @@ class EditorLineEditFileChooser : public HBoxContainer {
     void _browse();
 
 protected:
-    void _notification(int p_what);
+    void _notification(int p_what) override;
     static void _bind_methods();
 
 public:

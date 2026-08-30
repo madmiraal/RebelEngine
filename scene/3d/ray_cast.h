@@ -42,7 +42,7 @@ class RayCast : public Spatial {
     bool collide_with_bodies;
 
 protected:
-    void _notification(int p_what);
+    void _notification(int p_what) override;
     void _update_raycast_state();
     static void _bind_methods();
 

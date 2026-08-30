@@ -15,7 +15,7 @@ class CheckBox : public Button {
 protected:
     Size2 get_icon_size() const;
     Size2 get_minimum_size() const override;
-    void _notification(int p_what);
+    void _notification(int p_what) override;
 
     bool is_radio();
 

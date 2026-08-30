@@ -46,7 +46,7 @@ class AnimationTreeEditor : public VBoxContainer {
     static Vector<String> get_animation_list();
 
 protected:
-    void _notification(int p_what);
+    void _notification(int p_what) override;
     static void _bind_methods();
 
     static AnimationTreeEditor* singleton;

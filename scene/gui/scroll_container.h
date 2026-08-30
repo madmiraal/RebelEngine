@@ -45,7 +45,7 @@ protected:
 
     void _gui_input(const Ref<InputEvent>& p_gui_input);
     void _gui_focus_changed(Control* p_control);
-    void _notification(int p_what);
+    void _notification(int p_what) override;
 
     void _scroll_moved(float);
     static void _bind_methods();

@@ -26,7 +26,7 @@ protected:
     void _update_visibility();
     void _refresh_portal_mode() override;
 
-    void _notification(int p_what);
+    void _notification(int p_what) override;
     static void _bind_methods();
 
 public:
@@ -97,7 +97,7 @@ private:
     float extra_cull_margin;
 
 protected:
-    void _notification(int p_what);
+    void _notification(int p_what) override;
     static void _bind_methods();
 
 public:

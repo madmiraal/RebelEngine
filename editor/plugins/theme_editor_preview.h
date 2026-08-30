@@ -63,7 +63,7 @@ protected:
 
     void add_preview_overlay(Control* p_overlay);
 
-    void _notification(int p_what);
+    void _notification(int p_what) override;
     static void _bind_methods();
 
 public:
@@ -89,7 +89,7 @@ class SceneThemeEditorPreview : public ThemeEditorPreview {
     void _reload_scene();
 
 protected:
-    void _notification(int p_what);
+    void _notification(int p_what) override;
     static void _bind_methods();
 
 public:

@@ -237,7 +237,7 @@ protected:
     static void _bind_methods();
     void add_child_notify(Node* p_child) override;
     void remove_child_notify(Node* p_child) override;
-    void _notification(int p_what);
+    void _notification(int p_what) override;
     bool clips_input() const override;
 
 public:

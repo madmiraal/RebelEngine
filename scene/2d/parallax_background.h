@@ -33,7 +33,7 @@ protected:
         const Point2& p_screen_offset
     );
 
-    void _notification(int p_what);
+    void _notification(int p_what) override;
     static void _bind_methods();
 
 public:

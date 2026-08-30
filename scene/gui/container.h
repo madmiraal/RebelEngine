@@ -22,7 +22,7 @@ protected:
     void move_child_notify(Node* p_child) override;
     void remove_child_notify(Node* p_child) override;
 
-    void _notification(int p_what);
+    void _notification(int p_what) override;
     static void _bind_methods();
 
 public:

@@ -21,7 +21,7 @@ class PhysicsBody : public CollisionObject {
 
 protected:
     static void _bind_methods();
-    void _notification(int p_what);
+    void _notification(int p_what) override;
     PhysicsBody(PhysicsServer::BodyMode p_mode);
 
 public:
@@ -159,7 +159,7 @@ protected:
     );
     virtual void _direct_state_changed(Object* p_state);
 
-    void _notification(int p_what);
+    void _notification(int p_what) override;
     static void _bind_methods();
 
 public:
@@ -317,7 +317,7 @@ private:
     );
 
 protected:
-    void _notification(int p_what);
+    void _notification(int p_what) override;
     static void _bind_methods();
 
 public:
@@ -634,7 +634,7 @@ protected:
     bool _set(const StringName& p_name, const Variant& p_value);
     bool _get(const StringName& p_name, Variant& r_ret) const;
     void _get_property_list(List<PropertyInfo>* p_list) const;
-    void _notification(int p_what);
+    void _notification(int p_what) override;
     void _direct_state_changed(Object* p_state);
 
     static void _bind_methods();

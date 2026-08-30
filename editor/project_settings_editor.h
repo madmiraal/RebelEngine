@@ -170,7 +170,7 @@ class ProjectSettingsEditor : public AcceptDialog {
 
 protected:
     void _unhandled_input(const Ref<InputEvent>& p_event);
-    void _notification(int p_what);
+    void _notification(int p_what) override;
     static void _bind_methods();
 
     int _get_current_device();

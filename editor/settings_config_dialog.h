@@ -48,7 +48,7 @@ class EditorSettingsDialog : public AcceptDialog {
     void _settings_save();
 
     void _unhandled_input(const Ref<InputEvent>& p_event);
-    void _notification(int p_what);
+    void _notification(int p_what) override;
     void _update_icons();
 
     void _press_a_key_confirm();

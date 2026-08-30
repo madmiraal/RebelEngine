@@ -22,7 +22,7 @@ protected:
     virtual void _post_popup() {}
 
     void _gui_input(Ref<InputEvent> p_event);
-    void _notification(int p_what);
+    void _notification(int p_what) override;
     virtual void _fix_size();
     static void _bind_methods();
 
@@ -56,7 +56,7 @@ class PopupPanel : public Popup {
 
 protected:
     void _update_child_rects();
-    void _notification(int p_what);
+    void _notification(int p_what) override;
 
 public:
     Size2 get_minimum_size() const override;

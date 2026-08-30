@@ -63,7 +63,7 @@ class CollisionObject : public Spatial {
 protected:
     CollisionObject(RID p_rid, bool p_area);
 
-    void _notification(int p_what);
+    void _notification(int p_what) override;
     static void _bind_methods();
     friend class Viewport;
     virtual void _input_event(

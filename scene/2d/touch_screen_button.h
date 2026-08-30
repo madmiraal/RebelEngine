@@ -45,7 +45,7 @@ private:
     void _release(bool p_exiting_tree = false);
 
 protected:
-    void _notification(int p_what);
+    void _notification(int p_what) override;
     static void _bind_methods();
 
 public:

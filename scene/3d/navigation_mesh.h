@@ -188,7 +188,7 @@ class NavigationMeshInstance : public Spatial {
     Node* debug_view;
 
 protected:
-    void _notification(int p_what);
+    void _notification(int p_what) override;
     static void _bind_methods();
     void _changed_callback(Object* p_changed, const char* p_prop) override;
 

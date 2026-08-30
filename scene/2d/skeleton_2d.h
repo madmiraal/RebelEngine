@@ -27,7 +27,7 @@ class Bone2D : public Node2D {
     int skeleton_index;
 
 protected:
-    void _notification(int p_what);
+    void _notification(int p_what) override;
     static void _bind_methods();
 
 public:
@@ -78,7 +78,7 @@ class Skeleton2D : public Node2D {
     RID skeleton;
 
 protected:
-    void _notification(int p_what);
+    void _notification(int p_what) override;
     static void _bind_methods();
 
 public:

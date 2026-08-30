@@ -133,7 +133,7 @@ protected:
 
     void _commit_action() override;
 
-    void _notification(int p_what);
+    void _notification(int p_what) override;
     static void _bind_methods();
 
     Vector2 snap_point(Vector2 p_target) const;

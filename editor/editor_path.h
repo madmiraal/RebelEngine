@@ -31,7 +31,7 @@ class EditorPath : public Button {
     void _add_children_to_popup(Object* p_obj, int p_depth = 0);
 
 protected:
-    void _notification(int p_what);
+    void _notification(int p_what) override;
     static void _bind_methods();
 
 public:

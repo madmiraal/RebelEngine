@@ -133,7 +133,7 @@ private:
     void _editor_settings_changed();
 
     void _gui_input(Ref<InputEvent> p_event);
-    void _notification(int p_what);
+    void _notification(int p_what) override;
 
 protected:
     static void _bind_methods();

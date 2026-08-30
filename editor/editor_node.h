@@ -686,7 +686,7 @@ private:
     void _pick_main_scene_custom_action(const String& p_custom_action_name);
 
 protected:
-    void _notification(int p_what);
+    void _notification(int p_what) override;
 
     static void _bind_methods();
 

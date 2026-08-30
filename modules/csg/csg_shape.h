@@ -107,7 +107,7 @@ private:
     void _update_shape();
 
 protected:
-    void _notification(int p_what);
+    void _notification(int p_what) override;
     virtual CSGBrush* _build_brush() = 0;
     void _make_dirty();
 
@@ -399,7 +399,7 @@ private:
 protected:
     static void _bind_methods();
     void _validate_property(PropertyInfo& property) const override;
-    void _notification(int p_what);
+    void _notification(int p_what) override;
 
 public:
     void set_polygon(const Vector<Vector2>& p_polygon);

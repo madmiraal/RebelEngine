@@ -21,7 +21,7 @@ class Occluder : public Spatial {
     void resource_changed(RES res);
 
 protected:
-    void _notification(int p_what);
+    void _notification(int p_what) override;
     static void _bind_methods();
 
 public:

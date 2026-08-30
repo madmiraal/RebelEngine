@@ -351,7 +351,7 @@ private:
     Vector<String> _remove_self_included_paths(Vector<String> selected_strings);
 
 protected:
-    void _notification(int p_what);
+    void _notification(int p_what) override;
     static void _bind_methods();
 
 public:

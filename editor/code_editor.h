@@ -76,7 +76,7 @@ class FindReplaceBar : public HBoxContainer {
     void _replace_text_entered(const String& p_text);
 
 protected:
-    void _notification(int p_what);
+    void _notification(int p_what) override;
     void _unhandled_input(const Ref<InputEvent>& p_event);
 
     bool _search(uint32_t p_flags, int p_from_line, int p_from_col);
@@ -180,7 +180,7 @@ protected:
     void _code_complete_timer_timeout();
     void _text_changed();
     void _line_col_changed();
-    void _notification(int);
+    void _notification(int) override;
     static void _bind_methods();
 
     bool is_warnings_panel_opened;

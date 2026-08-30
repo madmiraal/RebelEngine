@@ -134,7 +134,7 @@ class ThemeItemImportTree : public VBoxContainer {
     void _import_selected();
 
 protected:
-    void _notification(int p_what);
+    void _notification(int p_what) override;
     static void _bind_methods();
 
 public:
@@ -236,7 +236,7 @@ class ThemeItemEditorDialog : public AcceptDialog {
     void _select_another_theme_cbk(const String& p_path);
 
 protected:
-    void _notification(int p_what);
+    void _notification(int p_what) override;
     static void _bind_methods();
 
 public:
@@ -347,7 +347,7 @@ class ThemeTypeEditor : public MarginContainer {
     void _update_stylebox_from_leading();
 
 protected:
-    void _notification(int p_what);
+    void _notification(int p_what) override;
     static void _bind_methods();
 
 public:
@@ -389,7 +389,7 @@ class ThemeEditor : public VBoxContainer {
     void _preview_control_picked(String p_class_name);
 
 protected:
-    void _notification(int p_what);
+    void _notification(int p_what) override;
     static void _bind_methods();
 
 public:

@@ -31,7 +31,7 @@ protected:
 
     void _refresh_portal_mode() override;
 
-    void _notification(int p_what);
+    void _notification(int p_what) override;
     static void _bind_methods();
     friend struct SpatialIndexer;
 
@@ -71,7 +71,7 @@ protected:
 
     void _change_node_state(Node* p_node, bool p_enabled);
 
-    void _notification(int p_what);
+    void _notification(int p_what) override;
     static void _bind_methods();
 
 public:

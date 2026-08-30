@@ -48,7 +48,7 @@ private:
 protected:
     static void _bind_methods();
     void _validate_property(PropertyInfo& property) const override;
-    void _notification(int p_what);
+    void _notification(int p_what) override;
 
 public:
     void set_emitting(bool p_emitting);

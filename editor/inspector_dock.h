@@ -109,7 +109,7 @@ class InspectorDock : public VBoxContainer {
 
 protected:
     static void _bind_methods();
-    void _notification(int p_what);
+    void _notification(int p_what) override;
 
 public:
     void go_back();

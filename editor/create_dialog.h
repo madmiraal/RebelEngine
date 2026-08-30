@@ -79,7 +79,7 @@ class CreateDialog : public ConfirmationDialog {
     bool _is_type_prefered(const String& type);
 
 protected:
-    void _notification(int p_what);
+    void _notification(int p_what) override;
     static void _bind_methods();
 
     void _save_and_update_favorite_list();

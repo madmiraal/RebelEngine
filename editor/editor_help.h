@@ -42,7 +42,7 @@ class FindBar : public HBoxContainer {
     void _update_matches_label();
 
 protected:
-    void _notification(int p_what);
+    void _notification(int p_what) override;
     void _unhandled_input(const Ref<InputEvent>& p_event);
 
     bool _search(bool p_search_previous = false);
@@ -140,7 +140,7 @@ class EditorHelp : public VBoxContainer {
     String _fix_constant(const String& p_constant) const;
 
 protected:
-    void _notification(int p_what);
+    void _notification(int p_what) override;
     static void _bind_methods();
 
 public:
@@ -181,7 +181,7 @@ class EditorHelpBit : public PanelContainer {
 
 protected:
     static void _bind_methods();
-    void _notification(int p_what);
+    void _notification(int p_what) override;
 
 public:
     RichTextLabel* get_rich_text() {

@@ -141,7 +141,7 @@ class AnimationNodeBlendTreeEditor : public AnimationTreeNodeEditorPlugin {
     };
 
 protected:
-    void _notification(int p_what);
+    void _notification(int p_what) override;
     static void _bind_methods();
 
 public:

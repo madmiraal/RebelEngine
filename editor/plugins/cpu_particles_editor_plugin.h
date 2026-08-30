@@ -29,7 +29,7 @@ class CPUParticlesEditor : public ParticlesEditorBase {
     void _generate_emission_points() override;
 
 protected:
-    void _notification(int p_notification);
+    void _notification(int p_notification) override;
     void _node_removed(Node* p_node);
     static void _bind_methods();
 

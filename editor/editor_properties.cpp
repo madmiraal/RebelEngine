@@ -717,7 +717,7 @@ public:
         }
     }
 
-    void _notification(int p_what) {
+    void _notification(int p_what) override {
         switch (p_what) {
             case NOTIFICATION_DRAW: {
                 Size2 grid_size = get_grid_size();

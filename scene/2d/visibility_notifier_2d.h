@@ -28,7 +28,7 @@ protected:
 
     virtual void _screen_exit() {}
 
-    void _notification(int p_what);
+    void _notification(int p_what) override;
     static void _bind_methods();
 
 public:
@@ -73,7 +73,7 @@ protected:
 
     void _change_node_state(Node* p_node, bool p_enabled);
 
-    void _notification(int p_what);
+    void _notification(int p_what) override;
     static void _bind_methods();
 
 public:

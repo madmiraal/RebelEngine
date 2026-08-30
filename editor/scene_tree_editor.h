@@ -59,7 +59,7 @@ class SceneTreeEditor : public Control {
     void _node_renamed(Node* p_node);
 
     TreeItem* _find(TreeItem* p_node, const NodePath& p_path);
-    void _notification(int p_what);
+    void _notification(int p_what) override;
     void _selected_changed();
     void _deselect_items();
     void _rename_node(ObjectID p_node, const String& p_name);
@@ -188,7 +188,7 @@ class SceneTreeDialog : public ConfirmationDialog {
     void _filter_changed(const String& p_filter);
 
 protected:
-    void _notification(int p_what);
+    void _notification(int p_what) override;
     static void _bind_methods();
 
 public:
