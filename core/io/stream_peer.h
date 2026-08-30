@@ -11,7 +11,6 @@
 
 class StreamPeer : public Reference {
     GDCLASS(StreamPeer, Reference);
-    OBJ_CATEGORY("Networking");
 
 protected:
     static void _bind_methods();

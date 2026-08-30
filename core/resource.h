@@ -28,7 +28,6 @@ private:
 
 class Resource : public Reference {
     GDCLASS(Resource, Reference);
-    OBJ_CATEGORY("Resources");
 
 public:
     static void register_custom_data_to_otdb() {

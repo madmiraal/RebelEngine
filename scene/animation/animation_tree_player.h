@@ -14,7 +14,6 @@
 
 class AnimationTreePlayer : public Node {
     GDCLASS(AnimationTreePlayer, Node);
-    OBJ_CATEGORY("Animation Nodes");
 
 public:
     enum AnimationProcessMode {
