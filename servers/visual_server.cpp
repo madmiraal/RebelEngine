@@ -67,9 +67,14 @@ Array VisualServer::_texture_debug_usage_bind() {
 }
 
 Array VisualServer::_shader_get_param_list_bind(RID p_shader) const {
-    List<PropertyInfo> l;
-    shader_get_param_list(p_shader, &l);
-    return convert_property_list(&l);
+    List<PropertyInfo> list;
+    shader_get_param_list(p_shader, &list);
+    Array array;
+    for (const List<PropertyInfo>::Element* item = list.front(); item;
+         item                                    = item->next()) {
+        array.push_back(Dictionary(item->get()));
+    }
+    return array;
 }
 
 static Array to_array(const Vector<ObjectID>& ids) {

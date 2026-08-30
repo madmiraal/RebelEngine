@@ -45,8 +45,6 @@
 #define ADD_GROUP(m_name, m_prefix)                                            \
     ClassDB::add_property_group(get_class_static(), m_name, m_prefix)
 
-Array convert_property_list(const List<PropertyInfo>* p_list);
-
 #define GDCLASS(m_class, m_inherits)                                           \
                                                                                \
 private:                                                                       \
