@@ -1,12 +1,11 @@
 changelog:
-  exclude:
-    authors:
-      - dependabot
-      - github-actions
   categories:
     - title: Exciting New Features ✨
       labels:
         - "PR Type: New Feature"
+    - title: Breaking Changes ⚠️
+      labels:
+        - "PR Type: Breaking Change"
     - title: Bug Fixes 🐛
       labels:
         - "PR Type: Bug Fix"
@@ -16,9 +15,6 @@ changelog:
     - title: Maintenance Updates 🔧
       labels:
         - "PR Type: Maintenance"
-    - title: Breaking Changes ⚠️
-      labels:
-        - "PR Type: Breaking Change"
     - title: Other Changes
       labels:
         - "*"
