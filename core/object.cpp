@@ -1377,9 +1377,9 @@ Error Object::emit_signal(
     Error err = OK;
 
     for (int i = 0; i < ssize; i++) {
-        const Connection& c = slot_map.getv(i).conn;
+        const Connection& c = slot_map.getv(i).connection;
 
-        Object* target = ObjectDB::get_instance(slot_map.getk(i)._id);
+        Object* target = ObjectDB::get_instance(slot_map.getk(i).id);
         if (!target) {
             // Target might have been deleted during signal callback, this is
             // expected and OK.
@@ -1610,7 +1610,7 @@ void Object::get_all_signal_connections(List<Connection>* p_connections) const {
         const Signal* s = &signal_map[*S];
 
         for (int i = 0; i < s->slot_map.size(); i++) {
-            p_connections->push_back(s->slot_map.getv(i).conn);
+            p_connections->push_back(s->slot_map.getv(i).connection);
         }
     }
 }
@@ -1625,7 +1625,7 @@ void Object::get_signal_connection_list(
     }
 
     for (int i = 0; i < s->slot_map.size(); i++) {
-        p_connections->push_back(s->slot_map.getv(i).conn);
+        p_connections->push_back(s->slot_map.getv(i).connection);
     }
 }
 
@@ -1637,7 +1637,7 @@ int Object::get_persistent_signal_connection_count() const {
         const Signal* s = &signal_map[*S];
 
         for (int i = 0; i < s->slot_map.size(); i++) {
-            if (s->slot_map.getv(i).conn.flags & CONNECT_PERSIST) {
+            if (s->slot_map.getv(i).connection.flags & CONNECT_PERSIST) {
                 count += 1;
             }
         }
@@ -1710,8 +1710,6 @@ Error Object::connect(
         }
     }
 
-    Signal::Slot slot;
-
     Connection conn;
     conn.source = this;
     conn.target = p_to_object;
@@ -1719,11 +1717,12 @@ Error Object::connect(
     conn.signal = p_signal;
     conn.flags  = p_flags;
     conn.binds  = p_binds;
-    slot.conn   = conn;
-    slot.cE     = p_to_object->connections.push_back(conn);
-    if (p_flags & CONNECT_REFERENCE_COUNTED) {
-        slot.reference_count = 1;
-    }
+
+    const Signal::Slot slot(
+        conn,
+        p_to_object->connections.push_back(conn),
+        p_flags & CONNECT_REFERENCE_COUNTED
+    );
 
     s->slot_map[target] = slot;
 
@@ -1805,7 +1804,7 @@ void Object::_disconnect(
     ERR_FAIL_COND_MSG(
         !s->slot_map.has(target),
         "Disconnecting nonexistent signal '" + p_signal
-            + "', slot: " + itos(target._id) + ":" + target.method + "."
+            + "', slot: " + itos(target.id) + ":" + target.method + "."
     );
 
     Signal::Slot* slot = &s->slot_map[target];
@@ -1818,7 +1817,7 @@ void Object::_disconnect(
         }
     }
 
-    p_to_object->connections.erase(slot->cE);
+    p_to_object->connections.erase(slot->connection_element);
     s->slot_map.erase(target);
 
     if (s->slot_map.empty()
@@ -2373,8 +2372,8 @@ Object::~Object() {
             s->slot_map.get_array();
 
         for (int i = 0; i < slot_count; i++) {
-            slot_list[i].value.conn.target->connections.erase(
-                slot_list[i].value.cE
+            slot_list[i].value.connection.target->connections.erase(
+                slot_list[i].value.connection_element
             );
         }
 

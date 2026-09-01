@@ -19,6 +19,7 @@
 #include "core/vmap.h"
 
 #include <atomic>
+#include <utility>
 
 #define REBEL_OBJECT(m_class, m_inherits)                                      \
                                                                                \
@@ -200,37 +201,41 @@ private:
 
     struct Signal {
         struct Target {
-            ObjectID _id;
+            ObjectID id;
             StringName method;
 
-            bool operator<(const Target& p_target) const {
-                return (_id == p_target._id) ? (method < p_target.method)
-                                             : (_id < p_target._id);
-            }
+            Target(const ObjectID& id, const StringName& method) :
+                id(id),
+                method(method) {}
 
-            Target(const ObjectID& p_id, const StringName& p_method) :
-                _id(p_id),
-                method(p_method) {}
-
-            Target() {
-                _id = 0;
+            bool operator<(const Target& other) const {
+                if (id == other.id) {
+                    return method < other.method;
+                }
+                return id < other.id;
             }
         };
 
         struct Slot {
-            int reference_count;
-            Connection conn;
-            List<Connection>::Element* cE;
+            Connection connection;
+            List<Connection>::Element* connection_element;
+            int reference_count = 0;
 
-            Slot() {
-                reference_count = 0;
+            Slot(
+                Connection connection,
+                List<Connection>::Element* connection_element,
+                const bool reference_counted
+            ) :
+                connection(std::move(connection)),
+                connection_element(connection_element) {
+                if (reference_counted) {
+                    reference_count = 1;
+                }
             }
         };
 
         MethodInfo user;
         VMap<Target, Slot> slot_map;
-
-        Signal() {}
     };
 
     HashMap<StringName, Signal> signal_map;
