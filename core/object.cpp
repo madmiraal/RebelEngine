@@ -401,25 +401,25 @@ Object::Connection::operator Variant() const {
     return d;
 }
 
-bool Object::Connection::operator<(const Connection& p_conn) const {
-    if (source == p_conn.source) {
-        if (signal == p_conn.signal) {
-            if (target == p_conn.target) {
-                return method < p_conn.method;
+bool Object::Connection::operator<(const Connection& other) const {
+    if (source == other.source) {
+        if (signal == other.signal) {
+            if (target == other.target) {
+                return method < other.method;
             } else {
                 return target->get_instance_id()
-                     < p_conn.target->get_instance_id();
+                     < other.target->get_instance_id();
             }
         } else {
-            return signal < p_conn.signal;
+            return signal < other.signal;
         }
     } else {
-        return source->get_instance_id() < p_conn.source->get_instance_id();
+        return source->get_instance_id() < other.source->get_instance_id();
     }
 }
 
-Object::Connection::Connection(const Variant& p_variant) {
-    Dictionary d = p_variant;
+Object::Connection::Connection(const Variant& variant) {
+    Dictionary d = variant;
     if (d.has("source")) {
         source = d["source"];
     }

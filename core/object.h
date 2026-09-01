@@ -174,23 +174,17 @@ public:
     };
 
     struct Connection {
-        Object* source;
         StringName signal;
-        Object* target;
         StringName method;
-        uint32_t flags;
         Vector<Variant> binds;
-        bool operator<(const Connection& p_conn) const;
+        Object* source = nullptr;
+        Object* target = nullptr;
+        uint32_t flags = 0;
 
+        Connection() = default;
+        Connection(const Variant& variant);
         operator Variant() const;
-
-        Connection() {
-            source = nullptr;
-            target = nullptr;
-            flags  = 0;
-        }
-
-        Connection(const Variant& p_variant);
+        bool operator<(const Connection& other) const;
     };
 
 private:
