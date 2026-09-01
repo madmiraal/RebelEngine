@@ -48,7 +48,7 @@ private:
 public:
     BulletPhysicsDirectSpaceState(SpaceBullet* p_space);
 
-    virtual int intersect_point(
+    int intersect_point(
         const Vector3& p_point,
         ShapeResult* r_results,
         int p_result_max,
@@ -56,8 +56,8 @@ public:
         uint32_t p_collision_mask  = 0xFFFFFFFF,
         bool p_collide_with_bodies = true,
         bool p_collide_with_areas  = false
-    );
-    virtual bool intersect_ray(
+    ) override;
+    bool intersect_ray(
         const Vector3& p_from,
         const Vector3& p_to,
         RayResult& r_result,
@@ -66,8 +66,8 @@ public:
         bool p_collide_with_bodies = true,
         bool p_collide_with_areas  = false,
         bool p_pick_ray            = false
-    );
-    virtual int intersect_shape(
+    ) override;
+    int intersect_shape(
         const RID& p_shape,
         const Transform& p_xform,
         float p_margin,
@@ -77,8 +77,8 @@ public:
         uint32_t p_collision_mask  = 0xFFFFFFFF,
         bool p_collide_with_bodies = true,
         bool p_collide_with_areas  = false
-    );
-    virtual bool cast_motion(
+    ) override;
+    bool cast_motion(
         const RID& p_shape,
         const Transform& p_xform,
         const Vector3& p_motion,
@@ -90,10 +90,10 @@ public:
         bool p_collide_with_bodies = true,
         bool p_collide_with_areas  = false,
         ShapeRestInfo* r_info      = nullptr
-    );
+    ) override;
     /// Returns the list of contacts pairs in this order: Local contact, other
     /// body contact
-    virtual bool collide_shape(
+    bool collide_shape(
         RID p_shape,
         const Transform& p_shape_xform,
         float p_margin,
@@ -104,8 +104,8 @@ public:
         uint32_t p_collision_mask  = 0xFFFFFFFF,
         bool p_collide_with_bodies = true,
         bool p_collide_with_areas  = false
-    );
-    virtual bool rest_info(
+    ) override;
+    bool rest_info(
         RID p_shape,
         const Transform& p_shape_xform,
         float p_margin,
@@ -114,11 +114,11 @@ public:
         uint32_t p_collision_mask  = 0xFFFFFFFF,
         bool p_collide_with_bodies = true,
         bool p_collide_with_areas  = false
-    );
-    virtual Vector3 get_closest_point_to_object_volume(
+    ) override;
+    Vector3 get_closest_point_to_object_volume(
         RID p_object,
         const Vector3 p_point
-    ) const;
+    ) const override;
 };
 
 class SpaceBullet : public RIDBullet {
@@ -153,7 +153,7 @@ class SpaceBullet : public RIDBullet {
 
 public:
     SpaceBullet();
-    virtual ~SpaceBullet();
+    ~SpaceBullet() override;
 
     void flush_queries();
 

@@ -12,10 +12,6 @@
 #include "core/typedefs.h"
 #include "core/vector.h"
 
-/**
-@author Juan Linietsky
-*/
-
 class EQ {
 public:
     enum Preset {

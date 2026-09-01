@@ -112,7 +112,7 @@ public:
         return instance_id;
     }
 
-    void _shape_changed();
+    void _shape_changed() override;
 
     _FORCE_INLINE_ Type get_type() const {
         return type;
@@ -207,7 +207,7 @@ public:
             || p_other->collision_layer & collision_mask;
     }
 
-    void remove_shape(ShapeSW* p_shape);
+    void remove_shape(ShapeSW* p_shape) override;
     void remove_shape(int p_index);
 
     virtual void set_space(SpaceSW* p_space) = 0;
@@ -216,7 +216,7 @@ public:
         return _static;
     }
 
-    virtual ~CollisionObjectSW() {}
+    ~CollisionObjectSW() override = default;
 };
 
 #endif // COLLISION_OBJECT_SW_H

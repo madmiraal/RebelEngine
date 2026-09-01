@@ -35,7 +35,7 @@ class ProjectsManager : public Panel {
 
 public:
     ProjectsManager();
-    ~ProjectsManager();
+    ~ProjectsManager() override;
 
 protected:
     static void _bind_methods();

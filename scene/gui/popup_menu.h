@@ -64,7 +64,7 @@ class PopupMenu : public Popup {
     Rect2 parent_rect;
     String _get_accel_text(int p_item) const;
     int _get_mouse_over(const Point2& p_over) const;
-    virtual Size2 get_minimum_size() const;
+    Size2 get_minimum_size() const override;
     void _scroll(float p_factor, const Point2& p_over);
     void _gui_input(const Ref<InputEvent>& p_event);
     void _activate_submenu(int over);
@@ -90,7 +90,7 @@ class PopupMenu : public Popup {
     String search_string;
 
 protected:
-    virtual bool has_point(const Point2& p_point) const;
+    bool has_point(const Point2& p_point) const override;
 
     friend class MenuButton;
     void _notification(int p_what);
@@ -234,9 +234,9 @@ public:
 
     void set_parent_rect(const Rect2& p_rect);
 
-    virtual String get_tooltip(const Point2& p_pos) const;
+    String get_tooltip(const Point2& p_pos) const override;
 
-    virtual void get_translatable_strings(List<String>* p_strings) const;
+    void get_translatable_strings(List<String>* p_strings) const override;
 
     void add_autohide_area(const Rect2& p_area);
     void clear_autohide_areas();
@@ -256,13 +256,13 @@ public:
     void set_allow_search(bool p_allow);
     bool get_allow_search() const;
 
-    virtual void popup(const Rect2& p_bounds = Rect2());
+    void popup(const Rect2& p_bounds = Rect2()) override;
 
     void set_hide_on_window_lose_focus(bool p_enabled);
     bool is_hide_on_window_lose_focus() const;
 
     PopupMenu();
-    ~PopupMenu();
+    ~PopupMenu() override;
 };
 
 #endif

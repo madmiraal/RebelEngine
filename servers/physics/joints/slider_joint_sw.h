@@ -431,10 +431,10 @@ public:
     void set_param(PhysicsServer::SliderJointParam p_param, real_t p_value);
     real_t get_param(PhysicsServer::SliderJointParam p_param) const;
 
-    bool setup(real_t p_step);
-    void solve(real_t p_step);
+    bool setup(real_t p_step) override;
+    void solve(real_t p_step) override;
 
-    virtual PhysicsServer::JointType get_type() const {
+    PhysicsServer::JointType get_type() const override {
         return PhysicsServer::JOINT_SLIDER;
     }
 };

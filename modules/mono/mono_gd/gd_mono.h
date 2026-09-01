@@ -387,7 +387,7 @@ public:
     bool is_runtime_initialized();
 
     _RebelSharp();
-    ~_RebelSharp();
+    ~_RebelSharp() override;
 };
 
 #endif // GD_MONO_H

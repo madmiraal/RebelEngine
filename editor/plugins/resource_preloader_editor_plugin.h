@@ -35,7 +35,6 @@ class ResourcePreloaderEditor : public PanelContainer {
     ResourcePreloader* preloader;
 
     void _load_pressed();
-    void _load_scene_pressed();
     void _files_load_request(const Vector<String>& p_paths);
     void _paste_pressed();
     void _remove_resource(const String& p_to_remove);
@@ -79,20 +78,20 @@ class ResourcePreloaderEditorPlugin : public EditorPlugin {
     Button* button;
 
 public:
-    virtual String get_name() const {
+    String get_name() const override {
         return "ResourcePreloader";
     }
 
-    bool has_main_screen() const {
+    bool has_main_screen() const override {
         return false;
     }
 
-    virtual void edit(Object* p_object);
-    virtual bool handles(Object* p_object) const;
-    virtual void make_visible(bool p_visible);
+    void edit(Object* p_object) override;
+    bool handles(Object* p_object) const override;
+    void make_visible(bool p_visible) override;
 
     ResourcePreloaderEditorPlugin(EditorNode* p_node);
-    ~ResourcePreloaderEditorPlugin();
+    ~ResourcePreloaderEditorPlugin() override;
 };
 
 #endif // RESOURCE_PRELOADER_EDITOR_PLUGIN_H

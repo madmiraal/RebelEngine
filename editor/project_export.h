@@ -165,7 +165,7 @@ public:
     Ref<EditorExportPreset> get_current_preset() const;
 
     ProjectExportDialog();
-    ~ProjectExportDialog();
+    ~ProjectExportDialog() override;
 };
 
 #endif // PROJECT_EXPORT_SETTINGS_H

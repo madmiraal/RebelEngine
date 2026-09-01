@@ -145,7 +145,6 @@ private:
         Group& g,
         bool p_use_priority = false
     );
-    void _update_listener();
 
     Array _get_nodes_in_group(const StringName& p_group);
 
@@ -362,14 +361,14 @@ public:
 
     void flush_transform_notifications();
 
-    virtual void input_text(const String& p_text);
-    virtual void input_event(const Ref<InputEvent>& p_event);
-    virtual void init();
+    void input_text(const String& p_text) override;
+    void input_event(const Ref<InputEvent>& p_event) override;
+    void init() override;
 
-    virtual bool iteration(float p_time);
-    virtual bool idle(float p_time);
+    bool iteration(float p_time) override;
+    bool idle(float p_time) override;
 
-    virtual void finish();
+    void finish() override;
 
     void set_auto_accept_quit(bool p_enable);
     void set_quit_on_go_back(bool p_enable);
@@ -397,9 +396,6 @@ public:
 
     void set_pause(bool p_enabled);
     bool is_paused() const;
-
-    void set_camera(const RID& p_camera);
-    RID get_camera() const;
 
 #ifdef DEBUG_ENABLED
     void set_debug_collisions_hint(bool p_enabled);
@@ -486,13 +482,15 @@ public:
         return singleton;
     }
 
-    void drop_files(const Vector<String>& p_files, int p_from_screen = 0);
-    void global_menu_action(const Variant& p_id, const Variant& p_meta);
+    void drop_files(const Vector<String>& p_files, int p_from_screen = 0)
+        override;
+    void global_menu_action(const Variant& p_id, const Variant& p_meta)
+        override;
     void get_argument_options(
         const StringName& p_function,
         int p_idx,
         List<String>* r_options
-    ) const;
+    ) const override;
 
     // network API
 
@@ -513,7 +511,7 @@ public:
 
     static void add_idle_callback(IdleCallback p_callback);
     SceneTree();
-    ~SceneTree();
+    ~SceneTree() override;
 };
 
 VARIANT_ENUM_CAST(SceneTree::StretchMode);

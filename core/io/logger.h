@@ -51,9 +51,9 @@ public:
  */
 class StdLogger : public Logger {
 public:
-    virtual void logv(const char* p_format, va_list p_list, bool p_err)
+    void logv(const char* p_format, va_list p_list, bool p_err) override
         _PRINTF_FORMAT_ATTRIBUTE_2_0;
-    virtual ~StdLogger();
+    ~StdLogger() override;
 };
 
 /**
@@ -68,7 +68,6 @@ class RotatedFileLogger : public Logger {
 
     FileAccess* file;
 
-    void rotate_file_without_closing();
     void close_file();
     void clear_old_backups();
     void rotate_file();
@@ -76,10 +75,10 @@ class RotatedFileLogger : public Logger {
 public:
     RotatedFileLogger(const String& p_base_path, int p_max_files = 10);
 
-    virtual void logv(const char* p_format, va_list p_list, bool p_err)
+    void logv(const char* p_format, va_list p_list, bool p_err) override
         _PRINTF_FORMAT_ATTRIBUTE_2_0;
 
-    virtual ~RotatedFileLogger();
+    ~RotatedFileLogger() override;
 };
 
 class CompositeLogger : public Logger {
@@ -88,20 +87,20 @@ class CompositeLogger : public Logger {
 public:
     CompositeLogger(Vector<Logger*> p_loggers);
 
-    virtual void logv(const char* p_format, va_list p_list, bool p_err)
+    void logv(const char* p_format, va_list p_list, bool p_err) override
         _PRINTF_FORMAT_ATTRIBUTE_2_0;
-    virtual void log_error(
+    void log_error(
         const char* p_function,
         const char* p_file,
         int p_line,
         const char* p_code,
         const char* p_rationale,
         ErrorType p_type = ERR_ERROR
-    );
+    ) override;
 
     void add_logger(Logger* p_logger);
 
-    virtual ~CompositeLogger();
+    ~CompositeLogger() override;
 };
 
 #endif

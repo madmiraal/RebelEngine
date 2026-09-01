@@ -16,7 +16,7 @@ private:
 
 public:
     CameraWindows();
-    ~CameraWindows();
+    ~CameraWindows() override;
 };
 
 #endif /* CAMERAWIN_H */

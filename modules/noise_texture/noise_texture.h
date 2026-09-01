@@ -18,15 +18,15 @@ class NoiseTexture : public Texture {
 
 public:
     NoiseTexture();
-    virtual ~NoiseTexture();
+    ~NoiseTexture() override;
 
-    virtual int get_width() const;
-    virtual int get_height() const;
-    virtual uint32_t get_flags() const;
-    virtual void set_flags(uint32_t new_flags);
-    virtual RID get_rid() const;
-    virtual bool has_alpha() const;
-    virtual Ref<Image> get_data() const;
+    int get_width() const override;
+    int get_height() const override;
+    uint32_t get_flags() const override;
+    void set_flags(uint32_t new_flags) override;
+    RID get_rid() const override;
+    bool has_alpha() const override;
+    Ref<Image> get_data() const override;
 
     void set_width(int new_width);
     void set_height(int new_height);
@@ -42,7 +42,7 @@ public:
     void set_bump_strength(float new_bump_strength);
 
 protected:
-    virtual void _validate_property(PropertyInfo& property) const;
+    void _validate_property(PropertyInfo& property) const override;
 
     static void _bind_methods();
 

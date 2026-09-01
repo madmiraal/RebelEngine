@@ -31,7 +31,7 @@ protected:
     virtual void _update_shape();
 
 public:
-    virtual RID get_rid() const {
+    RID get_rid() const override {
         return shape;
     }
 
@@ -48,7 +48,7 @@ public:
     void set_margin(real_t p_margin);
 
     Shape();
-    ~Shape();
+    ~Shape() override;
 };
 
 #endif // SHAPE_H

@@ -321,11 +321,11 @@ public:
         StringName struct_name;
         Vector<Node*> arguments;
 
-        virtual DataType get_datatype() const {
+        DataType get_datatype() const override {
             return return_cache;
         }
 
-        virtual String get_datatype_name() const {
+        String get_datatype_name() const override {
             return String(struct_name);
         }
 
@@ -342,11 +342,11 @@ public:
         StringName name;
         StringName struct_name;
 
-        virtual DataType get_datatype() const {
+        DataType get_datatype() const override {
             return datatype_cache;
         }
 
-        virtual String get_datatype_name() const {
+        String get_datatype_name() const override {
             return String(struct_name);
         }
 
@@ -373,7 +373,7 @@ public:
 
         Vector<Declaration> declarations;
 
-        virtual DataType get_datatype() const {
+        DataType get_datatype() const override {
             return datatype;
         }
 
@@ -394,11 +394,11 @@ public:
         bool is_const;
         bool is_local;
 
-        virtual DataType get_datatype() const {
+        DataType get_datatype() const override {
             return datatype_cache;
         }
 
-        virtual String get_datatype_name() const {
+        String get_datatype_name() const override {
             return String(struct_name);
         }
 
@@ -436,7 +436,7 @@ public:
 
         Vector<Declaration> declarations;
 
-        virtual DataType get_datatype() const {
+        DataType get_datatype() const override {
             return datatype;
         }
 
@@ -462,11 +462,11 @@ public:
         Vector<Value> values;
         Vector<ArrayDeclarationNode::Declaration> array_declarations;
 
-        virtual DataType get_datatype() const {
+        DataType get_datatype() const override {
             return datatype;
         }
 
-        virtual String get_datatype_name() const {
+        String get_datatype_name() const override {
             return struct_name;
         }
 
@@ -532,11 +532,11 @@ public:
         Node* assign_expression;
         bool has_swizzling_duplicates;
 
-        virtual DataType get_datatype() const {
+        DataType get_datatype() const override {
             return datatype;
         }
 
-        virtual String get_datatype_name() const {
+        String get_datatype_name() const override {
             return String(struct_name);
         }
 

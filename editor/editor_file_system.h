@@ -81,7 +81,7 @@ public:
     void force_update();
 
     EditorFileSystemDirectory();
-    ~EditorFileSystemDirectory();
+    ~EditorFileSystemDirectory() override;
 };
 
 class EditorFileSystem : public Node {
@@ -295,7 +295,7 @@ public:
     static bool _should_skip_directory(const String& p_path);
 
     EditorFileSystem();
-    ~EditorFileSystem();
+    ~EditorFileSystem() override;
 };
 
 #endif // EDITOR_FILE_SYSTEM_H

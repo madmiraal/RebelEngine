@@ -17,7 +17,7 @@ protected:
 
 public:
     Panel();
-    ~Panel();
+    ~Panel() override;
 };
 
 #endif

@@ -16,20 +16,6 @@
 class ARVRInterface;
 class ARVRPositionalTracker;
 
-/**
-    @author Bastiaan Olij <mux213@gmail.com>
-
-    The ARVR server is a singleton object that gives access to the various
-    objects and SDKs that are available on the system.
-    Because there can be multiple SDKs active this is exposed as an array
-    and our ARVR server object acts as a pass through
-    Also each positioning tracker is accessible from here.
-
-    I've added some additional info into this header file that should move
-    into the documentation, I will do so when we're close to accepting this PR
-    or as a separate PR once this has been merged into the master branch.
-**/
-
 class ARVRServer : public Object {
     GDCLASS(ARVRServer, Object);
     _THREAD_SAFE_CLASS_
@@ -195,7 +181,7 @@ public:
     void _mark_commit();
 
     ARVRServer();
-    ~ARVRServer();
+    ~ARVRServer() override;
 };
 
 #define ARVR ARVRServer

@@ -242,7 +242,7 @@ public:
 
         Map<String, String> targets;
 
-        MorphControllerData() {}
+        MorphControllerData() = default;
     };
 
     struct Vertex {

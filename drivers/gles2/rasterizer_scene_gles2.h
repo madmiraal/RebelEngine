@@ -256,13 +256,13 @@ public:
 
     RID_Owner<ShadowAtlas> shadow_atlas_owner;
 
-    RID shadow_atlas_create();
-    void shadow_atlas_set_size(RID p_atlas, int p_size);
+    RID shadow_atlas_create() override;
+    void shadow_atlas_set_size(RID p_atlas, int p_size) override;
     void shadow_atlas_set_quadrant_subdivision(
         RID p_atlas,
         int p_quadrant,
         int p_subdivision
-    );
+    ) override;
     bool _shadow_atlas_find_shadow(
         ShadowAtlas* shadow_atlas,
         int* p_in_quadrants,
@@ -277,7 +277,7 @@ public:
         RID p_light_intance,
         float p_coverage,
         uint64_t p_light_version
-    );
+    ) override;
 
     struct DirectionalShadow {
         GLuint fbo;
@@ -289,17 +289,15 @@ public:
         int current_light;
     } directional_shadow;
 
-    virtual int get_directional_light_shadow_size(RID p_light_intance);
-    virtual void set_directional_shadow_count(int p_count);
+    int get_directional_light_shadow_size(RID p_light_intance) override;
+    void set_directional_shadow_count(int p_count) override;
 
     /* REFLECTION PROBE ATLAS API */
 
-    virtual RID reflection_atlas_create();
-    virtual void reflection_atlas_set_size(RID p_ref_atlas, int p_size);
-    virtual void reflection_atlas_set_subdivision(
-        RID p_ref_atlas,
-        int p_subdiv
-    );
+    RID reflection_atlas_create() override;
+    void reflection_atlas_set_size(RID p_ref_atlas, int p_size) override;
+    void reflection_atlas_set_subdivision(RID p_ref_atlas, int p_subdiv)
+        override;
 
     /* REFLECTION CUBEMAPS */
 
@@ -335,19 +333,19 @@ public:
     ReflectionProbeInstance** reflection_probe_instances;
     int reflection_probe_count;
 
-    virtual RID reflection_probe_instance_create(RID p_probe);
-    virtual void reflection_probe_instance_set_transform(
+    RID reflection_probe_instance_create(RID p_probe) override;
+    void reflection_probe_instance_set_transform(
         RID p_instance,
         const Transform& p_transform
-    );
-    virtual void reflection_probe_release_atlas_index(RID p_instance);
-    virtual bool reflection_probe_instance_needs_redraw(RID p_instance);
-    virtual bool reflection_probe_instance_has_reflection(RID p_instance);
-    virtual bool reflection_probe_instance_begin_render(
+    ) override;
+    void reflection_probe_release_atlas_index(RID p_instance) override;
+    bool reflection_probe_instance_needs_redraw(RID p_instance) override;
+    bool reflection_probe_instance_has_reflection(RID p_instance) override;
+    bool reflection_probe_instance_begin_render(
         RID p_instance,
         RID p_reflection_atlas
-    );
-    virtual bool reflection_probe_instance_postprocess_step(RID p_instance);
+    ) override;
+    bool reflection_probe_instance_postprocess_step(RID p_instance) override;
 
     /* ENVIRONMENT API */
 
@@ -468,47 +466,43 @@ public:
 
     mutable RID_Owner<Environment> environment_owner;
 
-    virtual RID environment_create();
+    RID environment_create() override;
 
-    virtual void environment_set_background(RID p_env, VS::EnvironmentBG p_bg);
-    virtual void environment_set_sky(RID p_env, RID p_sky);
-    virtual void environment_set_sky_custom_fov(RID p_env, float p_scale);
-    virtual void environment_set_sky_orientation(
-        RID p_env,
-        const Basis& p_orientation
-    );
-    virtual void environment_set_bg_color(RID p_env, const Color& p_color);
-    virtual void environment_set_bg_energy(RID p_env, float p_energy);
-    virtual void environment_set_canvas_max_layer(RID p_env, int p_max_layer);
-    virtual void environment_set_ambient_light(
+    void environment_set_background(RID p_env, VS::EnvironmentBG p_bg) override;
+    void environment_set_sky(RID p_env, RID p_sky) override;
+    void environment_set_sky_custom_fov(RID p_env, float p_scale) override;
+    void environment_set_sky_orientation(RID p_env, const Basis& p_orientation)
+        override;
+    void environment_set_bg_color(RID p_env, const Color& p_color) override;
+    void environment_set_bg_energy(RID p_env, float p_energy) override;
+    void environment_set_canvas_max_layer(RID p_env, int p_max_layer) override;
+    void environment_set_ambient_light(
         RID p_env,
         const Color& p_color,
         float p_energy           = 1.0,
         float p_sky_contribution = 0.0
-    );
-    virtual void environment_set_camera_feed_id(
-        RID p_env,
-        int p_camera_feed_id
-    );
+    ) override;
+    void environment_set_camera_feed_id(RID p_env, int p_camera_feed_id)
+        override;
 
-    virtual void environment_set_dof_blur_near(
+    void environment_set_dof_blur_near(
         RID p_env,
         bool p_enable,
         float p_distance,
         float p_transition,
         float p_amount,
         VS::EnvironmentDOFBlurQuality p_quality
-    );
-    virtual void environment_set_dof_blur_far(
+    ) override;
+    void environment_set_dof_blur_far(
         RID p_env,
         bool p_enable,
         float p_distance,
         float p_transition,
         float p_amount,
         VS::EnvironmentDOFBlurQuality p_quality
-    );
+    ) override;
 
-    virtual void environment_set_glow(
+    void environment_set_glow(
         RID p_env,
         bool p_enable,
         int p_level_flags,
@@ -521,16 +515,16 @@ public:
         float p_hdr_luminance_cap,
         bool p_bicubic_upscale,
         bool p_high_quality
-    );
-    virtual void environment_set_fog(
+    ) override;
+    void environment_set_fog(
         RID p_env,
         bool p_enable,
         float p_begin,
         float p_end,
         RID p_gradient_texture
-    );
+    ) override;
 
-    virtual void environment_set_ssr(
+    void environment_set_ssr(
         RID p_env,
         bool p_enable,
         int p_max_steps,
@@ -538,8 +532,8 @@ public:
         float p_fade_out,
         float p_depth_tolerance,
         bool p_roughness
-    );
-    virtual void environment_set_ssao(
+    ) override;
+    void environment_set_ssao(
         RID p_env,
         bool p_enable,
         float p_radius,
@@ -553,9 +547,9 @@ public:
         VS::EnvironmentSSAOQuality p_quality,
         VS::EnvironmentSSAOBlur p_blur,
         float p_bilateral_sharpness
-    );
+    ) override;
 
-    virtual void environment_set_tonemap(
+    void environment_set_tonemap(
         RID p_env,
         VS::EnvironmentToneMapper p_tone_mapper,
         float p_exposure,
@@ -565,25 +559,25 @@ public:
         float p_max_luminance,
         float p_auto_exp_speed,
         float p_auto_exp_scale
-    );
+    ) override;
 
-    virtual void environment_set_adjustment(
+    void environment_set_adjustment(
         RID p_env,
         bool p_enable,
         float p_brightness,
         float p_contrast,
         float p_saturation,
         RID p_ramp
-    );
+    ) override;
 
-    virtual void environment_set_fog(
+    void environment_set_fog(
         RID p_env,
         bool p_enable,
         const Color& p_color,
         const Color& p_sun_color,
         float p_sun_amount
-    );
-    virtual void environment_set_fog_depth(
+    ) override;
+    void environment_set_fog_depth(
         RID p_env,
         bool p_enable,
         float p_depth_begin,
@@ -591,19 +585,19 @@ public:
         float p_depth_curve,
         bool p_transmit,
         float p_transmit_curve
-    );
-    virtual void environment_set_fog_height(
+    ) override;
+    void environment_set_fog_height(
         RID p_env,
         bool p_enable,
         float p_min_height,
         float p_max_height,
         float p_height_curve
-    );
+    ) override;
 
-    virtual bool is_environment(RID p_env);
+    bool is_environment(RID p_env) override;
 
-    virtual VS::EnvironmentBG environment_get_background(RID p_env);
-    virtual int environment_get_canvas_max_layer(RID p_env);
+    VS::EnvironmentBG environment_get_background(RID p_env) override;
+    int environment_get_canvas_max_layer(RID p_env) override;
 
     /* LIGHT INSTANCE */
 
@@ -646,12 +640,12 @@ public:
 
     mutable RID_Owner<LightInstance> light_instance_owner;
 
-    virtual RID light_instance_create(RID p_light);
-    virtual void light_instance_set_transform(
+    RID light_instance_create(RID p_light) override;
+    void light_instance_set_transform(
         RID p_light_instance,
         const Transform& p_transform
-    );
-    virtual void light_instance_set_shadow_transform(
+    ) override;
+    void light_instance_set_shadow_transform(
         RID p_light_instance,
         const CameraMatrix& p_projection,
         const Transform& p_transform,
@@ -659,10 +653,10 @@ public:
         float p_split,
         int p_pass,
         float p_bias_scale = 1.0
-    );
-    virtual void light_instance_mark_visible(RID p_light_instance);
+    ) override;
+    void light_instance_mark_visible(RID p_light_instance) override;
 
-    virtual bool light_instances_can_render_shadow_cube() const {
+    bool light_instances_can_render_shadow_cube() const override {
         return storage->config.support_shadow_cubemaps;
     }
 
@@ -672,20 +666,15 @@ public:
 
     /* REFLECTION INSTANCE */
 
-    virtual RID gi_probe_instance_create();
-    virtual void gi_probe_instance_set_light_data(
-        RID p_probe,
-        RID p_base,
-        RID p_data
-    );
-    virtual void gi_probe_instance_set_transform_to_data(
+    RID gi_probe_instance_create() override;
+    void gi_probe_instance_set_light_data(RID p_probe, RID p_base, RID p_data)
+        override;
+    void gi_probe_instance_set_transform_to_data(
         RID p_probe,
         const Transform& p_xform
-    );
-    virtual void gi_probe_instance_set_bounds(
-        RID p_probe,
-        const Vector3& p_bounds
-    );
+    ) override;
+    void gi_probe_instance_set_bounds(RID p_probe, const Vector3& p_bounds)
+        override;
 
     /* RENDER LIST */
 
@@ -962,7 +951,7 @@ public:
 
     void _post_process(Environment* env, const CameraMatrix& p_cam_projection);
 
-    virtual void render_scene(
+    void render_scene(
         const Transform& p_cam_transform,
         const CameraMatrix& p_cam_projection,
         const int p_eye,
@@ -978,24 +967,24 @@ public:
         RID p_reflection_atlas,
         RID p_reflection_probe,
         int p_reflection_probe_pass
-    );
-    virtual void render_shadow(
+    ) override;
+    void render_shadow(
         RID p_light,
         RID p_shadow_atlas,
         int p_pass,
         InstanceBase** p_cull_result,
         int p_cull_count
-    );
-    virtual bool free(RID p_rid);
+    ) override;
+    bool free(RID p_rid) override;
 
-    virtual void set_scene_pass(uint64_t p_pass);
-    virtual void set_debug_draw_mode(VS::ViewportDebugDraw p_debug_draw);
+    void set_scene_pass(uint64_t p_pass) override;
+    void set_debug_draw_mode(VS::ViewportDebugDraw p_debug_draw) override;
 
     void iteration();
     void initialize();
     void finalize();
     RasterizerSceneGLES2();
-    ~RasterizerSceneGLES2();
+    ~RasterizerSceneGLES2() override;
 };
 
 #endif // RASTERIZERSCENEGLES2_H

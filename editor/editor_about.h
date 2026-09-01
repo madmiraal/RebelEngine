@@ -52,7 +52,7 @@ public:
     TextureRect* get_logo() const;
 
     EditorAbout();
-    ~EditorAbout();
+    ~EditorAbout() override;
 };
 
-#endif
+#endif // EDITOR_ABOUT_H

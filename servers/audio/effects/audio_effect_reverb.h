@@ -4,8 +4,8 @@
 //
 // SPDX-License-Identifier: MIT
 
-#ifndef AUDIOEFFECTREVERB_H
-#define AUDIOEFFECTREVERB_H
+#ifndef AUDIO_EFFECT_REVERB_H
+#define AUDIO_EFFECT_REVERB_H
 
 #include "servers/audio/audio_effect.h"
 #include "servers/audio/effects/reverb.h"
@@ -25,11 +25,11 @@ class AudioEffectReverbInstance : public AudioEffectInstance {
     Reverb reverb[2];
 
 public:
-    virtual void process(
+    void process(
         const AudioFrame* p_src_frames,
         AudioFrame* p_dst_frames,
         int p_frame_count
-    );
+    ) override;
     AudioEffectReverbInstance();
 };
 
@@ -69,11 +69,9 @@ public:
     float get_wet() const;
     float get_hpf() const;
 
-    Ref<AudioEffectInstance> instance();
-    void set_volume_db(float p_volume);
-    float get_volume_db() const;
+    Ref<AudioEffectInstance> instance() override;
 
     AudioEffectReverb();
 };
 
-#endif // AUDIOEFFECTREVERB_H
+#endif // AUDIO_EFFECT_REVERB_H

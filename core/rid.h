@@ -103,7 +103,7 @@ public:
 
     static void init_rid();
 
-    virtual ~RID_OwnerBase() {}
+    virtual ~RID_OwnerBase() = default;
 };
 
 template <class T>
@@ -167,7 +167,7 @@ public:
 #endif
     }
 
-    void get_owned_list(List<RID>* p_owned) {
+    void get_owned_list(List<RID>* p_owned) override {
 #ifdef DEBUG_ENABLED
 
         for (typename Set<RID_Data*>::Element* E = id_map.front(); E;

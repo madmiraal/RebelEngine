@@ -24,7 +24,7 @@ class GraphEditFilter : public Control {
     friend class GraphEdit;
     friend class GraphEditMinimap;
     GraphEdit* ge;
-    virtual bool has_point(const Point2& p_point) const;
+    bool has_point(const Point2& p_point) const override;
 
 public:
     GraphEditFilter(GraphEdit* p_edit);
@@ -235,10 +235,10 @@ private:
 
 protected:
     static void _bind_methods();
-    virtual void add_child_notify(Node* p_child);
-    virtual void remove_child_notify(Node* p_child);
+    void add_child_notify(Node* p_child) override;
+    void remove_child_notify(Node* p_child) override;
     void _notification(int p_what);
-    virtual bool clips_input() const;
+    bool clips_input() const override;
 
 public:
     Error connect_node(
@@ -332,4 +332,4 @@ public:
     GraphEdit();
 };
 
-#endif // GRAPHEdit_H
+#endif // GRAPH_EDIT_H

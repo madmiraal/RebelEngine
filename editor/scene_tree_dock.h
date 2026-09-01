@@ -337,7 +337,7 @@ public:
         EditorSelection* p_editor_selection,
         EditorData& p_editor_data
     );
-    ~SceneTreeDock();
+    ~SceneTreeDock() override;
 };
 
 #endif // SCENE_TREE_DOCK_H

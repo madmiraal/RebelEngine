@@ -128,10 +128,10 @@ public:
         return rid;
     }
 
-    virtual String get_configuration_warning() const;
+    String get_configuration_warning() const override;
 
     CollisionObject();
-    ~CollisionObject();
+    ~CollisionObject() override;
 };
 
-#endif // COLLISION_OBJECT__H
+#endif // COLLISION_OBJECT_H

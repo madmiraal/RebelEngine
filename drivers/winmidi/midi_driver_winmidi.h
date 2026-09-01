@@ -4,10 +4,10 @@
 //
 // SPDX-License-Identifier: MIT
 
-#ifdef WINMIDI_ENABLED
-
 #ifndef MIDI_DRIVER_WINMIDI_H
 #define MIDI_DRIVER_WINMIDI_H
+
+#ifdef WINMIDI_ENABLED
 
 #include "core/os/midi_driver.h"
 #include "core/vector.h"
@@ -30,14 +30,15 @@ class MIDIDriverWinMidi : public MIDIDriver {
     );
 
 public:
-    virtual Error open();
-    virtual void close();
+    Error open() override;
+    void close() override;
 
-    virtual PoolStringArray get_connected_inputs();
+    PoolStringArray get_connected_inputs() override;
 
     MIDIDriverWinMidi();
-    virtual ~MIDIDriverWinMidi();
+    ~MIDIDriverWinMidi() override;
 };
 
-#endif // MIDI_DRIVER_WINMIDI_H
 #endif // WINMIDI_ENABLED
+
+#endif // MIDI_DRIVER_WINMIDI_H

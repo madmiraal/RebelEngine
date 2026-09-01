@@ -20,9 +20,9 @@ protected:
 
 public:
 #ifdef TOOLS_ENABLED
-    virtual Rect2 _edit_get_rect() const;
-    virtual bool _edit_use_rect() const;
-#endif
+    Rect2 _edit_get_rect() const override;
+    bool _edit_use_rect() const override;
+#endif // TOOLS_ENABLED
 
     void set_gizmo_extents(float p_extents);
     float get_gizmo_extents() const;

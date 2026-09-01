@@ -26,7 +26,7 @@ public:
 
 protected:
     static void _bind_methods();
-    virtual void ok_pressed();
+    void ok_pressed() override;
 
 private:
     enum class ProjectType {

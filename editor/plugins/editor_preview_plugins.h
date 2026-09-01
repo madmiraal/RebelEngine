@@ -4,8 +4,8 @@
 //
 // SPDX-License-Identifier: MIT
 
-#ifndef EDITORPREVIEWPLUGINS_H
-#define EDITORPREVIEWPLUGINS_H
+#ifndef EDITOR_PREVIEW_PLUGINS_H
+#define EDITOR_PREVIEW_PLUGINS_H
 
 #include "core/safe_refcount.h"
 #include "editor/editor_resource_preview.h"
@@ -16,9 +16,10 @@ class EditorTexturePreviewPlugin : public EditorResourcePreviewGenerator {
     GDCLASS(EditorTexturePreviewPlugin, EditorResourcePreviewGenerator);
 
 public:
-    virtual bool handles(const String& p_type) const;
-    virtual bool generate_small_preview_automatically() const;
-    virtual Ref<Texture> generate(const RES& p_from, const Size2& p_size) const;
+    bool handles(const String& p_type) const override;
+    bool generate_small_preview_automatically() const override;
+    Ref<Texture> generate(const RES& p_from, const Size2& p_size)
+        const override;
 
     EditorTexturePreviewPlugin();
 };
@@ -27,9 +28,10 @@ class EditorImagePreviewPlugin : public EditorResourcePreviewGenerator {
     GDCLASS(EditorImagePreviewPlugin, EditorResourcePreviewGenerator);
 
 public:
-    virtual bool handles(const String& p_type) const;
-    virtual bool generate_small_preview_automatically() const;
-    virtual Ref<Texture> generate(const RES& p_from, const Size2& p_size) const;
+    bool handles(const String& p_type) const override;
+    bool generate_small_preview_automatically() const override;
+    Ref<Texture> generate(const RES& p_from, const Size2& p_size)
+        const override;
 
     EditorImagePreviewPlugin();
 };
@@ -38,21 +40,21 @@ class EditorBitmapPreviewPlugin : public EditorResourcePreviewGenerator {
     GDCLASS(EditorBitmapPreviewPlugin, EditorResourcePreviewGenerator);
 
 public:
-    virtual bool handles(const String& p_type) const;
-    virtual bool generate_small_preview_automatically() const;
-    virtual Ref<Texture> generate(const RES& p_from, const Size2& p_size) const;
+    bool handles(const String& p_type) const override;
+    bool generate_small_preview_automatically() const override;
+    Ref<Texture> generate(const RES& p_from, const Size2& p_size)
+        const override;
 
     EditorBitmapPreviewPlugin();
 };
 
 class EditorPackedScenePreviewPlugin : public EditorResourcePreviewGenerator {
 public:
-    virtual bool handles(const String& p_type) const;
-    virtual Ref<Texture> generate(const RES& p_from, const Size2& p_size) const;
-    virtual Ref<Texture> generate_from_path(
-        const String& p_path,
-        const Size2& p_size
-    ) const;
+    bool handles(const String& p_type) const override;
+    Ref<Texture> generate(const RES& p_from, const Size2& p_size)
+        const override;
+    Ref<Texture> generate_from_path(const String& p_path, const Size2& p_size)
+        const override;
 
     EditorPackedScenePreviewPlugin();
 };
@@ -78,26 +80,29 @@ protected:
     static void _bind_methods();
 
 public:
-    virtual bool handles(const String& p_type) const;
-    virtual bool generate_small_preview_automatically() const;
-    virtual Ref<Texture> generate(const RES& p_from, const Size2& p_size) const;
+    bool handles(const String& p_type) const override;
+    bool generate_small_preview_automatically() const override;
+    Ref<Texture> generate(const RES& p_from, const Size2& p_size)
+        const override;
 
     EditorMaterialPreviewPlugin();
-    ~EditorMaterialPreviewPlugin();
+    ~EditorMaterialPreviewPlugin() override;
 };
 
 class EditorScriptPreviewPlugin : public EditorResourcePreviewGenerator {
 public:
-    virtual bool handles(const String& p_type) const;
-    virtual Ref<Texture> generate(const RES& p_from, const Size2& p_size) const;
+    bool handles(const String& p_type) const override;
+    Ref<Texture> generate(const RES& p_from, const Size2& p_size)
+        const override;
 
     EditorScriptPreviewPlugin();
 };
 
 class EditorAudioStreamPreviewPlugin : public EditorResourcePreviewGenerator {
 public:
-    virtual bool handles(const String& p_type) const;
-    virtual Ref<Texture> generate(const RES& p_from, const Size2& p_size) const;
+    bool handles(const String& p_type) const override;
+    Ref<Texture> generate(const RES& p_from, const Size2& p_size)
+        const override;
 
     EditorAudioStreamPreviewPlugin();
 };
@@ -122,11 +127,12 @@ protected:
     static void _bind_methods();
 
 public:
-    virtual bool handles(const String& p_type) const;
-    virtual Ref<Texture> generate(const RES& p_from, const Size2& p_size) const;
+    bool handles(const String& p_type) const override;
+    Ref<Texture> generate(const RES& p_from, const Size2& p_size)
+        const override;
 
     EditorMeshPreviewPlugin();
-    ~EditorMeshPreviewPlugin();
+    ~EditorMeshPreviewPlugin() override;
 };
 
 class EditorFontPreviewPlugin : public EditorResourcePreviewGenerator {
@@ -144,14 +150,13 @@ protected:
     static void _bind_methods();
 
 public:
-    virtual bool handles(const String& p_type) const;
-    virtual Ref<Texture> generate(const RES& p_from, const Size2& p_size) const;
-    virtual Ref<Texture> generate_from_path(
-        const String& p_path,
-        const Size2& p_size
-    ) const;
+    bool handles(const String& p_type) const override;
+    Ref<Texture> generate(const RES& p_from, const Size2& p_size)
+        const override;
+    Ref<Texture> generate_from_path(const String& p_path, const Size2& p_size)
+        const override;
 
     EditorFontPreviewPlugin();
-    ~EditorFontPreviewPlugin();
+    ~EditorFontPreviewPlugin() override;
 };
-#endif // EDITORPREVIEWPLUGINS_H
+#endif // EDITOR_PREVIEW_PLUGINS_H

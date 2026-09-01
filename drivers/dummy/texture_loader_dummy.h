@@ -12,16 +12,16 @@
 
 class ResourceFormatDummyTexture : public ResourceFormatLoader {
 public:
-    virtual RES load(
+    RES load(
         const String& p_path,
         const String& p_original_path = "",
         Error* r_error                = NULL
-    );
-    virtual void get_recognized_extensions(List<String>* p_extensions) const;
-    virtual bool handles_type(const String& p_type) const;
-    virtual String get_resource_type(const String& p_path) const;
+    ) override;
+    void get_recognized_extensions(List<String>* p_extensions) const override;
+    bool handles_type(const String& p_type) const override;
+    String get_resource_type(const String& p_path) const override;
 
-    virtual ~ResourceFormatDummyTexture() {}
+    ~ResourceFormatDummyTexture() override = default;
 };
 
 #endif // TEXTURE_LOADER_DUMMY_H

@@ -128,7 +128,7 @@ public:
     void shut_down();
 
     VersionControlEditorPlugin();
-    ~VersionControlEditorPlugin();
+    ~VersionControlEditorPlugin() override;
 };
 
 VARIANT_ENUM_CAST(VersionControlEditorPlugin::ChangeType);

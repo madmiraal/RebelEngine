@@ -19,14 +19,14 @@ private:
 
 public:
     CollisionDispatcher(btCollisionConfiguration* collisionConfiguration);
-    virtual bool needsCollision(
+    bool needsCollision(
         const btCollisionObject* body0,
         const btCollisionObject* body1
-    );
-    virtual bool needsResponse(
+    ) override;
+    bool needsResponse(
         const btCollisionObject* body0,
         const btCollisionObject* body1
-    );
+    ) override;
 };
 
 #endif // COLLISION_DISPATCHER_H

@@ -48,17 +48,18 @@ public:
 
     bool file_exists(String p_name) const;
 
-    virtual bool try_open_pack(
+    bool try_open_pack(
         const String& p_path,
         bool p_replace_files,
         uint64_t p_offset
-    );
-    FileAccess* get_file(const String& p_path, PackedData::PackedFile* p_file);
+    ) override;
+    FileAccess* get_file(const String& p_path, PackedData::PackedFile* p_file)
+        override;
 
     static ZipArchive* get_singleton();
 
     ZipArchive();
-    ~ZipArchive();
+    ~ZipArchive() override;
 };
 
 class FileAccessZip : public FileAccess {
@@ -68,50 +69,42 @@ class FileAccessZip : public FileAccess {
     mutable bool at_eof;
 
 public:
-    virtual Error _open(
-        const String& p_path,
-        int p_mode_flags
-    );                            ///< open a file
-    virtual void close();         ///< close a file
-    virtual bool is_open() const; ///< true when file is open
+    Error _open(const String& p_path, int p_mode_flags) override;
+    void close() override;
+    bool is_open() const override;
 
-    virtual void seek(uint64_t p_position); ///< seek to a given position
-    virtual void seek_end(
-        int64_t p_position = 0
-    );                                     ///< seek from the end of file
-    virtual uint64_t get_position() const; ///< get position in the file
-    virtual uint64_t get_len() const;      ///< get size of the file
+    void seek(uint64_t p_position) override;
+    void seek_end(int64_t p_position = 0) override;
+    uint64_t get_position() const override;
+    uint64_t get_len() const override;
 
-    virtual bool eof_reached() const; ///< reading passed EOF
+    bool eof_reached() const override;
 
-    virtual uint8_t get_8() const; ///< get a byte
-    virtual uint64_t get_buffer(uint8_t* p_dst, uint64_t p_length) const;
+    uint8_t get_8() const override;
+    uint64_t get_buffer(uint8_t* p_dst, uint64_t p_length) const override;
 
-    virtual Error get_error() const; ///< get last error
+    Error get_error() const override;
 
-    virtual void flush();
-    virtual void store_8(uint8_t p_dest); ///< store a byte
+    void flush() override;
+    void store_8(uint8_t p_dest) override;
 
-    virtual bool file_exists(const String& p_name
-    ); ///< return true if a file exists
+    bool file_exists(const String& p_name) override;
 
-    virtual uint64_t _get_modified_time(const String& p_file) {
+    uint64_t _get_modified_time(const String& p_file) override {
         return 0;
     } // todo
 
-    virtual uint32_t _get_unix_permissions(const String& p_file) {
+    uint32_t _get_unix_permissions(const String& p_file) override {
         return 0;
     }
 
-    virtual Error _set_unix_permissions(
-        const String& p_file,
-        uint32_t p_permissions
-    ) {
+    Error _set_unix_permissions(const String& p_file, uint32_t p_permissions)
+        override {
         return FAILED;
     }
 
     FileAccessZip(const String& p_path, const PackedData::PackedFile& p_file);
-    ~FileAccessZip();
+    ~FileAccessZip() override;
 };
 
 #endif // MINIZIP_ENABLED

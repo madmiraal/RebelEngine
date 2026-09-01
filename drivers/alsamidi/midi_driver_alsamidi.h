@@ -31,13 +31,13 @@ class MIDIDriverALSAMidi : public MIDIDriver {
     void unlock() const;
 
 public:
-    virtual Error open();
-    virtual void close();
+    Error open() override;
+    void close() override;
 
-    virtual PoolStringArray get_connected_inputs();
+    PoolStringArray get_connected_inputs() override;
 
     MIDIDriverALSAMidi();
-    virtual ~MIDIDriverALSAMidi();
+    ~MIDIDriverALSAMidi() override;
 };
 
 #endif // ALSAMIDI_ENABLED

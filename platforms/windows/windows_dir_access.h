@@ -27,46 +27,45 @@ class WindowsDirAccess : public DirAccess {
     bool _cishidden;
 
 public:
-    virtual Error list_dir_begin(); ///< This starts dir listing
-    virtual String get_next();
-    virtual bool current_is_dir() const;
-    virtual bool current_is_hidden() const;
-    virtual void list_dir_end(); ///<
+    Error list_dir_begin() override;
+    String get_next() override;
+    bool current_is_dir() const override;
+    bool current_is_hidden() const override;
+    void list_dir_end() override;
 
-    virtual int get_drive_count();
-    virtual String get_drive(int p_drive);
+    int get_drive_count() override;
+    String get_drive(int p_drive) override;
 
-    virtual Error change_dir(String p_dir
-    ); ///< can be relative or absolute, return false on success
-    virtual String get_current_dir(); ///< return current dir location
-    virtual String get_current_dir_without_drive();
+    Error change_dir(String p_dir) override;
+    String get_current_dir() override;
+    String get_current_dir_without_drive() override;
 
-    virtual bool file_exists(String p_file);
-    virtual bool dir_exists(String p_dir);
+    bool file_exists(String p_file) override;
+    bool dir_exists(String p_dir) override;
 
-    virtual Error make_dir(String p_dir);
+    Error make_dir(String p_dir) override;
 
-    virtual Error rename(String p_path, String p_new_path);
-    virtual Error remove(String p_path);
+    Error rename(String p_path, String p_new_path) override;
+    Error remove(String p_path) override;
 
-    virtual bool is_link(String p_file) {
+    bool is_link(String p_file) override {
         return false;
     };
 
-    virtual String read_link(String p_file) {
+    String read_link(String p_file) override {
         return p_file;
     };
 
-    virtual Error create_link(String p_source, String p_target) {
+    Error create_link(String p_source, String p_target) override {
         return FAILED;
     };
 
-    uint64_t get_space_left();
+    uint64_t get_space_left() override;
 
-    virtual String get_filesystem_type() const;
+    String get_filesystem_type() const override;
 
     WindowsDirAccess();
-    ~WindowsDirAccess();
+    ~WindowsDirAccess() override;
 };
 
 #endif // WINDOWS_DIR_ACCESS_H

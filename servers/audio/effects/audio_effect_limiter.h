@@ -19,11 +19,11 @@ class AudioEffectLimiterInstance : public AudioEffectInstance {
     float mix_volume_db;
 
 public:
-    virtual void process(
+    void process(
         const AudioFrame* p_src_frames,
         AudioFrame* p_dst_frames,
         int p_frame_count
-    );
+    ) override;
 };
 
 class AudioEffectLimiter : public AudioEffect {
@@ -51,9 +51,7 @@ public:
     void set_soft_clip_ratio(float p_soft_clip);
     float get_soft_clip_ratio() const;
 
-    Ref<AudioEffectInstance> instance();
-    void set_volume_db(float p_volume);
-    float get_volume_db() const;
+    Ref<AudioEffectInstance> instance() override;
 
     AudioEffectLimiter();
 };

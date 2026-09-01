@@ -20,7 +20,7 @@ public:                                                                        \
     static void register_custom_data_to_otdb() {                               \
         ClassDB::add_resource_base_extension(m_ext, get_class_static());       \
     }                                                                          \
-    virtual String get_base_extension() const {                                \
+    String get_base_extension() const override {                               \
         return m_ext;                                                          \
     }                                                                          \
                                                                                \
@@ -29,8 +29,17 @@ private:
 class Resource : public Reference {
     GDCLASS(Resource, Reference);
     OBJ_CATEGORY("Resources");
-    RES_BASE_EXTENSION("res");
 
+public:
+    static void register_custom_data_to_otdb() {
+        ClassDB::add_resource_base_extension("res", get_class_static());
+    }
+
+    virtual String get_base_extension() const {
+        return "res";
+    }
+
+private:
     Set<ObjectID> owners;
 
     friend class ResBase;
@@ -140,7 +149,7 @@ public:
 #endif
 
     Resource();
-    ~Resource();
+    ~Resource() override;
 };
 
 typedef Ref<Resource> RES;

@@ -90,7 +90,7 @@ public:
         return CharProxy<char>(p_index, _cowdata);
     }
 
-    _FORCE_INLINE_ CharString() {}
+    _FORCE_INLINE_ CharString() = default;
 
     _FORCE_INLINE_ CharString(const CharString& p_str) {
         _cowdata._ref(p_str._cowdata);
@@ -450,7 +450,7 @@ public:
      */
     /*	String(CharType p_char);*/
 
-    _FORCE_INLINE_ String() {}
+    _FORCE_INLINE_ String() = default;
 
     _FORCE_INLINE_ String(const String& p_str) {
         _cowdata._ref(p_str._cowdata);

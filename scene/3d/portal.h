@@ -69,10 +69,10 @@ public:
     // primarily for the gizmo
     void set_point(int p_idx, const Vector2& p_point);
 
-    String get_configuration_warning() const;
+    String get_configuration_warning() const override;
 
     Portal();
-    ~Portal();
+    ~Portal() override;
 
     // whether the convention is that the normal of the portal points outward
     // (false) or inward (true) normally I'd recommend portal normal faces

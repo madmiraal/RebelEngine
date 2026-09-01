@@ -13,18 +13,18 @@
 
 class WindowsTerminalLogger : public StdLogger {
 public:
-    virtual void logv(const char* p_format, va_list p_list, bool p_err);
-    virtual void log_error(
+    void logv(const char* p_format, va_list p_list, bool p_err) override;
+    void log_error(
         const char* p_function,
         const char* p_file,
         int p_line,
         const char* p_code,
         const char* p_rationale,
         ErrorType p_type = ERR_ERROR
-    );
-    virtual ~WindowsTerminalLogger();
+    ) override;
+    ~WindowsTerminalLogger() override;
 };
 
-#endif
+#endif // WINDOWS_ENABLED
 
-#endif
+#endif // WINDOWS_TERMINAL_LOGGER_H

@@ -22,15 +22,15 @@ public:
 
         Stream() : saved(0) {}
 
-        virtual ~Stream() {}
+        virtual ~Stream() = default;
     };
 
     struct StreamFile : public Stream {
         FileAccess* f;
 
-        virtual CharType get_char();
-        virtual bool is_utf8() const;
-        virtual bool is_eof() const;
+        CharType get_char() override;
+        bool is_utf8() const override;
+        bool is_eof() const override;
 
         StreamFile() {
             f = nullptr;
@@ -41,9 +41,9 @@ public:
         String s;
         int pos;
 
-        virtual CharType get_char();
-        virtual bool is_utf8() const;
-        virtual bool is_eof() const;
+        CharType get_char() override;
+        bool is_utf8() const override;
+        bool is_eof() const override;
 
         StreamString() {
             pos = 0;

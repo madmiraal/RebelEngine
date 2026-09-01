@@ -111,7 +111,7 @@ class DependencyRemoveDialog : public ConfirmationDialog {
         const Vector<RemovedDependency>& p_removed
     );
 
-    void ok_pressed();
+    void ok_pressed() override;
 
     static void _bind_methods();
 
@@ -135,8 +135,8 @@ private:
     Button* fdep;
     Label* text;
     Tree* files;
-    void ok_pressed();
-    void custom_action(const String&);
+    void ok_pressed() override;
+    void custom_action(const String&) override;
 
 public:
     void show(
@@ -153,7 +153,7 @@ class OrphanResourcesDialog : public ConfirmationDialog {
     DependencyEditor* dep_edit;
     Tree* files;
     ConfirmationDialog* delete_confirm;
-    void ok_pressed();
+    void ok_pressed() override;
 
     bool _fill_owners(
         EditorFileSystemDirectory* efsd,

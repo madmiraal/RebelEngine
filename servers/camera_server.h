@@ -13,13 +13,6 @@
 #include "core/rid.h"
 #include "core/variant.h"
 
-/**
-    @author Bastiaan Olij <mux213@gmail.com>
-
-    The camera server is a singleton object that gives access to the various
-    camera feeds that can be used as the background for our environment.
-**/
-
 class CameraFeed;
 
 class CameraServer : public Object {
@@ -86,9 +79,9 @@ public:
     RID feed_texture(int p_id, FeedImage p_texture);
 
     CameraServer();
-    ~CameraServer();
+    ~CameraServer() override;
 };
 
 VARIANT_ENUM_CAST(CameraServer::FeedImage);
 
-#endif /* CAMERA_SERVER_H */
+#endif // CAMERA_SERVER_H

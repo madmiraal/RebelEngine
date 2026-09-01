@@ -25,8 +25,8 @@ public:
 
 protected:
     static void _bind_methods();
-    virtual void cancel_pressed();
-    virtual void ok_pressed();
+    void cancel_pressed() override;
+    void ok_pressed() override;
 
 private:
     String created_folder;

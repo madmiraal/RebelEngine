@@ -24,7 +24,7 @@ class VisualInstance : public CullInstance {
 
 protected:
     void _update_visibility();
-    virtual void _refresh_portal_mode();
+    void _refresh_portal_mode() override;
 
     void _notification(int p_what);
     static void _bind_methods();
@@ -52,7 +52,7 @@ public:
     bool get_layer_mask_bit(int p_layer) const;
 
     VisualInstance();
-    ~VisualInstance();
+    ~VisualInstance() override;
 };
 
 class GeometryInstance : public VisualInstance {

@@ -37,10 +37,6 @@
 #define VARIANT_ARGS_FROM_ARRAY(m_arr)                                         \
     m_arr[0], m_arr[1], m_arr[2], m_arr[3], m_arr[4]
 
-/**
-@author Juan Linietsky <reduzio@gmail.com>
-*/
-
 #define ADD_SIGNAL(m_signal) ClassDB::add_signal(get_class_static(), m_signal)
 #define ADD_PROPERTY(m_property, m_setter, m_getter)                           \
     ClassDB::add_property(                                                     \
@@ -68,12 +64,6 @@
 
 Array convert_property_list(const List<PropertyInfo>* p_list);
 
-/*
-   the following is an incomprehensible blob of hacks and workarounds to
-   compensate for many of the fallencies in C++. As a plus, this macro pretty
-   much alone defines the object model.
-*/
-
 #define REVERSE_GET_PROPERTY_LIST                                              \
                                                                                \
 public:                                                                        \
@@ -100,10 +90,10 @@ private:                                                                       \
     friend class ClassDB;                                                      \
                                                                                \
 public:                                                                        \
-    virtual String get_class() const {                                         \
+    String get_class() const override {                                        \
         return String(#m_class);                                               \
     }                                                                          \
-    virtual const StringName* _get_class_namev() const {                       \
+    const StringName* _get_class_namev() const override {                      \
         if (!_class_name) _class_name = get_class_static();                    \
         return &_class_name;                                                   \
     }                                                                          \
@@ -133,10 +123,10 @@ public:                                                                        \
     static String inherits_static() {                                          \
         return String(#m_inherits);                                            \
     }                                                                          \
-    virtual bool is_class(const String& p_class) const {                       \
+    bool is_class(const String& p_class) const override {                      \
         return (p_class == (#m_class)) ? true : m_inherits::is_class(p_class); \
     }                                                                          \
-    virtual bool is_class_ptr(void* p_ptr) const {                             \
+    bool is_class_ptr(void* p_ptr) const override {                            \
         return (p_ptr == get_class_ptr_static())                               \
                  ? true                                                        \
                  : m_inherits::is_class_ptr(p_ptr);                            \
@@ -168,7 +158,7 @@ public:                                                                        \
     }                                                                          \
                                                                                \
 protected:                                                                     \
-    virtual void _initialize_classv() {                                        \
+    void _initialize_classv() override {                                       \
         initialize_class();                                                    \
     }                                                                          \
     _FORCE_INLINE_ bool (Object::*_get_get(                                    \
@@ -176,7 +166,7 @@ protected:                                                                     \
         return (bool(Object::*)(const StringName&, Variant&) const)            \
              & m_class::_get;                                                  \
     }                                                                          \
-    virtual bool _getv(const StringName& p_name, Variant& r_ret) const {       \
+    bool _getv(const StringName& p_name, Variant& r_ret) const override {      \
         if (m_class::_get_get() != m_inherits::_get_get()) {                   \
             if (_get(p_name, r_ret)) return true;                              \
         }                                                                      \
@@ -187,7 +177,7 @@ protected:                                                                     \
         return (bool(Object::*)(const StringName&, const Variant&))            \
              & m_class::_set;                                                  \
     }                                                                          \
-    virtual bool _setv(const StringName& p_name, const Variant& p_property) {  \
+    bool _setv(const StringName& p_name, const Variant& p_property) override { \
         if (m_inherits::_setv(p_name, p_property)) return true;                \
         if (m_class::_get_set() != m_inherits::_get_set()) {                   \
             return _set(p_name, p_property);                                   \
@@ -199,10 +189,8 @@ protected:                                                                     \
         return (void(Object::*)(List<PropertyInfo>*) const)                    \
              & m_class::_get_property_list;                                    \
     }                                                                          \
-    virtual void _get_property_listv(                                          \
-        List<PropertyInfo>* p_list,                                            \
-        bool p_reversed                                                        \
-    ) const {                                                                  \
+    void _get_property_listv(List<PropertyInfo>* p_list, bool p_reversed)      \
+        const override {                                                       \
         if (!p_reversed) {                                                     \
             m_inherits::_get_property_listv(p_list, p_reversed);               \
         }                                                                      \
@@ -228,7 +216,7 @@ protected:                                                                     \
     _FORCE_INLINE_ void (Object::*_get_notification() const)(int) {            \
         return (void(Object::*)(int)) & m_class::_notification;                \
     }                                                                          \
-    virtual void _notificationv(int p_notification, bool p_reversed) {         \
+    void _notificationv(int p_notification, bool p_reversed) override {        \
         if (!p_reversed)                                                       \
             m_inherits::_notificationv(p_notification, p_reversed);            \
         if (m_class::_get_notification() != m_inherits::_get_notification()) { \
@@ -252,7 +240,7 @@ private:
 #define OBJ_SAVE_TYPE(m_class)                                                 \
                                                                                \
 public:                                                                        \
-    virtual String get_save_class() const {                                    \
+    String get_save_class() const override {                                   \
         return #m_class;                                                       \
     }                                                                          \
                                                                                \

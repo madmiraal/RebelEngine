@@ -40,7 +40,7 @@ public:
     Dictionary environment;
 
     CharFXTransform();
-    ~CharFXTransform();
+    ~CharFXTransform() override;
 
     uint64_t get_relative_index() {
         return relative_index;

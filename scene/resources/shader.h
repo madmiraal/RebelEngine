@@ -77,38 +77,38 @@ public:
         return StringName();
     }
 
-    virtual RID get_rid() const;
+    RID get_rid() const override;
 
     Shader();
-    ~Shader();
+    ~Shader() override;
 };
 
 VARIANT_ENUM_CAST(Shader::Mode);
 
 class ResourceFormatLoaderShader : public ResourceFormatLoader {
 public:
-    virtual RES load(
+    RES load(
         const String& p_path,
         const String& p_original_path = "",
         Error* r_error                = nullptr
-    );
-    virtual void get_recognized_extensions(List<String>* p_extensions) const;
-    virtual bool handles_type(const String& p_type) const;
-    virtual String get_resource_type(const String& p_path) const;
+    ) override;
+    void get_recognized_extensions(List<String>* p_extensions) const override;
+    bool handles_type(const String& p_type) const override;
+    String get_resource_type(const String& p_path) const override;
 };
 
 class ResourceFormatSaverShader : public ResourceFormatSaver {
 public:
-    virtual Error save(
+    Error save(
         const String& p_path,
         const RES& p_resource,
         uint32_t p_flags = 0
-    );
-    virtual void get_recognized_extensions(
+    ) override;
+    void get_recognized_extensions(
         const RES& p_resource,
         List<String>* p_extensions
-    ) const;
-    virtual bool recognize(const RES& p_resource) const;
+    ) const override;
+    bool recognize(const RES& p_resource) const override;
 };
 
 #endif // SHADER_H

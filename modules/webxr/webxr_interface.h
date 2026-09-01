@@ -10,12 +10,6 @@
 #include "servers/arvr/arvr_interface.h"
 #include "servers/arvr/arvr_positional_tracker.h"
 
-/**
-    @author David Snopek <david.snopek@snopekgames.com>
-
-    The WebXR interface is a VR/AR interface that can be used on the web.
-*/
-
 class WebXRInterface : public ARVRInterface {
     GDCLASS(WebXRInterface, ARVRInterface);
 

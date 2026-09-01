@@ -410,8 +410,6 @@ void ScriptInstance::call_multilevel(
     call_multilevel(p_method, argptr, argc);
 }
 
-ScriptInstance::~ScriptInstance() {}
-
 ScriptCodeCompletionCache* ScriptCodeCompletionCache::singleton = nullptr;
 
 ScriptCodeCompletionCache::ScriptCodeCompletionCache() {

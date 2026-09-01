@@ -32,22 +32,22 @@ class GDMonoMethod : public IMonoClassMember {
     MonoMethod* mono_method;
 
 public:
-    virtual GDMonoClass* get_enclosing_class() const GD_FINAL;
+    GDMonoClass* get_enclosing_class() const GD_FINAL;
 
-    virtual MemberType get_member_type() const GD_FINAL {
+    MemberType get_member_type() const GD_FINAL {
         return MEMBER_TYPE_METHOD;
     }
 
-    virtual StringName get_name() const GD_FINAL {
+    StringName get_name() const GD_FINAL {
         return name;
     }
 
-    virtual bool is_static() GD_FINAL;
+    bool is_static() GD_FINAL;
 
-    virtual Visibility get_visibility() GD_FINAL;
+    Visibility get_visibility() GD_FINAL;
 
-    virtual bool has_attribute(GDMonoClass* p_attr_class) GD_FINAL;
-    virtual MonoObject* get_attribute(GDMonoClass* p_attr_class) GD_FINAL;
+    bool has_attribute(GDMonoClass* p_attr_class) GD_FINAL;
+    MonoObject* get_attribute(GDMonoClass* p_attr_class) GD_FINAL;
     void fetch_attributes();
 
     _FORCE_INLINE_ MonoMethod* get_mono_ptr() {
@@ -85,7 +85,7 @@ public:
     const MethodInfo& get_method_info();
 
     GDMonoMethod(StringName p_name, MonoMethod* p_method);
-    ~GDMonoMethod();
+    ~GDMonoMethod() override;
 };
 
 #endif // GD_MONO_METHOD_H

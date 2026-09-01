@@ -75,7 +75,6 @@ class SpriteFramesEditor : public HSplitContainer {
     float min_sheet_zoom;
 
     void _load_pressed();
-    void _load_scene_pressed();
     void _file_load_request(
         const PoolVector<String>& p_path,
         int p_at_pos = -1
@@ -106,10 +105,6 @@ class SpriteFramesEditor : public HSplitContainer {
 
     UndoRedo* undo_redo;
 
-    bool _is_drop_valid(
-        const Dictionary& p_drag_data,
-        const Dictionary& p_item_data
-    ) const;
     Variant get_drag_data_fw(const Point2& p_point, Control* p_from);
     bool can_drop_data_fw(
         const Point2& p_point,
@@ -157,20 +152,20 @@ class SpriteFramesEditorPlugin : public EditorPlugin {
     Button* button;
 
 public:
-    virtual String get_name() const {
+    String get_name() const override {
         return "SpriteFrames";
     }
 
-    bool has_main_screen() const {
+    bool has_main_screen() const override {
         return false;
     }
 
-    virtual void edit(Object* p_object);
-    virtual bool handles(Object* p_object) const;
-    virtual void make_visible(bool p_visible);
+    void edit(Object* p_object) override;
+    bool handles(Object* p_object) const override;
+    void make_visible(bool p_visible) override;
 
     SpriteFramesEditorPlugin(EditorNode* p_node);
-    ~SpriteFramesEditorPlugin();
+    ~SpriteFramesEditorPlugin() override;
 };
 
 #endif // SPRITE_FRAMES_EDITOR_PLUGIN_H

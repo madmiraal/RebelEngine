@@ -32,7 +32,7 @@ public:
     virtual void _shape_changed()               = 0;
     virtual void remove_shape(ShapeSW* p_shape) = 0;
 
-    virtual ~ShapeOwnerSW() {}
+    ~ShapeOwnerSW() override = default;
 };
 
 class ShapeSW : public RID_Data {
@@ -121,7 +121,7 @@ public:
     const Map<ShapeOwnerSW*, int>& get_owners() const;
 
     ShapeSW();
-    virtual ~ShapeSW();
+    ~ShapeSW() override;
 };
 
 class ConcaveShapeSW : public ShapeSW {
@@ -129,17 +129,17 @@ public:
     // Returns true to stop the query.
     typedef bool (*QueryCallback)(void* p_userdata, ShapeSW* p_convex);
 
-    virtual bool is_concave() const {
+    bool is_concave() const override {
         return true;
     }
 
-    virtual void get_supports(
+    void get_supports(
         const Vector3& p_normal,
         int p_max,
         Vector3* r_supports,
         int& r_amount,
         FeatureType& r_type
-    ) const {
+    ) const override {
         r_amount = 0;
     }
 
@@ -160,44 +160,44 @@ class PlaneShapeSW : public ShapeSW {
 public:
     Plane get_plane() const;
 
-    virtual real_t get_area() const {
+    real_t get_area() const override {
         return Math_INF;
     }
 
-    virtual PhysicsServer::ShapeType get_type() const {
+    PhysicsServer::ShapeType get_type() const override {
         return PhysicsServer::SHAPE_PLANE;
     }
 
-    virtual void project_range(
+    void project_range(
         const Vector3& p_normal,
         const Transform& p_transform,
         real_t& r_min,
         real_t& r_max
-    ) const;
-    virtual Vector3 get_support(const Vector3& p_normal) const;
+    ) const override;
+    Vector3 get_support(const Vector3& p_normal) const override;
 
-    virtual void get_supports(
+    void get_supports(
         const Vector3& p_normal,
         int p_max,
         Vector3* r_supports,
         int& r_amount,
         FeatureType& r_type
-    ) const {
+    ) const override {
         r_amount = 0;
     }
 
-    virtual bool intersect_segment(
+    bool intersect_segment(
         const Vector3& p_begin,
         const Vector3& p_end,
         Vector3& r_result,
         Vector3& r_normal
-    ) const;
-    virtual bool intersect_point(const Vector3& p_point) const;
-    virtual Vector3 get_closest_point_to(const Vector3& p_point) const;
-    virtual Vector3 get_moment_of_inertia(real_t p_mass) const;
+    ) const override;
+    bool intersect_point(const Vector3& p_point) const override;
+    Vector3 get_closest_point_to(const Vector3& p_point) const override;
+    Vector3 get_moment_of_inertia(real_t p_mass) const override;
 
-    virtual void set_data(const Variant& p_data);
-    virtual Variant get_data() const;
+    void set_data(const Variant& p_data) override;
+    Variant get_data() const override;
 
     PlaneShapeSW();
 };
@@ -212,42 +212,42 @@ public:
     real_t get_length() const;
     bool get_slips_on_slope() const;
 
-    virtual real_t get_area() const {
+    real_t get_area() const override {
         return 0.0;
     }
 
-    virtual PhysicsServer::ShapeType get_type() const {
+    PhysicsServer::ShapeType get_type() const override {
         return PhysicsServer::SHAPE_RAY;
     }
 
-    virtual void project_range(
+    void project_range(
         const Vector3& p_normal,
         const Transform& p_transform,
         real_t& r_min,
         real_t& r_max
-    ) const;
-    virtual Vector3 get_support(const Vector3& p_normal) const;
-    virtual void get_supports(
+    ) const override;
+    Vector3 get_support(const Vector3& p_normal) const override;
+    void get_supports(
         const Vector3& p_normal,
         int p_max,
         Vector3* r_supports,
         int& r_amount,
         FeatureType& r_type
-    ) const;
+    ) const override;
 
-    virtual bool intersect_segment(
+    bool intersect_segment(
         const Vector3& p_begin,
         const Vector3& p_end,
         Vector3& r_result,
         Vector3& r_normal
-    ) const;
-    virtual bool intersect_point(const Vector3& p_point) const;
-    virtual Vector3 get_closest_point_to(const Vector3& p_point) const;
+    ) const override;
+    bool intersect_point(const Vector3& p_point) const override;
+    Vector3 get_closest_point_to(const Vector3& p_point) const override;
 
-    virtual Vector3 get_moment_of_inertia(real_t p_mass) const;
+    Vector3 get_moment_of_inertia(real_t p_mass) const override;
 
-    virtual void set_data(const Variant& p_data);
-    virtual Variant get_data() const;
+    void set_data(const Variant& p_data) override;
+    Variant get_data() const override;
 
     RayShapeSW();
 };
@@ -260,41 +260,41 @@ class SphereShapeSW : public ShapeSW {
 public:
     real_t get_radius() const;
 
-    virtual real_t get_area() const {
+    real_t get_area() const override {
         return 4.0 / 3.0 * Math_PI * radius * radius * radius;
     }
 
-    virtual PhysicsServer::ShapeType get_type() const {
+    PhysicsServer::ShapeType get_type() const override {
         return PhysicsServer::SHAPE_SPHERE;
     }
 
-    virtual void project_range(
+    void project_range(
         const Vector3& p_normal,
         const Transform& p_transform,
         real_t& r_min,
         real_t& r_max
-    ) const;
-    virtual Vector3 get_support(const Vector3& p_normal) const;
-    virtual void get_supports(
+    ) const override;
+    Vector3 get_support(const Vector3& p_normal) const override;
+    void get_supports(
         const Vector3& p_normal,
         int p_max,
         Vector3* r_supports,
         int& r_amount,
         FeatureType& r_type
-    ) const;
-    virtual bool intersect_segment(
+    ) const override;
+    bool intersect_segment(
         const Vector3& p_begin,
         const Vector3& p_end,
         Vector3& r_result,
         Vector3& r_normal
-    ) const;
-    virtual bool intersect_point(const Vector3& p_point) const;
-    virtual Vector3 get_closest_point_to(const Vector3& p_point) const;
+    ) const override;
+    bool intersect_point(const Vector3& p_point) const override;
+    Vector3 get_closest_point_to(const Vector3& p_point) const override;
 
-    virtual Vector3 get_moment_of_inertia(real_t p_mass) const;
+    Vector3 get_moment_of_inertia(real_t p_mass) const override;
 
-    virtual void set_data(const Variant& p_data);
-    virtual Variant get_data() const;
+    void set_data(const Variant& p_data) override;
+    Variant get_data() const override;
 
     SphereShapeSW();
 };
@@ -308,41 +308,41 @@ public:
         return half_extents;
     }
 
-    virtual real_t get_area() const {
+    real_t get_area() const override {
         return 8 * half_extents.x * half_extents.y * half_extents.z;
     }
 
-    virtual PhysicsServer::ShapeType get_type() const {
+    PhysicsServer::ShapeType get_type() const override {
         return PhysicsServer::SHAPE_BOX;
     }
 
-    virtual void project_range(
+    void project_range(
         const Vector3& p_normal,
         const Transform& p_transform,
         real_t& r_min,
         real_t& r_max
-    ) const;
-    virtual Vector3 get_support(const Vector3& p_normal) const;
-    virtual void get_supports(
+    ) const override;
+    Vector3 get_support(const Vector3& p_normal) const override;
+    void get_supports(
         const Vector3& p_normal,
         int p_max,
         Vector3* r_supports,
         int& r_amount,
         FeatureType& r_type
-    ) const;
-    virtual bool intersect_segment(
+    ) const override;
+    bool intersect_segment(
         const Vector3& p_begin,
         const Vector3& p_end,
         Vector3& r_result,
         Vector3& r_normal
-    ) const;
-    virtual bool intersect_point(const Vector3& p_point) const;
-    virtual Vector3 get_closest_point_to(const Vector3& p_point) const;
+    ) const override;
+    bool intersect_point(const Vector3& p_point) const override;
+    Vector3 get_closest_point_to(const Vector3& p_point) const override;
 
-    virtual Vector3 get_moment_of_inertia(real_t p_mass) const;
+    Vector3 get_moment_of_inertia(real_t p_mass) const override;
 
-    virtual void set_data(const Variant& p_data);
-    virtual Variant get_data() const;
+    void set_data(const Variant& p_data) override;
+    Variant get_data() const override;
 
     BoxShapeSW();
 };
@@ -362,41 +362,41 @@ public:
         return radius;
     }
 
-    virtual real_t get_area() const {
+    real_t get_area() const override {
         return height * Math_PI * radius * radius;
     }
 
-    virtual PhysicsServer::ShapeType get_type() const {
+    PhysicsServer::ShapeType get_type() const override {
         return PhysicsServer::SHAPE_CAPSULE;
     }
 
-    virtual void project_range(
+    void project_range(
         const Vector3& p_normal,
         const Transform& p_transform,
         real_t& r_min,
         real_t& r_max
-    ) const;
-    virtual Vector3 get_support(const Vector3& p_normal) const;
-    virtual void get_supports(
+    ) const override;
+    Vector3 get_support(const Vector3& p_normal) const override;
+    void get_supports(
         const Vector3& p_normal,
         int p_max,
         Vector3* r_supports,
         int& r_amount,
         FeatureType& r_type
-    ) const;
-    virtual bool intersect_segment(
+    ) const override;
+    bool intersect_segment(
         const Vector3& p_begin,
         const Vector3& p_end,
         Vector3& r_result,
         Vector3& r_normal
-    ) const;
-    virtual bool intersect_point(const Vector3& p_point) const;
-    virtual Vector3 get_closest_point_to(const Vector3& p_point) const;
+    ) const override;
+    bool intersect_point(const Vector3& p_point) const override;
+    Vector3 get_closest_point_to(const Vector3& p_point) const override;
 
-    virtual Vector3 get_moment_of_inertia(real_t p_mass) const;
+    Vector3 get_moment_of_inertia(real_t p_mass) const override;
 
-    virtual void set_data(const Variant& p_data);
-    virtual Variant get_data() const;
+    void set_data(const Variant& p_data) override;
+    Variant get_data() const override;
 
     CapsuleShapeSW();
 };
@@ -416,42 +416,42 @@ public:
         return radius;
     }
 
-    virtual real_t get_area() const {
+    real_t get_area() const override {
         return 4.0 / 3.0 * Math_PI * radius * radius * radius
              + height * Math_PI * radius * radius;
     }
 
-    virtual PhysicsServer::ShapeType get_type() const {
+    PhysicsServer::ShapeType get_type() const override {
         return PhysicsServer::SHAPE_CYLINDER;
     }
 
-    virtual void project_range(
+    void project_range(
         const Vector3& p_normal,
         const Transform& p_transform,
         real_t& r_min,
         real_t& r_max
-    ) const;
-    virtual Vector3 get_support(const Vector3& p_normal) const;
-    virtual void get_supports(
+    ) const override;
+    Vector3 get_support(const Vector3& p_normal) const override;
+    void get_supports(
         const Vector3& p_normal,
         int p_max,
         Vector3* r_supports,
         int& r_amount,
         FeatureType& r_type
-    ) const;
-    virtual bool intersect_segment(
+    ) const override;
+    bool intersect_segment(
         const Vector3& p_begin,
         const Vector3& p_end,
         Vector3& r_result,
         Vector3& r_normal
-    ) const;
-    virtual bool intersect_point(const Vector3& p_point) const;
-    virtual Vector3 get_closest_point_to(const Vector3& p_point) const;
+    ) const override;
+    bool intersect_point(const Vector3& p_point) const override;
+    Vector3 get_closest_point_to(const Vector3& p_point) const override;
 
-    virtual Vector3 get_moment_of_inertia(real_t p_mass) const;
+    Vector3 get_moment_of_inertia(real_t p_mass) const override;
 
-    virtual void set_data(const Variant& p_data);
-    virtual Variant get_data() const;
+    void set_data(const Variant& p_data) override;
+    Variant get_data() const override;
 
     CylinderShapeSW();
 };
@@ -466,37 +466,37 @@ public:
         return mesh;
     }
 
-    virtual PhysicsServer::ShapeType get_type() const {
+    PhysicsServer::ShapeType get_type() const override {
         return PhysicsServer::SHAPE_CONVEX_POLYGON;
     }
 
-    virtual void project_range(
+    void project_range(
         const Vector3& p_normal,
         const Transform& p_transform,
         real_t& r_min,
         real_t& r_max
-    ) const;
-    virtual Vector3 get_support(const Vector3& p_normal) const;
-    virtual void get_supports(
+    ) const override;
+    Vector3 get_support(const Vector3& p_normal) const override;
+    void get_supports(
         const Vector3& p_normal,
         int p_max,
         Vector3* r_supports,
         int& r_amount,
         FeatureType& r_type
-    ) const;
-    virtual bool intersect_segment(
+    ) const override;
+    bool intersect_segment(
         const Vector3& p_begin,
         const Vector3& p_end,
         Vector3& r_result,
         Vector3& r_normal
-    ) const;
-    virtual bool intersect_point(const Vector3& p_point) const;
-    virtual Vector3 get_closest_point_to(const Vector3& p_point) const;
+    ) const override;
+    bool intersect_point(const Vector3& p_point) const override;
+    Vector3 get_closest_point_to(const Vector3& p_point) const override;
 
-    virtual Vector3 get_moment_of_inertia(real_t p_mass) const;
+    Vector3 get_moment_of_inertia(real_t p_mass) const override;
 
-    virtual void set_data(const Variant& p_data);
-    virtual Variant get_data() const;
+    void set_data(const Variant& p_data) override;
+    Variant get_data() const override;
 
     ConvexPolygonShapeSW();
 };
@@ -559,37 +559,37 @@ struct ConcavePolygonShapeSW : public ConcaveShapeSW {
 public:
     PoolVector<Vector3> get_faces() const;
 
-    virtual PhysicsServer::ShapeType get_type() const {
+    PhysicsServer::ShapeType get_type() const override {
         return PhysicsServer::SHAPE_CONCAVE_POLYGON;
     }
 
-    virtual void project_range(
+    void project_range(
         const Vector3& p_normal,
         const Transform& p_transform,
         real_t& r_min,
         real_t& r_max
-    ) const;
-    virtual Vector3 get_support(const Vector3& p_normal) const;
+    ) const override;
+    Vector3 get_support(const Vector3& p_normal) const override;
 
-    virtual bool intersect_segment(
+    bool intersect_segment(
         const Vector3& p_begin,
         const Vector3& p_end,
         Vector3& r_result,
         Vector3& r_normal
-    ) const;
-    virtual bool intersect_point(const Vector3& p_point) const;
-    virtual Vector3 get_closest_point_to(const Vector3& p_point) const;
+    ) const override;
+    bool intersect_point(const Vector3& p_point) const override;
+    Vector3 get_closest_point_to(const Vector3& p_point) const override;
 
-    virtual void cull(
+    void cull(
         const AABB& p_local_aabb,
         QueryCallback p_callback,
         void* p_userdata
-    ) const;
+    ) const override;
 
-    virtual Vector3 get_moment_of_inertia(real_t p_mass) const;
+    Vector3 get_moment_of_inertia(real_t p_mass) const override;
 
-    virtual void set_data(const Variant& p_data);
-    virtual Variant get_data() const;
+    void set_data(const Variant& p_data) override;
+    Variant get_data() const override;
 
     ConcavePolygonShapeSW();
 };
@@ -657,36 +657,36 @@ public:
     int get_width() const;
     int get_depth() const;
 
-    virtual PhysicsServer::ShapeType get_type() const {
+    PhysicsServer::ShapeType get_type() const override {
         return PhysicsServer::SHAPE_HEIGHTMAP;
     }
 
-    virtual void project_range(
+    void project_range(
         const Vector3& p_normal,
         const Transform& p_transform,
         real_t& r_min,
         real_t& r_max
-    ) const;
-    virtual Vector3 get_support(const Vector3& p_normal) const;
-    virtual bool intersect_segment(
+    ) const override;
+    Vector3 get_support(const Vector3& p_normal) const override;
+    bool intersect_segment(
         const Vector3& p_begin,
         const Vector3& p_end,
         Vector3& r_point,
         Vector3& r_normal
-    ) const;
-    virtual bool intersect_point(const Vector3& p_point) const;
+    ) const override;
+    bool intersect_point(const Vector3& p_point) const override;
 
-    virtual Vector3 get_closest_point_to(const Vector3& p_point) const;
-    virtual void cull(
+    Vector3 get_closest_point_to(const Vector3& p_point) const override;
+    void cull(
         const AABB& p_local_aabb,
         QueryCallback p_callback,
         void* p_userdata
-    ) const;
+    ) const override;
 
-    virtual Vector3 get_moment_of_inertia(real_t p_mass) const;
+    Vector3 get_moment_of_inertia(real_t p_mass) const override;
 
-    virtual void set_data(const Variant& p_data);
-    virtual Variant get_data() const;
+    void set_data(const Variant& p_data) override;
+    Variant get_data() const override;
 
     HeightMapShapeSW();
 };
@@ -696,7 +696,7 @@ struct FaceShapeSW : public ShapeSW {
     Vector3 normal; // cache
     Vector3 vertex[3];
 
-    virtual PhysicsServer::ShapeType get_type() const {
+    PhysicsServer::ShapeType get_type() const override {
         return PhysicsServer::SHAPE_CONCAVE_POLYGON;
     }
 
@@ -709,29 +709,29 @@ struct FaceShapeSW : public ShapeSW {
         const Transform& p_transform,
         real_t& r_min,
         real_t& r_max
-    ) const;
-    Vector3 get_support(const Vector3& p_normal) const;
-    virtual void get_supports(
+    ) const override;
+    Vector3 get_support(const Vector3& p_normal) const override;
+    void get_supports(
         const Vector3& p_normal,
         int p_max,
         Vector3* r_supports,
         int& r_amount,
         FeatureType& r_type
-    ) const;
+    ) const override;
     bool intersect_segment(
         const Vector3& p_begin,
         const Vector3& p_end,
         Vector3& r_result,
         Vector3& r_normal
-    ) const;
-    virtual bool intersect_point(const Vector3& p_point) const;
-    virtual Vector3 get_closest_point_to(const Vector3& p_point) const;
+    ) const override;
+    bool intersect_point(const Vector3& p_point) const override;
+    Vector3 get_closest_point_to(const Vector3& p_point) const override;
 
-    Vector3 get_moment_of_inertia(real_t p_mass) const;
+    Vector3 get_moment_of_inertia(real_t p_mass) const override;
 
-    virtual void set_data(const Variant& p_data) {}
+    void set_data(const Variant& p_data) override {}
 
-    virtual Variant get_data() const {
+    Variant get_data() const override {
         return Variant();
     }
 
@@ -742,7 +742,7 @@ struct MotionShapeSW : public ShapeSW {
     ShapeSW* shape;
     Vector3 motion;
 
-    virtual PhysicsServer::ShapeType get_type() const {
+    PhysicsServer::ShapeType get_type() const override {
         return PhysicsServer::SHAPE_CONVEX_POLYGON;
     }
 
@@ -751,7 +751,7 @@ struct MotionShapeSW : public ShapeSW {
         const Transform& p_transform,
         real_t& r_min,
         real_t& r_max
-    ) const {
+    ) const override {
         Vector3 cast = p_transform.basis.xform(motion);
         real_t mina, maxa;
         real_t minb, maxb;
@@ -763,7 +763,7 @@ struct MotionShapeSW : public ShapeSW {
         r_max = MAX(maxa, maxb);
     }
 
-    Vector3 get_support(const Vector3& p_normal) const {
+    Vector3 get_support(const Vector3& p_normal) const override {
         Vector3 support = shape->get_support(p_normal);
         if (p_normal.dot(motion) > 0) {
             support += motion;
@@ -771,13 +771,13 @@ struct MotionShapeSW : public ShapeSW {
         return support;
     }
 
-    virtual void get_supports(
+    void get_supports(
         const Vector3& p_normal,
         int p_max,
         Vector3* r_supports,
         int& r_amount,
         FeatureType& r_type
-    ) const {
+    ) const override {
         r_amount = 0;
     }
 
@@ -786,25 +786,25 @@ struct MotionShapeSW : public ShapeSW {
         const Vector3& p_end,
         Vector3& r_result,
         Vector3& r_normal
-    ) const {
+    ) const override {
         return false;
     }
 
-    virtual bool intersect_point(const Vector3& p_point) const {
+    bool intersect_point(const Vector3& p_point) const override {
         return false;
     }
 
-    virtual Vector3 get_closest_point_to(const Vector3& p_point) const {
+    Vector3 get_closest_point_to(const Vector3& p_point) const override {
         return p_point;
     }
 
-    Vector3 get_moment_of_inertia(real_t p_mass) const {
+    Vector3 get_moment_of_inertia(real_t p_mass) const override {
         return Vector3();
     }
 
-    virtual void set_data(const Variant& p_data) {}
+    void set_data(const Variant& p_data) override {}
 
-    virtual Variant get_data() const {
+    Variant get_data() const override {
         return Variant();
     }
 
@@ -827,4 +827,4 @@ struct _ShapeTestConvexBSPSW {
     }
 };
 
-#endif // SHAPESW_H
+#endif // SHAPE_SW_H

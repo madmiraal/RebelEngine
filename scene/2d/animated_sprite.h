@@ -153,21 +153,21 @@ class AnimatedSprite : public Node2D {
 protected:
     static void _bind_methods();
     void _notification(int p_what);
-    virtual void _validate_property(PropertyInfo& property) const;
+    void _validate_property(PropertyInfo& property) const override;
 
 public:
 #ifdef TOOLS_ENABLED
-    virtual Dictionary _edit_get_state() const;
-    virtual void _edit_set_state(const Dictionary& p_state);
+    Dictionary _edit_get_state() const override;
+    void _edit_set_state(const Dictionary& p_state) override;
 
-    virtual void _edit_set_pivot(const Point2& p_pivot);
-    virtual Point2 _edit_get_pivot() const;
-    virtual bool _edit_use_pivot() const;
-    virtual Rect2 _edit_get_rect() const;
-    virtual bool _edit_use_rect() const;
+    void _edit_set_pivot(const Point2& p_pivot) override;
+    Point2 _edit_get_pivot() const override;
+    bool _edit_use_pivot() const override;
+    Rect2 _edit_get_rect() const override;
+    bool _edit_use_rect() const override;
 #endif
 
-    virtual Rect2 get_anchorable_rect() const;
+    Rect2 get_anchorable_rect() const override;
 
     void set_sprite_frames(const Ref<SpriteFrames>& p_frames);
     Ref<SpriteFrames> get_sprite_frames() const;
@@ -200,10 +200,7 @@ public:
     void set_flip_v(bool p_flip);
     bool is_flipped_v() const;
 
-    void set_modulate(const Color& p_color);
-    Color get_modulate() const;
-
-    virtual String get_configuration_warning() const;
+    String get_configuration_warning() const override;
     AnimatedSprite();
 };
 

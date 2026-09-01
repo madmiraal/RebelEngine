@@ -4,8 +4,8 @@
 //
 // SPDX-License-Identifier: MIT
 
-#ifndef VISUALSERVERSCENE_H
-#define VISUALSERVERSCENE_H
+#ifndef VISUAL_SERVER_SCENE_H
+#define VISUAL_SERVER_SCENE_H
 
 #include "core/math/bvh.h"
 #include "core/math/geometry.h"
@@ -188,7 +188,7 @@ public:
         // octree specific
         virtual void set_balance(float p_balance) {}
 
-        virtual ~SpatialPartitioningScene() {}
+        virtual ~SpatialPartitioningScene() = default;
     };
 
     class SpatialPartitioningScene_Octree : public SpatialPartitioningScene {
@@ -202,28 +202,28 @@ public:
             bool p_pairable          = false,
             uint32_t p_pairable_type = 0,
             uint32_t pairable_mask   = 1
-        );
-        void erase(SpatialPartitionID p_handle);
-        void move(SpatialPartitionID p_handle, const AABB& p_aabb);
+        ) override;
+        void erase(SpatialPartitionID p_handle) override;
+        void move(SpatialPartitionID p_handle, const AABB& p_aabb) override;
         void set_pairable(
             SpatialPartitionID p_handle,
             bool p_pairable,
             uint32_t p_pairable_type,
             uint32_t p_pairable_mask
-        );
+        ) override;
         int cull_convex(
             const Vector<Plane>& p_convex,
             Instance** p_result_array,
             int p_result_max,
             uint32_t p_mask = 0xFFFFFFFF
-        );
+        ) override;
         int cull_aabb(
             const AABB& p_aabb,
             Instance** p_result_array,
             int p_result_max,
             int* p_subindex_array = nullptr,
             uint32_t p_mask       = 0xFFFFFFFF
-        );
+        ) override;
         int cull_segment(
             const Vector3& p_from,
             const Vector3& p_to,
@@ -231,10 +231,12 @@ public:
             int p_result_max,
             int* p_subindex_array = nullptr,
             uint32_t p_mask       = 0xFFFFFFFF
-        );
-        void set_pair_callback(PairCallback p_callback, void* p_userdata);
-        void set_unpair_callback(UnpairCallback p_callback, void* p_userdata);
-        void set_balance(float p_balance);
+        ) override;
+        void set_pair_callback(PairCallback p_callback, void* p_userdata)
+            override;
+        void set_unpair_callback(UnpairCallback p_callback, void* p_userdata)
+            override;
+        void set_balance(float p_balance) override;
     };
 
     class SpatialPartitioningScene_BVH : public SpatialPartitioningScene {
@@ -251,33 +253,33 @@ public:
             bool p_pairable          = false,
             uint32_t p_pairable_type = 0,
             uint32_t p_pairable_mask = 1
-        );
-        void erase(SpatialPartitionID p_handle);
-        void move(SpatialPartitionID p_handle, const AABB& p_aabb);
-        void activate(SpatialPartitionID p_handle, const AABB& p_aabb);
-        void deactivate(SpatialPartitionID p_handle);
-        void force_collision_check(SpatialPartitionID p_handle);
-        void update();
-        void update_collisions();
+        ) override;
+        void erase(SpatialPartitionID p_handle) override;
+        void move(SpatialPartitionID p_handle, const AABB& p_aabb) override;
+        void activate(SpatialPartitionID p_handle, const AABB& p_aabb) override;
+        void deactivate(SpatialPartitionID p_handle) override;
+        void force_collision_check(SpatialPartitionID p_handle) override;
+        void update() override;
+        void update_collisions() override;
         void set_pairable(
             SpatialPartitionID p_handle,
             bool p_pairable,
             uint32_t p_pairable_type,
             uint32_t p_pairable_mask
-        );
+        ) override;
         int cull_convex(
             const Vector<Plane>& p_convex,
             Instance** p_result_array,
             int p_result_max,
             uint32_t p_mask = 0xFFFFFFFF
-        );
+        ) override;
         int cull_aabb(
             const AABB& p_aabb,
             Instance** p_result_array,
             int p_result_max,
             int* p_subindex_array = nullptr,
             uint32_t p_mask       = 0xFFFFFFFF
-        );
+        ) override;
         int cull_segment(
             const Vector3& p_from,
             const Vector3& p_to,
@@ -285,15 +287,17 @@ public:
             int p_result_max,
             int* p_subindex_array = nullptr,
             uint32_t p_mask       = 0xFFFFFFFF
-        );
-        void set_pair_callback(PairCallback p_callback, void* p_userdata);
-        void set_unpair_callback(UnpairCallback p_callback, void* p_userdata);
+        ) override;
+        void set_pair_callback(PairCallback p_callback, void* p_userdata)
+            override;
+        void set_unpair_callback(UnpairCallback p_callback, void* p_userdata)
+            override;
 
-        void params_set_node_expansion(real_t p_value) {
+        void params_set_node_expansion(real_t p_value) override {
             _bvh.params_set_node_expansion(p_value);
         }
 
-        void params_set_pairing_expansion(real_t p_value) {
+        void params_set_pairing_expansion(real_t p_value) override {
             _bvh.params_set_pairing_expansion(p_value);
         }
     };
@@ -315,7 +319,7 @@ public:
 
         Scenario();
 
-        ~Scenario() {
+        ~Scenario() override {
             memdelete(sps);
         }
     };
@@ -354,7 +358,7 @@ public:
     /* INSTANCING API */
 
     struct InstanceBaseData {
-        virtual ~InstanceBaseData() {}
+        virtual ~InstanceBaseData() = default;
     };
 
     struct Instance : RasterizerScene::InstanceBase {
@@ -397,11 +401,11 @@ public:
 
         InstanceBaseData* base_data;
 
-        virtual void base_removed() {
+        void base_removed() override {
             singleton->instance_set_base(self, RID());
         }
 
-        virtual void base_changed(bool p_aabb, bool p_materials) {
+        void base_changed(bool p_aabb, bool p_materials) override {
             singleton->_instance_queue_update(this, p_aabb, p_materials);
         }
 
@@ -434,7 +438,7 @@ public:
             custom_aabb = nullptr;
         }
 
-        ~Instance() {
+        ~Instance() override {
             if (base_data) {
                 memdelete(base_data);
             }
@@ -742,7 +746,7 @@ public:
         RGhostHandle rghost_handle = 0; // handle in occlusion system (or 0)
         AABB aabb;
 
-        virtual ~Ghost() {
+        ~Ghost() override {
             if (scenario) {
                 if (rghost_handle) {
                     scenario->_portal_renderer.rghost_destroy(rghost_handle);
@@ -775,7 +779,7 @@ public:
         uint32_t scenario_portal_id = 0;
         Scenario* scenario          = nullptr;
 
-        virtual ~Portal() {
+        ~Portal() override {
             if (scenario) {
                 scenario->_portal_renderer.portal_destroy(scenario_portal_id);
                 scenario           = nullptr;
@@ -808,7 +812,7 @@ public:
         uint32_t scenario_roomgroup_id = 0;
         Scenario* scenario             = nullptr;
 
-        virtual ~RoomGroup() {
+        ~RoomGroup() override {
             if (scenario) {
                 scenario->_portal_renderer.roomgroup_destroy(
                     scenario_roomgroup_id
@@ -834,7 +838,7 @@ public:
         uint32_t scenario_occluder_id = 0;
         Scenario* scenario            = nullptr;
 
-        virtual ~Occluder() {
+        ~Occluder() override {
             if (scenario) {
                 scenario->_portal_renderer.occluder_destroy(scenario_occluder_id
                 );
@@ -870,7 +874,7 @@ public:
         uint32_t scenario_room_id = 0;
         Scenario* scenario        = nullptr;
 
-        virtual ~Room() {
+        ~Room() override {
             if (scenario) {
                 scenario->_portal_renderer.room_destroy(scenario_room_id);
                 scenario         = nullptr;
@@ -1141,4 +1145,4 @@ public:
     virtual ~VisualServerScene();
 };
 
-#endif // VISUALSERVERSCENE_H
+#endif // VISUAL_SERVER_SCENE_H

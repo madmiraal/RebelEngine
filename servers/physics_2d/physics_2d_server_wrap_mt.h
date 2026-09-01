@@ -80,7 +80,7 @@ public:
         Vector2* r_results,
         int p_result_max,
         int& r_result_count
-    ) {
+    ) override {
         ERR_FAIL_COND_V(main_thread != Thread::get_caller_id(), false);
         return physics_2d_server->shape_collide(
             p_shape_A,
@@ -106,14 +106,14 @@ public:
 
     // this function only works on physics process, errors and returns null
     // otherwise
-    Physics2DDirectSpaceState* space_get_direct_state(RID p_space) {
+    Physics2DDirectSpaceState* space_get_direct_state(RID p_space) override {
         ERR_FAIL_COND_V(main_thread != Thread::get_caller_id(), nullptr);
         return physics_2d_server->space_get_direct_state(p_space);
     }
 
     FUNC2(space_set_debug_contacts, RID, int);
 
-    virtual Vector<Vector2> space_get_contacts(RID p_space) const {
+    Vector<Vector2> space_get_contacts(RID p_space) const override {
         ERR_FAIL_COND_V(
             main_thread != Thread::get_caller_id(),
             Vector<Vector2>()
@@ -121,7 +121,7 @@ public:
         return physics_2d_server->space_get_contacts(p_space);
     }
 
-    virtual int space_get_contact_count(RID p_space) const {
+    int space_get_contact_count(RID p_space) const override {
         ERR_FAIL_COND_V(main_thread != Thread::get_caller_id(), 0);
         return physics_2d_server->space_get_contact_count(p_space);
     }
@@ -255,7 +255,7 @@ public:
         Vector2* r_results,
         int p_result_max,
         int& r_result_count
-    ) {
+    ) override {
         return physics_2d_server->body_collide_shape(
             p_body,
             p_body_shape,
@@ -285,7 +285,7 @@ public:
 
     // this function only works on physics process, errors and returns null
     // otherwise
-    Physics2DDirectBodyState* body_get_direct_state(RID p_body) {
+    Physics2DDirectBodyState* body_get_direct_state(RID p_body) override {
         ERR_FAIL_COND_V(main_thread != Thread::get_caller_id(), nullptr);
         return physics_2d_server->body_get_direct_state(p_body);
     }
@@ -338,23 +338,23 @@ public:
     FUNC1(set_active, bool);
     FUNC1(set_collision_iterations, int);
 
-    virtual void init();
-    virtual void step(real_t p_step);
-    virtual void sync();
-    virtual void end_sync();
-    virtual void flush_queries();
-    virtual void finish();
+    void init() override;
+    void step(real_t p_step) override;
+    void sync() override;
+    void end_sync() override;
+    void flush_queries() override;
+    void finish() override;
 
-    virtual bool is_flushing_queries() const {
+    bool is_flushing_queries() const override {
         return physics_2d_server->is_flushing_queries();
     }
 
-    int get_process_info(ProcessInfo p_info) {
+    int get_process_info(ProcessInfo p_info) override {
         return physics_2d_server->get_process_info(p_info);
     }
 
     Physics2DServerWrapMT(Physics2DServer* p_contained, bool p_create_thread);
-    ~Physics2DServerWrapMT();
+    ~Physics2DServerWrapMT() override;
 
     template <class T>
     static Physics2DServer* init_server() {

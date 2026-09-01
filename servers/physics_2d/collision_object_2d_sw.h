@@ -111,7 +111,7 @@ public:
         return canvas_instance_id;
     }
 
-    void _shape_changed();
+    void _shape_changed() override;
 
     _FORCE_INLINE_ Type get_type() const {
         return type;
@@ -215,7 +215,7 @@ public:
         return collision_layer;
     }
 
-    void remove_shape(Shape2DSW* p_shape);
+    void remove_shape(Shape2DSW* p_shape) override;
     void remove_shape(int p_index);
 
     virtual void set_space(Space2DSW* p_space) = 0;
@@ -238,7 +238,7 @@ public:
             || p_other->collision_layer & collision_mask;
     }
 
-    virtual ~CollisionObject2DSW() {}
+    ~CollisionObject2DSW() override = default;
 };
 
 #endif // COLLISION_OBJECT_2D_SW_H

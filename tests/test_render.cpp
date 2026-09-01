@@ -40,13 +40,13 @@ class TestMainLoop : public MainLoop {
 protected:
 
 public:
-    virtual void input_event(const Ref<InputEvent>& p_event) {
+    void input_event(const Ref<InputEvent>& p_event) override {
         if (p_event->is_pressed()) {
             quit = true;
         }
     }
 
-    virtual void init() {
+    void init() override {
         print_line("INITIALIZING TEST RENDER");
         VisualServer* vs = VisualServer::get_singleton();
         test_cube        = vs->get_test_cube();
@@ -193,7 +193,7 @@ public:
         quit = false;
     }
 
-    virtual bool iteration(float p_time) {
+    bool iteration(float p_time) override {
         VisualServer* vs = VisualServer::get_singleton();
         // Transform t;
         // t.rotate(Vector3(0, 1, 0), ofs);
@@ -219,11 +219,11 @@ public:
         return quit;
     }
 
-    virtual bool idle(float p_time) {
+    bool idle(float p_time) override {
         return quit;
     }
 
-    virtual void finish() {}
+    void finish() override {}
 };
 
 MainLoop* test() {

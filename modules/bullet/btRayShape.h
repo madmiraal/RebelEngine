@@ -27,14 +27,14 @@ public:
     BT_DECLARE_ALIGNED_ALLOCATOR();
 
     btRayShape(btScalar length);
-    virtual ~btRayShape();
+    ~btRayShape() override;
 
     void setLength(btScalar p_length);
     btScalar getLength() const {
         return m_length;
     }
 
-    virtual void setMargin(btScalar margin);
+    void setMargin(btScalar margin) override;
 
     void setSlipsOnSlope(bool p_slipsOnSlope);
     bool getSlipsOnSlope() const {
@@ -48,40 +48,37 @@ public:
         return m_cacheScaledLength;
     }
 
-    virtual btVector3 localGetSupportingVertex(const btVector3& vec) const;
+    btVector3 localGetSupportingVertex(const btVector3& vec) const override;
 #ifndef __SPU__
-    virtual btVector3 localGetSupportingVertexWithoutMargin(const btVector3& vec
-    ) const;
+    btVector3 localGetSupportingVertexWithoutMargin(const btVector3& vec)
+        const override;
 #endif // #ifndef __SPU__
 
-    virtual void batchedUnitVectorGetSupportingVertexWithoutMargin(
+    void batchedUnitVectorGetSupportingVertexWithoutMargin(
         const btVector3* vectors,
         btVector3* supportVerticesOut,
         int numVectors
-    ) const;
+    ) const override;
 
     /// getAabb returns the axis aligned bounding box in the coordinate frame of
     /// the given transform t.
-    virtual void getAabb(
-        const btTransform& t,
-        btVector3& aabbMin,
-        btVector3& aabbMax
-    ) const;
+    void getAabb(const btTransform& t, btVector3& aabbMin, btVector3& aabbMax)
+        const override;
 
 #ifndef __SPU__
-    virtual void calculateLocalInertia(btScalar mass, btVector3 & inertia)
-        const;
+    void calculateLocalInertia(btScalar mass, btVector3 & inertia)
+        const override;
 
-    virtual const char* getName() const {
+    const char* getName() const override {
         return "RayZ";
     }
 #endif //__SPU__
 
-    virtual int getNumPreferredPenetrationDirections() const;
-    virtual void getPreferredPenetrationDirection(
+    int getNumPreferredPenetrationDirections() const override;
+    void getPreferredPenetrationDirection(
         int index,
         btVector3& penetrationVector
-    ) const;
+    ) const override;
 
 private:
     void reload_cache();

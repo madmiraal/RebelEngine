@@ -36,5 +36,6 @@ public:
     GDNativeLibrarySingletonEditor();
 };
 
-#endif
+#endif // TOOLS_ENABLED
+
 #endif // GD_NATIVE_LIBRARY_EDITOR_H

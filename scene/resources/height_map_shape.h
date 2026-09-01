@@ -20,7 +20,7 @@ class HeightMapShape : public Shape {
 
 protected:
     static void _bind_methods();
-    virtual void _update_shape();
+    void _update_shape() override;
 
 public:
     void set_map_width(int p_new);
@@ -30,9 +30,9 @@ public:
     void set_map_data(PoolRealArray p_new);
     PoolRealArray get_map_data() const;
 
-    virtual Vector<Vector3> get_debug_mesh_lines();
+    Vector<Vector3> get_debug_mesh_lines() override;
 
     HeightMapShape();
 };
 
-#endif /* !HEIGHT_MAP_SHAPE_H */
+#endif // HEIGHT_MAP_SHAPE_H

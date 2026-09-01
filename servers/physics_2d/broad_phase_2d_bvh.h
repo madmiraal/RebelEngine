@@ -52,45 +52,41 @@ class BroadPhase2DBVH : public BroadPhase2DSW {
 
 public:
     // 0 is an invalid ID
-    virtual ID create(
+    ID create(
         CollisionObject2DSW* p_object,
         int p_subindex      = 0,
         const Rect2& p_aabb = Rect2(),
         bool p_static       = false
-    );
-    virtual void move(ID p_id, const Rect2& p_aabb);
-    virtual void recheck_pairs(ID p_id);
-    virtual void set_static(ID p_id, bool p_static);
-    virtual void remove(ID p_id);
+    ) override;
+    void move(ID p_id, const Rect2& p_aabb) override;
+    void recheck_pairs(ID p_id) override;
+    void set_static(ID p_id, bool p_static) override;
+    void remove(ID p_id) override;
 
-    virtual CollisionObject2DSW* get_object(ID p_id) const;
-    virtual bool is_static(ID p_id) const;
-    virtual int get_subindex(ID p_id) const;
+    CollisionObject2DSW* get_object(ID p_id) const override;
+    bool is_static(ID p_id) const override;
+    int get_subindex(ID p_id) const override;
 
-    virtual int cull_segment(
+    int cull_segment(
         const Vector2& p_from,
         const Vector2& p_to,
         CollisionObject2DSW** p_results,
         int p_max_results,
         int* p_result_indices = nullptr
-    );
-    virtual int cull_aabb(
+    ) override;
+    int cull_aabb(
         const Rect2& p_aabb,
         CollisionObject2DSW** p_results,
         int p_max_results,
         int* p_result_indices = nullptr
-    );
+    ) override;
 
-    virtual void set_pair_callback(
-        PairCallback p_pair_callback,
-        void* p_userdata
-    );
-    virtual void set_unpair_callback(
-        UnpairCallback p_unpair_callback,
-        void* p_userdata
-    );
+    void set_pair_callback(PairCallback p_pair_callback, void* p_userdata)
+        override;
+    void set_unpair_callback(UnpairCallback p_unpair_callback, void* p_userdata)
+        override;
 
-    virtual void update();
+    void update() override;
 
     static BroadPhase2DSW* _create();
     BroadPhase2DBVH();

@@ -87,7 +87,7 @@ class Script : public Resource {
     OBJ_SAVE_TYPE(Script);
 
 protected:
-    virtual bool editor_can_reload_from_file() {
+    bool editor_can_reload_from_file() override {
         return false;
     } // this is handled by editor better
 
@@ -161,8 +161,6 @@ public:
     virtual bool is_placeholder_fallback_enabled() const {
         return false;
     }
-
-    Script() {}
 };
 
 class ScriptInstance {
@@ -242,7 +240,7 @@ public:
     ) const = 0;
 
     virtual ScriptLanguage* get_language() = 0;
-    virtual ~ScriptInstance();
+    virtual ~ScriptInstance()              = default;
 };
 
 struct ScriptCodeCompletionOption {
@@ -287,8 +285,7 @@ public:
     }
 
     ScriptCodeCompletionCache();
-
-    virtual ~ScriptCodeCompletionCache() {}
+    virtual ~ScriptCodeCompletionCache() = default;
 };
 
 class ScriptLanguage {
@@ -545,7 +542,7 @@ public:
         return String();
     }
 
-    virtual ~ScriptLanguage() {}
+    virtual ~ScriptLanguage() = default;
 };
 
 extern uint8_t script_encryption_key[32];
@@ -559,46 +556,42 @@ class PlaceHolderScriptInstance : public ScriptInstance {
     Ref<Script> script;
 
 public:
-    virtual bool set(const StringName& p_name, const Variant& p_value);
-    virtual bool get(const StringName& p_name, Variant& r_ret) const;
-    virtual void get_property_list(List<PropertyInfo>* p_properties) const;
-    virtual Variant::Type get_property_type(
+    bool set(const StringName& p_name, const Variant& p_value) override;
+    bool get(const StringName& p_name, Variant& r_ret) const override;
+    void get_property_list(List<PropertyInfo>* p_properties) const override;
+    Variant::Type get_property_type(
         const StringName& p_name,
         bool* r_is_valid = nullptr
-    ) const;
+    ) const override;
 
-    virtual void get_method_list(List<MethodInfo>* p_list) const;
-    virtual bool has_method(const StringName& p_method) const;
+    void get_method_list(List<MethodInfo>* p_list) const override;
+    bool has_method(const StringName& p_method) const override;
 
-    virtual Variant call(const StringName& p_method, VARIANT_ARG_LIST) {
+    Variant call(const StringName& p_method, VARIANT_ARG_LIST) override {
         return Variant();
     }
 
-    virtual Variant call(
+    Variant call(
         const StringName& p_method,
         const Variant** p_args,
         int p_argcount,
         Variant::CallError& r_error
-    ) {
+    ) override {
         r_error.error = Variant::CallError::CALL_ERROR_INVALID_METHOD;
         return Variant();
     }
 
-    // virtual void call_multilevel(const StringName& p_method,VARIANT_ARG_LIST)
-    // { return Variant(); } virtual void call_multilevel(const StringName&
-    // p_method,const Variant** p_args,int p_argcount,Variant::CallError
-    // &r_error) { return Variant(); }
-    virtual void notification(int p_notification) {}
+    void notification(int p_notification) override {}
 
-    virtual Ref<Script> get_script() const {
+    Ref<Script> get_script() const override {
         return script;
     }
 
-    virtual ScriptLanguage* get_language() {
+    ScriptLanguage* get_language() override {
         return language;
     }
 
-    Object* get_owner() {
+    Object* get_owner() override {
         return owner;
     }
 
@@ -607,27 +600,27 @@ public:
         const Map<StringName, Variant>& p_values
     ); // likely changed in editor
 
-    virtual bool is_placeholder() const {
+    bool is_placeholder() const override {
         return true;
     }
 
-    virtual void property_set_fallback(
+    void property_set_fallback(
         const StringName& p_name,
         const Variant& p_value,
         bool* r_valid = nullptr
-    );
-    virtual Variant property_get_fallback(
+    ) override;
+    Variant property_get_fallback(
         const StringName& p_name,
         bool* r_valid = nullptr
-    );
+    ) override;
 
-    virtual MultiplayerAPI::RPCMode get_rpc_mode(const StringName& p_method
-    ) const {
+    MultiplayerAPI::RPCMode get_rpc_mode(const StringName& p_method
+    ) const override {
         return MultiplayerAPI::RPC_MODE_DISABLED;
     }
 
-    virtual MultiplayerAPI::RPCMode get_rset_mode(const StringName& p_variable
-    ) const {
+    MultiplayerAPI::RPCMode get_rset_mode(const StringName& p_variable
+    ) const override {
         return MultiplayerAPI::RPC_MODE_DISABLED;
     }
 
@@ -636,7 +629,7 @@ public:
         Ref<Script> p_script,
         Object* p_owner
     );
-    ~PlaceHolderScriptInstance();
+    ~PlaceHolderScriptInstance() override;
 };
 
 class ScriptDebugger {

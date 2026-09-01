@@ -737,7 +737,7 @@ public:
     uint64_t get_modified_time(const String& p_file) const;
 
     _File();
-    virtual ~_File();
+    ~_File() override;
 };
 
 VARIANT_ENUM_CAST(_File::ModeFlags);
@@ -783,7 +783,7 @@ public:
     Error remove(String p_name);
 
     _Directory();
-    virtual ~_Directory();
+    ~_Directory() override;
 
 private:
     bool _list_skip_navigational;
@@ -817,7 +817,7 @@ public:
         singleton = this;
     }
 
-    ~_Marshalls() {
+    ~_Marshalls() override {
         singleton = nullptr;
     }
 };
@@ -878,7 +878,7 @@ public:
     Variant wait_to_finish();
 
     _Thread();
-    ~_Thread();
+    ~_Thread() override;
 };
 
 VARIANT_ENUM_CAST(_Thread::Priority);
@@ -961,7 +961,7 @@ public:
     bool is_class_enabled(StringName p_class) const;
 
     _ClassDB();
-    ~_ClassDB();
+    ~_ClassDB() override;
 };
 
 class _Engine : public Object {

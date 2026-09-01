@@ -12,14 +12,6 @@
 #include "scene/resources/mesh.h"
 #include "servers/arvr/arvr_positional_tracker.h"
 
-/**
-    @author Bastiaan Olij <mux213@gmail.com>
-**/
-
-/*
-    ARVRCamera is a subclass of camera which will register itself with its
-   parent ARVROrigin and as a result is automatically positioned
-*/
 class ARVRCamera : public Camera {
     GDCLASS(ARVRCamera, Camera);
 
@@ -27,16 +19,16 @@ protected:
     void _notification(int p_what);
 
 public:
-    String get_configuration_warning() const;
+    String get_configuration_warning() const override;
 
-    virtual Vector3 project_local_ray_normal(const Point2& p_pos) const;
-    virtual Point2 unproject_position(const Vector3& p_pos) const;
-    virtual Vector3 project_position(const Point2& p_point, float p_z_depth)
-        const;
-    virtual Vector<Plane> get_frustum() const;
+    Vector3 project_local_ray_normal(const Point2& p_pos) const override;
+    Point2 unproject_position(const Vector3& p_pos) const override;
+    Vector3 project_position(const Point2& p_point, float p_z_depth)
+        const override;
+    Vector<Plane> get_frustum() const override;
 
     ARVRCamera();
-    ~ARVRCamera();
+    ~ARVRCamera() override;
 };
 
 /*
@@ -76,10 +68,10 @@ public:
 
     Ref<Mesh> get_mesh() const;
 
-    String get_configuration_warning() const;
+    String get_configuration_warning() const override;
 
     ARVRController();
-    ~ARVRController();
+    ~ARVRController() override;
 };
 
 /*
@@ -113,10 +105,10 @@ public:
 
     Ref<Mesh> get_mesh() const;
 
-    String get_configuration_warning() const;
+    String get_configuration_warning() const override;
 
     ARVRAnchor();
-    ~ARVRAnchor();
+    ~ARVRAnchor() override;
 };
 
 /*
@@ -143,7 +135,7 @@ protected:
     static void _bind_methods();
 
 public:
-    String get_configuration_warning() const;
+    String get_configuration_warning() const override;
 
     void set_tracked_camera(ARVRCamera* p_tracked_camera);
     void clear_tracked_camera_if(ARVRCamera* p_tracked_camera);
@@ -152,7 +144,7 @@ public:
     void set_world_scale(float p_world_scale);
 
     ARVROrigin();
-    ~ARVROrigin();
+    ~ARVROrigin() override;
 };
 
 #endif /* ARVR_NODES_H */

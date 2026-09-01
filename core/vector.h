@@ -7,13 +7,6 @@
 #ifndef VECTOR_H
 #define VECTOR_H
 
-/**
- * @class Vector
- * @author Juan Linietsky
- * Vector container. Regular Vector Container. Use with care and for smaller
- * arrays when possible. Use PoolVector for large arrays.
- */
-
 #include "core/cowdata.h"
 #include "core/error_macros.h"
 #include "core/os/memory.h"
@@ -131,7 +124,7 @@ public:
         insert(i, p_val);
     }
 
-    _FORCE_INLINE_ Vector() {}
+    _FORCE_INLINE_ Vector() = default;
 
     _FORCE_INLINE_ Vector(const Vector& p_from) {
         _cowdata._ref(p_from._cowdata);
@@ -142,7 +135,7 @@ public:
         return *this;
     }
 
-    _FORCE_INLINE_ ~Vector() {}
+    _FORCE_INLINE_ ~Vector() = default;
 };
 
 template <class T>

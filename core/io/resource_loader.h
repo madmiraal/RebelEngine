@@ -30,7 +30,7 @@ public:
 
     ResourceInteractiveLoader() {}
 
-    ~ResourceInteractiveLoader();
+    ~ResourceInteractiveLoader() override;
 };
 
 class ResourceFormatLoader : public Reference {
@@ -88,7 +88,7 @@ public:
         return "";
     } // no group
 
-    virtual ~ResourceFormatLoader() {}
+    ~ResourceFormatLoader() override = default;
 };
 
 typedef void (*ResourceLoadErrorNotify)(void* p_ud, const String& p_text);

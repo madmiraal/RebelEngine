@@ -30,10 +30,10 @@ protected:
     static void _bind_methods();
 
 public:
-    virtual bool _edit_is_selected_on_click(
-        const Point2& p_point,
-        double p_tolerance
-    ) const;
+#ifdef TOOLS_ENABLED
+    bool _edit_is_selected_on_click(const Point2& p_point, double p_tolerance)
+        const override;
+#endif // TOOLS_ENABLED
 
     void set_shape(const Ref<Shape2D>& p_shape);
     Ref<Shape2D> get_shape() const;
@@ -47,7 +47,7 @@ public:
     void set_one_way_collision_margin(float p_margin);
     float get_one_way_collision_margin() const;
 
-    virtual String get_configuration_warning() const;
+    String get_configuration_warning() const override;
 
     CollisionShape2D();
 };

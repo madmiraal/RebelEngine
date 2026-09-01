@@ -54,7 +54,7 @@ public:
 #endif
 
     SignalAwaiterHandle(MonoObject* p_managed);
-    ~SignalAwaiterHandle();
+    ~SignalAwaiterHandle() override;
 };
 
 #endif // SIGNAL_AWAITER_UTILS_H

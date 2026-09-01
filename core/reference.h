@@ -33,7 +33,7 @@ public:
     int reference_get_count() const;
 
     Reference();
-    ~Reference();
+    ~Reference() override;
 };
 
 template <class T>

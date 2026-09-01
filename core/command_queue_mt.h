@@ -273,13 +273,13 @@ class CommandQueueMT {
     struct CommandBase {
         virtual void call() = 0;
         virtual void post() {};
-        virtual ~CommandBase(){};
+        virtual ~CommandBase() = default;
     };
 
     struct SyncCommand : public CommandBase {
         SyncSemaphore* sync_sem;
 
-        virtual void post() {
+        void post() override {
             sync_sem->sem.post();
         }
     };

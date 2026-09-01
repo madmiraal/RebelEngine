@@ -21,7 +21,7 @@ class RoomGroup : public Spatial {
 
 public:
     RoomGroup();
-    ~RoomGroup();
+    ~RoomGroup() override;
 
     void add_room(Room* p_room);
 
@@ -34,7 +34,7 @@ public:
         return _settings_priority;
     }
 
-    String get_configuration_warning() const;
+    String get_configuration_warning() const override;
 
 private:
     void clear();

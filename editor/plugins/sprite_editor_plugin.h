@@ -78,20 +78,20 @@ class SpriteEditorPlugin : public EditorPlugin {
     EditorNode* editor;
 
 public:
-    virtual String get_name() const {
+    String get_name() const override {
         return "Sprite";
     }
 
-    bool has_main_screen() const {
+    bool has_main_screen() const override {
         return false;
     }
 
-    virtual void edit(Object* p_object);
-    virtual bool handles(Object* p_object) const;
-    virtual void make_visible(bool p_visible);
+    void edit(Object* p_object) override;
+    bool handles(Object* p_object) const override;
+    void make_visible(bool p_visible) override;
 
     SpriteEditorPlugin(EditorNode* p_node);
-    ~SpriteEditorPlugin();
+    ~SpriteEditorPlugin() override;
 };
 
 #endif // SPRITE_EDITOR_PLUGIN_H

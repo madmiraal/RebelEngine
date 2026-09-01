@@ -22,16 +22,16 @@ public:
         const btDefaultCollisionConstructionInfo& constructionInfo =
             btDefaultCollisionConstructionInfo()
     );
-    virtual ~CollisionConfiguration();
+    ~CollisionConfiguration() override;
 
-    virtual btCollisionAlgorithmCreateFunc* getCollisionAlgorithmCreateFunc(
+    btCollisionAlgorithmCreateFunc* getCollisionAlgorithmCreateFunc(
         int proxyType0,
         int proxyType1
-    );
-    virtual btCollisionAlgorithmCreateFunc* getClosestPointsAlgorithmCreateFunc(
+    ) override;
+    btCollisionAlgorithmCreateFunc* getClosestPointsAlgorithmCreateFunc(
         int proxyType0,
         int proxyType1
-    );
+    ) override;
 };
 
 class SoftCollisionConfiguration :
@@ -45,16 +45,16 @@ public:
         const btDefaultCollisionConstructionInfo& constructionInfo =
             btDefaultCollisionConstructionInfo()
     );
-    virtual ~SoftCollisionConfiguration();
+    ~SoftCollisionConfiguration() override;
 
-    virtual btCollisionAlgorithmCreateFunc* getCollisionAlgorithmCreateFunc(
+    btCollisionAlgorithmCreateFunc* getCollisionAlgorithmCreateFunc(
         int proxyType0,
         int proxyType1
-    );
-    virtual btCollisionAlgorithmCreateFunc* getClosestPointsAlgorithmCreateFunc(
+    ) override;
+    btCollisionAlgorithmCreateFunc* getClosestPointsAlgorithmCreateFunc(
         int proxyType0,
         int proxyType1
-    );
+    ) override;
 };
 
 #endif // COLLISION_CONFIGURATION_H

@@ -197,11 +197,11 @@ public:
         Vector<int> arguments_usage;
 #endif // DEBUG_ENABLED
 
-        virtual DataType get_datatype() const {
+        DataType get_datatype() const override {
             return return_type;
         }
 
-        virtual void set_datatype(const DataType& p_datatype) {
+        void set_datatype(const DataType& p_datatype) override {
             return_type = p_datatype;
         }
 
@@ -265,11 +265,11 @@ public:
                                    // declared locally
         DataType datatype;
 
-        virtual DataType get_datatype() const {
+        DataType get_datatype() const override {
             return datatype;
         }
 
-        virtual void set_datatype(const DataType& p_datatype) {
+        void set_datatype(const DataType& p_datatype) override {
             datatype = p_datatype;
         }
 
@@ -287,11 +287,11 @@ public:
         int usages;
         DataType datatype;
 
-        virtual DataType get_datatype() const {
+        DataType get_datatype() const override {
             return datatype;
         }
 
-        virtual void set_datatype(const DataType& p_datatype) {
+        void set_datatype(const DataType& p_datatype) override {
             datatype = p_datatype;
         }
 
@@ -308,11 +308,11 @@ public:
         Variant value;
         DataType datatype;
 
-        virtual DataType get_datatype() const {
+        DataType get_datatype() const override {
             return datatype;
         }
 
-        virtual void set_datatype(const DataType& p_datatype) {
+        void set_datatype(const DataType& p_datatype) override {
             datatype = p_datatype;
         }
 
@@ -325,11 +325,11 @@ public:
         Vector<Node*> elements;
         DataType datatype;
 
-        virtual DataType get_datatype() const {
+        DataType get_datatype() const override {
             return datatype;
         }
 
-        virtual void set_datatype(const DataType& p_datatype) {
+        void set_datatype(const DataType& p_datatype) override {
             datatype = p_datatype;
         }
 
@@ -350,11 +350,11 @@ public:
         Vector<Pair> elements;
         DataType datatype;
 
-        virtual DataType get_datatype() const {
+        DataType get_datatype() const override {
             return datatype;
         }
 
-        virtual void set_datatype(const DataType& p_datatype) {
+        void set_datatype(const DataType& p_datatype) override {
             datatype = p_datatype;
         }
 
@@ -430,11 +430,11 @@ public:
         Vector<Node*> arguments;
         DataType datatype;
 
-        virtual DataType get_datatype() const {
+        DataType get_datatype() const override {
             return datatype;
         }
 
-        virtual void set_datatype(const DataType& p_datatype) {
+        void set_datatype(const DataType& p_datatype) override {
             datatype = p_datatype;
         }
 
@@ -511,11 +511,11 @@ public:
         DataType cast_type;
         DataType return_type;
 
-        virtual DataType get_datatype() const {
+        DataType get_datatype() const override {
             return return_type;
         }
 
-        virtual void set_datatype(const DataType& p_datatype) {
+        void set_datatype(const DataType& p_datatype) override {
             return_type = p_datatype;
         }
 

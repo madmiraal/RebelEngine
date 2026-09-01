@@ -150,7 +150,7 @@ public:
     );
 
     UndoRedo();
-    ~UndoRedo();
+    ~UndoRedo() override;
 };
 
 VARIANT_ENUM_CAST(UndoRedo::MergeMode);

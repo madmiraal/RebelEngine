@@ -100,7 +100,7 @@ private:
 
 protected:
     static void _bind_methods();
-    void _validate_property(PropertyInfo& property) const;
+    void _validate_property(PropertyInfo& property) const override;
 
 public:
     void set_blend_mode(BlendMode p_blend_mode);
@@ -126,10 +126,10 @@ public:
 
     RID get_shader_rid() const;
 
-    virtual Shader::Mode get_shader_mode() const;
+    Shader::Mode get_shader_mode() const override;
 
     CanvasItemMaterial();
-    virtual ~CanvasItemMaterial();
+    ~CanvasItemMaterial() override;
 };
 
 VARIANT_ENUM_CAST(CanvasItemMaterial::BlendMode)
@@ -508,7 +508,7 @@ public:
     int get_canvas_layer() const;
 
     CanvasItem();
-    ~CanvasItem();
+    ~CanvasItem() override;
 };
 
 VARIANT_ENUM_CAST(CanvasItem::BlendMode);

@@ -66,7 +66,7 @@ public:
     void clear();
 
     ImportDock();
-    ~ImportDock();
+    ~ImportDock() override;
 };
 
 #endif // IMPORTDOCK_H

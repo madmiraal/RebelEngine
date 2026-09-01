@@ -126,7 +126,7 @@ public:
     }
 
     InspectorDock(EditorNode* p_editor, EditorData& p_editor_data);
-    ~InspectorDock();
+    ~InspectorDock() override;
 };
 
 #endif

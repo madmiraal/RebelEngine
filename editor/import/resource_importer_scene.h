@@ -64,7 +64,7 @@ public:
         int p_bake_fps
     );
 
-    EditorSceneImporter() {}
+    EditorSceneImporter() = default;
 };
 
 class EditorScenePostImport : public Reference {
@@ -137,26 +137,24 @@ public:
         importers.erase(p_importer);
     }
 
-    virtual String get_importer_name() const;
-    virtual String get_visible_name() const;
-    virtual void get_recognized_extensions(List<String>* p_extensions) const;
-    virtual String get_save_extension() const;
-    virtual String get_resource_type() const;
+    String get_importer_name() const override;
+    String get_visible_name() const override;
+    void get_recognized_extensions(List<String>* p_extensions) const override;
+    String get_save_extension() const override;
+    String get_resource_type() const override;
 
-    virtual int get_preset_count() const;
-    virtual String get_preset_name(int p_idx) const;
+    int get_preset_count() const override;
+    String get_preset_name(int p_idx) const override;
 
-    virtual void get_import_options(
-        List<ImportOption>* r_options,
-        int p_preset = 0
-    ) const;
-    virtual bool get_option_visibility(
+    void get_import_options(List<ImportOption>* r_options, int p_preset = 0)
+        const override;
+    bool get_option_visibility(
         const String& p_option,
         const Map<StringName, Variant>& p_options
-    ) const;
+    ) const override;
 
     // Import scenes *after* everything else (such as textures).
-    virtual int get_import_order() const {
+    int get_import_order() const override {
         return ResourceImporter::IMPORT_ORDER_SCENE;
     }
 
@@ -195,14 +193,14 @@ public:
         float p_max_angle
     );
 
-    virtual Error import(
+    Error import(
         const String& p_source_file,
         const String& p_save_path,
         const Map<StringName, Variant>& p_options,
         List<String>* r_platform_variants,
         List<String>* r_gen_files = nullptr,
         Variant* r_metadata       = nullptr
-    );
+    ) override;
 
     Node* import_scene_from_other_importer(
         EditorSceneImporter* p_exception,
@@ -225,21 +223,21 @@ class EditorSceneImporterESCN : public EditorSceneImporter {
     GDCLASS(EditorSceneImporterESCN, EditorSceneImporter);
 
 public:
-    virtual uint32_t get_import_flags() const;
-    virtual void get_extensions(List<String>* r_extensions) const;
-    virtual Node* import_scene(
+    uint32_t get_import_flags() const override;
+    void get_extensions(List<String>* r_extensions) const override;
+    Node* import_scene(
         const String& p_path,
         uint32_t p_flags,
         int p_bake_fps,
         uint32_t p_compress_flags,
         List<String>* r_missing_deps,
         Error* r_err = nullptr
-    );
-    virtual Ref<Animation> import_animation(
+    ) override;
+    Ref<Animation> import_animation(
         const String& p_path,
         uint32_t p_flags,
         int p_bake_fps
-    );
+    ) override;
 };
 
 #endif // RESOURCEIMPORTERSCENE_H

@@ -172,7 +172,7 @@ public:
         bool p_can_rename        = false,
         bool p_can_open_instance = false
     );
-    ~SceneTreeEditor();
+    ~SceneTreeEditor() override;
 };
 
 class SceneTreeDialog : public ConfirmationDialog {
@@ -183,7 +183,6 @@ class SceneTreeDialog : public ConfirmationDialog {
     // Button *cancel;
     LineEdit* filter;
 
-    void update_tree();
     void _select();
     void _cancel();
     void _filter_changed(const String& p_filter);
@@ -202,7 +201,7 @@ public:
     }
 
     SceneTreeDialog();
-    ~SceneTreeDialog();
+    ~SceneTreeDialog() override;
 };
 
 #endif

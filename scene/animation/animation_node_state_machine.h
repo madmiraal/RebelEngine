@@ -155,9 +155,9 @@ protected:
     void _get_property_list(List<PropertyInfo>* p_list) const;
 
 public:
-    virtual void get_parameter_list(List<PropertyInfo>* r_list) const;
-    virtual Variant get_parameter_default_value(const StringName& p_parameter
-    ) const;
+    void get_parameter_list(List<PropertyInfo>* r_list) const override;
+    Variant get_parameter_default_value(const StringName& p_parameter
+    ) const override;
 
     void add_node(
         const StringName& p_name,
@@ -175,7 +175,7 @@ public:
     void set_node_position(const StringName& p_name, const Vector2& p_position);
     Vector2 get_node_position(const StringName& p_name) const;
 
-    virtual void get_child_nodes(List<ChildNode>* r_child_nodes);
+    void get_child_nodes(List<ChildNode>* r_child_nodes) override;
 
     bool has_transition(const StringName& p_from, const StringName& p_to) const;
     int find_transition(const StringName& p_from, const StringName& p_to) const;
@@ -201,10 +201,10 @@ public:
     void set_graph_offset(const Vector2& p_offset);
     Vector2 get_graph_offset() const;
 
-    virtual float process(float p_time, bool p_seek);
-    virtual String get_caption() const;
+    float process(float p_time, bool p_seek) override;
+    String get_caption() const override;
 
-    virtual Ref<AnimationNode> get_child_by_name(const StringName& p_name);
+    Ref<AnimationNode> get_child_by_name(const StringName& p_name) override;
 
     AnimationNodeStateMachine();
 };

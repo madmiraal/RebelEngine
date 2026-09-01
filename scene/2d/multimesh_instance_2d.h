@@ -24,8 +24,8 @@ protected:
 
 public:
 #ifdef TOOLS_ENABLED
-    virtual Rect2 _edit_get_rect() const;
-#endif
+    Rect2 _edit_get_rect() const override;
+#endif // TOOLS_ENABLED
 
     void set_multimesh(const Ref<MultiMesh>& p_multimesh);
     Ref<MultiMesh> get_multimesh() const;
@@ -37,7 +37,7 @@ public:
     Ref<Texture> get_normal_map() const;
 
     MultiMeshInstance2D();
-    ~MultiMeshInstance2D();
+    ~MultiMeshInstance2D() override;
 };
 
 #endif // MULTIMESH_INSTANCE_2D_H

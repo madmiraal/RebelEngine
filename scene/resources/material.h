@@ -34,7 +34,7 @@ protected:
         return false;
     }
 
-    void _validate_property(PropertyInfo& property) const;
+    void _validate_property(PropertyInfo& property) const override;
 
 public:
     enum {
@@ -48,11 +48,11 @@ public:
     void set_render_priority(int p_priority);
     int get_render_priority() const;
 
-    virtual RID get_rid() const;
+    RID get_rid() const override;
 
     virtual Shader::Mode get_shader_mode() const = 0;
     Material();
-    virtual ~Material();
+    ~Material() override;
 };
 
 class ShaderMaterial : public Material {
@@ -72,9 +72,9 @@ protected:
         const StringName& p_function,
         int p_idx,
         List<String>* r_options
-    ) const;
+    ) const override;
 
-    virtual bool _can_do_next_pass() const;
+    bool _can_do_next_pass() const override;
 
     void _shader_changed();
 
@@ -85,10 +85,10 @@ public:
     void set_shader_param(const StringName& p_param, const Variant& p_value);
     Variant get_shader_param(const StringName& p_param) const;
 
-    virtual Shader::Mode get_shader_mode() const;
+    Shader::Mode get_shader_mode() const override;
 
     ShaderMaterial();
-    ~ShaderMaterial();
+    ~ShaderMaterial() override;
 };
 
 class SpatialMaterial : public Material {
@@ -438,9 +438,9 @@ private:
 
 protected:
     static void _bind_methods();
-    void _validate_property(PropertyInfo& property) const;
+    void _validate_property(PropertyInfo& property) const override;
 
-    virtual bool _can_do_next_pass() const {
+    bool _can_do_next_pass() const override {
         return true;
     }
 
@@ -634,10 +634,10 @@ public:
 
     RID get_shader_rid() const;
 
-    virtual Shader::Mode get_shader_mode() const;
+    Shader::Mode get_shader_mode() const override;
 
     SpatialMaterial();
-    virtual ~SpatialMaterial();
+    ~SpatialMaterial() override;
 };
 
 VARIANT_ENUM_CAST(SpatialMaterial::TextureParam)

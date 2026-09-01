@@ -664,7 +664,7 @@ public:
         _copy_from(p_map);
     }
 
-    _FORCE_INLINE_ Map() {}
+    _FORCE_INLINE_ Map() = default;
 
     ~Map() {
         clear();

@@ -214,7 +214,7 @@ public:
     String query_string_from_dict(const Dictionary& p_dict);
 
     HTTPClient();
-    ~HTTPClient();
+    ~HTTPClient() override;
 };
 
 VARIANT_ENUM_CAST(HTTPClient::ResponseCode)

@@ -1578,9 +1578,9 @@ public:
         bounds = btDbvtVolume::FromMM(p_aabb_min, p_aabb_max);
     }
 
-    virtual ~RecoverPenetrationBroadPhaseCallback() {}
+    ~RecoverPenetrationBroadPhaseCallback() override {}
 
-    virtual bool process(const btBroadphaseProxy* proxy) {
+    bool process(const btBroadphaseProxy* proxy) override {
         btCollisionObject* co =
             static_cast<btCollisionObject*>(proxy->m_clientObject);
         if (co->getInternalType() <= btCollisionObject::CO_RIGID_BODY) {

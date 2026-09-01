@@ -27,7 +27,6 @@ class Skeleton2DEditor : public Control {
 
     void _menu_option(int p_option);
 
-    // void _create_uv_lines();
     friend class Skeleton2DEditorPlugin;
 
 protected:
@@ -46,20 +45,20 @@ class Skeleton2DEditorPlugin : public EditorPlugin {
     EditorNode* editor;
 
 public:
-    virtual String get_name() const {
+    String get_name() const override {
         return "Skeleton2D";
     }
 
-    bool has_main_screen() const {
+    bool has_main_screen() const override {
         return false;
     }
 
-    virtual void edit(Object* p_object);
-    virtual bool handles(Object* p_object) const;
-    virtual void make_visible(bool p_visible);
+    void edit(Object* p_object) override;
+    bool handles(Object* p_object) const override;
+    void make_visible(bool p_visible) override;
 
     Skeleton2DEditorPlugin(EditorNode* p_node);
-    ~Skeleton2DEditorPlugin();
+    ~Skeleton2DEditorPlugin() override;
 };
 
 #endif // SKELETON_2D_EDITOR_PLUGIN_H

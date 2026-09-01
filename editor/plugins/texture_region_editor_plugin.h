@@ -16,10 +16,6 @@
 #include "scene/resources/style_box.h"
 #include "scene/resources/texture.h"
 
-/**
-    @author Mariano Suligoy
-*/
-
 class TextureRegionEditor : public VBoxContainer {
     GDCLASS(TextureRegionEditor, VBoxContainer);
 
@@ -101,7 +97,7 @@ protected:
 
     Vector2 snap_point(Vector2 p_target) const;
 
-    virtual void _changed_callback(Object* p_changed, const char* p_prop);
+    void _changed_callback(Object* p_changed, const char* p_prop) override;
 
 public:
     void _edit_region();
@@ -132,19 +128,19 @@ protected:
     void _editor_visiblity_changed();
 
 public:
-    virtual String get_name() const {
+    String get_name() const override {
         return "TextureRegion";
     }
 
-    bool has_main_screen() const {
+    bool has_main_screen() const override {
         return false;
     }
 
-    virtual void edit(Object* p_object);
-    virtual bool handles(Object* p_object) const;
-    virtual void make_visible(bool p_visible);
-    void set_state(const Dictionary& p_state);
-    Dictionary get_state() const;
+    void edit(Object* p_object) override;
+    bool handles(Object* p_object) const override;
+    void make_visible(bool p_visible) override;
+    void set_state(const Dictionary& p_state) override;
+    Dictionary get_state() const override;
 
     TextureRegionEditorPlugin(EditorNode* p_node);
 };

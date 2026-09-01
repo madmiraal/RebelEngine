@@ -143,7 +143,7 @@ public:
 
     Engine();
 
-    virtual ~Engine() {}
+    virtual ~Engine() = default;
 };
 
 #endif // ENGINE_H

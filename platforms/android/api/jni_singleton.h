@@ -18,12 +18,12 @@ class JNISingleton : public Object {
     GDCLASS(JNISingleton, Object);
 
 public:
-    virtual Variant call(
+    Variant call(
         const StringName& p_method,
         const Variant** p_args,
         int p_argcount,
         Variant::CallError& r_error
-    ) {
+    ) override {
         return Object::call(p_method, p_args, p_argcount, r_error);
     }
 

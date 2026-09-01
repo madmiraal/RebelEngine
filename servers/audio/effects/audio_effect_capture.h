@@ -23,12 +23,12 @@ class AudioEffectCaptureInstance : public AudioEffectInstance {
     Ref<AudioEffectCapture> base;
 
 public:
-    virtual void process(
+    void process(
         const AudioFrame* p_src_frames,
         AudioFrame* p_dst_frames,
         int p_frame_count
-    );
-    virtual bool process_silence() const;
+    ) override;
+    bool process_silence() const override;
 };
 
 class AudioEffectCapture : public AudioEffect {
@@ -52,7 +52,7 @@ public:
         buffer_initialized    = false;
     }
 
-    virtual Ref<AudioEffectInstance> instance();
+    Ref<AudioEffectInstance> instance() override;
 
     void set_buffer_length(float p_buffer_length_seconds);
     float get_buffer_length();

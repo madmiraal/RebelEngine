@@ -119,26 +119,26 @@ class ResourceInteractiveLoaderDefault : public ResourceInteractiveLoader {
 public:
     Ref<Resource> resource;
 
-    virtual void set_local_path(const String& p_local_path
-    ) { /*scene->set_filename(p_local_path);*/ }
+    void set_local_path(const String& p_local_path
+    ) override { /*scene->set_filename(p_local_path);*/ }
 
-    virtual Ref<Resource> get_resource() {
+    Ref<Resource> get_resource() override {
         return resource;
     }
 
-    virtual Error poll() {
+    Error poll() override {
         return ERR_FILE_EOF;
     }
 
-    virtual int get_stage() const {
+    int get_stage() const override {
         return 1;
     }
 
-    virtual int get_stage_count() const {
+    int get_stage_count() const override {
         return 1;
     }
 
-    virtual void set_translation_remapped(bool p_remapped) {
+    void set_translation_remapped(bool p_remapped) override {
         resource->set_as_translation_remapped(p_remapped);
     }
 

@@ -22,16 +22,16 @@ public:
     static void initialize();
     static void finalize();
 
-    virtual Error setup(
+    Error setup(
         Ref<CryptoKey> p_key,
         Ref<X509Certificate> p_cert,
         Ref<X509Certificate> p_ca_chain = Ref<X509Certificate>()
-    );
-    virtual void stop();
-    virtual Ref<PacketPeerDTLS> take_connection(Ref<PacketPeerUDP> p_peer);
+    ) override;
+    void stop() override;
+    Ref<PacketPeerDTLS> take_connection(Ref<PacketPeerUDP> p_peer) override;
 
     DTLSServerMbedTLS();
-    ~DTLSServerMbedTLS();
+    ~DTLSServerMbedTLS() override;
 };
 
 #endif // MBED_DTLS_SERVER_H

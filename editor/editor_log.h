@@ -68,7 +68,7 @@ public:
     void clear();
     void copy();
     EditorLog();
-    ~EditorLog();
+    ~EditorLog() override;
 };
 
 #endif // EDITOR_LOG_H

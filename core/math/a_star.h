@@ -10,12 +10,6 @@
 #include "core/oa_hash_map.h"
 #include "core/reference.h"
 
-/**
-    A* pathfinding algorithm
-
-    @author Juan Linietsky <reduzio@gmail.com>
-*/
-
 class AStar : public Reference {
     GDCLASS(AStar, Reference);
     friend class AStar2D;
@@ -149,7 +143,7 @@ public:
     PoolVector<int> get_id_path(int p_from_id, int p_to_id);
 
     AStar();
-    ~AStar();
+    ~AStar() override;
 };
 
 class AStar2D : public Reference {
@@ -199,7 +193,7 @@ public:
     PoolVector<int> get_id_path(int p_from_id, int p_to_id);
 
     AStar2D();
-    ~AStar2D();
+    ~AStar2D() override;
 };
 
 #endif // ASTAR_H

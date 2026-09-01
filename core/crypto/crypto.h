@@ -63,9 +63,9 @@ public:
     virtual Error update(PoolByteArray p_data) = 0;
     virtual PoolByteArray finish()             = 0;
 
-    HMACContext() {}
+    HMACContext() = default;
 
-    virtual ~HMACContext() {}
+    ~HMACContext() override = default;
 };
 
 class Crypto : public Reference {
@@ -129,28 +129,28 @@ public:
 
 class ResourceFormatLoaderCrypto : public ResourceFormatLoader {
 public:
-    virtual RES load(
+    RES load(
         const String& p_path,
         const String& p_original_path = "",
         Error* r_error                = nullptr
-    );
-    virtual void get_recognized_extensions(List<String>* p_extensions) const;
-    virtual bool handles_type(const String& p_type) const;
-    virtual String get_resource_type(const String& p_path) const;
+    ) override;
+    void get_recognized_extensions(List<String>* p_extensions) const override;
+    bool handles_type(const String& p_type) const override;
+    String get_resource_type(const String& p_path) const override;
 };
 
 class ResourceFormatSaverCrypto : public ResourceFormatSaver {
 public:
-    virtual Error save(
+    Error save(
         const String& p_path,
         const RES& p_resource,
         uint32_t p_flags = 0
-    );
-    virtual void get_recognized_extensions(
+    ) override;
+    void get_recognized_extensions(
         const RES& p_resource,
         List<String>* p_extensions
-    ) const;
-    virtual bool recognize(const RES& p_resource) const;
+    ) const override;
+    bool recognize(const RES& p_resource) const override;
 };
 
 #endif // CRYPTO_H

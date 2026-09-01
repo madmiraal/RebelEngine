@@ -217,52 +217,51 @@ public:
     );
 
 public:
-    virtual void get_preset_features(
+    void get_preset_features(
         const Ref<EditorExportPreset>& p_preset,
         List<String>* r_features
-    );
+    ) override;
 
-    virtual void get_export_options(List<ExportOption>* r_options);
+    void get_export_options(List<ExportOption>* r_options) override;
 
-    virtual String get_name() const;
+    String get_name() const override;
 
-    virtual String get_os_name() const;
+    String get_os_name() const override;
 
-    virtual Ref<Texture> get_logo() const;
+    Ref<Texture> get_logo() const override;
 
-    virtual bool should_update_export_options();
+    bool should_update_export_options() override;
 
-    virtual bool poll_export();
+    bool poll_export() override;
 
-    virtual int get_options_count() const;
+    int get_options_count() const override;
 
-    virtual String get_options_tooltip() const;
+    String get_options_tooltip() const override;
 
-    virtual String get_option_label(int p_index) const;
+    String get_option_label(int p_index) const override;
 
-    virtual String get_option_tooltip(int p_index) const;
+    String get_option_tooltip(int p_index) const override;
 
-    virtual Error run(
+    Error run(
         const Ref<EditorExportPreset>& p_preset,
         int p_device,
         int p_debug_flags
-    );
+    ) override;
 
-    virtual Ref<Texture> get_run_icon() const;
+    Ref<Texture> get_run_icon() const override;
 
     static String get_adb_path();
 
     static String get_apksigner_path();
 
-    virtual bool can_export(
+    bool can_export(
         const Ref<EditorExportPreset>& p_preset,
         String& r_error,
         bool& r_missing_templates
-    ) const;
+    ) const override;
 
-    virtual List<String> get_binary_extensions(
-        const Ref<EditorExportPreset>& p_preset
-    ) const;
+    List<String> get_binary_extensions(const Ref<EditorExportPreset>& p_preset
+    ) const override;
 
     void _update_custom_build_project();
 
@@ -323,12 +322,12 @@ public:
 
     String join_list(List<String> parts, const String& separator) const;
 
-    virtual Error export_project(
+    Error export_project(
         const Ref<EditorExportPreset>& p_preset,
         bool p_debug,
         const String& p_path,
         int p_flags = 0
-    );
+    ) override;
 
     Error export_project_helper(
         const Ref<EditorExportPreset>& p_preset,
@@ -339,14 +338,14 @@ public:
         int p_flags
     );
 
-    virtual void get_platform_features(List<String>* r_features);
+    void get_platform_features(List<String>* r_features) override;
 
-    virtual void resolve_platform_feature_priorities(
+    void resolve_platform_feature_priorities(
         const Ref<EditorExportPreset>& p_preset,
         Set<String>& p_features
-    );
+    ) override;
 
     EditorExportPlatformAndroid();
 
-    ~EditorExportPlatformAndroid();
+    ~EditorExportPlatformAndroid() override;
 };

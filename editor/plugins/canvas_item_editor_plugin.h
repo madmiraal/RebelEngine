@@ -430,8 +430,6 @@ private:
 
     CanvasItem* ref_item;
 
-    void _add_canvas_item(CanvasItem* p_canvas_item);
-
     void _save_canvas_item_ik_chain(
         const CanvasItem* p_canvas_item,
         List<float>* p_bones_length,
@@ -462,7 +460,6 @@ private:
     bool updating_scroll;
     void _update_scroll(float);
     void _update_scrollbars();
-    void _append_canvas_item(CanvasItem* p_item);
     void _snap_changed();
     void _selection_result_pressed(int);
     void _selection_menu_hide();
@@ -602,7 +599,6 @@ private:
     );
 
     void _set_anchors_preset(Control::LayoutPreset p_preset);
-    void _set_margins_preset(Control::LayoutPreset p_preset);
     void _set_anchors_and_margins_preset(Control::LayoutPreset p_preset);
     void _set_anchors_and_margins_to_keep_ratio();
 
@@ -645,9 +641,6 @@ protected:
     void _notification(int p_what);
 
     static void _bind_methods();
-    void end_drag();
-    void box_selection_start(Point2& click);
-    bool box_selection_end();
 
     HBoxContainer* get_panel_hb() {
         return hb;
@@ -759,7 +752,7 @@ public:
 
     void focus_selection();
 
-    bool is_anchors_mode_enabled() {
+    bool is_anchors_mode_enabled() const {
         return anchors_mode;
     };
 
@@ -773,26 +766,26 @@ class CanvasItemEditorPlugin : public EditorPlugin {
     EditorNode* editor;
 
 public:
-    virtual String get_name() const {
+    String get_name() const override {
         return "2D";
     }
 
-    bool has_main_screen() const {
+    bool has_main_screen() const override {
         return true;
     }
 
-    virtual void edit(Object* p_object);
-    virtual bool handles(Object* p_object) const;
-    virtual void make_visible(bool p_visible);
-    virtual Dictionary get_state() const;
-    virtual void set_state(const Dictionary& p_state);
+    void edit(Object* p_object) override;
+    bool handles(Object* p_object) const override;
+    void make_visible(bool p_visible) override;
+    Dictionary get_state() const override;
+    void set_state(const Dictionary& p_state) override;
 
     CanvasItemEditor* get_canvas_item_editor() {
         return canvas_item_editor;
     }
 
     CanvasItemEditorPlugin(EditorNode* p_node);
-    ~CanvasItemEditorPlugin();
+    ~CanvasItemEditorPlugin() override;
 };
 
 class CanvasItemEditorViewport : public Control {
@@ -846,15 +839,15 @@ protected:
     void _notification(int p_what);
 
 public:
-    virtual bool can_drop_data(const Point2& p_point, const Variant& p_data)
-        const;
-    virtual void drop_data(const Point2& p_point, const Variant& p_data);
+    bool can_drop_data(const Point2& p_point, const Variant& p_data)
+        const override;
+    void drop_data(const Point2& p_point, const Variant& p_data) override;
 
     CanvasItemEditorViewport(
         EditorNode* p_node,
         CanvasItemEditor* p_canvas_item_editor
     );
-    ~CanvasItemEditorViewport();
+    ~CanvasItemEditorViewport() override;
 };
 
 #endif

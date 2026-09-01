@@ -65,11 +65,11 @@ class AudioEffectPitchShiftInstance : public AudioEffectInstance {
     SMBPitchShift shift_r;
 
 public:
-    virtual void process(
+    void process(
         const AudioFrame* p_src_frames,
         AudioFrame* p_dst_frames,
         int p_frame_count
-    );
+    ) override;
 };
 
 class AudioEffectPitchShift : public AudioEffect {
@@ -98,7 +98,7 @@ protected:
     static void _bind_methods();
 
 public:
-    Ref<AudioEffectInstance> instance();
+    Ref<AudioEffectInstance> instance() override;
 
     void set_pitch_scale(float p_pitch_scale);
     float get_pitch_scale() const;

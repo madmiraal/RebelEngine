@@ -36,17 +36,17 @@ public:
         CryptoKey::_create = nullptr;
     }
 
-    virtual Error load(String p_path, bool p_public_only);
-    virtual Error save(String p_path, bool p_public_only);
-    virtual String save_to_string(bool p_public_only);
-    virtual Error load_from_string(String p_string_key, bool p_public_only);
+    Error load(String p_path, bool p_public_only) override;
+    Error save(String p_path, bool p_public_only) override;
+    String save_to_string(bool p_public_only) override;
+    Error load_from_string(String p_string_key, bool p_public_only) override;
 
-    virtual bool is_public_only() const {
+    bool is_public_only() const override {
         return public_only;
     };
 
     CryptoKeyMbedTLS();
-    ~CryptoKeyMbedTLS();
+    ~CryptoKeyMbedTLS() override;
 
     _FORCE_INLINE_ void lock() {
         locks++;
@@ -76,16 +76,16 @@ public:
         X509Certificate::_create = nullptr;
     }
 
-    virtual Error load(String p_path);
-    virtual Error load_from_memory(const uint8_t* p_buffer, int p_len);
-    virtual Error save(String p_path);
+    Error load(String p_path) override;
+    Error load_from_memory(const uint8_t* p_buffer, int p_len) override;
+    Error save(String p_path) override;
 
     X509CertificateMbedTLS() {
         mbedtls_x509_crt_init(&cert);
         locks = 0;
     }
 
-    ~X509CertificateMbedTLS() {
+    ~X509CertificateMbedTLS() override {
         mbedtls_x509_crt_free(&cert);
     }
 
@@ -120,16 +120,14 @@ public:
 
     static bool is_md_type_allowed(mbedtls_md_type_t p_md_type);
 
-    virtual Error start(
-        HashingContext::HashType p_hash_type,
-        PoolByteArray p_key
-    );
-    virtual Error update(PoolByteArray p_data);
-    virtual PoolByteArray finish();
+    Error start(HashingContext::HashType p_hash_type, PoolByteArray p_key)
+        override;
+    Error update(PoolByteArray p_data) override;
+    PoolByteArray finish() override;
 
     HMACContextMbedTLS() {}
 
-    ~HMACContextMbedTLS();
+    ~HMACContextMbedTLS() override;
 };
 
 class CryptoMbedTLS : public Crypto {
@@ -149,36 +147,32 @@ public:
         int& r_size
     );
 
-    virtual PoolByteArray generate_random_bytes(int p_bytes);
-    virtual Ref<CryptoKey> generate_rsa(int p_bytes);
-    virtual Ref<X509Certificate> generate_self_signed_certificate(
+    PoolByteArray generate_random_bytes(int p_bytes) override;
+    Ref<CryptoKey> generate_rsa(int p_bytes) override;
+    Ref<X509Certificate> generate_self_signed_certificate(
         Ref<CryptoKey> p_key,
         String p_issuer_name,
         String p_not_before,
         String p_not_after
-    );
-    virtual Vector<uint8_t> sign(
+    ) override;
+    Vector<uint8_t> sign(
         HashingContext::HashType p_hash_type,
         Vector<uint8_t> p_hash,
         Ref<CryptoKey> p_key
-    );
-    virtual bool verify(
+    ) override;
+    bool verify(
         HashingContext::HashType p_hash_type,
         Vector<uint8_t> p_hash,
         Vector<uint8_t> p_signature,
         Ref<CryptoKey> p_key
-    );
-    virtual Vector<uint8_t> encrypt(
-        Ref<CryptoKey> p_key,
-        Vector<uint8_t> p_plaintext
-    );
-    virtual Vector<uint8_t> decrypt(
-        Ref<CryptoKey> p_key,
-        Vector<uint8_t> p_ciphertext
-    );
+    ) override;
+    Vector<uint8_t> encrypt(Ref<CryptoKey> p_key, Vector<uint8_t> p_plaintext)
+        override;
+    Vector<uint8_t> decrypt(Ref<CryptoKey> p_key, Vector<uint8_t> p_ciphertext)
+        override;
 
     CryptoMbedTLS();
-    ~CryptoMbedTLS();
+    ~CryptoMbedTLS() override;
 };
 
 #endif // CRYPTO_MBEDTLS_H

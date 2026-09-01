@@ -34,7 +34,7 @@ public:
     PoolByteArray finish();
 
     HashingContext();
-    ~HashingContext();
+    ~HashingContext() override;
 };
 
 VARIANT_ENUM_CAST(HashingContext::HashType);

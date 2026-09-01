@@ -41,7 +41,7 @@ public:
         const Point2& p_screen_offset
     );
 
-    virtual String get_configuration_warning() const;
+    String get_configuration_warning() const override;
     ParallaxLayer();
 };
 

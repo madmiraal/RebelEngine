@@ -164,12 +164,12 @@ class JavaClass : public Reference {
     jclass _class;
 
 public:
-    virtual Variant call(
+    Variant call(
         const StringName& p_method,
         const Variant** p_args,
         int p_argcount,
         Variant::CallError& r_error
-    );
+    ) override;
     JavaClass();
 };
 
@@ -181,14 +181,14 @@ public:
     friend class JavaClass;
     jobject instance;
 
-    virtual Variant call(
+    Variant call(
         const StringName& p_method,
         const Variant** p_args,
         int p_argcount,
         Variant::CallError& r_error
-    );
+    ) override;
     JavaObject(const Ref<JavaClass>& p_base, jobject* p_instance);
-    ~JavaObject();
+    ~JavaObject() override;
 };
 
 class JavaClassWrapper : public Object {

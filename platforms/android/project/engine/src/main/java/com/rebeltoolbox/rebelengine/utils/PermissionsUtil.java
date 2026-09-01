@@ -19,11 +19,6 @@ import androidx.core.content.ContextCompat;
 import java.util.ArrayList;
 import java.util.List;
 
-/**
- * This class includes utility functions for Android permissions related
- * operations.
- * @author Cagdas Caglak <cagdascaglak@gmail.com>
- */
 public final class PermissionsUtil {
     private static final String TAG = PermissionsUtil.class.getSimpleName();
 

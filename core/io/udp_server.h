@@ -57,7 +57,7 @@ public:
     void stop();
 
     UDPServer();
-    ~UDPServer();
+    ~UDPServer() override;
 };
 
 #endif // UDP_SERVER_H

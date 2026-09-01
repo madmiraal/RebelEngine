@@ -4,8 +4,8 @@
 //
 // SPDX-License-Identifier: MIT
 
-#ifndef EMWSCLIENT_H
-#define EMWSCLIENT_H
+#ifndef EMWS_CLIENT_H
+#define EMWS_CLIENT_H
 
 #ifdef WEB_ENABLED
 
@@ -44,7 +44,7 @@ public:
         int p_in_packets,
         int p_out_buffer,
         int p_out_packets
-    );
+    ) override;
     Error connect_to_host(
         String p_host,
         String p_path,
@@ -52,18 +52,18 @@ public:
         bool p_ssl,
         const Vector<String> p_protocol       = Vector<String>(),
         const Vector<String> p_custom_headers = Vector<String>()
-    );
-    Ref<WebSocketPeer> get_peer(int p_peer_id) const;
-    void disconnect_from_host(int p_code = 1000, String p_reason = "");
-    IP_Address get_connected_host() const;
-    uint16_t get_connected_port() const;
-    virtual ConnectionStatus get_connection_status() const;
-    int get_max_packet_size() const;
-    virtual void poll();
+    ) override;
+    Ref<WebSocketPeer> get_peer(int p_peer_id) const override;
+    void disconnect_from_host(int p_code = 1000, String p_reason = "") override;
+    IP_Address get_connected_host() const override;
+    uint16_t get_connected_port() const override;
+    ConnectionStatus get_connection_status() const override;
+    int get_max_packet_size() const override;
+    void poll() override;
     EMWSClient();
-    ~EMWSClient();
+    ~EMWSClient() override;
 };
 
 #endif // WEB_ENABLED
 
-#endif // EMWSCLIENT_H
+#endif // EMWS_CLIENT_H

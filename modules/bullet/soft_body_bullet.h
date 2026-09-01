@@ -45,21 +45,21 @@ private:
 
 public:
     SoftBodyBullet();
-    ~SoftBodyBullet();
+    ~SoftBodyBullet() override;
 
-    virtual void reload_body();
-    virtual void set_space(SpaceBullet* p_space);
+    void reload_body() override;
+    void set_space(SpaceBullet* p_space) override;
 
-    virtual void dispatch_callbacks() {}
+    void dispatch_callbacks() override {}
 
-    virtual void on_collision_filters_change() {}
+    void on_collision_filters_change() override {}
 
-    virtual void on_collision_checker_start() {}
+    void on_collision_checker_start() override {}
 
-    virtual void on_collision_checker_end() {}
+    void on_collision_checker_end() override {}
 
-    virtual void on_enter_area(AreaBullet* p_area);
-    virtual void on_exit_area(AreaBullet* p_area);
+    void on_enter_area(AreaBullet* p_area) override;
+    void on_exit_area(AreaBullet* p_area) override;
 
     _FORCE_INLINE_ btSoftBody* get_bt_soft_body() const {
         return bt_soft_body;

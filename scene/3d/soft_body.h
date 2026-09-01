@@ -97,12 +97,12 @@ protected:
         Variant& r_ret
     ) const;
 
-    virtual void _changed_callback(Object* p_changed, const char* p_prop);
+    void _changed_callback(Object* p_changed, const char* p_prop) override;
 
     void _notification(int p_what);
     static void _bind_methods();
 
-    virtual String get_configuration_warning() const;
+    String get_configuration_warning() const override;
 
 protected:
     void _update_physics_server();
@@ -180,7 +180,7 @@ public:
     bool is_ray_pickable() const;
 
     SoftBody();
-    ~SoftBody();
+    ~SoftBody() override;
 
 private:
     void reset_softbody_pin();

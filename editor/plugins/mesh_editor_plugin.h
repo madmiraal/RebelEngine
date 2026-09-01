@@ -52,19 +52,19 @@ class EditorInspectorPluginMesh : public EditorInspectorPlugin {
     GDCLASS(EditorInspectorPluginMesh, EditorInspectorPlugin);
 
 public:
-    virtual bool can_handle(Object* p_object);
-    virtual void parse_begin(Object* p_object);
+    bool can_handle(Object* p_object) override;
+    void parse_begin(Object* p_object) override;
 };
 
 class MeshEditorPlugin : public EditorPlugin {
     GDCLASS(MeshEditorPlugin, EditorPlugin);
 
 public:
-    virtual String get_name() const {
+    String get_name() const override {
         return "Mesh";
     }
 
     MeshEditorPlugin(EditorNode* p_node);
 };
 
-#endif
+#endif // MESH_EDITOR_PLUGIN_H

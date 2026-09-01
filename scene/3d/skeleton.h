@@ -39,7 +39,7 @@ public:
     RID get_skeleton() const;
     Skeleton* get_skeleton_node() const;
     Ref<Skin> get_skin() const;
-    ~SkinReference();
+    ~SkinReference() override;
 };
 
 class Skeleton : public Spatial {
@@ -205,7 +205,7 @@ public:
 
 public:
     Skeleton();
-    ~Skeleton();
+    ~Skeleton() override;
 };
 
 #endif

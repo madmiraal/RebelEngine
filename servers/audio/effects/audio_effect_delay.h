@@ -4,8 +4,8 @@
 //
 // SPDX-License-Identifier: MIT
 
-#ifndef AUDIOEFFECTDELAY_H
-#define AUDIOEFFECTDELAY_H
+#ifndef AUDIO_EFFECT_DELAY_H
+#define AUDIO_EFFECT_DELAY_H
 
 #include "servers/audio/audio_effect.h"
 
@@ -34,11 +34,11 @@ class AudioEffectDelayInstance : public AudioEffectInstance {
     );
 
 public:
-    virtual void process(
+    void process(
         const AudioFrame* p_src_frames,
         AudioFrame* p_dst_frames,
         int p_frame_count
-    );
+    ) override;
 };
 
 class AudioEffectDelay : public AudioEffect {
@@ -111,9 +111,9 @@ public:
     void set_feedback_lowpass(float p_lowpass);
     float get_feedback_lowpass() const;
 
-    Ref<AudioEffectInstance> instance();
+    Ref<AudioEffectInstance> instance() override;
 
     AudioEffectDelay();
 };
 
-#endif // AUDIOEFFECTDELAY_H
+#endif // AUDIO_EFFECT_DELAY_H

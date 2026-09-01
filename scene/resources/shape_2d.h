@@ -63,12 +63,12 @@ public:
         return Rect2();
     }
 
-    virtual RID get_rid() const;
+    RID get_rid() const override;
 
     bool is_collision_outline_enabled();
 
     Shape2D();
-    ~Shape2D();
+    ~Shape2D() override;
 };
 
 #endif // SHAPE_2D_H

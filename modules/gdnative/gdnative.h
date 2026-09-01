@@ -38,7 +38,7 @@ class GDNativeLibrary : public Resource {
 
 public:
     GDNativeLibrary();
-    ~GDNativeLibrary();
+    ~GDNativeLibrary() override;
 
     virtual bool _set(const StringName& p_name, const Variant& p_property);
     virtual bool _get(const StringName& p_name, Variant& r_property) const;
@@ -130,7 +130,7 @@ class GDNative : public Reference {
 
 public:
     GDNative();
-    ~GDNative();
+    ~GDNative() override;
 
     static void _bind_methods();
 
@@ -157,28 +157,25 @@ public:
 
 class GDNativeLibraryResourceLoader : public ResourceFormatLoader {
 public:
-    virtual RES load(
+    RES load(
         const String& p_path,
         const String& p_original_path,
         Error* r_error
-    );
-    virtual void get_recognized_extensions(List<String>* p_extensions) const;
-    virtual bool handles_type(const String& p_type) const;
-    virtual String get_resource_type(const String& p_path) const;
+    ) override;
+    void get_recognized_extensions(List<String>* p_extensions) const override;
+    bool handles_type(const String& p_type) const override;
+    String get_resource_type(const String& p_path) const override;
 };
 
 class GDNativeLibraryResourceSaver : public ResourceFormatSaver {
 public:
-    virtual Error save(
-        const String& p_path,
-        const RES& p_resource,
-        uint32_t p_flags
-    );
-    virtual bool recognize(const RES& p_resource) const;
-    virtual void get_recognized_extensions(
+    Error save(const String& p_path, const RES& p_resource, uint32_t p_flags)
+        override;
+    bool recognize(const RES& p_resource) const override;
+    void get_recognized_extensions(
         const RES& p_resource,
         List<String>* p_extensions
-    ) const;
+    ) const override;
 };
 
 #endif // GDNATIVE_H

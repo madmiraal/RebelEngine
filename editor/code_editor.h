@@ -24,13 +24,12 @@ class GotoLineDialog : public ConfirmationDialog {
 
     TextEdit* text_editor;
 
-    virtual void ok_pressed();
+    void ok_pressed() override;
 
 public:
     void popup_find_line(TextEdit* p_edit);
     int get_line() const;
 
-    void set_text_editor(TextEdit* p_text_editor);
     GotoLineDialog();
 };
 
@@ -75,7 +74,6 @@ class FindReplaceBar : public HBoxContainer {
     void _search_text_changed(const String& p_text);
     void _search_text_entered(const String& p_text);
     void _replace_text_entered(const String& p_text);
-    void _update_size();
 
 protected:
     void _notification(int p_what);

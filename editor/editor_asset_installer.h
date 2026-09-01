@@ -4,8 +4,8 @@
 //
 // SPDX-License-Identifier: MIT
 
-#ifndef EDITORASSETINSTALLER_H
-#define EDITORASSETINSTALLER_H
+#ifndef EDITOR_ASSET_INSTALLER_H
+#define EDITOR_ASSET_INSTALLER_H
 
 #include "scene/gui/dialogs.h"
 #include "scene/gui/tree.h"
@@ -23,7 +23,7 @@ class EditorAssetInstaller : public ConfirmationDialog {
     void _update_subitems(TreeItem* p_item, bool p_check, bool p_first = false);
     void _uncheck_parent(TreeItem* p_item);
     void _item_edited();
-    virtual void ok_pressed();
+    void ok_pressed() override;
 
 protected:
     static void _bind_methods();
@@ -37,4 +37,4 @@ public:
     EditorAssetInstaller();
 };
 
-#endif // EDITORASSETINSTALLER_H
+#endif // EDITOR_ASSET_INSTALLER_H

@@ -21,9 +21,9 @@ public:
         RigidBodyBullet* p_body_b,
         const Vector3& p_pos_b
     );
-    ~PinJointBullet();
+    ~PinJointBullet() override;
 
-    virtual PhysicsServer::JointType get_type() const {
+    PhysicsServer::JointType get_type() const override {
         return PhysicsServer::JOINT_PIN;
     }
 

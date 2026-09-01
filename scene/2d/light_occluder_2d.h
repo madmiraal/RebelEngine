@@ -4,8 +4,8 @@
 //
 // SPDX-License-Identifier: MIT
 
-#ifndef LIGHTOCCLUDER2D_H
-#define LIGHTOCCLUDER2D_H
+#ifndef LIGHT_OCCLUDER_2D_H
+#define LIGHT_OCCLUDER_2D_H
 
 #include "scene/2d/node_2d.h"
 
@@ -49,9 +49,9 @@ public:
     void set_cull_mode(CullMode p_mode);
     CullMode get_cull_mode() const;
 
-    virtual RID get_rid() const;
+    RID get_rid() const override;
     OccluderPolygon2D();
-    ~OccluderPolygon2D();
+    ~OccluderPolygon2D() override;
 };
 
 VARIANT_ENUM_CAST(OccluderPolygon2D::CullMode);
@@ -72,12 +72,10 @@ protected:
 
 public:
 #ifdef TOOLS_ENABLED
-    virtual Rect2 _edit_get_rect() const;
-    virtual bool _edit_is_selected_on_click(
-        const Point2& p_point,
-        double p_tolerance
-    ) const;
-#endif
+    Rect2 _edit_get_rect() const override;
+    bool _edit_is_selected_on_click(const Point2& p_point, double p_tolerance)
+        const override;
+#endif // TOOLS_ENABLED
 
     void set_occluder_polygon(const Ref<OccluderPolygon2D>& p_polygon);
     Ref<OccluderPolygon2D> get_occluder_polygon() const;
@@ -85,10 +83,10 @@ public:
     void set_occluder_light_mask(int p_mask);
     int get_occluder_light_mask() const;
 
-    String get_configuration_warning() const;
+    String get_configuration_warning() const override;
 
     LightOccluder2D();
-    ~LightOccluder2D();
+    ~LightOccluder2D() override;
 };
 
-#endif // LIGHTOCCLUDER2D_H
+#endif // LIGHT_OCCLUDER_2D_H

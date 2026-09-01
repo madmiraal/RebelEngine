@@ -4,8 +4,8 @@
 //
 // SPDX-License-Identifier: MIT
 
-#ifndef WEBSOCKETMACTOS_H
-#define WEBSOCKETMACTOS_H
+#ifndef WEBSOCKET_MACTOS_H
+#define WEBSOCKET_MACTOS_H
 
 #define WSC_IN_BUF  "network/limits/websocket_client/max_in_buffer_kb"
 #define WSC_IN_PKT  "network/limits/websocket_client/max_in_packets"
@@ -48,4 +48,4 @@ public:                                                                        \
                                                                                \
 protected:
 
-#endif // WEBSOCKETMACTOS_H
+#endif // WEBSOCKET_MACTOS_H

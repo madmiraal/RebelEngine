@@ -16,7 +16,7 @@ class CylinderShape : public Shape {
 
 protected:
     static void _bind_methods();
-    virtual void _update_shape();
+    void _update_shape() override;
 
 public:
     void set_radius(float p_radius);
@@ -24,7 +24,7 @@ public:
     void set_height(float p_height);
     float get_height() const;
 
-    virtual Vector<Vector3> get_debug_mesh_lines();
+    Vector<Vector3> get_debug_mesh_lines() override;
 
     CylinderShape();
 };

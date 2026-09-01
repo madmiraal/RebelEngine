@@ -36,7 +36,7 @@ class Physics2DDirectSpaceStateSW : public Physics2DDirectSpaceState {
 public:
     Space2DSW* space;
 
-    virtual int intersect_point(
+    int intersect_point(
         const Vector2& p_point,
         ShapeResult* r_results,
         int p_result_max,
@@ -45,8 +45,8 @@ public:
         bool p_collide_with_bodies = true,
         bool p_collide_with_areas  = false,
         bool p_pick_point          = false
-    );
-    virtual int intersect_point_on_canvas(
+    ) override;
+    int intersect_point_on_canvas(
         const Vector2& p_point,
         ObjectID p_canvas_instance_id,
         ShapeResult* r_results,
@@ -56,8 +56,8 @@ public:
         bool p_collide_with_bodies = true,
         bool p_collide_with_areas  = false,
         bool p_pick_point          = false
-    );
-    virtual bool intersect_ray(
+    ) override;
+    bool intersect_ray(
         const Vector2& p_from,
         const Vector2& p_to,
         RayResult& r_result,
@@ -65,8 +65,8 @@ public:
         uint32_t p_collision_mask  = 0xFFFFFFFF,
         bool p_collide_with_bodies = true,
         bool p_collide_with_areas  = false
-    );
-    virtual int intersect_shape(
+    ) override;
+    int intersect_shape(
         const RID& p_shape,
         const Transform2D& p_xform,
         const Vector2& p_motion,
@@ -77,8 +77,8 @@ public:
         uint32_t p_collision_mask  = 0xFFFFFFFF,
         bool p_collide_with_bodies = true,
         bool p_collide_with_areas  = false
-    );
-    virtual bool cast_motion(
+    ) override;
+    bool cast_motion(
         const RID& p_shape,
         const Transform2D& p_xform,
         const Vector2& p_motion,
@@ -89,8 +89,8 @@ public:
         uint32_t p_collision_mask  = 0xFFFFFFFF,
         bool p_collide_with_bodies = true,
         bool p_collide_with_areas  = false
-    );
-    virtual bool collide_shape(
+    ) override;
+    bool collide_shape(
         RID p_shape,
         const Transform2D& p_shape_xform,
         const Vector2& p_motion,
@@ -102,8 +102,8 @@ public:
         uint32_t p_collision_mask  = 0xFFFFFFFF,
         bool p_collide_with_bodies = true,
         bool p_collide_with_areas  = false
-    );
-    virtual bool rest_info(
+    ) override;
+    bool rest_info(
         RID p_shape,
         const Transform2D& p_shape_xform,
         const Vector2& p_motion,
@@ -113,7 +113,7 @@ public:
         uint32_t p_collision_mask  = 0xFFFFFFFF,
         bool p_collide_with_bodies = true,
         bool p_collide_with_areas  = false
-    );
+    ) override;
 
     Physics2DDirectSpaceStateSW();
 };
@@ -348,7 +348,7 @@ public:
     }
 
     Space2DSW();
-    ~Space2DSW();
+    ~Space2DSW() override;
 };
 
 #endif // SPACE_2D_SW_H

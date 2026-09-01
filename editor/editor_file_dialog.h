@@ -161,7 +161,7 @@ private:
     void _go_back();
     void _go_forward();
 
-    virtual void _post_popup();
+    void _post_popup() override;
 
     void _save_to_recent();
     // callback function is callback(String p_path,Ref<Texture> preview,Variant
@@ -231,7 +231,7 @@ public:
     bool is_overwrite_warning_disabled() const;
 
     EditorFileDialog();
-    ~EditorFileDialog();
+    ~EditorFileDialog() override;
 };
 
 class EditorLineEditFileChooser : public HBoxContainer {

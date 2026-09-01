@@ -239,8 +239,6 @@ private:
 
     void _file_removed(String p_file);
     void _folder_removed(String p_folder);
-    void _files_moved(String p_old_file, String p_new_file);
-    void _folder_moved(String p_old_folder, String p_new_folder);
 
     void _resource_created() const;
     void _make_dir_confirm();
@@ -394,7 +392,7 @@ public:
     };
 
     FileSystemDock(EditorNode* p_editor);
-    ~FileSystemDock();
+    ~FileSystemDock() override;
 };
 
-#endif // SCENES_DOCK_H
+#endif // FILESYSTEM_DOCK_H

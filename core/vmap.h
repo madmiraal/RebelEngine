@@ -17,7 +17,7 @@ public:
         T key;
         V value;
 
-        _FORCE_INLINE_ Pair() {}
+        _FORCE_INLINE_ Pair() = default;
 
         _FORCE_INLINE_ Pair(const T& p_key, const V& p_value) {
             key   = p_key;
@@ -171,7 +171,7 @@ public:
         return _cowdata.get_m(pos).value;
     }
 
-    _FORCE_INLINE_ VMap() {};
+    _FORCE_INLINE_ VMap() = default;
 
     _FORCE_INLINE_ VMap(const VMap& p_from) {
         _cowdata._ref(p_from._cowdata);

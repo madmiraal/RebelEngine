@@ -4,7 +4,6 @@
 //
 // SPDX-License-Identifier: MIT
 
-// author: Andreas Haas <hondres,  liugam3@gmail.com>
 #ifndef LINUX_JOYPAD_H
 #define LINUX_JOYPAD_H
 

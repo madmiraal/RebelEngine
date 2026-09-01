@@ -202,7 +202,7 @@ public:
     void notify_changes();
 
     EditorSettings();
-    ~EditorSettings();
+    ~EditorSettings() override;
 };
 
 // not a macro any longer
