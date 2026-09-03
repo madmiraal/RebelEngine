@@ -20,18 +20,18 @@ SPDX-License-Identifier: MIT
         <method name="add_char">
             <return type="void" />
             <argument index="0" name="character" type="int" />
-            <argument index="1" name="texture" type="int" />
-            <argument index="2" name="rect" type="Rect2" />
-            <argument index="3" name="align" type="Vector2" default="Vector2( 0, 0 )" />
-            <argument index="4" name="advance" type="float" default="-1" />
+            <argument index="1" name="texture_index" type="int" />
+            <argument index="2" name="bounding_box" type="Rect2" />
+            <argument index="3" name="offset" type="Vector2" default="Vector2( 0, 0 )" />
+            <argument index="4" name="advance" type="int" default="-1" />
             <description>
                 Adds a character to the font, where [code]character[/code] is the Unicode value, [code]texture[/code] is the texture index, [code]rect[/code] is the region in the texture (in pixels!), [code]align[/code] is the (optional) alignment for the character and [code]advance[/code] is the (optional) advance.
             </description>
         </method>
         <method name="add_kerning_pair">
             <return type="void" />
-            <argument index="0" name="char_a" type="int" />
-            <argument index="1" name="char_b" type="int" />
+            <argument index="0" name="first_character" type="int" />
+            <argument index="1" name="second_character" type="int" />
             <argument index="2" name="kerning" type="int" />
             <description>
                 Adds a kerning pair to the [BitmapFont] as a difference. Kerning pairs are special cases where a typeface advance is determined by the next character.
@@ -59,15 +59,15 @@ SPDX-License-Identifier: MIT
         </method>
         <method name="get_kerning_pair" qualifiers="const">
             <return type="int" />
-            <argument index="0" name="char_a" type="int" />
-            <argument index="1" name="char_b" type="int" />
+            <argument index="0" name="first_character" type="int" />
+            <argument index="1" name="second_character" type="int" />
             <description>
                 Returns a kerning pair as a difference.
             </description>
         </method>
         <method name="get_texture" qualifiers="const">
             <return type="Texture" />
-            <argument index="0" name="idx" type="int" />
+            <argument index="0" name="index" type="int" />
             <description>
                 Returns the font atlas texture at index [code]idx[/code].
             </description>
@@ -89,7 +89,7 @@ SPDX-License-Identifier: MIT
         <member name="fallback" type="BitmapFont" setter="set_fallback" getter="get_fallback">
             The fallback font.
         </member>
-        <member name="height" type="float" setter="set_height" getter="get_height" default="1.0">
+        <member name="height" type="float" setter="set_height" getter="get_height" default="0.0">
             Total font height (ascent plus descent) in pixels.
         </member>
     </members>
