@@ -10,28 +10,27 @@
 #include "core/vector.h"
 #include "scene/resources/fonts/font.h"
 
-// Helper class to that draws outlines immediately and draws characters in its
-// destructor.
+// Helper that draws outlines immediately and the characters in the destructor.
 class FontDrawer {
 public:
-    FontDrawer(const Ref<Font>& p_font, const Color& p_outline_color);
+    FontDrawer(const Ref<Font>& font, const Color& outline_color);
     ~FontDrawer();
 
     float draw_char(
-        RID p_canvas_item,
-        const Point2& p_pos,
-        CharType p_char,
-        CharType p_next         = 0,
-        const Color& p_modulate = Color(1, 1, 1)
+        RID canvas_item,
+        const Point2& position,
+        CharType character,
+        CharType next_character = 0,
+        const Color& color      = Color(1, 1, 1)
     );
 
 private:
     struct PendingDraw {
         RID canvas_item;
-        Point2 pos;
-        CharType chr;
-        CharType next;
-        Color modulate;
+        Point2 position;
+        CharType character      = 0;
+        CharType next_character = 0;
+        Color color;
     };
 
     Vector<PendingDraw> pending_draws;

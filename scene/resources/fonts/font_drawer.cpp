@@ -4,10 +4,10 @@
 
 #include "font_drawer.h"
 
-FontDrawer::FontDrawer(const Ref<Font>& p_font, const Color& p_outline_color) :
-    font(p_font),
-    outline_color(p_outline_color) {
-    has_outline = p_font->has_outline();
+FontDrawer::FontDrawer(const Ref<Font>& font, const Color& outline_color) :
+    font(font),
+    outline_color(outline_color) {
+    has_outline = font->has_outline();
 }
 
 FontDrawer::~FontDrawer() {
@@ -15,32 +15,33 @@ FontDrawer::~FontDrawer() {
         const PendingDraw& draw = pending_draws[i];
         font->draw_char(
             draw.canvas_item,
-            draw.pos,
-            draw.chr,
-            draw.next,
-            draw.modulate,
+            draw.position,
+            draw.character,
+            draw.next_character,
+            draw.color,
             false
         );
     }
 }
 
 float FontDrawer::draw_char(
-    RID p_canvas_item,
-    const Point2& p_pos,
-    CharType p_char,
-    CharType p_next,
-    const Color& p_modulate
+    const RID canvas_item,
+    const Point2& position,
+    const CharType character,
+    const CharType next_character,
+    const Color& color
 ) {
     if (has_outline) {
-        PendingDraw draw = {p_canvas_item, p_pos, p_char, p_next, p_modulate};
+        const PendingDraw draw =
+            {canvas_item, position, character, next_character, color};
         pending_draws.push_back(draw);
     }
     return font->draw_char(
-        p_canvas_item,
-        p_pos,
-        p_char,
-        p_next,
-        has_outline ? outline_color : p_modulate,
+        canvas_item,
+        position,
+        character,
+        next_character,
+        has_outline ? outline_color : color,
         has_outline
     );
 }
