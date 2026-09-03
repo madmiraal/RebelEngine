@@ -6,9 +6,8 @@
 
 #include "label.h"
 
-#include "core/print_string.h"
 #include "core/project_settings.h"
-#include "core/translation.h"
+#include "scene/resources/fonts/font_drawer.h"
 
 void Label::set_autowrap(bool p_autowrap) {
     if (autowrap == p_autowrap) {
