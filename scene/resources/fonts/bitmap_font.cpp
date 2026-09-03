@@ -165,13 +165,13 @@ Size2 BitmapFont::get_char_size(
 
     Size2i size(character_data->advance, character_data->bounding_box.size.y);
     if (next_character) {
-        KerningPairKey kerning_pair_key;
-        kerning_pair_key.first_character  = character;
-        kerning_pair_key.second_character = next_character;
-        const Map<KerningPairKey, int>::Element* E =
-            kernings.find(kerning_pair_key);
-        if (E) {
-            size.width -= E->get();
+        const auto character_kernings = kernings.find(character);
+        if (character_kernings) {
+            const auto kerning = character_kernings->get().find(next_character);
+            if (kerning) {
+                // TODO: Check whether kerning should be subtracted or added.
+                size.width -= kerning->get();
+            }
         }
     }
     return size;
@@ -332,13 +332,12 @@ int BitmapFont::get_kerning_pair(
     const CharType first_character,
     const CharType second_character
 ) const {
-    KerningPairKey kerning_pair_key;
-    kerning_pair_key.first_character  = first_character;
-    kerning_pair_key.second_character = second_character;
-    const Map<KerningPairKey, int>::Element* E =
-        kernings.find(kerning_pair_key);
-    if (E) {
-        return E->get();
+    const auto character_kernings = kernings.find(first_character);
+    if (character_kernings) {
+        const auto kerning = character_kernings->get().find(second_character);
+        if (kerning) {
+            return kerning->get();
+        }
     }
     return 0;
 }
@@ -348,13 +347,27 @@ void BitmapFont::add_kerning_pair(
     const CharType second_character,
     const int kerning
 ) {
-    KerningPairKey kerning_pair_key;
-    kerning_pair_key.first_character  = first_character;
-    kerning_pair_key.second_character = second_character;
-    if (kerning == 0 && kernings.has(kerning_pair_key)) {
-        kernings.erase(kerning_pair_key);
+    if (kerning == 0) {
+        // Erase existing kerning if it exists.
+        const auto character_kernings_element = kernings.find(first_character);
+        if (character_kernings_element) {
+            auto character_kernings = character_kernings_element->get();
+            if (character_kernings.find(second_character)) {
+                character_kernings.erase(second_character);
+                if (character_kernings.empty()) {
+                    kernings.erase(first_character);
+                }
+            }
+        }
+        return;
+    }
+    const auto character_kernings = kernings.find(first_character);
+    if (character_kernings) {
+        character_kernings->get()[second_character] = kerning;
     } else {
-        kernings[kerning_pair_key] = kerning;
+        Map<CharType, int> new_character_kernings;
+        new_character_kernings[second_character] = kerning;
+        kernings[first_character]                = new_character_kernings;
     }
 }
 
