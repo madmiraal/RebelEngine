@@ -8,6 +8,7 @@
 
 #include "core/os/os.h"
 #include "core/project_settings.h"
+#include "scene/resources/fonts/font_drawer.h"
 
 void ItemList::add_item(
     const String& p_item,

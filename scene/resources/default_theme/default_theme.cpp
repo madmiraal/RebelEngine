@@ -9,6 +9,7 @@
 #include "core/os/os.h"
 #include "font_hidpi.inc"
 #include "font_lodpi.inc"
+#include "scene/resources/fonts/bitmap_font.h"
 #include "scene/resources/theme.h"
 #include "theme_data.h"
 
