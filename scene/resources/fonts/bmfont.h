@@ -22,20 +22,6 @@ public:
         int advance = -1;
     };
 
-    struct KerningPairKey {
-        union {
-            struct {
-                uint32_t first_character, second_character;
-            };
-
-            uint64_t pair;
-        };
-
-        _FORCE_INLINE_ bool operator<(const KerningPairKey& other) const {
-            return pair < other.pair;
-        }
-    };
-
     float get_ascent() const override;
     float get_descent() const override;
     float get_height() const override;
@@ -86,7 +72,7 @@ protected:
 
 private:
     HashMap<CharType, CharacterData> characters;
-    Map<KerningPairKey, int> kernings;
+    Map<CharType, Map<CharType, int>> kernings;
     Vector<Ref<Texture>> textures;
     Ref<BitmapFont> fallback;
 
