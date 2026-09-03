@@ -6,262 +6,133 @@
 
 #include "bitmap_font.h"
 
+#include "core/error_macros.h"
 #include "core/os/file_access.h"
 
-void BitmapFont::_set_chars(const PoolVector<int>& p_chars) {
-    int len = p_chars.size();
-    // char 1 charsize 1 texture, 4 rect, 2 align, advance 1
-    ERR_FAIL_COND(len % 9);
-    if (!len) {
-        return; // none to do
-    }
-    int chars = len / 9;
-
-    PoolVector<int>::Read r = p_chars.read();
-    for (int i = 0; i < chars; i++) {
-        const int* data = &r[i * 9];
-        add_char(
-            data[0],
-            data[1],
-            Rect2(data[2], data[3], data[4], data[5]),
-            Size2(data[6], data[7]),
-            data[8]
-        );
-    }
-}
-
-PoolVector<int> BitmapFont::_get_chars() const {
-    PoolVector<int> chars;
-
-    const CharType* key = nullptr;
-
-    while ((key = char_map.next(key))) {
-        const Character* c = char_map.getptr(*key);
-        ERR_FAIL_COND_V(!c, PoolVector<int>());
-        chars.push_back(*key);
-        chars.push_back(c->texture_idx);
-        chars.push_back(c->rect.position.x);
-        chars.push_back(c->rect.position.y);
-
-        chars.push_back(c->rect.size.x);
-        chars.push_back(c->rect.size.y);
-        chars.push_back(c->h_align);
-        chars.push_back(c->v_align);
-        chars.push_back(c->advance);
-    }
-
-    return chars;
-}
-
-void BitmapFont::_set_kernings(const PoolVector<int>& p_kernings) {
-    int len = p_kernings.size();
-    ERR_FAIL_COND(len % 3);
-    if (!len) {
-        return;
-    }
-    PoolVector<int>::Read r = p_kernings.read();
-
-    for (int i = 0; i < len / 3; i++) {
-        const int* data = &r[i * 3];
-        add_kerning_pair(data[0], data[1], data[2]);
-    }
-}
-
-PoolVector<int> BitmapFont::_get_kernings() const {
-    PoolVector<int> kernings;
-
-    for (Map<KerningPairKey, int>::Element* E = kerning_map.front(); E;
-         E                                    = E->next()) {
-        kernings.push_back(E->key().A);
-        kernings.push_back(E->key().B);
-        kernings.push_back(E->get());
-    }
-
-    return kernings;
-}
-
-void BitmapFont::_set_textures(const Vector<Variant>& p_textures) {
-    textures.clear();
-    for (int i = 0; i < p_textures.size(); i++) {
-        Ref<Texture> tex = p_textures[i];
-        ERR_CONTINUE(!tex.is_valid());
-        add_texture(tex);
-    }
-}
-
-Vector<Variant> BitmapFont::_get_textures() const {
-    Vector<Variant> rtextures;
-    for (int i = 0; i < textures.size(); i++) {
-        rtextures.push_back(textures[i].get_ref_ptr());
-    }
-    return rtextures;
-}
-
-Error BitmapFont::create_from_fnt(const String& p_file) {
-    // fnt format used by angelcode bmfont
-    // http://www.angelcode.com/products/bmfont/
-
-    FileAccess* f = FileAccess::open(p_file, FileAccess::READ);
-
-    ERR_FAIL_COND_V_MSG(
-        !f,
-        ERR_FILE_NOT_FOUND,
-        "Can't open font: " + p_file + "."
-    );
-
-    clear();
-
-    while (true) {
-        String line = f->get_line();
-
-        int delimiter = line.find(" ");
-        String type   = line.substr(0, delimiter);
-        int pos       = delimiter + 1;
-        Map<String, String> keys;
-
-        while (pos < line.size() && line[pos] == ' ') {
-            pos++;
-        }
-
-        while (pos < line.size()) {
-            int eq = line.find("=", pos);
-            if (eq == -1) {
-                break;
-            }
-            String key = line.substr(pos, eq - pos);
-            int end    = -1;
-            String value;
-            if (line[eq + 1] == '"') {
-                end = line.find("\"", eq + 2);
-                if (end == -1) {
-                    break;
-                }
-                value = line.substr(eq + 2, end - 1 - eq - 1);
-                pos   = end + 1;
-            } else {
-                end = line.find(" ", eq + 1);
-                if (end == -1) {
-                    end = line.size();
-                }
-
-                value = line.substr(eq + 1, end - eq);
-
-                pos = end;
-            }
-
-            while (pos < line.size() && line[pos] == ' ') {
-                pos++;
-            }
-
-            keys[key] = value;
-        }
-
-        if (type == "info") {
-            if (keys.has("face")) {
-                set_name(keys["face"]);
-            }
-            /*
-            if (keys.has("size"))
-                font->set_height(keys["size"].to_int());
-            */
-
-        } else if (type == "common") {
-            if (keys.has("lineHeight")) {
-                set_height(keys["lineHeight"].to_int());
-            }
-            if (keys.has("base")) {
-                set_ascent(keys["base"].to_int());
-            }
-
-        } else if (type == "page") {
-            if (keys.has("file")) {
-                String base_dir  = p_file.get_base_dir();
-                String file      = base_dir.plus_file(keys["file"]);
-                Ref<Texture> tex = ResourceLoader::load(file);
-                if (tex.is_null()) {
-                    ERR_PRINT("Can't load font texture!");
-                } else {
-                    add_texture(tex);
-                }
-            }
-        } else if (type == "char") {
-            CharType idx = 0;
-            if (keys.has("id")) {
-                idx = keys["id"].to_int();
-            }
-
-            Rect2 rect;
-
-            if (keys.has("x")) {
-                rect.position.x = keys["x"].to_int();
-            }
-            if (keys.has("y")) {
-                rect.position.y = keys["y"].to_int();
-            }
-            if (keys.has("width")) {
-                rect.size.width = keys["width"].to_int();
-            }
-            if (keys.has("height")) {
-                rect.size.height = keys["height"].to_int();
-            }
-
-            Point2 ofs;
-
-            if (keys.has("xoffset")) {
-                ofs.x = keys["xoffset"].to_int();
-            }
-            if (keys.has("yoffset")) {
-                ofs.y = keys["yoffset"].to_int();
-            }
-
-            int texture = 0;
-            if (keys.has("page")) {
-                texture = keys["page"].to_int();
-            }
-            int advance = -1;
-            if (keys.has("xadvance")) {
-                advance = keys["xadvance"].to_int();
-            }
-
-            add_char(idx, texture, rect, ofs, advance);
-
-        } else if (type == "kerning") {
-            CharType first = 0, second = 0;
-            int k = 0;
-
-            if (keys.has("first")) {
-                first = keys["first"].to_int();
-            }
-            if (keys.has("second")) {
-                second = keys["second"].to_int();
-            }
-            if (keys.has("amount")) {
-                k = keys["amount"].to_int();
-            }
-
-            add_kerning_pair(first, second, -k);
-        }
-
-        if (f->eof_reached()) {
+static Map<String, String> get_key_value_pairs(const String& line) {
+    Map<String, String> keys;
+    int position = 0;
+    while (position < line.size()) {
+        const int equals_position = line.find("=", position);
+        if (equals_position == -1) {
             break;
         }
+        const int key_length = equals_position - position;
+        String key           = line.substr(position, key_length);
+        String value;
+        if (line[equals_position + 1] == '"') {
+            // Value is a text string surrounded by ".
+            const int end_position = line.find("\"", equals_position + 2);
+            if (end_position == -1) {
+                break;
+            }
+            // Don't include the ".
+            const int value_length = end_position - equals_position - 2;
+            value    = line.substr(equals_position + 2, value_length);
+            position = end_position + 1;
+        } else {
+            // Value is a number.
+            int end_position = line.find(" ", equals_position + 1);
+            if (end_position == -1) {
+                // End of the line.
+                end_position = line.size();
+            }
+            const int value_length = end_position - equals_position;
+            value    = line.substr(equals_position + 1, value_length);
+            position = end_position;
+        }
+        keys[key] = value;
+        // Skip white-space.
+        while (position < line.size() && line[position] == ' ') {
+            position++;
+        }
     }
-
-    memdelete(f);
-
-    return OK;
+    return keys;
 }
 
-void BitmapFont::set_height(float p_height) {
-    height = p_height;
+static void extract_info(BitmapFont* font, const Map<String, String>& keys) {
+    if (keys.has("face")) {
+        font->set_name(keys["face"]);
+    }
 }
 
-float BitmapFont::get_height() const {
-    return height;
+static void extract_common(BitmapFont* font, const Map<String, String>& keys) {
+    if (keys.has("lineHeight")) {
+        font->set_height(keys["lineHeight"].to_int());
+    }
+    if (keys.has("base")) {
+        font->set_ascent(keys["base"].to_int());
+    }
 }
 
-void BitmapFont::set_ascent(float p_ascent) {
-    ascent = p_ascent;
+static void extract_page(
+    BitmapFont* font,
+    const Map<String, String>& keys,
+    const String& directory
+) {
+    if (keys.has("file")) {
+        const String file          = directory.plus_file(keys["file"]);
+        const Ref<Texture> texture = ResourceLoader::load(file);
+        ERR_FAIL_COND_MSG(texture.is_null(), "Can't load font texture!");
+        font->add_texture(texture);
+    }
+}
+
+static void extract_char(BitmapFont* font, const Map<String, String>& keys) {
+    // The character id.
+    CharType idx = 0;
+    if (keys.has("id")) {
+        idx = keys["id"].to_int();
+    }
+    // The character bounding box in the texture.
+    Rect2i bounding_box;
+    if (keys.has("x")) {
+        bounding_box.position.x = keys["x"].to_int();
+    }
+    if (keys.has("y")) {
+        bounding_box.position.y = keys["y"].to_int();
+    }
+    if (keys.has("width")) {
+        bounding_box.size.width = keys["width"].to_int();
+    }
+    if (keys.has("height")) {
+        bounding_box.size.height = keys["height"].to_int();
+    }
+    // How much the bounding box should be offset when displaying the image.
+    Point2i offset;
+    if (keys.has("xoffset")) {
+        offset.x = keys["xoffset"].to_int();
+    }
+    if (keys.has("yoffset")) {
+        offset.y = keys["yoffset"].to_int();
+    }
+    // The texture page that contains the character image.
+    int texture = 0;
+    if (keys.has("page")) {
+        texture = keys["page"].to_int();
+    }
+    // How much the current position should be advanced after drawing the image.
+    int advance = -1;
+    if (keys.has("xadvance")) {
+        advance = keys["xadvance"].to_int();
+    }
+    font->add_char(idx, texture, bounding_box, offset, advance);
+}
+
+static void extract_kerning(BitmapFont* font, const Map<String, String>& keys) {
+    CharType first_character  = 0;
+    CharType second_character = 0;
+    int kerning               = 0;
+    if (keys.has("first")) {
+        first_character = keys["first"].to_int();
+    }
+    if (keys.has("second")) {
+        second_character = keys["second"].to_int();
+    }
+    if (keys.has("amount")) {
+        kerning = keys["amount"].to_int();
+    }
+    font->add_kerning_pair(first_character, second_character, -kerning);
 }
 
 float BitmapFont::get_ascent() const {
@@ -272,213 +143,233 @@ float BitmapFont::get_descent() const {
     return height - ascent;
 }
 
-void BitmapFont::add_texture(const Ref<Texture>& p_texture) {
-    ERR_FAIL_COND_MSG(
-        p_texture.is_null(),
-        "It's not a reference to a valid Texture object."
-    );
-    textures.push_back(p_texture);
-}
-
-int BitmapFont::get_texture_count() const {
-    return textures.size();
-};
-
-Ref<Texture> BitmapFont::get_texture(int p_idx) const {
-    ERR_FAIL_INDEX_V(p_idx, textures.size(), Ref<Texture>());
-    return textures[p_idx];
-};
-
-int BitmapFont::get_character_count() const {
-    return char_map.size();
-};
-
-Vector<CharType> BitmapFont::get_char_keys() const {
-    Vector<CharType> chars;
-    chars.resize(char_map.size());
-    const CharType* ct = nullptr;
-    int count          = 0;
-    while ((ct = char_map.next(ct))) {
-        chars.write[count++] = *ct;
-    };
-
-    return chars;
-};
-
-BitmapFont::Character BitmapFont::get_character(CharType p_char) const {
-    if (!char_map.has(p_char)) {
-        ERR_FAIL_V(Character());
-    };
-
-    return char_map[p_char];
-};
-
-void BitmapFont::add_char(
-    CharType p_char,
-    int p_texture_idx,
-    const Rect2& p_rect,
-    const Size2& p_align,
-    float p_advance
-) {
-    if (p_advance < 0) {
-        p_advance = p_rect.size.width;
-    }
-
-    Character c;
-    c.rect        = p_rect;
-    c.texture_idx = p_texture_idx;
-    c.v_align     = p_align.y;
-    c.advance     = p_advance;
-    c.h_align     = p_align.x;
-
-    char_map[p_char] = c;
-}
-
-void BitmapFont::add_kerning_pair(CharType p_A, CharType p_B, int p_kerning) {
-    KerningPairKey kpk;
-    kpk.A = p_A;
-    kpk.B = p_B;
-
-    if (p_kerning == 0 && kerning_map.has(kpk)) {
-        kerning_map.erase(kpk);
-    } else {
-        kerning_map[kpk] = p_kerning;
-    }
-}
-
-Vector<BitmapFont::KerningPairKey> BitmapFont::get_kerning_pair_keys() const {
-    Vector<BitmapFont::KerningPairKey> ret;
-    ret.resize(kerning_map.size());
-    int i = 0;
-
-    for (Map<KerningPairKey, int>::Element* E = kerning_map.front(); E;
-         E                                    = E->next()) {
-        ret.write[i++] = E->key();
-    }
-
-    return ret;
-}
-
-int BitmapFont::get_kerning_pair(CharType p_A, CharType p_B) const {
-    KerningPairKey kpk;
-    kpk.A = p_A;
-    kpk.B = p_B;
-
-    const Map<KerningPairKey, int>::Element* E = kerning_map.find(kpk);
-    if (E) {
-        return E->get();
-    }
-
-    return 0;
-}
-
-void BitmapFont::set_distance_field_hint(bool p_distance_field) {
-    distance_field_hint = p_distance_field;
-    emit_changed();
+float BitmapFont::get_height() const {
+    return height;
 }
 
 bool BitmapFont::is_distance_field_hint() const {
     return distance_field_hint;
 }
 
-void BitmapFont::clear() {
-    height = 1;
-    ascent = 0;
-    char_map.clear();
-    textures.clear();
-    kerning_map.clear();
-    distance_field_hint = false;
-}
-
-void BitmapFont::set_fallback(const Ref<BitmapFont>& p_fallback) {
-    for (Ref<BitmapFont> fallback_child = p_fallback; fallback_child != nullptr;
-         fallback_child                 = fallback_child->get_fallback()) {
-        ERR_FAIL_COND_MSG(
-            fallback_child == this,
-            "Can't set as fallback one of its parents to prevent crashes due "
-            "to recursive loop."
-        );
+Size2 BitmapFont::get_char_size(
+    const CharType character,
+    const CharType next_character
+) const {
+    const CharacterData* character_data = characters.getptr(character);
+    if (!character_data) {
+        if (fallback.is_valid()) {
+            return fallback->get_char_size(character, next_character);
+        }
+        return {};
     }
 
-    fallback = p_fallback;
-}
-
-Ref<BitmapFont> BitmapFont::get_fallback() const {
-    return fallback;
+    Size2i size(character_data->advance, character_data->bounding_box.size.y);
+    if (next_character) {
+        KerningPairKey kerning_pair_key;
+        kerning_pair_key.first_character  = character;
+        kerning_pair_key.second_character = next_character;
+        const Map<KerningPairKey, int>::Element* E =
+            kernings.find(kerning_pair_key);
+        if (E) {
+            size.width -= E->get();
+        }
+    }
+    return size;
 }
 
 float BitmapFont::draw_char(
-    RID p_canvas_item,
-    const Point2& p_pos,
-    CharType p_char,
-    CharType p_next,
-    const Color& p_modulate,
-    bool p_outline
+    const RID canvas_item,
+    const Point2& position,
+    const CharType character,
+    const CharType next_character,
+    const Color& color,
+    const bool draw_outline
 ) const {
-    const Character* c = char_map.getptr(p_char);
-
-    if (!c) {
+    const CharacterData* character_data = characters.getptr(character);
+    if (!character_data) {
         if (fallback.is_valid()) {
             return fallback->draw_char(
-                p_canvas_item,
-                p_pos,
-                p_char,
-                p_next,
-                p_modulate,
-                p_outline
+                canvas_item,
+                position,
+                character,
+                next_character,
+                color,
+                draw_outline
             );
         }
         return 0;
     }
 
     ERR_FAIL_COND_V(
-        c->texture_idx < -1 || c->texture_idx >= textures.size(),
+        character_data->texture_index < -1
+            || character_data->texture_index >= textures.size(),
         0
     );
-    if (!p_outline && c->texture_idx != -1) {
-        Point2 cpos  = p_pos;
-        cpos.x      += c->h_align;
-        cpos.y      -= ascent;
-        cpos.y      += c->v_align;
+    if (!draw_outline && character_data->texture_index != -1) {
+        const int x_offset = character_data->offset.x;
+        const int y_offset = -ascent + character_data->offset.y;
+        const Point2i character_position =
+            position + Point2i(x_offset, y_offset);
         VisualServer::get_singleton()->canvas_item_add_texture_rect_region(
-            p_canvas_item,
-            Rect2(cpos, c->rect.size),
-            textures[c->texture_idx]->get_rid(),
-            c->rect,
-            p_modulate,
+            canvas_item,
+            Rect2(character_position, character_data->bounding_box.size),
+            textures[character_data->texture_index]->get_rid(),
+            character_data->bounding_box,
+            color,
             false,
             RID(),
             false
         );
     }
 
-    return get_char_size(p_char, p_next).width;
+    return get_char_size(character, next_character).width;
 }
 
-Size2 BitmapFont::get_char_size(CharType p_char, CharType p_next) const {
-    const Character* c = char_map.getptr(p_char);
+Error BitmapFont::create_from_fnt(const String& font_filename) {
+    // fnt format used by AngelCode BMFont.
+    // http://www.angelcode.com/products/bmfont/
 
-    if (!c) {
-        if (fallback.is_valid()) {
-            return fallback->get_char_size(p_char, p_next);
+    const String directory  = font_filename.get_base_dir();
+    FileAccess* file_access = FileAccess::open(font_filename, FileAccess::READ);
+    ERR_FAIL_COND_V_MSG(
+        !file_access,
+        ERR_FILE_NOT_FOUND,
+        "Can't open font: " + font_filename + "."
+    );
+    clear();
+
+    while (true) {
+        // First word is the tag name.
+        String line          = file_access->get_line();
+        const int tag_length = line.find(" ");
+        String tag           = line.substr(0, tag_length);
+        int position         = tag_length + 1;
+        // Skip white-space.
+        while (position < line.size() && line[position] == ' ') {
+            position++;
         }
-        return Size2();
-    }
 
-    Size2 ret(c->advance, c->rect.size.y);
+        // Get all key=value pairs for the tag.
+        Map<String, String> keys = get_key_value_pairs(line.substr(position));
 
-    if (p_next) {
-        KerningPairKey kpk;
-        kpk.A = p_char;
-        kpk.B = p_next;
-
-        const Map<KerningPairKey, int>::Element* E = kerning_map.find(kpk);
-        if (E) {
-            ret.width -= E->get();
+        // Extract tag information.
+        if (tag == "info") {
+            // Information on how the font was generated.
+            extract_info(this, keys);
+        } else if (tag == "common") {
+            // Information common to all characters.
+            extract_common(this, keys);
+        } else if (tag == "page") {
+            // Texture file information. One for each page in the font.
+            extract_page(this, keys, directory);
+        } else if (tag == "char") {
+            // Character information. One for each character in the font.
+            extract_char(this, keys);
+        } else if (tag == "kerning") {
+            // Kerning information. Adjusts the distance between two characters.
+            extract_kerning(this, keys);
+        }
+        if (file_access->eof_reached()) {
+            break;
         }
     }
+    memdelete(file_access);
+    return OK;
+}
 
-    return ret;
+void BitmapFont::clear() {
+    ascent              = 0;
+    height              = 0;
+    distance_field_hint = false;
+    characters.clear();
+    kernings.clear();
+    textures.clear();
+}
+
+void BitmapFont::set_ascent(const float new_ascent) {
+    ascent = static_cast<int>(new_ascent);
+}
+
+void BitmapFont::set_height(const float new_height) {
+    height = static_cast<int>(new_height);
+}
+
+void BitmapFont::set_distance_field_hint(const bool new_distance_field_hint) {
+    distance_field_hint = new_distance_field_hint;
+    emit_changed();
+}
+
+Ref<BitmapFont> BitmapFont::get_fallback() const {
+    return fallback;
+}
+
+void BitmapFont::set_fallback(const Ref<BitmapFont>& new_fallback) {
+    for (Ref<BitmapFont> fallback_child = new_fallback;
+         fallback_child != nullptr;
+         fallback_child = fallback_child->get_fallback()) {
+        ERR_FAIL_COND_MSG(
+            fallback_child == this,
+            "Can't add fallback, because it would create a fallback loop."
+        );
+    }
+    fallback = new_fallback;
+}
+
+void BitmapFont::add_char(
+    const CharType new_character,
+    const int texture_index,
+    const Rect2& bounding_box,
+    const Point2& offset,
+    int advance
+) {
+    if (advance < 0) {
+        advance = static_cast<int>(bounding_box.size.width);
+    }
+    characters[new_character] = {texture_index, bounding_box, offset, advance};
+}
+
+int BitmapFont::get_kerning_pair(
+    const CharType first_character,
+    const CharType second_character
+) const {
+    KerningPairKey kerning_pair_key;
+    kerning_pair_key.first_character  = first_character;
+    kerning_pair_key.second_character = second_character;
+    const Map<KerningPairKey, int>::Element* E =
+        kernings.find(kerning_pair_key);
+    if (E) {
+        return E->get();
+    }
+    return 0;
+}
+
+void BitmapFont::add_kerning_pair(
+    const CharType first_character,
+    const CharType second_character,
+    const int kerning
+) {
+    KerningPairKey kerning_pair_key;
+    kerning_pair_key.first_character  = first_character;
+    kerning_pair_key.second_character = second_character;
+    if (kerning == 0 && kernings.has(kerning_pair_key)) {
+        kernings.erase(kerning_pair_key);
+    } else {
+        kernings[kerning_pair_key] = kerning;
+    }
+}
+
+int BitmapFont::get_texture_count() const {
+    return textures.size();
+}
+
+Ref<Texture> BitmapFont::get_texture(const int index) const {
+    ERR_FAIL_INDEX_V(index, textures.size(), Ref<Texture>());
+    return textures[index];
+}
+
+void BitmapFont::add_texture(const Ref<Texture>& new_texture) {
+    ERR_FAIL_COND_MSG(new_texture.is_null(), "Invalid Texture object.");
+    textures.push_back(new_texture);
 }
 
 void BitmapFont::_bind_methods() {
@@ -486,30 +377,31 @@ void BitmapFont::_bind_methods() {
         D_METHOD("create_from_fnt", "path"),
         &BitmapFont::create_from_fnt
     );
-    ClassDB::bind_method(D_METHOD("set_height", "px"), &BitmapFont::set_height);
-
-    ClassDB::bind_method(D_METHOD("set_ascent", "px"), &BitmapFont::set_ascent);
-
+    ClassDB::bind_method(D_METHOD("clear"), &BitmapFont::clear);
     ClassDB::bind_method(
-        D_METHOD("add_kerning_pair", "char_a", "char_b", "kerning"),
-        &BitmapFont::add_kerning_pair
+        D_METHOD("set_ascent", "pixels"),
+        &BitmapFont::set_ascent
     );
     ClassDB::bind_method(
-        D_METHOD("get_kerning_pair", "char_a", "char_b"),
-        &BitmapFont::get_kerning_pair
+        D_METHOD("set_height", "pixels"),
+        &BitmapFont::set_height
     );
-
     ClassDB::bind_method(
-        D_METHOD("add_texture", "texture"),
-        &BitmapFont::add_texture
+        D_METHOD("set_distance_field_hint", "enable"),
+        &BitmapFont::set_distance_field_hint
+    );
+    ClassDB::bind_method(D_METHOD("get_fallback"), &BitmapFont::get_fallback);
+    ClassDB::bind_method(
+        D_METHOD("set_fallback", "fallback"),
+        &BitmapFont::set_fallback
     );
     ClassDB::bind_method(
         D_METHOD(
             "add_char",
             "character",
-            "texture",
-            "rect",
-            "align",
+            "texture_index",
+            "bounding_box",
+            "offset",
             "advance"
         ),
         &BitmapFont::add_char,
@@ -518,75 +410,32 @@ void BitmapFont::_bind_methods() {
     );
 
     ClassDB::bind_method(
+        D_METHOD("get_kerning_pair", "first_character", "second_character"),
+        &BitmapFont::get_kerning_pair
+    );
+    ClassDB::bind_method(
+        D_METHOD(
+            "add_kerning_pair",
+            "first_character",
+            "second_character",
+            "kerning"
+        ),
+        &BitmapFont::add_kerning_pair
+    );
+
+    ClassDB::bind_method(
         D_METHOD("get_texture_count"),
         &BitmapFont::get_texture_count
     );
     ClassDB::bind_method(
-        D_METHOD("get_texture", "idx"),
+        D_METHOD("get_texture", "index"),
         &BitmapFont::get_texture
     );
-
     ClassDB::bind_method(
-        D_METHOD("set_distance_field_hint", "enable"),
-        &BitmapFont::set_distance_field_hint
+        D_METHOD("add_texture", "texture"),
+        &BitmapFont::add_texture
     );
 
-    ClassDB::bind_method(D_METHOD("clear"), &BitmapFont::clear);
-
-    ClassDB::bind_method(D_METHOD("_set_chars"), &BitmapFont::_set_chars);
-    ClassDB::bind_method(D_METHOD("_get_chars"), &BitmapFont::_get_chars);
-
-    ClassDB::bind_method(D_METHOD("_set_kernings"), &BitmapFont::_set_kernings);
-    ClassDB::bind_method(D_METHOD("_get_kernings"), &BitmapFont::_get_kernings);
-
-    ClassDB::bind_method(D_METHOD("_set_textures"), &BitmapFont::_set_textures);
-    ClassDB::bind_method(D_METHOD("_get_textures"), &BitmapFont::_get_textures);
-
-    ClassDB::bind_method(
-        D_METHOD("set_fallback", "fallback"),
-        &BitmapFont::set_fallback
-    );
-    ClassDB::bind_method(D_METHOD("get_fallback"), &BitmapFont::get_fallback);
-
-    ADD_PROPERTY(
-        PropertyInfo(
-            Variant::ARRAY,
-            "textures",
-            PROPERTY_HINT_NONE,
-            "",
-            PROPERTY_USAGE_NOEDITOR | PROPERTY_USAGE_INTERNAL
-        ),
-        "_set_textures",
-        "_get_textures"
-    );
-    ADD_PROPERTY(
-        PropertyInfo(
-            Variant::POOL_INT_ARRAY,
-            "chars",
-            PROPERTY_HINT_NONE,
-            "",
-            PROPERTY_USAGE_NOEDITOR | PROPERTY_USAGE_INTERNAL
-        ),
-        "_set_chars",
-        "_get_chars"
-    );
-    ADD_PROPERTY(
-        PropertyInfo(
-            Variant::POOL_INT_ARRAY,
-            "kernings",
-            PROPERTY_HINT_NONE,
-            "",
-            PROPERTY_USAGE_NOEDITOR | PROPERTY_USAGE_INTERNAL
-        ),
-        "_set_kernings",
-        "_get_kernings"
-    );
-
-    ADD_PROPERTY(
-        PropertyInfo(Variant::REAL, "height", PROPERTY_HINT_RANGE, "1,1024,1"),
-        "set_height",
-        "get_height"
-    );
     ADD_PROPERTY(
         PropertyInfo(Variant::REAL, "ascent", PROPERTY_HINT_RANGE, "0,1024,1"),
         "set_ascent",
@@ -607,12 +456,9 @@ void BitmapFont::_bind_methods() {
         "set_fallback",
         "get_fallback"
     );
-}
-
-BitmapFont::BitmapFont() {
-    clear();
-}
-
-BitmapFont::~BitmapFont() {
-    clear();
+    ADD_PROPERTY(
+        PropertyInfo(Variant::REAL, "height", PROPERTY_HINT_RANGE, "1,1024,1"),
+        "set_height",
+        "get_height"
+    );
 }
