@@ -9,6 +9,7 @@
 #include "core/math/math_defs.h"
 #include "core/os/keyboard.h"
 #include "core/os/os.h"
+#include "scene/resources/fonts/font_drawer.h"
 #include "scene/scene_string_names.h"
 
 #ifdef TOOLS_ENABLED
