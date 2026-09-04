@@ -26,6 +26,7 @@ public:
     float get_descent() const override;
     float get_height() const override;
     bool is_distance_field_hint() const override;
+    bool has_outline() const override;
     Size2 get_char_size(CharType character, CharType next_character = 0)
         const override;
     float draw_char(

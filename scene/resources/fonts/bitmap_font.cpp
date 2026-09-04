@@ -151,6 +151,10 @@ bool BitmapFont::is_distance_field_hint() const {
     return distance_field_hint;
 }
 
+bool BitmapFont::has_outline() const {
+    return false;
+}
+
 Size2 BitmapFont::get_char_size(
     const CharType character,
     const CharType next_character
