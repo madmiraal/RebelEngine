@@ -19,14 +19,9 @@ public:
     virtual float get_descent() const           = 0;
     virtual float get_height() const            = 0;
     virtual bool is_distance_field_hint() const = 0;
-
-    virtual bool has_outline() const {
-        return false;
-    }
-
+    virtual bool has_outline() const            = 0;
     virtual Size2 get_char_size(CharType character, CharType next_character = 0)
         const = 0;
-
     virtual float draw_char(
         RID canvas_item,
         const Point2& position,
