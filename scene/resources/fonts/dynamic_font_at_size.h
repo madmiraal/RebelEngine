@@ -12,128 +12,132 @@
 #include "core/pair.h"
 #include "core/reference.h"
 #include "scene/resources/fonts/dynamic_font_data.h"
+#include "scene/resources/texture.h"
 
 #include <ft2build.h>
 #include FT_FREETYPE_H
+#include FT_GLYPH_H
 
 class ImageTexture;
 
 class DynamicFontAtSize : public Reference {
     GDCLASS(DynamicFontAtSize, Reference);
-
     _THREAD_SAFE_CLASS_
-
-    FT_Library library; /* handle to library     */
-    FT_Face face;       /* handle to face object */
-    FT_StreamRec stream;
-
-    float ascent;
-    float descent;
-    float linegap;
-    float rect_margin;
-    float oversampling;
-    float scale_color_font;
-
-    uint32_t texture_flags;
-
-    bool valid;
-
-    struct CharTexture {
-        PoolVector<uint8_t> imgdata;
-        int texture_size;
-        Vector<int> offsets;
-        Ref<ImageTexture> texture;
-    };
-
-    Vector<CharTexture> textures;
-
-    struct Character {
-        bool found;
-        int texture_idx;
-        Rect2 rect;
-        Rect2 rect_uv;
-        float v_align;
-        float h_align;
-        float advance;
-
-        Character() {
-            texture_idx = 0;
-            v_align     = 0;
-        }
-
-        static Character not_found();
-    };
-
-    struct TexturePosition {
-        int index;
-        int x;
-        int y;
-    };
-
-    const Pair<const Character*, DynamicFontAtSize*> _find_char_with_font(
-        CharType p_char,
-        const Vector<Ref<DynamicFontAtSize>>& p_fallbacks
-    ) const;
-    Character _make_outline_char(CharType p_char);
-    float _get_kerning_advance(
-        const DynamicFontAtSize* font,
-        CharType p_char,
-        CharType p_next
-    ) const;
-    TexturePosition _find_texture_pos_for_glyph(
-        int p_color_size,
-        Image::Format p_image_format,
-        int p_width,
-        int p_height
-    );
-    Character _bitmap_to_character(
-        FT_Bitmap bitmap,
-        int yofs,
-        int xofs,
-        float advance
-    );
-
-    HashMap<CharType, Character> char_map;
-
-    _FORCE_INLINE_ void _update_char(CharType p_char);
-
-    friend class DynamicFontData;
-    Ref<DynamicFontData> font;
-    DynamicFontData::CacheID id;
-
-    Error _load();
 
 public:
     static float font_oversampling;
 
-    float get_height() const;
+    ~DynamicFontAtSize() override;
 
     float get_ascent() const;
     float get_descent() const;
-
+    float get_height() const;
     Size2 get_char_size(
-        CharType p_char,
-        CharType p_next,
-        const Vector<Ref<DynamicFontAtSize>>& p_fallbacks
+        CharType character,
+        CharType next_character,
+        const Vector<Ref<DynamicFontAtSize>>& fallbacks
     ) const;
-    String get_available_chars() const;
-
     float draw_char(
-        RID p_canvas_item,
-        const Point2& p_pos,
-        CharType p_char,
-        CharType p_next,
-        const Color& p_modulate,
-        const Vector<Ref<DynamicFontAtSize>>& p_fallbacks,
-        bool p_advance_only = false,
-        bool p_outline      = false
+        RID canvas_item,
+        const Point2& position,
+        CharType character,
+        CharType next_character,
+        const Color& color,
+        const Vector<Ref<DynamicFontAtSize>>& fallbacks,
+        bool advance_only = false,
+        bool has_outline  = false
     ) const;
 
-    void set_texture_flags(uint32_t p_flags);
+    String get_available_chars() const;
+    void set_texture_flags(uint32_t new_texture_flags);
     void update_oversampling();
 
-    DynamicFontAtSize();
-    ~DynamicFontAtSize() override;
+private:
+    friend class DynamicFontData;
+
+    struct CharacterData {
+        Rect2 rect;
+        Rect2 uv_rect;
+        int texture_index       = -1;
+        float horizontal_offset = 0;
+        float vertical_offset   = 0;
+        float advance           = 0;
+        bool found              = false;
+    };
+
+    struct CharacterTexture {
+        Ref<ImageTexture> texture;
+        PoolVector<unsigned char> image_data;
+        Vector<int> offsets;
+        int texture_size = 0;
+    };
+
+    struct TextureLocation {
+        int texture_index = -1;
+        int x_offset      = 0;
+        int y_offset      = 0;
+    };
+
+    FT_Face ft_face        = nullptr;
+    FT_Library ft_library  = nullptr;
+    FT_StreamRec ft_stream = {};
+
+    Ref<DynamicFontData> font_data;
+    DynamicFontData::CacheID id;
+    mutable Vector<CharacterTexture> textures_cache;
+    mutable HashMap<CharType, CharacterData> character_data_cache;
+
+    uint32_t texture_flags = 0;
+
+    float ascent             = 1;
+    float descent            = 1;
+    float line_gap           = 1;
+    float oversampling       = font_oversampling;
+    float color_font_scaling = 1;
+
+    bool valid = false;
+
+    Error load();
+    Pair<const CharacterData*, const DynamicFontAtSize*>
+    get_character_data_and_font(
+        CharType character,
+        const Vector<Ref<DynamicFontAtSize>>& fallbacks
+    ) const;
+    const CharacterData* get_character_data(CharType character) const;
+    CharacterData create_character_data(CharType character) const;
+    CharacterData create_bitmap_character(const FT_GlyphSlot& ft_glyph_slot
+    ) const;
+    CharacterData create_bitmap_character(const FT_Glyph& ft_glyph) const;
+    CharacterData create_bitmap_character(
+        const FT_Bitmap& bitmap,
+        FT_Int top,
+        FT_Int left,
+        float ft_glyph_advance
+    ) const;
+    CharacterData create_outline_character(CharType character) const;
+    TextureLocation find_cached_texture_location(
+        const Image::Format& image_format,
+        int width,
+        int height
+    ) const;
+    TextureLocation get_texture_location(
+        const Image::Format& image_format,
+        int width,
+        int height
+    ) const;
+    TextureLocation create_new_cached_texture_location(
+        const Image::Format& image_format,
+        int width,
+        int height
+    ) const;
+
+    static void draw_texture(
+        RID canvas_item,
+        const Point2& position,
+        const CharacterData* character_data,
+        const DynamicFontAtSize* font_at_size,
+        const Color& color
+    );
 };
 
 #endif // DYNAMIC_FONT_AT_SIZE_H

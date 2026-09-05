@@ -55,10 +55,10 @@ Ref<DynamicFontAtSize> DynamicFontData::get_font_at_size(const CacheID cache_id
     }
     Ref<DynamicFontAtSize> font_at_size;
     font_at_size.instance();
-    font_at_size->font            = Ref<DynamicFontData>(this);
+    font_at_size->font_data       = Ref<DynamicFontData>(this);
     font_at_sizes_cache[cache_id] = font_at_size.ptr();
     font_at_size->id              = cache_id;
-    font_at_size->_load();
+    font_at_size->load();
     return font_at_size;
 }
 
