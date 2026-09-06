@@ -20,7 +20,7 @@ Error DynamicFontAtSize::_load() {
         "Error initializing FreeType."
     );
 
-    if (font->font_mem == nullptr && font->font_path != String()) {
+    if (font->font_bytes == nullptr && font->font_path != String()) {
         FileAccess* f = FileAccess::open(font->font_path, FileAccess::READ);
         if (!f) {
             FT_Done_FreeType(library);
@@ -31,24 +31,24 @@ Error DynamicFontAtSize::_load() {
         }
 
         uint64_t len    = f->get_len();
-        font->_fontdata = Vector<uint8_t>();
-        font->_fontdata.resize(len);
-        f->get_buffer(font->_fontdata.ptrw(), len);
-        font->set_font_ptr(font->_fontdata.ptr(), len);
+        font->font_data = Vector<uint8_t>();
+        font->font_data.resize(len);
+        f->get_buffer(font->font_data.ptrw(), len);
+        font->set_font_bytes(font->font_data.ptr(), len);
         f->close();
         memdelete(f);
     }
 
-    if (font->font_mem) {
+    if (font->font_bytes) {
         memset(&stream, 0, sizeof(FT_StreamRec));
-        stream.base = (unsigned char*)font->font_mem;
-        stream.size = font->font_mem_size;
+        stream.base = (unsigned char*)font->font_bytes;
+        stream.size = font->font_bytes_length;
         stream.pos  = 0;
 
         FT_Open_Args fargs;
         memset(&fargs, 0, sizeof(FT_Open_Args));
-        fargs.memory_base = (unsigned char*)font->font_mem;
-        fargs.memory_size = font->font_mem_size;
+        fargs.memory_base = (unsigned char*)font->font_bytes;
+        fargs.memory_size = font->font_bytes_length;
         fargs.flags       = FT_OPEN_MEMORY;
         fargs.stream      = &stream;
         error             = FT_Open_Face(library, &fargs, 0, &face);
@@ -572,7 +572,7 @@ DynamicFontAtSize::Character DynamicFontAtSize::_make_outline_char(
             face,
             p_char,
             FT_LOAD_NO_BITMAP
-                | (font->force_autohinter ? FT_LOAD_FORCE_AUTOHINT : 0)
+                | (font->force_auto_hinter ? FT_LOAD_FORCE_AUTOHINT : 0)
         )
         != 0) {
         return ret;
@@ -660,7 +660,7 @@ void DynamicFontAtSize::_update_char(CharType p_char) {
         FT_HAS_COLOR(face)
             ? FT_LOAD_COLOR
             : FT_LOAD_DEFAULT
-                  | (font->force_autohinter ? FT_LOAD_FORCE_AUTOHINT : 0)
+                  | (font->force_auto_hinter ? FT_LOAD_FORCE_AUTOHINT : 0)
                   | ft_hinting
     );
     if (error) {
@@ -716,6 +716,6 @@ DynamicFontAtSize::~DynamicFontAtSize() {
     if (valid) {
         FT_Done_FreeType(library);
     }
-    font->size_cache.erase(id);
+    font->font_at_sizes_cache.erase(id);
     font.unref();
 }
