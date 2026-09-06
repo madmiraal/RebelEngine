@@ -40,38 +40,37 @@ public:
     };
 
     bool is_antialiased() const;
-    void set_antialiased(bool p_antialiased);
+    void set_antialiased(bool new_antialiased);
+
+    String get_font_path() const;
+    void set_font_path(const String& new_font_path);
+    void set_font_bytes(
+        const unsigned char* new_font_bytes,
+        int new_font_bytes_length
+    );
+
     Hinting get_hinting() const;
-    void set_hinting(Hinting p_hinting);
+    void set_hinting(Hinting new_hinting);
+    void set_force_auto_hinter(bool new_force_auto_hinting);
 
-private:
-    const uint8_t* font_mem;
-    int font_mem_size;
-    bool antialiased;
-    bool force_autohinter;
-    Hinting hinting;
-    Vector<uint8_t> _fontdata;
-
-    String font_path;
-    Map<CacheID, DynamicFontAtSize*> size_cache;
-
-    friend class DynamicFontAtSize;
-
-    friend class DynamicFont;
-
-    Ref<DynamicFontAtSize> _get_dynamic_font_at_size(CacheID p_cache_id);
+    Ref<DynamicFontAtSize> get_font_at_size(CacheID cache_id);
 
 protected:
     static void _bind_methods();
 
-public:
-    void set_font_ptr(const uint8_t* p_font_mem, int p_font_mem_size);
-    void set_font_path(const String& p_path);
-    String get_font_path() const;
-    void set_force_autohinter(bool p_force);
+private:
+    friend class DynamicFont;
+    friend class DynamicFontAtSize;
 
-    DynamicFontData();
-    ~DynamicFontData() override;
+    String font_path;
+    Vector<unsigned char> font_data;
+    Hinting hinting = HINTING_NORMAL;
+    Map<CacheID, DynamicFontAtSize*> font_at_sizes_cache;
+
+    const unsigned char* font_bytes = nullptr;
+    int font_bytes_length           = 0;
+    bool antialiased                = true;
+    bool force_auto_hinter          = false;
 };
 
 VARIANT_ENUM_CAST(DynamicFontData::Hinting);

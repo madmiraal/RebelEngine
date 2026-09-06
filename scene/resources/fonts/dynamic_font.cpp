@@ -267,7 +267,7 @@ void DynamicFont::set_fallback(
     ERR_FAIL_INDEX(index, fallback_fonts_data.size());
     fallback_fonts_data.write[index] = new_fallback_font_data;
     fallback_fonts_at_size.write[index] =
-        fallback_fonts_data.write[index]->_get_dynamic_font_at_size(cache_id);
+        fallback_fonts_data.write[index]->get_font_at_size(cache_id);
 }
 
 void DynamicFont::add_fallback(
@@ -277,11 +277,11 @@ void DynamicFont::add_fallback(
     fallback_fonts_data.push_back(new_fallback_font_data);
     fallback_fonts_at_size.push_back(fallback_fonts_data
                                          .write[fallback_fonts_data.size() - 1]
-                                         ->_get_dynamic_font_at_size(cache_id));
+                                         ->get_font_at_size(cache_id));
     if (outline_cache_id.outline_size > 0) {
         fallback_outline_fonts_at_size.push_back(
             fallback_fonts_data.write[fallback_fonts_data.size() - 1]
-                ->_get_dynamic_font_at_size(outline_cache_id)
+                ->get_font_at_size(outline_cache_id)
         );
     }
     emit_changed();
@@ -562,10 +562,9 @@ void DynamicFont::reload_cache(const char* triggering_property) {
         return;
     }
 
-    font_at_size = font_data->_get_dynamic_font_at_size(cache_id);
+    font_at_size = font_data->get_font_at_size(cache_id);
     if (outline_cache_id.outline_size > 0) {
-        outline_font_at_size =
-            font_data->_get_dynamic_font_at_size(outline_cache_id);
+        outline_font_at_size = font_data->get_font_at_size(outline_cache_id);
         fallback_outline_fonts_at_size.resize(fallback_fonts_at_size.size());
     } else {
         outline_font_at_size.unref();
@@ -574,11 +573,10 @@ void DynamicFont::reload_cache(const char* triggering_property) {
 
     for (int i = 0; i < fallback_fonts_data.size(); i++) {
         fallback_fonts_at_size.write[i] =
-            fallback_fonts_data.write[i]->_get_dynamic_font_at_size(cache_id);
+            fallback_fonts_data.write[i]->get_font_at_size(cache_id);
         if (outline_cache_id.outline_size > 0) {
             fallback_outline_fonts_at_size.write[i] =
-                fallback_fonts_data.write[i]->_get_dynamic_font_at_size(
-                    outline_cache_id
+                fallback_fonts_data.write[i]->get_font_at_size(outline_cache_id
                 );
         }
     }

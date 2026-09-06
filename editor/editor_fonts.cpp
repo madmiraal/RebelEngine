@@ -20,7 +20,7 @@ static void configure_dynamic_font_data(
 ) {
     font_data->set_antialiased(antialiased);
     font_data->set_hinting(hinting);
-    font_data->set_force_autohinter(true);
+    font_data->set_force_auto_hinter(true);
 }
 
 static Ref<DynamicFontData> create_dynamic_font_data_from_file(
@@ -40,7 +40,7 @@ static Ref<DynamicFontData> create_dynamic_font_data_from_source(
 ) {
     Ref<DynamicFontData> font_data;
     font_data.instance();
-    font_data->set_font_ptr(font_bytes, font_bytes_length);
+    font_data->set_font_bytes(font_bytes, font_bytes_length);
     return font_data;
 }
 
@@ -221,7 +221,7 @@ void register_editor_fonts(Ref<Theme> theme) {
             hinting
         );
         // Don't force auto hinting for source code font.
-        custom_code_font_data->set_force_autohinter(false);
+        custom_code_font_data->set_force_auto_hinter(false);
     }
 
     // Get built-in font data.
