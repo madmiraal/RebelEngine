@@ -10,7 +10,8 @@
 #include "modules/modules_enabled.gen.h" // For freetype.
 #ifdef MODULE_FREETYPE_ENABLED
 
-#include "dynamic_font_data.h"
+#include "scene/resources/fonts/dynamic_font_data.h"
+#include "scene/resources/fonts/dynamic_font_settings.h"
 #include "scene/resources/fonts/font.h"
 
 class DynamicFontAtSize;
@@ -94,9 +95,8 @@ private:
     Vector<Ref<DynamicFontAtSize>> fallback_fonts_at_size;
     Vector<Ref<DynamicFontAtSize>> fallback_outline_fonts_at_size;
 
-    DynamicFontData::CacheID cache_id;
-    DynamicFontData::CacheID outline_cache_id;
-
+    DynamicFontSettings font_settings;
+    DynamicFontSettings outline_font_settings;
     Color outline_color{1, 1, 1};
 
     int top_spacing       = 0;

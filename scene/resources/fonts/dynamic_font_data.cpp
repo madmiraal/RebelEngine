@@ -8,10 +8,6 @@
 
 #include "scene/resources/fonts/dynamic_font_at_size.h"
 
-bool DynamicFontData::CacheID::operator<(const CacheID right) const {
-    return key < right.key;
-}
-
 bool DynamicFontData::is_antialiased() const {
     return antialiased;
 }
@@ -48,16 +44,17 @@ void DynamicFontData::set_force_auto_hinter(const bool new_force_auto_hinting) {
     force_auto_hinter = new_force_auto_hinting;
 }
 
-Ref<DynamicFontAtSize> DynamicFontData::get_font_at_size(const CacheID cache_id
+Ref<DynamicFontAtSize> DynamicFontData::get_font_at_size(
+    const DynamicFontSettings& font_settings
 ) {
-    if (font_at_sizes_cache.has(cache_id)) {
-        return {font_at_sizes_cache[cache_id]};
+    if (font_at_sizes_cache.has(font_settings)) {
+        return {font_at_sizes_cache[font_settings]};
     }
     Ref<DynamicFontAtSize> font_at_size;
     font_at_size.instance();
-    font_at_size->font_data       = Ref<DynamicFontData>(this);
-    font_at_sizes_cache[cache_id] = font_at_size.ptr();
-    font_at_size->id              = cache_id;
+    font_at_size->font_data            = Ref<DynamicFontData>(this);
+    font_at_sizes_cache[font_settings] = font_at_size.ptr();
+    font_at_size->font_settings        = font_settings;
     font_at_size->load();
     return font_at_size;
 }
