@@ -17,8 +17,6 @@ SelfList<DynamicFont>::List* DynamicFont::dynamic_fonts = nullptr;
 Mutex DynamicFont::dynamic_font_mutex;
 
 DynamicFont::DynamicFont() {
-    cache_id.size         = 16;
-    outline_cache_id.size = 16;
     dynamic_font_mutex.lock();
     dynamic_fonts->add(&font_list);
     dynamic_font_mutex.unlock();
@@ -56,7 +54,7 @@ bool DynamicFont::is_distance_field_hint() const {
 }
 
 bool DynamicFont::has_outline() const {
-    return outline_cache_id.outline_size > 0;
+    return outline_font_settings.outline_thickness > 0;
 }
 
 Size2 DynamicFont::get_char_size(
@@ -98,7 +96,7 @@ float DynamicFont::draw_char(
     }
 
     if (draw_outline && outline_font_at_size.is_valid()
-        && outline_cache_id.outline_size > 0) {
+        && outline_font_settings.outline_thickness > 0) {
         outline_font_at_size->draw_char(
             canvas_item,
             position,
@@ -166,28 +164,28 @@ void DynamicFont::set_outline_color(const Color new_outline_color) {
 }
 
 int DynamicFont::get_outline_size() const {
-    return outline_cache_id.outline_size;
+    return outline_font_settings.outline_thickness;
 }
 
 void DynamicFont::set_outline_size(const int new_size) {
-    if (outline_cache_id.outline_size == new_size) {
+    if (outline_font_settings.outline_thickness == new_size) {
         return;
     }
     ERR_FAIL_COND(new_size < 0 || new_size > UINT8_MAX);
-    outline_cache_id.outline_size = new_size;
+    outline_font_settings.outline_thickness = new_size;
     reload_cache("outline_size");
 }
 
 int DynamicFont::get_size() const {
-    return cache_id.size;
+    return font_settings.font_size;
 }
 
 void DynamicFont::set_size(const int new_size) {
-    if (cache_id.size == new_size) {
+    if (font_settings.font_size == new_size) {
         return;
     }
-    cache_id.size         = new_size;
-    outline_cache_id.size = new_size;
+    font_settings.font_size         = new_size;
+    outline_font_settings.font_size = new_size;
     reload_cache("size");
 }
 
@@ -225,28 +223,28 @@ void DynamicFont::set_spacing(int spacing_type, int new_value) {
 }
 
 bool DynamicFont::get_use_filter() const {
-    return cache_id.filter;
+    return font_settings.use_filter;
 }
 
 void DynamicFont::set_use_filter(const bool enabled) {
-    if (cache_id.filter == enabled) {
+    if (font_settings.use_filter == enabled) {
         return;
     }
-    cache_id.filter         = enabled;
-    outline_cache_id.filter = enabled;
+    font_settings.use_filter         = enabled;
+    outline_font_settings.use_filter = enabled;
     reload_cache();
 }
 
 bool DynamicFont::get_use_mipmaps() const {
-    return cache_id.mipmaps;
+    return font_settings.use_mipmaps;
 }
 
 void DynamicFont::set_use_mipmaps(const bool enabled) {
-    if (cache_id.mipmaps == enabled) {
+    if (font_settings.use_mipmaps == enabled) {
         return;
     }
-    cache_id.mipmaps         = enabled;
-    outline_cache_id.mipmaps = enabled;
+    font_settings.use_mipmaps         = enabled;
+    outline_font_settings.use_mipmaps = enabled;
     reload_cache();
 }
 
@@ -267,7 +265,7 @@ void DynamicFont::set_fallback(
     ERR_FAIL_INDEX(index, fallback_fonts_data.size());
     fallback_fonts_data.write[index] = new_fallback_font_data;
     fallback_fonts_at_size.write[index] =
-        fallback_fonts_data.write[index]->get_font_at_size(cache_id);
+        fallback_fonts_data.write[index]->get_font_at_size(font_settings);
 }
 
 void DynamicFont::add_fallback(
@@ -277,11 +275,11 @@ void DynamicFont::add_fallback(
     fallback_fonts_data.push_back(new_fallback_font_data);
     fallback_fonts_at_size.push_back(fallback_fonts_data
                                          .write[fallback_fonts_data.size() - 1]
-                                         ->get_font_at_size(cache_id));
-    if (outline_cache_id.outline_size > 0) {
+                                         ->get_font_at_size(font_settings));
+    if (outline_font_settings.outline_thickness > 0) {
         fallback_outline_fonts_at_size.push_back(
             fallback_fonts_data.write[fallback_fonts_data.size() - 1]
-                ->get_font_at_size(outline_cache_id)
+                ->get_font_at_size(outline_font_settings)
         );
     }
     emit_changed();
@@ -552,7 +550,7 @@ void DynamicFont::_bind_methods() {
 }
 
 void DynamicFont::reload_cache(const char* triggering_property) {
-    ERR_FAIL_COND(cache_id.size < 1);
+    ERR_FAIL_COND(font_settings.font_size < 1);
     if (!font_data.is_valid()) {
         font_at_size.unref();
         outline_font_at_size.unref();
@@ -562,9 +560,10 @@ void DynamicFont::reload_cache(const char* triggering_property) {
         return;
     }
 
-    font_at_size = font_data->get_font_at_size(cache_id);
-    if (outline_cache_id.outline_size > 0) {
-        outline_font_at_size = font_data->get_font_at_size(outline_cache_id);
+    font_at_size = font_data->get_font_at_size(font_settings);
+    if (outline_font_settings.outline_thickness > 0) {
+        outline_font_at_size =
+            font_data->get_font_at_size(outline_font_settings);
         fallback_outline_fonts_at_size.resize(fallback_fonts_at_size.size());
     } else {
         outline_font_at_size.unref();
@@ -573,10 +572,11 @@ void DynamicFont::reload_cache(const char* triggering_property) {
 
     for (int i = 0; i < fallback_fonts_data.size(); i++) {
         fallback_fonts_at_size.write[i] =
-            fallback_fonts_data.write[i]->get_font_at_size(cache_id);
-        if (outline_cache_id.outline_size > 0) {
+            fallback_fonts_data.write[i]->get_font_at_size(font_settings);
+        if (outline_font_settings.outline_thickness > 0) {
             fallback_outline_fonts_at_size.write[i] =
-                fallback_fonts_data.write[i]->get_font_at_size(outline_cache_id
+                fallback_fonts_data.write[i]->get_font_at_size(
+                    outline_font_settings
                 );
         }
     }

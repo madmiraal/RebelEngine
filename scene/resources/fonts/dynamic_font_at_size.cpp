@@ -86,7 +86,7 @@ DynamicFontAtSize::~DynamicFontAtSize() {
     if (valid) {
         FT_Done_FreeType(ft_library);
     }
-    font_data->font_at_sizes_cache.erase(id);
+    font_data->font_at_sizes_cache.erase(font_settings);
     font_data.unref();
 }
 
@@ -267,22 +267,25 @@ Error DynamicFontAtSize::load() {
     if (FT_HAS_COLOR(ft_face) && ft_face->num_fixed_sizes > 0) {
         int best_index = 0;
         int best_difference =
-            ABS(id.size - ((int64_t)(ft_face->available_sizes[0].width)));
+            ABS(font_settings.font_size
+                - ((int64_t)(ft_face->available_sizes[0].width)));
         for (int i = 1; i < ft_face->num_fixed_sizes; i++) {
             const int this_difference =
-                ABS(id.size - ((int64_t)(ft_face->available_sizes[i].width)));
+                ABS(font_settings.font_size
+                    - ((int64_t)(ft_face->available_sizes[i].width)));
             if (this_difference < best_difference) {
                 best_index      = i;
                 best_difference = this_difference;
             }
         }
         color_font_scaling =
-            static_cast<float>(id.size) * oversampling
+            static_cast<float>(font_settings.font_size) * oversampling
             / static_cast<float>(ft_face->available_sizes[best_index].width);
         FT_Select_Size(ft_face, best_index);
     } else {
-        const auto oversampled_size =
-            static_cast<FT_UInt>(static_cast<float>(id.size) * oversampling);
+        const auto oversampled_size = static_cast<FT_UInt>(
+            static_cast<float>(font_settings.font_size) * oversampling
+        );
         FT_Set_Pixel_Sizes(ft_face, 0, oversampled_size);
     }
 
@@ -292,10 +295,10 @@ Error DynamicFontAtSize::load() {
             / oversampling * color_font_scaling;
     line_gap      = 0;
     texture_flags = 0;
-    if (id.mipmaps) {
+    if (font_settings.use_mipmaps) {
         texture_flags |= Texture::FLAG_MIPMAPS;
     }
-    if (id.filter) {
+    if (font_settings.use_filter) {
         texture_flags |= Texture::FLAG_FILTER;
     }
     valid = true;
@@ -332,7 +335,7 @@ DynamicFontAtSize::CharacterData DynamicFontAtSize::create_character_data(
     if (error) {
         return {};
     }
-    if (id.outline_size > 0) {
+    if (font_settings.outline_thickness > 0) {
         return create_outline_character(character);
     }
 
@@ -517,8 +520,9 @@ DynamicFontAtSize::CharacterData DynamicFontAtSize::create_outline_character(
         return {};
     }
 
-    const FT_Fixed radius =
-        ft_26_6_from_float(static_cast<float>(id.outline_size) * oversampling);
+    const FT_Fixed radius = ft_26_6_from_float(
+        static_cast<float>(font_settings.outline_thickness) * oversampling
+    );
     FT_Stroker_Set(
         ft_stroker,
         radius,
@@ -641,7 +645,7 @@ DynamicFontAtSize::TextureLocation DynamicFontAtSize::
         const int height
     ) const {
     const int bytes_per_pixel = Image::get_format_pixel_size(image_format);
-    int texture_size          = MAX(id.size * oversampling * 8, 256);
+    int texture_size = MAX(font_settings.font_size * oversampling * 8, 256);
     if (width > texture_size) {
         // Special case! Adapt to it?
         texture_size = width;

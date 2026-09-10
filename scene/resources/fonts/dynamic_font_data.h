@@ -6,6 +6,7 @@
 #define DYNAMIC_FONT_DATA_H
 
 #include "core/resource.h"
+#include "scene/resources/fonts/dynamic_font_settings.h"
 
 class DynamicFontAtSize;
 
@@ -13,26 +14,6 @@ class DynamicFontData : public Resource {
     GDCLASS(DynamicFontData, Resource);
 
 public:
-    struct CacheID {
-        union {
-            struct {
-                uint32_t size         : 16;
-                uint32_t outline_size : 8;
-                uint32_t mipmaps      : 1;
-                uint32_t filter       : 1;
-                uint32_t unused       : 6;
-            };
-
-            uint32_t key;
-        };
-
-        bool operator<(CacheID right) const;
-
-        CacheID() {
-            key = 0;
-        }
-    };
-
     enum Hinting {
         HINTING_NONE,
         HINTING_LIGHT,
@@ -53,7 +34,9 @@ public:
     void set_hinting(Hinting new_hinting);
     void set_force_auto_hinter(bool new_force_auto_hinting);
 
-    Ref<DynamicFontAtSize> get_font_at_size(CacheID cache_id);
+    Ref<DynamicFontAtSize> get_font_at_size(
+        const DynamicFontSettings& font_settings
+    );
 
 protected:
     static void _bind_methods();
@@ -65,7 +48,7 @@ private:
     String font_path;
     Vector<unsigned char> font_data;
     Hinting hinting = HINTING_NORMAL;
-    Map<CacheID, DynamicFontAtSize*> font_at_sizes_cache;
+    Map<DynamicFontSettings, DynamicFontAtSize*> font_at_sizes_cache;
 
     const unsigned char* font_bytes = nullptr;
     int font_bytes_length           = 0;
