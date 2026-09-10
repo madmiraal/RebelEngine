@@ -14,6 +14,7 @@
 #include "core/pair.h"
 #include "core/reference.h"
 #include "scene/resources/fonts/dynamic_font_data.h"
+#include "scene/resources/fonts/dynamic_font_settings.h"
 #include "scene/resources/texture.h"
 
 #include <ft2build.h>
@@ -78,7 +79,7 @@ private:
     FT_StreamRec ft_stream = {};
 
     Ref<DynamicFontData> font_data;
-    DynamicFontData::CacheID id;
+    DynamicFontSettings font_settings;
     mutable Vector<CharacterTexture> textures_cache;
     mutable HashMap<CharType, CharacterData> character_data_cache;
 
