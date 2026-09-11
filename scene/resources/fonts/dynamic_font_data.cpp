@@ -6,7 +6,55 @@
 
 #include "dynamic_font_data.h"
 
+#include "core/os/file_access.h"
 #include "scene/resources/fonts/dynamic_font_at_size.h"
+
+DynamicFontData::DynamicFontData() {
+    const FT_Error ft_error = FT_Init_FreeType(&ft_library);
+    if (ft_error) {
+        ft_library = nullptr;
+        ERR_FAIL_MSG("Error initializing FreeType.");
+    }
+}
+
+DynamicFontData::~DynamicFontData() {
+    if (ft_library) {
+        FT_Done_FreeType(ft_library);
+    }
+}
+
+Error DynamicFontData::initialize() {
+    ERR_FAIL_NULL_V_MSG(
+        ft_library,
+        ERR_CANT_CREATE,
+        "FreeType not initialized."
+    );
+    if (font_path.empty()) {
+        if (!font_bytes) {
+            ERR_FAIL_V_MSG(ERR_UNCONFIGURED, "No font data found.");
+        }
+        return OK;
+    }
+    FileAccess* file_access = FileAccess::open(font_path, FileAccess::READ);
+    if (!file_access) {
+        ERR_FAIL_V_MSG(
+            ERR_CANT_OPEN,
+            "Cannot open font file '" + font_path + "'."
+        );
+    }
+    const int length = static_cast<int>(file_access->get_len());
+    font_data.resize(length);
+    file_access->get_buffer(font_data.ptrw(), length);
+    set_font_bytes(font_data.ptr(), length);
+    file_access->close();
+    memdelete(file_access);
+
+    ft_stream.base = const_cast<unsigned char*>(font_bytes);
+    ft_stream.size = font_bytes_length;
+    ft_stream.pos  = 0;
+
+    return OK;
+}
 
 bool DynamicFontData::is_antialiased() const {
     return antialiased;
@@ -42,6 +90,14 @@ void DynamicFontData::set_hinting(const Hinting new_hinting) {
 
 void DynamicFontData::set_force_auto_hinter(const bool new_force_auto_hinting) {
     force_auto_hinter = new_force_auto_hinting;
+}
+
+FT_Library DynamicFontData::get_ft_library() const {
+    return ft_library;
+}
+
+FT_Stream DynamicFontData::get_ft_stream() {
+    return &ft_stream;
 }
 
 Ref<DynamicFontAtSize> DynamicFontData::get_font_at_size(
