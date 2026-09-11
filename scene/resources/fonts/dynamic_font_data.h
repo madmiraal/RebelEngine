@@ -8,6 +8,9 @@
 #include "core/resource.h"
 #include "scene/resources/fonts/dynamic_font_settings.h"
 
+#include <ft2build.h>
+#include FT_FREETYPE_H
+
 class DynamicFontAtSize;
 
 class DynamicFontData : public Resource {
@@ -19,6 +22,10 @@ public:
         HINTING_LIGHT,
         HINTING_NORMAL
     };
+
+    DynamicFontData();
+    ~DynamicFontData() override;
+    Error initialize();
 
     bool is_antialiased() const;
     void set_antialiased(bool new_antialiased);
@@ -34,6 +41,9 @@ public:
     void set_hinting(Hinting new_hinting);
     void set_force_auto_hinter(bool new_force_auto_hinting);
 
+    FT_Library get_ft_library() const;
+    FT_Stream get_ft_stream();
+
     Ref<DynamicFontAtSize> get_font_at_size(
         const DynamicFontSettings& font_settings
     );
@@ -44,6 +54,9 @@ protected:
 private:
     friend class DynamicFont;
     friend class DynamicFontAtSize;
+
+    FT_Library ft_library  = nullptr;
+    FT_StreamRec ft_stream = {};
 
     String font_path;
     Vector<unsigned char> font_data;

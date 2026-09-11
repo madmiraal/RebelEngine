@@ -83,9 +83,6 @@ constexpr static float get_kerning_advance(
 }
 
 DynamicFontAtSize::~DynamicFontAtSize() {
-    if (valid) {
-        FT_Done_FreeType(ft_library);
-    }
     font_data->font_at_sizes_cache.erase(font_settings);
     font_data.unref();
 }
@@ -205,7 +202,6 @@ void DynamicFontAtSize::update_oversampling() {
     if (!valid || oversampling == font_oversampling) {
         return;
     }
-    FT_Done_FreeType(ft_library);
     textures_cache.clear();
     character_data_cache.clear();
     oversampling = font_oversampling;
@@ -214,50 +210,22 @@ void DynamicFontAtSize::update_oversampling() {
 }
 
 Error DynamicFontAtSize::load() {
-    FT_Error ft_error = FT_Init_FreeType(&ft_library);
-    ERR_FAIL_COND_V_MSG(
-        ft_error != 0,
-        ERR_CANT_CREATE,
-        "Error initializing FreeType."
-    );
-
-    if (font_data->font_bytes == nullptr && !font_data->font_path.empty()) {
-        FileAccess* file_access =
-            FileAccess::open(font_data->font_path, FileAccess::READ);
-        if (!file_access) {
-            FT_Done_FreeType(ft_library);
-            ERR_FAIL_V_MSG(
-                ERR_CANT_OPEN,
-                "Cannot open font file '" + font_data->font_path + "'."
-            );
-        }
-
-        const int length = static_cast<int>(file_access->get_len());
-        font_data->font_data.resize(length);
-        file_access->get_buffer(font_data->font_data.ptrw(), length);
-        font_data->set_font_bytes(font_data->font_data.ptr(), length);
-        file_access->close();
-        memdelete(file_access);
+    const Error error = font_data->initialize();
+    if (error) {
+        return error;
     }
-    if (!font_data->font_bytes) {
-        FT_Done_FreeType(ft_library);
-        ERR_FAIL_V_MSG(ERR_UNCONFIGURED, "DynamicFontData uninitialized.");
-    }
-
-    ft_stream      = {};
-    ft_stream.base = const_cast<unsigned char*>(font_data->font_bytes);
-    ft_stream.size = font_data->font_bytes_length;
-    ft_stream.pos  = 0;
+    FT_Library ft_library = font_data->get_ft_library();
+    FT_Stream ft_stream   = font_data->get_ft_stream();
 
     FT_Open_Args ft_open_args = {};
     ft_open_args.memory_base  = font_data->font_bytes;
     ft_open_args.memory_size  = font_data->font_bytes_length;
     ft_open_args.flags        = FT_OPEN_MEMORY;
-    ft_open_args.stream       = &ft_stream;
+    ft_open_args.stream       = ft_stream;
 
-    ft_error = FT_Open_Face(ft_library, &ft_open_args, 0, &ft_face);
+    const FT_Error ft_error =
+        FT_Open_Face(ft_library, &ft_open_args, 0, &ft_face);
     if (ft_error) {
-        FT_Done_FreeType(ft_library);
         if (ft_error == FT_Err_Unknown_File_Format) {
             ERR_FAIL_V_MSG(ERR_FILE_CANT_OPEN, "Unknown font format.");
         }
@@ -505,6 +473,9 @@ DynamicFontAtSize::CharacterData DynamicFontAtSize::create_bitmap_character(
 DynamicFontAtSize::CharacterData DynamicFontAtSize::create_outline_character(
     const CharType character
 ) const {
+    FT_Library ft_library = font_data->get_ft_library();
+    ERR_FAIL_NULL_V_MSG(ft_library, {}, "FreeType not initialized.");
+
     FT_Int32 load_flags = FT_LOAD_NO_BITMAP;
     if (font_data->force_auto_hinter) {
         load_flags |= FT_LOAD_FORCE_AUTOHINT;

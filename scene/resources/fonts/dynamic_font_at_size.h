@@ -15,8 +15,6 @@
 #include "scene/resources/fonts/dynamic_font_settings.h"
 #include "scene/resources/texture.h"
 
-#include <ft2build.h>
-#include FT_FREETYPE_H
 #include FT_GLYPH_H
 
 class ImageTexture;
@@ -28,6 +26,7 @@ class DynamicFontAtSize : public Reference {
 public:
     static float font_oversampling;
 
+    DynamicFontAtSize() = default;
     ~DynamicFontAtSize() override;
 
     float get_ascent() const;
@@ -79,9 +78,7 @@ private:
         int y_offset      = 0;
     };
 
-    FT_Face ft_face        = nullptr;
-    FT_Library ft_library  = nullptr;
-    FT_StreamRec ft_stream = {};
+    FT_Face ft_face = nullptr;
 
     Ref<DynamicFontData> font_data;
     DynamicFontSettings font_settings;
