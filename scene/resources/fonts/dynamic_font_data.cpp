@@ -23,35 +23,6 @@ DynamicFontData::~DynamicFontData() {
     }
 }
 
-Error DynamicFontData::initialize() {
-    ERR_FAIL_NULL_V_MSG(
-        ft_library,
-        ERR_CANT_CREATE,
-        "FreeType not initialized."
-    );
-    if (font_path.empty()) {
-        if (!font_bytes) {
-            ERR_FAIL_V_MSG(ERR_UNCONFIGURED, "No font data found.");
-        }
-        return OK;
-    }
-    FileAccess* file_access = FileAccess::open(font_path, FileAccess::READ);
-    if (!file_access) {
-        ERR_FAIL_V_MSG(
-            ERR_CANT_OPEN,
-            "Cannot open font file '" + font_path + "'."
-        );
-    }
-    const int length = static_cast<int>(file_access->get_len());
-    font_data.resize(length);
-    file_access->get_buffer(font_data.ptrw(), length);
-    set_font_bytes(font_data.ptr(), length);
-    file_access->close();
-    memdelete(file_access);
-
-    return OK;
-}
-
 bool DynamicFontData::is_antialiased() const {
     return antialiased;
 }
@@ -88,8 +59,70 @@ void DynamicFontData::set_force_auto_hinter(const bool new_force_auto_hinting) {
     force_auto_hinter = new_force_auto_hinting;
 }
 
-FT_Library DynamicFontData::get_ft_library() const {
-    return ft_library;
+Error DynamicFontData::initialize() {
+    ERR_FAIL_NULL_V_MSG(
+        ft_library,
+        ERR_CANT_CREATE,
+        "FreeType not initialized."
+    );
+    if (font_path.empty()) {
+        if (!font_bytes) {
+            ERR_FAIL_V_MSG(ERR_UNCONFIGURED, "No font data found.");
+        }
+        return OK;
+    }
+    FileAccess* file_access = FileAccess::open(font_path, FileAccess::READ);
+    if (!file_access) {
+        ERR_FAIL_V_MSG(
+            ERR_CANT_OPEN,
+            "Cannot open font file '" + font_path + "'."
+        );
+    }
+    const int length = static_cast<int>(file_access->get_len());
+    font_data.resize(length);
+    file_access->get_buffer(font_data.ptrw(), length);
+    set_font_bytes(font_data.ptr(), length);
+    file_access->close();
+    memdelete(file_access);
+
+    return OK;
+}
+
+Error DynamicFontData::load_new_face(FT_Face* ft_face) const {
+    ERR_FAIL_NULL_V_MSG(
+        ft_library,
+        ERR_CANT_CREATE,
+        "FreeType not initialized."
+    );
+    const FT_Error ft_error = FT_New_Memory_Face(
+        ft_library,
+        font_bytes,
+        font_bytes_length,
+        0,
+        ft_face
+    );
+    if (ft_error) {
+        if (ft_error == FT_Err_Unknown_File_Format) {
+            ERR_FAIL_V_MSG(ERR_FILE_CANT_OPEN, "Unknown font format.");
+        }
+        ERR_FAIL_V_MSG(ERR_FILE_CANT_OPEN, "Error loading font.");
+    }
+    return OK;
+}
+
+Error DynamicFontData::load_new_stroker(FT_Stroker* ft_stroker) const {
+    ERR_FAIL_NULL_V_MSG(
+        ft_library,
+        ERR_CANT_CREATE,
+        "FreeType not initialized."
+    );
+    const FT_Error ft_error = FT_Stroker_New(ft_library, ft_stroker);
+    ERR_FAIL_COND_V_MSG(
+        ft_error,
+        ERR_BUG,
+        "FT_Stroker_New() returned error code " + itos(ft_error)
+    );
+    return OK;
 }
 
 Ref<DynamicFontAtSize> DynamicFontData::get_font_at_size(
