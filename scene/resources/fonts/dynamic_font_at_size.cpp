@@ -508,6 +508,9 @@ static DynamicFontAtSize::CharacterData create_bitmap_character(
 }
 
 DynamicFontAtSize::~DynamicFontAtSize() {
+    if (ft_face) {
+        FT_Done_Face(ft_face);
+    }
     font_data->font_at_sizes_cache.erase(font_settings);
     font_data.unref();
 }
@@ -659,6 +662,9 @@ Error DynamicFontAtSize::load() {
     ft_open_args.flags        = FT_OPEN_MEMORY;
     ft_open_args.stream       = ft_stream;
 
+    if (ft_face) {
+        FT_Done_Face(ft_face);
+    }
     const FT_Error ft_error =
         FT_Open_Face(ft_library, &ft_open_args, 0, &ft_face);
     if (ft_error) {
