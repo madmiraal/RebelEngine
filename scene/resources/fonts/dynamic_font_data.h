@@ -47,7 +47,6 @@ public:
     void set_force_auto_hinter(bool new_force_auto_hinting);
 
     FT_Library get_ft_library() const;
-    FT_Stream get_ft_stream();
 
     Ref<DynamicFontAtSize> get_font_at_size(
         const DynamicFontSettings& font_settings
@@ -60,8 +59,7 @@ private:
     friend class DynamicFont;
     friend class DynamicFontAtSize;
 
-    FT_Library ft_library  = nullptr;
-    FT_StreamRec ft_stream = {};
+    FT_Library ft_library = nullptr;
 
     String font_path;
     Vector<unsigned char> font_data;
