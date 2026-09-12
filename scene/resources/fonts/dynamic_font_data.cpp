@@ -49,10 +49,6 @@ Error DynamicFontData::initialize() {
     file_access->close();
     memdelete(file_access);
 
-    ft_stream.base = const_cast<unsigned char*>(font_bytes);
-    ft_stream.size = font_bytes_length;
-    ft_stream.pos  = 0;
-
     return OK;
 }
 
@@ -94,10 +90,6 @@ void DynamicFontData::set_force_auto_hinter(const bool new_force_auto_hinting) {
 
 FT_Library DynamicFontData::get_ft_library() const {
     return ft_library;
-}
-
-FT_Stream DynamicFontData::get_ft_stream() {
-    return &ft_stream;
 }
 
 Ref<DynamicFontAtSize> DynamicFontData::get_font_at_size(
