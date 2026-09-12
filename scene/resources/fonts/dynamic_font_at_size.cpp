@@ -217,20 +217,18 @@ Error DynamicFontAtSize::load() {
     if (error) {
         return error;
     }
+
     FT_Library ft_library = font_data->get_ft_library();
-    FT_Stream ft_stream   = font_data->get_ft_stream();
-
-    FT_Open_Args ft_open_args = {};
-    ft_open_args.memory_base  = font_data->font_bytes;
-    ft_open_args.memory_size  = font_data->font_bytes_length;
-    ft_open_args.flags        = FT_OPEN_MEMORY;
-    ft_open_args.stream       = ft_stream;
-
     if (ft_face) {
         FT_Done_Face(ft_face);
     }
-    const FT_Error ft_error =
-        FT_Open_Face(ft_library, &ft_open_args, 0, &ft_face);
+    const FT_Error ft_error = FT_New_Memory_Face(
+        ft_library,
+        font_data->font_bytes,
+        font_data->font_bytes_length,
+        0,
+        &ft_face
+    );
     if (ft_error) {
         if (ft_error == FT_Err_Unknown_File_Format) {
             ERR_FAIL_V_MSG(ERR_FILE_CANT_OPEN, "Unknown font format.");
