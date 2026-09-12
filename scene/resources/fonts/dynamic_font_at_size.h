@@ -15,8 +15,6 @@
 #include "scene/resources/fonts/dynamic_font_settings.h"
 #include "scene/resources/texture.h"
 
-#include FT_GLYPH_H
-
 class ImageTexture;
 
 class DynamicFontAtSize : public Reference {

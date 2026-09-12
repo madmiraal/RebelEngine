@@ -10,6 +10,7 @@
 
 #include <ft2build.h>
 #include FT_FREETYPE_H
+#include FT_STROKER_H
 
 class DynamicFontAtSize;
 
@@ -25,7 +26,6 @@ public:
 
     DynamicFontData();
     ~DynamicFontData() override;
-    Error initialize();
 
     bool is_antialiased() const;
     void set_antialiased(bool new_antialiased);
@@ -41,7 +41,9 @@ public:
     void set_hinting(Hinting new_hinting);
     void set_force_auto_hinter(bool new_force_auto_hinting);
 
-    FT_Library get_ft_library() const;
+    Error initialize();
+    Error load_new_face(FT_Face* ft_face) const;
+    Error load_new_stroker(FT_Stroker* ft_stroker) const;
 
     Ref<DynamicFontAtSize> get_font_at_size(
         const DynamicFontSettings& font_settings

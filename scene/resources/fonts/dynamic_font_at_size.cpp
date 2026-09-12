@@ -9,8 +9,6 @@
 #include "core/os/file_access.h"
 #include "scene/resources/texture.h"
 
-#include FT_STROKER_H
-
 static constexpr int margin = 1;
 
 float DynamicFontAtSize::font_oversampling = 1.0;
@@ -213,27 +211,17 @@ void DynamicFontAtSize::update_oversampling() {
 }
 
 Error DynamicFontAtSize::load() {
-    const Error error = font_data->initialize();
+    Error error = font_data->initialize();
     if (error) {
         return error;
     }
-
-    FT_Library ft_library = font_data->get_ft_library();
     if (ft_face) {
         FT_Done_Face(ft_face);
+        ft_face = nullptr;
     }
-    const FT_Error ft_error = FT_New_Memory_Face(
-        ft_library,
-        font_data->font_bytes,
-        font_data->font_bytes_length,
-        0,
-        &ft_face
-    );
-    if (ft_error) {
-        if (ft_error == FT_Err_Unknown_File_Format) {
-            ERR_FAIL_V_MSG(ERR_FILE_CANT_OPEN, "Unknown font format.");
-        }
-        ERR_FAIL_V_MSG(ERR_FILE_CANT_OPEN, "Error loading font.");
+    error = font_data->load_new_face(&ft_face);
+    if (error) {
+        return error;
     }
 
     if (FT_HAS_COLOR(ft_face) && ft_face->num_fixed_sizes > 0) {
@@ -477,9 +465,6 @@ DynamicFontAtSize::CharacterData DynamicFontAtSize::create_bitmap_character(
 DynamicFontAtSize::CharacterData DynamicFontAtSize::create_outline_character(
     const CharType character
 ) const {
-    FT_Library ft_library = font_data->get_ft_library();
-    ERR_FAIL_NULL_V_MSG(ft_library, {}, "FreeType not initialized.");
-
     FT_Int32 load_flags = FT_LOAD_NO_BITMAP;
     if (font_data->force_auto_hinter) {
         load_flags |= FT_LOAD_FORCE_AUTOHINT;
@@ -488,9 +473,8 @@ DynamicFontAtSize::CharacterData DynamicFontAtSize::create_outline_character(
     if (error) {
         return {};
     }
-
     FT_Stroker ft_stroker;
-    error = FT_Stroker_New(ft_library, &ft_stroker);
+    error = font_data->load_new_stroker(&ft_stroker);
     if (error) {
         return {};
     }
