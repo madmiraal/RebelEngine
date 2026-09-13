@@ -506,7 +506,7 @@ DynamicFontAtSize::~DynamicFontAtSize() {
     if (ft_face) {
         FT_Done_Face(ft_face);
     }
-    font_data->font_at_sizes_cache.erase(font_settings);
+    font_data->remove_from_cache(font_settings);
     font_data.unref();
 }
 
@@ -752,11 +752,12 @@ const DynamicFontAtSize::CharacterData* DynamicFontAtSize::get_character_data(
 DynamicFontAtSize::CharacterData DynamicFontAtSize::create_character_data(
     const CharType character
 ) const {
-    FT_Int32 load_flags = ft_hinting_from_font_hinting(font_data->hinting);
+    FT_Int32 load_flags =
+        ft_hinting_from_font_hinting(font_data->get_hinting());
     if (FT_HAS_COLOR(ft_face)) {
         load_flags |= FT_LOAD_COLOR;
     }
-    if (font_data->force_auto_hinter) {
+    if (font_data->get_force_auto_hinter()) {
         load_flags |= FT_LOAD_FORCE_AUTOHINT;
     }
     int error = FT_Load_Char(ft_face, character, load_flags);
@@ -795,7 +796,7 @@ DynamicFontAtSize::CharacterData DynamicFontAtSize::create_outline_character(
     const CharType character
 ) const {
     FT_Int32 load_flags = FT_LOAD_NO_BITMAP;
-    if (font_data->force_auto_hinter) {
+    if (font_data->get_force_auto_hinter()) {
         load_flags |= FT_LOAD_FORCE_AUTOHINT;
     }
     FT_Error error = FT_Load_Char(ft_face, character, load_flags);

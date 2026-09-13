@@ -41,6 +41,7 @@ public:
 
     Hinting get_hinting() const;
     void set_hinting(Hinting new_hinting);
+    bool get_force_auto_hinter() const;
     void set_force_auto_hinter(bool new_force_auto_hinting);
 
     Error initialize();
@@ -50,14 +51,12 @@ public:
     Ref<DynamicFontAtSize> get_font_at_size(
         const DynamicFontSettings& font_settings
     );
+    void remove_from_cache(const DynamicFontSettings& font_settings);
 
 protected:
     static void _bind_methods();
 
 private:
-    friend class DynamicFont;
-    friend class DynamicFontAtSize;
-
     FT_Library ft_library = nullptr;
 
     String font_path;

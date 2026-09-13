@@ -55,6 +55,10 @@ void DynamicFontData::set_hinting(const Hinting new_hinting) {
     hinting = new_hinting;
 }
 
+bool DynamicFontData::get_force_auto_hinter() const {
+    return force_auto_hinter;
+}
+
 void DynamicFontData::set_force_auto_hinter(const bool new_force_auto_hinting) {
     force_auto_hinter = new_force_auto_hinting;
 }
@@ -138,6 +142,11 @@ Ref<DynamicFontAtSize> DynamicFontData::get_font_at_size(
     font_at_size->font_settings        = font_settings;
     font_at_size->load();
     return font_at_size;
+}
+
+void DynamicFontData::remove_from_cache(const DynamicFontSettings& font_settings
+) {
+    font_at_sizes_cache.erase(font_settings);
 }
 
 void DynamicFontData::_bind_methods() {
