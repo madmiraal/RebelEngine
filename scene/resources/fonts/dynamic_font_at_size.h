@@ -40,7 +40,7 @@ public:
 
     static float font_oversampling;
 
-    DynamicFontAtSize() = default;
+    DynamicFontAtSize();
     ~DynamicFontAtSize() override;
 
     float get_ascent() const;

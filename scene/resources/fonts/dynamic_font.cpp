@@ -16,13 +16,24 @@
 SelfList<DynamicFont>::List* DynamicFont::dynamic_fonts = nullptr;
 Mutex DynamicFont::dynamic_font_mutex;
 
+#include <iostream>
+
+static int count = 0;
+
 DynamicFont::DynamicFont() {
+    count++;
+    std::cout << count << ": Constructing DynamicFont" << std::endl;
     dynamic_font_mutex.lock();
     dynamic_fonts->add(&font_list);
     dynamic_font_mutex.unlock();
 }
 
 DynamicFont::~DynamicFont() {
+    std::cout << count << ": Destructing DynamicFont" << std::endl;
+    count--;
+    if (count == 0) {
+        std::cout << "All DynamicFont destructed!" << std::endl;
+    }
     dynamic_font_mutex.lock();
     dynamic_fonts->remove(&font_list);
     dynamic_font_mutex.unlock();

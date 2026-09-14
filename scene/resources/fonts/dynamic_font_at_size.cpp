@@ -502,7 +502,21 @@ static DynamicFontAtSize::CharacterData create_bitmap_character(
     );
 }
 
+#include <iostream>
+
+static int count = 0;
+
+DynamicFontAtSize::DynamicFontAtSize() {
+    count++;
+    std::cout << count << ": Constructing DynamicFontAtSize" << std::endl;
+}
+
 DynamicFontAtSize::~DynamicFontAtSize() {
+    std::cout << count << ": Destructing DynamicFontAtSize" << std::endl;
+    count--;
+    if (count == 0) {
+        std::cout << "All DynamicFontAtSize destructed!" << std::endl;
+    }
     if (ft_face) {
         FT_Done_Face(ft_face);
     }

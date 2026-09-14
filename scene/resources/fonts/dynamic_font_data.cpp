@@ -9,7 +9,13 @@
 #include "core/os/file_access.h"
 #include "scene/resources/fonts/dynamic_font_at_size.h"
 
+#include <iostream>
+
+static int count = 0;
+
 DynamicFontData::DynamicFontData() {
+    count++;
+    std::cout << count << ": Constructing DynamicFontData" << std::endl;
     const FT_Error ft_error = FT_Init_FreeType(&ft_library);
     if (ft_error) {
         ft_library = nullptr;
@@ -18,6 +24,11 @@ DynamicFontData::DynamicFontData() {
 }
 
 DynamicFontData::~DynamicFontData() {
+    std::cout << count << ": Destructing DynamicFontData" << std::endl;
+    count--;
+    if (count == 0) {
+        std::cout << "All DynamicFontData destructed!" << std::endl;
+    }
     if (ft_library) {
         FT_Done_FreeType(ft_library);
     }
