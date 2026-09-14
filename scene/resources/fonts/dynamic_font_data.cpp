@@ -135,16 +135,13 @@ Error DynamicFontData::load_new_stroker(FT_Stroker* ft_stroker) const {
 Ref<DynamicFontAtSize> DynamicFontData::get_font_at_size(
     const DynamicFontSettings& font_settings
 ) {
-    if (font_at_sizes_cache.has(font_settings)) {
-        return {font_at_sizes_cache[font_settings]};
+    if (!font_at_sizes_cache.has(font_settings)) {
+        auto dynamic_font_at_size =
+            DynamicFontAtSize::create_font_at_size(this, font_settings);
+        font_at_sizes_cache[font_settings] = dynamic_font_at_size.ptr();
+        return dynamic_font_at_size;
     }
-    Ref<DynamicFontAtSize> font_at_size;
-    font_at_size.instance();
-    font_at_size->font_data            = Ref<DynamicFontData>(this);
-    font_at_sizes_cache[font_settings] = font_at_size.ptr();
-    font_at_size->font_settings        = font_settings;
-    font_at_size->load();
-    return font_at_size;
+    return font_at_sizes_cache[font_settings];
 }
 
 void DynamicFontData::remove_from_cache(const DynamicFontSettings& font_settings
