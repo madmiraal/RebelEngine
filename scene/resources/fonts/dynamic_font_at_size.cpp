@@ -653,6 +653,18 @@ void DynamicFontAtSize::update_oversampling() {
     load();
 }
 
+Ref<DynamicFontAtSize> DynamicFontAtSize::create_font_at_size(
+    const Ref<DynamicFontData>& font_data,
+    const DynamicFontSettings& font_settings
+) {
+    Ref<DynamicFontAtSize> font_at_size;
+    font_at_size.instance();
+    font_at_size->font_data     = font_data;
+    font_at_size->font_settings = font_settings;
+    font_at_size->load();
+    return font_at_size;
+}
+
 Error DynamicFontAtSize::load() {
     Error error = font_data->initialize();
     if (error) {

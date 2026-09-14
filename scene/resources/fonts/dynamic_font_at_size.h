@@ -66,9 +66,12 @@ public:
     void set_texture_flags(uint32_t new_texture_flags);
     void update_oversampling();
 
-private:
-    friend class DynamicFontData;
+    static Ref<DynamicFontAtSize> create_font_at_size(
+        const Ref<DynamicFontData>& font_data,
+        const DynamicFontSettings& font_settings
+    );
 
+private:
     FT_Face ft_face = nullptr;
 
     Ref<DynamicFontData> font_data;
