@@ -9,16 +9,16 @@
 
 #include "core/io/resource_loader.h"
 
-class ResourceFormatLoaderBMFont : public ResourceFormatLoader {
+class BMFontResourceLoader : public ResourceFormatLoader {
 public:
     RES load(
-        const String& p_path,
-        const String& p_original_path = "",
-        Error* r_error                = nullptr
+        const String& path,
+        const String& original_path = "",
+        Error* error                = nullptr
     ) override;
-    void get_recognized_extensions(List<String>* p_extensions) const override;
-    bool handles_type(const String& p_type) const override;
-    String get_resource_type(const String& p_path) const override;
+    void get_recognized_extensions(List<String>* extensions) const override;
+    bool handles_type(const String& type) const override;
+    String get_resource_type(const String& path) const override;
 };
 
 #endif // BM_FONT_RESOURCE_LOADER_H
