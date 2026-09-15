@@ -8,45 +8,37 @@
 
 #include "scene/resources/fonts/dynamic_font_data.h"
 
-RES ResourceFormatLoaderDynamicFont::load(
-    const String& p_path,
-    const String& p_original_path,
-    Error* r_error
+RES DynamicFontResourceLoader::load(
+    const String& path,
+    const String&,
+    Error* error
 ) {
-    if (r_error) {
-        *r_error = ERR_FILE_CANT_OPEN;
+    Ref<DynamicFontData> dynamic_font_data;
+    dynamic_font_data.instance();
+    dynamic_font_data->set_font_path(path);
+    if (error) {
+        *error = OK;
     }
-
-    Ref<DynamicFontData> dfont;
-    dfont.instance();
-    dfont->set_font_path(p_path);
-
-    if (r_error) {
-        *r_error = OK;
-    }
-
-    return dfont;
+    return dynamic_font_data;
 }
 
-void ResourceFormatLoaderDynamicFont::get_recognized_extensions(
-    List<String>* p_extensions
+void DynamicFontResourceLoader::get_recognized_extensions(
+    List<String>* extensions
 ) const {
-    p_extensions->push_back("ttf");
-    p_extensions->push_back("otf");
-    // Only WOFF1 is supported as WOFF2 requires a Brotli decompression library
-    // to be linked.
-    p_extensions->push_back("woff");
+    extensions->push_back("ttf");
+    extensions->push_back("otf");
+    extensions->push_back("woff");
+    // WOFF2 requires a Brotli decompression library.
 }
 
-bool ResourceFormatLoaderDynamicFont::handles_type(const String& p_type) const {
-    return (p_type == "DynamicFontData");
+bool DynamicFontResourceLoader::handles_type(const String& type) const {
+    return type == "DynamicFontData";
 }
 
-String ResourceFormatLoaderDynamicFont::get_resource_type(const String& p_path
-) const {
-    String el = p_path.get_extension().to_lower();
-    if (el == "ttf" || el == "otf" || el == "woff") {
+String DynamicFontResourceLoader::get_resource_type(const String& path) const {
+    const String extension = path.get_extension().to_lower();
+    if (extension == "ttf" || extension == "otf" || extension == "woff") {
         return "DynamicFontData";
     }
-    return "";
+    return {};
 }
