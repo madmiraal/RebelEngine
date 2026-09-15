@@ -202,7 +202,7 @@ static Ref<ResourceFormatSaverText> resource_saver_text;
 static Ref<ResourceFormatLoaderText> resource_loader_text;
 
 #ifdef MODULE_FREETYPE_ENABLED
-static Ref<ResourceFormatLoaderDynamicFont> resource_loader_dynamic_font;
+static Ref<DynamicFontResourceLoader> dynamic_font_resource_loader;
 #endif // MODULE_FREETYPE_ENABLED
 
 static Ref<ResourceFormatLoaderStreamTexture> resource_loader_stream_texture;
@@ -221,8 +221,8 @@ void register_scene_types() {
     Node::init_node_hrcr();
 
 #ifdef MODULE_FREETYPE_ENABLED
-    resource_loader_dynamic_font.instance();
-    ResourceLoader::add_resource_format_loader(resource_loader_dynamic_font);
+    dynamic_font_resource_loader.instance();
+    ResourceLoader::add_resource_format_loader(dynamic_font_resource_loader);
 #endif // MODULE_FREETYPE_ENABLED
 
     resource_loader_stream_texture.instance();
@@ -818,8 +818,8 @@ void unregister_scene_types() {
     clear_default_theme();
 
 #ifdef MODULE_FREETYPE_ENABLED
-    ResourceLoader::remove_resource_format_loader(resource_loader_dynamic_font);
-    resource_loader_dynamic_font.unref();
+    ResourceLoader::remove_resource_format_loader(dynamic_font_resource_loader);
+    dynamic_font_resource_loader.unref();
 
     DynamicFont::finish_dynamic_fonts();
 #endif // MODULE_FREETYPE_ENABLED
