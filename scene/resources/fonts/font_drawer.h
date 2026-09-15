@@ -10,65 +10,33 @@
 #include "core/reference.h"
 #include "scene/resources/fonts/font.h"
 
-// Helper class to that draws outlines immediately and draws characters in its
-// destructor.
+// Helper class to draw outlines immediately and characters in the destructor.
 class FontDrawer {
-    const Ref<Font>& font;
-    Color outline_color;
-    bool has_outline;
-
-    struct PendingDraw {
-        RID canvas_item;
-        Point2 pos;
-        CharType chr;
-        CharType next;
-        Color modulate;
-    };
-
-    Vector<PendingDraw> pending_draws;
-
 public:
-    FontDrawer(const Ref<Font>& p_font, const Color& p_outline_color) :
-        font(p_font),
-        outline_color(p_outline_color) {
-        has_outline = p_font->has_outline();
-    }
+    FontDrawer(const Ref<Font>& font, const Color& outline_color);
+    ~FontDrawer();
 
     float draw_char(
-        RID p_canvas_item,
-        const Point2& p_pos,
-        CharType p_char,
-        CharType p_next         = 0,
-        const Color& p_modulate = Color(1, 1, 1)
-    ) {
-        if (has_outline) {
-            PendingDraw draw =
-                {p_canvas_item, p_pos, p_char, p_next, p_modulate};
-            pending_draws.push_back(draw);
-        }
-        return font->draw_char(
-            p_canvas_item,
-            p_pos,
-            p_char,
-            p_next,
-            has_outline ? outline_color : p_modulate,
-            has_outline
-        );
-    }
+        RID canvas_item,
+        const Point2& position,
+        CharType character,
+        CharType next_character = 0,
+        const Color& color      = Color(1, 1, 1)
+    );
 
-    ~FontDrawer() {
-        for (int i = 0; i < pending_draws.size(); ++i) {
-            const PendingDraw& draw = pending_draws[i];
-            font->draw_char(
-                draw.canvas_item,
-                draw.pos,
-                draw.chr,
-                draw.next,
-                draw.modulate,
-                false
-            );
-        }
-    }
+private:
+    struct PendingDraw {
+        RID canvas_item;
+        Point2 position;
+        CharType character      = 0;
+        CharType next_character = 0;
+        Color color;
+    };
+
+    const Ref<Font>& font;
+    Color outline_color;
+
+    Vector<PendingDraw> pending_draws;
 };
 
 #endif // FONT_DRAWER_H
