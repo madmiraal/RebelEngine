@@ -208,7 +208,7 @@ static Ref<ResourceFormatLoaderDynamicFont> resource_loader_dynamic_font;
 static Ref<ResourceFormatLoaderStreamTexture> resource_loader_stream_texture;
 static Ref<ResourceFormatLoaderTextureLayered> resource_loader_texture_layered;
 
-static Ref<ResourceFormatLoaderBMFont> resource_loader_bmfont;
+static Ref<BMFontResourceLoader> bm_font_resource_loader;
 
 static Ref<ResourceFormatSaverShader> resource_saver_shader;
 static Ref<ResourceFormatLoaderShader> resource_loader_shader;
@@ -243,8 +243,8 @@ void register_scene_types() {
     resource_loader_shader.instance();
     ResourceLoader::add_resource_format_loader(resource_loader_shader, true);
 
-    resource_loader_bmfont.instance();
-    ResourceLoader::add_resource_format_loader(resource_loader_bmfont, true);
+    bm_font_resource_loader.instance();
+    ResourceLoader::add_resource_format_loader(bm_font_resource_loader, true);
 
     OS::get_singleton()->yield(); // may take time to init
 
@@ -845,8 +845,8 @@ void unregister_scene_types() {
     ResourceLoader::remove_resource_format_loader(resource_loader_shader);
     resource_loader_shader.unref();
 
-    ResourceLoader::remove_resource_format_loader(resource_loader_bmfont);
-    resource_loader_bmfont.unref();
+    ResourceLoader::remove_resource_format_loader(bm_font_resource_loader);
+    bm_font_resource_loader.unref();
 
     // SpatialMaterial is not initialised when 3D is disabled, so it shouldn't
     // be cleaned up either
