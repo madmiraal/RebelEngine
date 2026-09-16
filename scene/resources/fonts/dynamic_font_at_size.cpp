@@ -534,8 +534,8 @@ Size2 DynamicFontAtSize::get_char_size(
         return {};
     }
     const auto pair = get_character_data_and_font(character, fallbacks);
-    const CharacterData& character_data   = pair.first;
-    const DynamicFontAtSize* font_at_size = pair.second;
+    const CharacterData& character_data        = pair.first;
+    const Ref<DynamicFontAtSize>& font_at_size = pair.second;
     float width =
         get_kerning_advance(font_at_size->ft_face, character, next_character)
         / oversampling;
@@ -559,8 +559,8 @@ float DynamicFontAtSize::draw_char(
         return 0;
     }
     const auto pair = get_character_data_and_font(character, fallbacks);
-    const CharacterData& character_data   = pair.first;
-    const DynamicFontAtSize* font_at_size = pair.second;
+    const CharacterData& character_data        = pair.first;
+    const Ref<DynamicFontAtSize>& font_at_size = pair.second;
 
     const float advance =
         get_kerning_advance(font_at_size->ft_face, character, next_character)
@@ -710,18 +710,18 @@ Error DynamicFontAtSize::load() {
     return OK;
 }
 
-Pair<const DynamicFontAtSize::CharacterData&, const DynamicFontAtSize*>
+Pair<const DynamicFontAtSize::CharacterData&, const Ref<DynamicFontAtSize>>
 DynamicFontAtSize::get_character_data_and_font(
     const CharType character,
     const Vector<Ref<DynamicFontAtSize>>& fallbacks
 ) const {
     const CharacterData& character_data = get_character_data(character);
     if (character_data.found) {
-        return {character_data, this};
+        return {character_data, Ref<DynamicFontAtSize>(this)};
     }
     // Character not found, try fallbacks.
     for (int i = 0; i < fallbacks.size(); i++) {
-        auto* fallback = const_cast<DynamicFontAtSize*>(fallbacks[i].ptr());
+        const Ref<DynamicFontAtSize>& fallback = fallbacks[i];
         if (!fallback->valid) {
             continue;
         }
@@ -734,7 +734,7 @@ DynamicFontAtSize::get_character_data_and_font(
     // Character not found. Try replacement character 0xFFFD.
     const CharacterData& replacement_character_data =
         get_character_data(0xFFFD);
-    return {replacement_character_data, const_cast<DynamicFontAtSize*>(this)};
+    return {replacement_character_data, Ref<DynamicFontAtSize>(this)};
 }
 
 const DynamicFontAtSize::CharacterData& DynamicFontAtSize::get_character_data(
