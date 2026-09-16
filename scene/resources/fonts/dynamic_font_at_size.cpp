@@ -545,13 +545,13 @@ Size2 DynamicFontAtSize::get_char_size(
         return {};
     }
     const auto pair = get_character_data_and_font(character, fallbacks);
-    const CharacterData* character_data   = pair.first;
+    const CharacterData& character_data   = pair.first;
     const DynamicFontAtSize* font_at_size = pair.second;
     float width =
         get_kerning_advance(font_at_size->ft_face, character, next_character)
         / oversampling;
-    if (character_data->found) {
-        width += character_data->advance;
+    if (character_data.found) {
+        width += character_data.advance;
     }
     return {width, get_height()};
 }
@@ -570,31 +570,31 @@ float DynamicFontAtSize::draw_char(
         return 0;
     }
     const auto pair = get_character_data_and_font(character, fallbacks);
-    const CharacterData* character_data   = pair.first;
+    const CharacterData& character_data   = pair.first;
     const DynamicFontAtSize* font_at_size = pair.second;
 
     const float advance =
         get_kerning_advance(font_at_size->ft_face, character, next_character)
         / oversampling;
 
-    if (character_data->found) {
-        if (!advance_only && character_data->texture_index != -1) {
+    if (character_data.found) {
+        if (!advance_only && character_data.texture_index != -1) {
             const CharacterTexture& character_texture =
-                font_at_size->textures_cache[character_data->texture_index];
+                font_at_size->textures_cache[character_data.texture_index];
             Color modulate = color;
             if (FT_HAS_COLOR(font_at_size->ft_face)) {
                 modulate.r = modulate.g = modulate.b = 1.0;
             }
             draw_texture(
                 character_texture,
-                *character_data,
+                character_data,
                 canvas_item,
                 position,
                 ascent,
                 modulate
             );
         }
-        return advance + character_data->advance;
+        return advance + character_data.advance;
     }
 
     if (!has_outline) {
@@ -734,13 +734,13 @@ Error DynamicFontAtSize::load() {
     return OK;
 }
 
-Pair<const DynamicFontAtSize::CharacterData*, const DynamicFontAtSize*>
+Pair<const DynamicFontAtSize::CharacterData&, const DynamicFontAtSize*>
 DynamicFontAtSize::get_character_data_and_font(
     const CharType character,
     const Vector<Ref<DynamicFontAtSize>>& fallbacks
 ) const {
-    const CharacterData* character_data = get_character_data(character);
-    if (character_data->found) {
+    const CharacterData& character_data = get_character_data(character);
+    if (character_data.found) {
         return {character_data, this};
     }
     // Character not found, try fallbacks.
@@ -749,22 +749,24 @@ DynamicFontAtSize::get_character_data_and_font(
         if (!fallback->valid) {
             continue;
         }
-        character_data = fallback->get_character_data(character);
-        if (character_data->found) {
-            return {character_data, fallback};
+        const CharacterData& fallback_character_data =
+            fallback->get_character_data(character);
+        if (fallback_character_data.found) {
+            return {fallback_character_data, fallback};
         }
     }
     // Character not found. Try replacement character 0xFFFD.
-    character_data = get_character_data(0xFFFD);
-    return {character_data, const_cast<DynamicFontAtSize*>(this)};
+    const CharacterData& replacement_character_data =
+        get_character_data(0xFFFD);
+    return {replacement_character_data, const_cast<DynamicFontAtSize*>(this)};
 }
 
-const DynamicFontAtSize::CharacterData* DynamicFontAtSize::get_character_data(
+const DynamicFontAtSize::CharacterData& DynamicFontAtSize::get_character_data(
     const CharType character
 ) const {
     _THREAD_SAFE_METHOD_
     if (character_data_cache.has(character)) {
-        return character_data_cache.getptr(character);
+        return character_data_cache[character];
     }
     if (FT_Get_Char_Index(ft_face, character) == 0) {
         // Font doesn't have this character.
@@ -772,7 +774,7 @@ const DynamicFontAtSize::CharacterData* DynamicFontAtSize::get_character_data(
     } else {
         character_data_cache[character] = create_character_data(character);
     }
-    return character_data_cache.getptr(character);
+    return character_data_cache[character];
 }
 
 DynamicFontAtSize::CharacterData DynamicFontAtSize::create_character_data(
