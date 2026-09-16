@@ -88,7 +88,7 @@ private:
     bool valid               = false;
 
     Error load();
-    Pair<const CharacterData&, const DynamicFontAtSize*>
+    Pair<const CharacterData&, const Ref<DynamicFontAtSize>>
     get_character_data_and_font(
         CharType character,
         const Vector<Ref<DynamicFontAtSize>>& fallbacks
