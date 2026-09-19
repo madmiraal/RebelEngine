@@ -23,7 +23,9 @@ public:
     enum Hinting {
         HINTING_NONE,
         HINTING_LIGHT,
-        HINTING_NORMAL
+        HINTING_NORMAL,
+        HINTING_MONO,
+        HINTING_FREETYPE,
     };
 
     DynamicFontData();
@@ -41,8 +43,6 @@ public:
 
     Hinting get_hinting() const;
     void set_hinting(Hinting new_hinting);
-    bool get_force_auto_hinter() const;
-    void set_force_auto_hinter(bool new_force_auto_hinting);
 
     Error initialize();
     Error load_new_face(FT_Face* ft_face) const;
@@ -67,7 +67,6 @@ private:
     const unsigned char* font_bytes = nullptr;
     int font_bytes_length           = 0;
     bool antialiased                = true;
-    bool force_auto_hinter          = false;
 };
 
 VARIANT_ENUM_CAST(DynamicFontData::Hinting);

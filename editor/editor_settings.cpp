@@ -349,18 +349,18 @@ void EditorSettings::_load_defaults(Ref<ConfigFile> p_extra_config) {
         Variant::INT,
         "interface/editor/font_hinting",
         PROPERTY_HINT_ENUM,
-        "Auto (None),None,Light,Normal",
+        "Auto (None),None,Light,Normal,Mono,FreeType Hinting",
         PROPERTY_USAGE_DEFAULT
     );
-#else
+#else  // !MACOS_ENABLED
     hints["interface/editor/font_hinting"] = PropertyInfo(
         Variant::INT,
         "interface/editor/font_hinting",
         PROPERTY_HINT_ENUM,
-        "Auto (Light),None,Light,Normal",
+        "Auto (Light),None,Light,Normal,Mono,FreeType Hinting",
         PROPERTY_USAGE_DEFAULT
     );
-#endif
+#endif // !MACOS_ENABLED
     _initial_set("interface/editor/main_font", "");
     hints["interface/editor/main_font"] = PropertyInfo(
         Variant::STRING,
