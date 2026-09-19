@@ -25,18 +25,24 @@ SPDX-License-Identifier: MIT
             The path to the vector font file.
         </member>
         <member name="hinting" type="int" setter="set_hinting" getter="get_hinting" enum="DynamicFontData.Hinting" default="2">
-            The font hinting mode used by FreeType. See [enum Hinting] for options.
+            The font hinting mode used by FreeType. Hinting is used to adjust a font to fit a specific pixel grid. Hinting is needed to make a font crisp and readable on low resolution displays. See [enum Hinting] for available options.
         </member>
     </members>
     <constants>
         <constant name="HINTING_NONE" value="0" enum="Hinting">
-            Disables font hinting (smoother but less crisp).
+            Disables font hinting. Ensures all characters look the same at all sizes. At smaller sizes, fonts will be blurry and possibly unreadable on low resolution displays.
         </constant>
         <constant name="HINTING_LIGHT" value="1" enum="Hinting">
-            Use the light font hinting mode.
+            If available, uses the font's native hinter for vertical pixel alignment only. It uses FreeType's hinting algorithm for horizontal pixel alignment.
         </constant>
         <constant name="HINTING_NORMAL" value="2" enum="Hinting">
-            Use the default font hinting mode (crisper but less smooth).
+            (Default) If available, it uses the font's native hinter. If unavailable, it will use the FreeType hinting algorithm.
+        </constant>
+        <constant name="HINTING_MONO" value="3" enum="Hinting">
+            Monochrome hinting. Pixels are either on or off; there is no gray-scale. Useful for creating pixel fonts when combined with [member antialiased]=[code]false[/code].
+        </constant>
+        <constant name="HINTING_FREETYPE" value="4" enum="Hinting">
+            Ignores the font's native hinter and only uses FreeType's hinting algorithm.
         </constant>
     </constants>
 </class>
