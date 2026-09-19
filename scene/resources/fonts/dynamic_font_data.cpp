@@ -58,14 +58,6 @@ void DynamicFontData::set_hinting(const Hinting new_hinting) {
     hinting = new_hinting;
 }
 
-bool DynamicFontData::get_force_auto_hinter() const {
-    return force_auto_hinter;
-}
-
-void DynamicFontData::set_force_auto_hinter(const bool new_force_auto_hinting) {
-    force_auto_hinter = new_force_auto_hinting;
-}
-
 Error DynamicFontData::initialize() {
     ERR_FAIL_NULL_V_MSG(
         ft_library,
@@ -194,6 +186,8 @@ void DynamicFontData::_bind_methods() {
     BIND_ENUM_CONSTANT(HINTING_NONE);
     BIND_ENUM_CONSTANT(HINTING_LIGHT);
     BIND_ENUM_CONSTANT(HINTING_NORMAL);
+    BIND_ENUM_CONSTANT(HINTING_MONO);
+    BIND_ENUM_CONSTANT(HINTING_FREETYPE);
 
     // Only WOFF1 is supported.
     // WOFF2 requires a Brotli decompression library.

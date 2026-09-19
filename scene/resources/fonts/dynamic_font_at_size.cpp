@@ -67,6 +67,10 @@ constexpr static FT_Int32 ft_hinting_from_font_hinting(const int hinting) {
             return FT_LOAD_TARGET_LIGHT;
         case DynamicFontData::HINTING_NORMAL:
             return FT_LOAD_TARGET_NORMAL;
+        case DynamicFontData::HINTING_MONO:
+            return FT_LOAD_TARGET_MONO;
+        case DynamicFontData::HINTING_FREETYPE:
+            return FT_LOAD_FORCE_AUTOHINT;
         default:
             ERR_FAIL_V_MSG(FT_LOAD_TARGET_NORMAL, "Unknown hinting type.");
     }
@@ -761,9 +765,6 @@ DynamicFontAtSize::CharacterData DynamicFontAtSize::create_character_data(
     if (FT_HAS_COLOR(ft_face)) {
         load_flags |= FT_LOAD_COLOR;
     }
-    if (font_data->get_force_auto_hinter()) {
-        load_flags |= FT_LOAD_FORCE_AUTOHINT;
-    }
     int error = FT_Load_Char(ft_face, character, load_flags);
     if (error) {
         return {};
@@ -799,11 +800,7 @@ DynamicFontAtSize::CharacterData DynamicFontAtSize::create_character_data(
 DynamicFontAtSize::CharacterData DynamicFontAtSize::create_outline_character(
     const CharType character
 ) const {
-    FT_Int32 load_flags = FT_LOAD_NO_BITMAP;
-    if (font_data->get_force_auto_hinter()) {
-        load_flags |= FT_LOAD_FORCE_AUTOHINT;
-    }
-    FT_Error error = FT_Load_Char(ft_face, character, load_flags);
+    FT_Error error = FT_Load_Char(ft_face, character, FT_LOAD_NO_BITMAP);
     if (error) {
         return {};
     }
