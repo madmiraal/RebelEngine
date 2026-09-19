@@ -39,7 +39,7 @@ SPDX-License-Identifier: MIT
             (Default) If available, it uses the font's native hinter. If unavailable, it will use the FreeType hinting algorithm.
         </constant>
         <constant name="HINTING_MONO" value="3" enum="Hinting">
-            Monochrome hinting. Pixels are either on or off; there is no gray-scale.
+            Monochrome hinting. Pixels are either on or off; there is no gray-scale. Useful for creating pixel fonts when combined with [member antialiased]=[code]false[/code].
         </constant>
         <constant name="HINTING_FREETYPE" value="4" enum="Hinting">
             Ignores the font's native hinter and only uses FreeType's hinting algorithm.
