@@ -196,8 +196,6 @@
 #include "scene/resources/occluder_shape.h"
 #endif
 
-#include "modules/modules_enabled.gen.h" // For freetype.
-
 static Ref<ResourceFormatSaverText> resource_saver_text;
 static Ref<ResourceFormatLoaderText> resource_loader_text;
 
@@ -681,8 +679,6 @@ void register_scene_types() {
 #ifdef MODULE_FREETYPE_ENABLED
     ClassDB::register_class<DynamicFontData>();
     ClassDB::register_class<DynamicFont>();
-
-    DynamicFont::initialize_dynamic_fonts();
 #endif // MODULE_FREETYPE_ENABLED
 
     ClassDB::register_virtual_class<StyleBox>();
@@ -820,8 +816,6 @@ void unregister_scene_types() {
 #ifdef MODULE_FREETYPE_ENABLED
     ResourceLoader::remove_resource_format_loader(dynamic_font_resource_loader);
     dynamic_font_resource_loader.unref();
-
-    DynamicFont::finish_dynamic_fonts();
 #endif // MODULE_FREETYPE_ENABLED
 
     ResourceLoader::remove_resource_format_loader(

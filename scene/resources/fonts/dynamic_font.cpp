@@ -12,20 +12,14 @@
 #include "core/os/file_access.h"
 #include "core/os/os.h"
 #include "scene/resources/fonts/dynamic_font_at_size.h"
-
-SelfList<DynamicFont>::List* DynamicFont::dynamic_fonts = nullptr;
-Mutex DynamicFont::dynamic_font_mutex;
+#include "scene/resources/fonts/dynamic_fonts.h"
 
 DynamicFont::DynamicFont() {
-    dynamic_font_mutex.lock();
-    dynamic_fonts->add(&this_dynamic_font);
-    dynamic_font_mutex.unlock();
+    DynamicFonts::add(this_dynamic_font);
 }
 
 DynamicFont::~DynamicFont() {
-    dynamic_font_mutex.lock();
-    dynamic_fonts->remove(&this_dynamic_font);
-    dynamic_font_mutex.unlock();
+    DynamicFonts::remove(this_dynamic_font);
 }
 
 float DynamicFont::get_ascent() const {
@@ -296,49 +290,23 @@ void DynamicFont::remove_fallback(const int index) {
     _change_notify();
 }
 
-void DynamicFont::initialize_dynamic_fonts() {
-    dynamic_fonts = memnew(SelfList<DynamicFont>::List());
-}
-
-void DynamicFont::finish_dynamic_fonts() {
-    memdelete(dynamic_fonts);
-    dynamic_fonts = nullptr;
-}
-
 void DynamicFont::update_oversampling() {
-    Vector<Ref<DynamicFont>> changed_fonts;
-    dynamic_font_mutex.lock();
-    SelfList<DynamicFont>* E = dynamic_fonts->get_first();
-    while (E) {
-        if (E->get_self()->font_at_size.is_valid()) {
-            E->get_self()->font_at_size->update_oversampling();
-            if (E->get_self()->outline_font_at_size.is_valid()) {
-                E->get_self()->outline_font_at_size->update_oversampling();
-            }
-            for (int i = 0; i < E->get_self()->fallback_fonts_at_size.size();
-                 i++) {
-                if (E->get_self()->fallback_fonts_at_size[i].is_valid()) {
-                    E->get_self()
-                        ->fallback_fonts_at_size.write[i]
+    if (font_at_size.is_valid()) {
+        font_at_size->update_oversampling();
+        if (outline_font_at_size.is_valid()) {
+            outline_font_at_size->update_oversampling();
+        }
+        for (int i = 0; i < fallback_fonts_at_size.size(); i++) {
+            if (fallback_fonts_at_size[i].is_valid()) {
+                fallback_fonts_at_size.write[i]->update_oversampling();
+                if (has_outline()
+                    && fallback_outline_fonts_at_size[i].is_valid()) {
+                    fallback_outline_fonts_at_size.write[i]
                         ->update_oversampling();
-                    if (E->get_self()->has_outline()
-                        && E->get_self()
-                               ->fallback_outline_fonts_at_size[i]
-                               .is_valid()) {
-                        E->get_self()
-                            ->fallback_outline_fonts_at_size.write[i]
-                            ->update_oversampling();
-                    }
                 }
             }
-            changed_fonts.push_back(Ref<DynamicFont>(E->get_self()));
         }
-        E = E->get_next();
-    }
-    dynamic_font_mutex.unlock();
-
-    for (int i = 0; i < changed_fonts.size(); i++) {
-        changed_fonts.write[i]->emit_changed();
+        emit_changed();
     }
 }
 
