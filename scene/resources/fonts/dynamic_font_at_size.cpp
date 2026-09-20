@@ -10,11 +10,10 @@
 #ifdef MODULE_FREETYPE_ENABLED
 
 #include "core/os/file_access.h"
+#include "scene/resources/fonts/dynamic_fonts.h"
 #include "scene/resources/texture.h"
 
 static constexpr int margin = 1;
-
-float DynamicFontAtSize::font_oversampling = 1.0;
 
 namespace {
 struct CharacterLocation {
@@ -640,12 +639,12 @@ String DynamicFontAtSize::get_available_chars() const {
 }
 
 void DynamicFontAtSize::update_oversampling() {
-    if (!valid || oversampling == font_oversampling) {
+    if (!valid || oversampling == DynamicFonts::get_oversampling()) {
         return;
     }
     textures_cache.clear();
     character_data_cache.clear();
-    oversampling = font_oversampling;
+    oversampling = DynamicFonts::get_oversampling();
     valid        = false;
     load();
 }
@@ -658,6 +657,7 @@ Ref<DynamicFontAtSize> DynamicFontAtSize::create_font_at_size(
     font_at_size.instance();
     font_at_size->font_data     = font_data;
     font_at_size->font_settings = font_settings;
+    font_at_size->oversampling  = DynamicFonts::get_oversampling();
     font_at_size->load();
     return font_at_size;
 }

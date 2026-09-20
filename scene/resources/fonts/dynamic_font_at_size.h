@@ -41,8 +41,6 @@ public:
         int texture_size = 0;
     };
 
-    static float font_oversampling;
-
     DynamicFontAtSize() = default;
     ~DynamicFontAtSize() override;
 
@@ -84,7 +82,7 @@ private:
     uint32_t texture_flags   = 0;
     float ascent             = 1;
     float descent            = 1;
-    float oversampling       = font_oversampling;
+    float oversampling       = 1;
     float color_font_scaling = 1;
     bool valid               = false;
 

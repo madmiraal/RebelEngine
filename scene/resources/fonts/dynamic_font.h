@@ -29,9 +29,6 @@ public:
 
     SelfList<DynamicFont> this_dynamic_font{this};
 
-    static SelfList<DynamicFont>::List* dynamic_fonts;
-    static Mutex dynamic_font_mutex;
-
     DynamicFont();
     ~DynamicFont() override;
 
@@ -76,9 +73,7 @@ public:
     void add_fallback(const Ref<DynamicFontData>& new_fallback_font_data);
     void remove_fallback(int index);
 
-    static void initialize_dynamic_fonts();
-    static void finish_dynamic_fonts();
-    static void update_oversampling();
+    void update_oversampling();
 
 protected:
     bool _get(const StringName& name, Variant& result) const;
