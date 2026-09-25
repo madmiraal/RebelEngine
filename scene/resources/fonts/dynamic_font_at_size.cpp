@@ -10,7 +10,6 @@
 #ifdef MODULE_FREETYPE_ENABLED
 
 #include "core/os/file_access.h"
-#include "scene/resources/fonts/dynamic_fonts.h"
 #include "scene/resources/texture.h"
 
 static constexpr int margin = 1;
@@ -541,7 +540,7 @@ Size2 DynamicFontAtSize::get_char_size(
     const Ref<DynamicFontAtSize>& font_at_size = pair.second;
     float width =
         get_kerning_advance(font_at_size->ft_face, character, next_character)
-        / oversampling;
+        / font_settings.oversampling;
     if (character_data.found) {
         width += character_data.advance;
     }
@@ -567,7 +566,7 @@ float DynamicFontAtSize::draw_char(
 
     const float advance =
         get_kerning_advance(font_at_size->ft_face, character, next_character)
-        / oversampling;
+        / font_settings.oversampling;
 
     if (character_data.found) {
         if (!advance_only && character_data.texture_index != -1) {
@@ -615,7 +614,7 @@ float DynamicFontAtSize::draw_char(
         textures_cache,
         font_settings.font_size,
         ascent,
-        oversampling,
+        font_settings.oversampling,
         color_font_scaling,
         texture_flags
     );
@@ -638,17 +637,6 @@ String DynamicFontAtSize::get_available_chars() const {
     return characters;
 }
 
-void DynamicFontAtSize::update_oversampling() {
-    if (!valid || oversampling == DynamicFonts::get_oversampling()) {
-        return;
-    }
-    textures_cache.clear();
-    character_data_cache.clear();
-    oversampling = DynamicFonts::get_oversampling();
-    valid        = false;
-    load();
-}
-
 Ref<DynamicFontAtSize> DynamicFontAtSize::create_font_at_size(
     const Ref<DynamicFontData>& font_data,
     const DynamicFontSettings& font_settings
@@ -657,7 +645,6 @@ Ref<DynamicFontAtSize> DynamicFontAtSize::create_font_at_size(
     font_at_size.instance();
     font_at_size->font_data     = font_data;
     font_at_size->font_settings = font_settings;
-    font_at_size->oversampling  = DynamicFonts::get_oversampling();
     font_at_size->load();
     return font_at_size;
 }
@@ -689,20 +676,22 @@ Error DynamicFontAtSize::load() {
             }
         }
         color_font_scaling =
-            static_cast<float>(font_settings.font_size) * oversampling
+            static_cast<float>(font_settings.font_size)
+            * font_settings.oversampling
             / static_cast<float>(ft_face->available_sizes[best_index].width);
         FT_Select_Size(ft_face, best_index);
     } else {
         const auto oversampled_size = static_cast<FT_UInt>(
-            static_cast<float>(font_settings.font_size) * oversampling
+            static_cast<float>(font_settings.font_size)
+            * font_settings.oversampling
         );
         FT_Set_Pixel_Sizes(ft_face, 0, oversampled_size);
     }
 
-    ascent = float_from_ft_26_6(ft_face->size->metrics.ascender) / oversampling
-           * color_font_scaling;
+    ascent = float_from_ft_26_6(ft_face->size->metrics.ascender)
+           / font_settings.oversampling * color_font_scaling;
     descent = -float_from_ft_26_6(ft_face->size->metrics.descender)
-            / oversampling * color_font_scaling;
+            / font_settings.oversampling * color_font_scaling;
     texture_flags = 0;
     if (font_settings.use_mipmaps) {
         texture_flags |= Texture::FLAG_MIPMAPS;
@@ -791,7 +780,7 @@ DynamicFontAtSize::CharacterData DynamicFontAtSize::create_character_data(
         textures_cache,
         font_settings.font_size,
         ascent,
-        oversampling,
+        font_settings.oversampling,
         color_font_scaling,
         texture_flags
     );
@@ -811,7 +800,8 @@ DynamicFontAtSize::CharacterData DynamicFontAtSize::create_outline_character(
     }
 
     const FT_Fixed radius = ft_26_6_from_float(
-        static_cast<float>(font_settings.outline_thickness) * oversampling
+        static_cast<float>(font_settings.outline_thickness)
+        * font_settings.oversampling
     );
     FT_Stroker_Set(
         ft_stroker,
@@ -854,7 +844,7 @@ DynamicFontAtSize::CharacterData DynamicFontAtSize::create_outline_character(
         textures_cache,
         font_settings.font_size,
         ascent,
-        oversampling,
+        font_settings.oversampling,
         color_font_scaling,
         texture_flags
     );

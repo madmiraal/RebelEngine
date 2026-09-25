@@ -31,7 +31,7 @@ void set_oversampling(const float new_oversampling) {
 
     const SelfList<DynamicFont>* E = dynamic_fonts.get_first();
     while (E) {
-        E->get_self()->update_oversampling();
+        E->get_self()->set_oversampling(new_oversampling);
         E = E->get_next();
     }
 }

@@ -64,7 +64,6 @@ public:
     ) const;
 
     String get_available_chars() const;
-    void update_oversampling();
 
     static Ref<DynamicFontAtSize> create_font_at_size(
         const Ref<DynamicFontData>& font_data,
@@ -82,7 +81,6 @@ private:
     uint32_t texture_flags   = 0;
     float ascent             = 1;
     float descent            = 1;
-    float oversampling       = 1;
     float color_font_scaling = 1;
     bool valid               = false;
 

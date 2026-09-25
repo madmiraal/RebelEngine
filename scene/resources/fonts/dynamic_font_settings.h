@@ -9,12 +9,16 @@
 #ifdef MODULE_FREETYPE_ENABLED
 
 struct DynamicFontSettings {
+    float oversampling    = 1;
     int font_size         = 16;
     int outline_thickness = 0;
     bool use_filter       = false;
     bool use_mipmaps      = false;
 
     constexpr bool operator<(const DynamicFontSettings& other) const {
+        if (oversampling != other.oversampling) {
+            return oversampling < other.oversampling;
+        }
         if (font_size != other.font_size) {
             return font_size < other.font_size;
         }
