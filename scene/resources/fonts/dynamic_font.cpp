@@ -172,6 +172,12 @@ void DynamicFont::set_outline_size(const int new_size) {
     reload_cache("outline_size");
 }
 
+void DynamicFont::set_oversampling(const float new_oversampling) {
+    font_settings.oversampling         = new_oversampling;
+    outline_font_settings.oversampling = new_oversampling;
+    reload_cache();
+}
+
 int DynamicFont::get_size() const {
     return font_settings.font_size;
 }
@@ -288,26 +294,6 @@ void DynamicFont::remove_fallback(const int index) {
     fallback_fonts_at_size.remove(index);
     emit_changed();
     _change_notify();
-}
-
-void DynamicFont::update_oversampling() {
-    if (font_at_size.is_valid()) {
-        font_at_size->update_oversampling();
-        if (outline_font_at_size.is_valid()) {
-            outline_font_at_size->update_oversampling();
-        }
-        for (int i = 0; i < fallback_fonts_at_size.size(); i++) {
-            if (fallback_fonts_at_size[i].is_valid()) {
-                fallback_fonts_at_size.write[i]->update_oversampling();
-                if (has_outline()
-                    && fallback_outline_fonts_at_size[i].is_valid()) {
-                    fallback_outline_fonts_at_size.write[i]
-                        ->update_oversampling();
-                }
-            }
-        }
-        emit_changed();
-    }
 }
 
 bool DynamicFont::_get(const StringName& name, Variant& result) const {

@@ -55,6 +55,7 @@ public:
     void set_outline_color(Color new_outline_color);
     int get_outline_size() const;
     void set_outline_size(int new_size);
+    void set_oversampling(float new_oversampling);
     int get_size() const;
     void set_size(int new_size);
     int get_spacing(int spacing_type) const;
@@ -72,8 +73,6 @@ public:
     );
     void add_fallback(const Ref<DynamicFontData>& new_fallback_font_data);
     void remove_fallback(int index);
-
-    void update_oversampling();
 
 protected:
     bool _get(const StringName& name, Variant& result) const;
