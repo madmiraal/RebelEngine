@@ -86,7 +86,6 @@ private:
     uint32_t texture_flags   = 0;
     float ascent             = 1;
     float descent            = 1;
-    float line_gap           = 1;
     float oversampling       = font_oversampling;
     float color_font_scaling = 1;
     bool valid               = false;

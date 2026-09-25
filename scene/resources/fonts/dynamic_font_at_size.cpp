@@ -735,7 +735,6 @@ Error DynamicFontAtSize::load() {
            * color_font_scaling;
     descent = -float_from_ft_26_6(ft_face->size->metrics.descender)
             / oversampling * color_font_scaling;
-    line_gap      = 0;
     texture_flags = 0;
     if (id.mipmaps) {
         texture_flags |= Texture::FLAG_MIPMAPS;
