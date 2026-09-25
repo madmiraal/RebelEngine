@@ -507,6 +507,55 @@ static DynamicFontAtSize::CharacterData create_bitmap_character(
     );
 }
 
+DynamicFontAtSize::DynamicFontAtSize(
+    const Ref<DynamicFontData>& font_data,
+    const DynamicFontSettings& font_settings
+) :
+    font_data(font_data),
+    font_settings(font_settings) {
+    const Error error = font_data->load_new_face(&ft_face);
+    if (error) {
+        return;
+    }
+    const int num_fixed_sizes = ft_face->num_fixed_sizes;
+    if (FT_HAS_COLOR(ft_face) && num_fixed_sizes > 0) {
+        int best_index      = 0;
+        int best_difference = INT_MAX;
+        for (int i = 0; i < num_fixed_sizes; i++) {
+            const int this_difference =
+                ABS(font_settings.font_size - ft_face->available_sizes[i].width
+                );
+            if (this_difference < best_difference) {
+                best_index      = i;
+                best_difference = this_difference;
+            }
+        }
+        color_font_scaling =
+            static_cast<float>(font_settings.font_size)
+            * font_settings.oversampling
+            / static_cast<float>(ft_face->available_sizes[best_index].width);
+        FT_Select_Size(ft_face, best_index);
+    } else {
+        const auto oversampled_size = static_cast<FT_UInt>(
+            static_cast<float>(font_settings.font_size)
+            * font_settings.oversampling
+        );
+        FT_Set_Pixel_Sizes(ft_face, 0, oversampled_size);
+    }
+
+    ascent = float_from_ft_26_6(ft_face->size->metrics.ascender)
+           / font_settings.oversampling * color_font_scaling;
+    descent = -float_from_ft_26_6(ft_face->size->metrics.descender)
+            / font_settings.oversampling * color_font_scaling;
+    if (font_settings.use_mipmaps) {
+        texture_flags |= Texture::FLAG_MIPMAPS;
+    }
+    if (font_settings.use_filter) {
+        texture_flags |= Texture::FLAG_FILTER;
+    }
+    valid = true;
+}
+
 DynamicFontAtSize::~DynamicFontAtSize() {
     if (ft_face) {
         FT_Done_Face(ft_face);
@@ -635,72 +684,6 @@ String DynamicFontAtSize::get_available_chars() const {
         character_code = FT_Get_Next_Char(ft_face, character_code, &gindex);
     }
     return characters;
-}
-
-Ref<DynamicFontAtSize> DynamicFontAtSize::create_font_at_size(
-    const Ref<DynamicFontData>& font_data,
-    const DynamicFontSettings& font_settings
-) {
-    Ref<DynamicFontAtSize> font_at_size;
-    font_at_size.instance();
-    font_at_size->font_data     = font_data;
-    font_at_size->font_settings = font_settings;
-    font_at_size->load();
-    return font_at_size;
-}
-
-Error DynamicFontAtSize::load() {
-    Error error = font_data->initialize();
-    if (error) {
-        return error;
-    }
-    if (ft_face) {
-        FT_Done_Face(ft_face);
-        ft_face = nullptr;
-    }
-    error = font_data->load_new_face(&ft_face);
-    if (error) {
-        return error;
-    }
-
-    if (FT_HAS_COLOR(ft_face) && ft_face->num_fixed_sizes > 0) {
-        int best_index      = 0;
-        int best_difference = INT_MAX;
-        for (int i = 0; i < ft_face->num_fixed_sizes; i++) {
-            const int this_difference =
-                ABS(font_settings.font_size - ft_face->available_sizes[i].width
-                );
-            if (this_difference < best_difference) {
-                best_index      = i;
-                best_difference = this_difference;
-            }
-        }
-        color_font_scaling =
-            static_cast<float>(font_settings.font_size)
-            * font_settings.oversampling
-            / static_cast<float>(ft_face->available_sizes[best_index].width);
-        FT_Select_Size(ft_face, best_index);
-    } else {
-        const auto oversampled_size = static_cast<FT_UInt>(
-            static_cast<float>(font_settings.font_size)
-            * font_settings.oversampling
-        );
-        FT_Set_Pixel_Sizes(ft_face, 0, oversampled_size);
-    }
-
-    ascent = float_from_ft_26_6(ft_face->size->metrics.ascender)
-           / font_settings.oversampling * color_font_scaling;
-    descent = -float_from_ft_26_6(ft_face->size->metrics.descender)
-            / font_settings.oversampling * color_font_scaling;
-    texture_flags = 0;
-    if (font_settings.use_mipmaps) {
-        texture_flags |= Texture::FLAG_MIPMAPS;
-    }
-    if (font_settings.use_filter) {
-        texture_flags |= Texture::FLAG_FILTER;
-    }
-    valid = true;
-    return OK;
 }
 
 Pair<const DynamicFontAtSize::CharacterData&, const Ref<DynamicFontAtSize>>
