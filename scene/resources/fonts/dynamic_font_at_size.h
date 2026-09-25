@@ -41,7 +41,10 @@ public:
         int texture_size = 0;
     };
 
-    DynamicFontAtSize() = default;
+    DynamicFontAtSize(
+        const Ref<DynamicFontData>& font_data,
+        const DynamicFontSettings& font_settings
+    );
     ~DynamicFontAtSize() override;
 
     float get_ascent() const;
@@ -65,11 +68,6 @@ public:
 
     String get_available_chars() const;
 
-    static Ref<DynamicFontAtSize> create_font_at_size(
-        const Ref<DynamicFontData>& font_data,
-        const DynamicFontSettings& font_settings
-    );
-
 private:
     FT_Face ft_face = nullptr;
 
@@ -84,7 +82,6 @@ private:
     float color_font_scaling = 1;
     bool valid               = false;
 
-    Error load();
     Pair<const CharacterData&, const Ref<DynamicFontAtSize>>
     get_character_data_and_font(
         CharType character,

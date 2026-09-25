@@ -128,10 +128,12 @@ Ref<DynamicFontAtSize> DynamicFontData::get_font_at_size(
     const DynamicFontSettings& font_settings
 ) {
     if (!font_at_sizes_cache.has(font_settings)) {
-        auto dynamic_font_at_size =
-            DynamicFontAtSize::create_font_at_size(this, font_settings);
-        font_at_sizes_cache[font_settings] = dynamic_font_at_size.ptr();
-        return dynamic_font_at_size;
+        const Error error = initialize();
+        if (error) {
+            return {};
+        }
+        font_at_sizes_cache[font_settings] =
+            memnew(DynamicFontAtSize(this, font_settings));
     }
     return font_at_sizes_cache[font_settings];
 }
