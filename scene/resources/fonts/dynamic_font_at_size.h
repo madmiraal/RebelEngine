@@ -68,7 +68,6 @@ public:
     ) const;
 
     String get_available_chars() const;
-    void set_texture_flags(uint32_t new_texture_flags);
     void update_oversampling();
 
 private:

@@ -637,16 +637,6 @@ String DynamicFontAtSize::get_available_chars() const {
     return characters;
 }
 
-void DynamicFontAtSize::set_texture_flags(const uint32_t new_texture_flags) {
-    texture_flags = new_texture_flags;
-    for (int i = 0; i < textures_cache.size(); i++) {
-        Ref<ImageTexture>& texture = textures_cache.write[i].texture;
-        if (!texture.is_null()) {
-            texture->set_flags(new_texture_flags);
-        }
-    }
-}
-
 void DynamicFontAtSize::update_oversampling() {
     if (!valid || oversampling == font_oversampling) {
         return;
