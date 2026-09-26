@@ -50,6 +50,9 @@ public:
     float get_ascent() const;
     float get_descent() const;
     float get_height() const;
+    void set_antialiased(bool new_antialiased);
+    void set_hinting(DynamicFontData::Hinting new_hinting);
+
     Size2 get_char_size(
         CharType character,
         CharType next_character,
@@ -77,11 +80,13 @@ private:
     mutable Vector<CharacterTexture> textures_cache;
     mutable HashMap<CharType, CharacterData> character_data_cache;
 
-    uint32_t texture_flags   = 0;
-    float ascent             = 1;
-    float descent            = 1;
-    float color_font_scaling = 1;
-    bool valid               = false;
+    uint32_t texture_flags           = 0;
+    DynamicFontData::Hinting hinting = DynamicFontData::Hinting::HINTING_NONE;
+    float ascent                     = 1;
+    float descent                    = 1;
+    float color_font_scaling         = 1;
+    bool valid                       = false;
+    bool antialiased                 = true;
 
     Pair<const CharacterData&, const Ref<DynamicFontAtSize>>
     get_character_data_and_font(

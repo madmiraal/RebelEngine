@@ -31,7 +31,15 @@ bool DynamicFontData::is_antialiased() const {
 }
 
 void DynamicFontData::set_antialiased(const bool new_antialiased) {
-    antialiased = new_antialiased;
+    if (antialiased == new_antialiased) {
+        return;
+    }
+    antialiased       = new_antialiased;
+    auto font_at_size = font_at_sizes_cache.front();
+    while (font_at_size) {
+        font_at_size->get()->set_antialiased(antialiased);
+        font_at_size = font_at_size->next();
+    }
 }
 
 String DynamicFontData::get_font_path() const {
@@ -55,7 +63,15 @@ DynamicFontData::Hinting DynamicFontData::get_hinting() const {
 }
 
 void DynamicFontData::set_hinting(const Hinting new_hinting) {
-    hinting = new_hinting;
+    if (hinting == new_hinting) {
+        return;
+    }
+    hinting           = new_hinting;
+    auto font_at_size = font_at_sizes_cache.front();
+    while (font_at_size) {
+        font_at_size->get()->set_hinting(hinting);
+        font_at_size = font_at_size->next();
+    }
 }
 
 Error DynamicFontData::initialize() {

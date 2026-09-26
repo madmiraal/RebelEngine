@@ -512,7 +512,9 @@ DynamicFontAtSize::DynamicFontAtSize(
     const DynamicFontSettings& font_settings
 ) :
     font_data(font_data),
-    font_settings(font_settings) {
+    font_settings(font_settings),
+    hinting(font_data->get_hinting()),
+    antialiased(font_data->is_antialiased()) {
     Error error = font_data->load_new_face(&ft_face);
     if (error) {
         return;
@@ -582,6 +584,15 @@ float DynamicFontAtSize::get_descent() const {
 
 float DynamicFontAtSize::get_height() const {
     return ascent + descent;
+}
+
+void DynamicFontAtSize::set_antialiased(const bool new_antialiased) {
+    antialiased = new_antialiased;
+}
+
+void DynamicFontAtSize::set_hinting(const DynamicFontData::Hinting new_hinting
+) {
+    hinting = new_hinting;
 }
 
 Size2 DynamicFontAtSize::get_char_size(
@@ -740,8 +751,7 @@ const DynamicFontAtSize::CharacterData& DynamicFontAtSize::get_character_data(
 DynamicFontAtSize::CharacterData DynamicFontAtSize::create_character_data(
     const CharType character
 ) const {
-    FT_Int32 load_flags =
-        ft_hinting_from_font_hinting(font_data->get_hinting());
+    FT_Int32 load_flags = ft_hinting_from_font_hinting(hinting);
     if (FT_HAS_COLOR(ft_face)) {
         load_flags |= FT_LOAD_COLOR;
     }
@@ -754,7 +764,7 @@ DynamicFontAtSize::CharacterData DynamicFontAtSize::create_character_data(
     }
 
     FT_Render_Mode render_mode = FT_RENDER_MODE_NORMAL;
-    if (!font_data->is_antialiased()) {
+    if (!antialiased) {
         render_mode = FT_RENDER_MODE_MONO;
     }
     error = FT_Render_Glyph(ft_face->glyph, render_mode);
@@ -811,7 +821,7 @@ DynamicFontAtSize::CharacterData DynamicFontAtSize::create_outline_character(
         return {};
     }
     FT_Render_Mode render_mode = FT_RENDER_MODE_NORMAL;
-    if (!font_data->is_antialiased()) {
+    if (!antialiased) {
         render_mode = FT_RENDER_MODE_MONO;
     }
     ft_error = FT_Glyph_To_Bitmap(&ft_glyph, render_mode, nullptr, true);
