@@ -513,10 +513,15 @@ DynamicFontAtSize::DynamicFontAtSize(
 ) :
     font_data(font_data),
     font_settings(font_settings) {
-    const Error error = font_data->load_new_face(&ft_face);
+    Error error = font_data->load_new_face(&ft_face);
     if (error) {
         return;
     }
+    error = font_data->load_new_stroker(&ft_stroker);
+    if (error) {
+        ft_stroker = nullptr;
+    }
+
     const int num_fixed_sizes = ft_face->num_fixed_sizes;
     if (FT_HAS_COLOR(ft_face) && num_fixed_sizes > 0) {
         int best_index      = 0;
@@ -559,6 +564,9 @@ DynamicFontAtSize::DynamicFontAtSize(
 DynamicFontAtSize::~DynamicFontAtSize() {
     if (ft_face) {
         FT_Done_Face(ft_face);
+    }
+    if (ft_stroker) {
+        FT_Stroker_Done(ft_stroker);
     }
     font_data->remove_from_cache(font_settings);
     font_data.unref();
@@ -772,13 +780,16 @@ DynamicFontAtSize::CharacterData DynamicFontAtSize::create_character_data(
 DynamicFontAtSize::CharacterData DynamicFontAtSize::create_outline_character(
     const CharType character
 ) const {
-    FT_Error error = FT_Load_Char(ft_face, character, FT_LOAD_NO_BITMAP);
-    if (error) {
+    if (!ft_stroker) {
         return {};
     }
-    FT_Stroker ft_stroker;
-    error = font_data->load_new_stroker(&ft_stroker);
-    if (error) {
+    FT_Error ft_error = FT_Load_Char(ft_face, character, FT_LOAD_NO_BITMAP);
+    if (ft_error) {
+        return {};
+    }
+    FT_Glyph ft_glyph;
+    ft_error = FT_Get_Glyph(ft_face->glyph, &ft_glyph);
+    if (ft_error) {
         return {};
     }
 
@@ -794,26 +805,18 @@ DynamicFontAtSize::CharacterData DynamicFontAtSize::create_outline_character(
         0
     );
 
-    FT_Glyph ft_glyph;
-    error = FT_Get_Glyph(ft_face->glyph, &ft_glyph);
-    if (error) {
-        FT_Stroker_Done(ft_stroker);
-        return {};
-    }
-    error = FT_Glyph_Stroke(&ft_glyph, ft_stroker, 1);
-    if (error) {
+    ft_error = FT_Glyph_Stroke(&ft_glyph, ft_stroker, true);
+    if (ft_error) {
         FT_Done_Glyph(ft_glyph);
-        FT_Stroker_Done(ft_stroker);
         return {};
     }
     FT_Render_Mode render_mode = FT_RENDER_MODE_NORMAL;
     if (!font_data->is_antialiased()) {
         render_mode = FT_RENDER_MODE_MONO;
     }
-    error = FT_Glyph_To_Bitmap(&ft_glyph, render_mode, nullptr, true);
-    if (error) {
+    ft_error = FT_Glyph_To_Bitmap(&ft_glyph, render_mode, nullptr, true);
+    if (ft_error) {
         FT_Done_Glyph(ft_glyph);
-        FT_Stroker_Done(ft_stroker);
         return {};
     }
 
@@ -832,7 +835,6 @@ DynamicFontAtSize::CharacterData DynamicFontAtSize::create_outline_character(
         texture_flags
     );
     FT_Done_Glyph(ft_glyph);
-    FT_Stroker_Done(ft_stroker);
     return character_data;
 }
 

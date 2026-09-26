@@ -69,7 +69,8 @@ public:
     String get_available_chars() const;
 
 private:
-    FT_Face ft_face = nullptr;
+    FT_Face ft_face       = nullptr;
+    FT_Stroker ft_stroker = nullptr;
 
     Ref<DynamicFontData> font_data;
     DynamicFontSettings font_settings;
