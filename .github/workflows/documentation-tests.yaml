@@ -39,7 +39,7 @@ jobs:
 
   api-update-test:
     name: API Updates Check
-    runs-on: ubuntu-24.04
+    runs-on: ubuntu-latest
     steps:
       - name: Build Rebel
         id: build
