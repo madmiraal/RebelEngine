@@ -66,19 +66,11 @@ if env["builtin_embree"]:
     env_raycast.Prepend(CPPPATH=[third_party_dir, third_party_dir + "include"])
     env_raycast.Append(
         CPPDEFINES=[
-            "EMBREE_TARGET_SSE2",
-            "EMBREE_LOWEST_ISA",
             "TASKING_INTERNAL",
-            "NDEBUG",
+            "EMBREE_LOWEST_ISA",
+            "EMBREE_MAX_ISA=SSE2",
         ]
     )
-
-    if not env.msvc:
-        if env["arch"] in ["x86", "x86_64"]:
-            env_raycast.Append(CPPFLAGS=["-msse2", "-mxsave"])
-
-        if env["platform"] == "windows":
-            env_raycast.Append(CPPFLAGS=["-mstackrealign"])
 
     if env["platform"] == "windows":
         if env.msvc:
@@ -89,10 +81,6 @@ if env["builtin_embree"]:
     env_third_party = env_raycast.Clone()
     env_third_party.disable_warnings()
     env_third_party.add_source_files(third_party_obj, third_party_sources)
-
-    if not env["arch"] in ["x86", "x86_64"] or env.msvc:
-        # Embree needs those, it will automatically use SSE2NEON in ARM
-        env_third_party.Append(CPPDEFINES=["__SSE2__", "__SSE__"])
 
     env.modules_sources += third_party_obj
 
