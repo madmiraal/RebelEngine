@@ -68,7 +68,7 @@ if env["builtin_embree"]:
         CPPDEFINES=[
             "TASKING_INTERNAL",
             "EMBREE_LOWEST_ISA",
-            "EMBREE_MAX_ISA=SSE2",
+            "EMBREE_MAX_ISA=AVX2",
         ]
     )
 
