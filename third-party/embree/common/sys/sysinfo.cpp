@@ -295,9 +295,7 @@ namespace embree
     if (nIds >= 1) __cpuid (cpuid_leaf_1,0x00000001);
 #if _WIN32
 #if _MSC_VER && (_MSC_FULL_VER < 160040219)
-// Rebel changes start.
-#elif defined(_MSC_VER)
-// Rebel changes end.
+#else
     if (nIds >= 7) __cpuidex(cpuid_leaf_7,0x00000007,0);
 #endif
 #else
@@ -661,12 +659,6 @@ namespace embree
 
 #if defined(__EMSCRIPTEN__)
 #include <emscripten.h>
-
-// Rebel changes start.
-extern "C" {
-extern int rebel_js_os_hw_concurrency_get();
-}
-// Rebel changes end.
 #endif
 
 namespace embree
@@ -680,9 +672,21 @@ namespace embree
     nThreads = sysconf(_SC_NPROCESSORS_ONLN); // does not work in Linux LXC container
     assert(nThreads);
 #elif defined(__EMSCRIPTEN__)
-    // Rebel changes start.
-    nThreads = rebel_js_os_hw_concurrency_get();
-    // Rebel changes end.
+    // WebAssembly supports pthreads, but not pthread_getaffinity_np. Get the number of logical
+    // threads from the browser or Node.js using JavaScript.
+    nThreads = MAIN_THREAD_EM_ASM_INT({
+        const isBrowser = typeof window !== 'undefined';
+        const isNode = typeof process !== 'undefined' && process.versions != null &&
+            process.versions.node != null;
+        if (isBrowser) {
+            // Return 1 if the browser does not expose hardwareConcurrency.
+            return window.navigator.hardwareConcurrency || 1;
+        } else if (isNode) {
+            return require('os').cpus().length;
+        } else {
+            return 1;
+        }
+    });
 #else
     cpu_set_t set;
     if (pthread_getaffinity_np(pthread_self(), sizeof(set), &set) == 0)

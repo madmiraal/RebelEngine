@@ -5,80 +5,86 @@ Import("env_modules")
 
 env_raycast = env_modules.Clone()
 
-# Third-party source files
-
-third_party_obj = []
-
 if env["builtin_embree"]:
-    third_party_dir = "#third-party/embree/"
+    import glob
+    import os
+    import shutil
+    import subprocess
 
-    embree_src = [
-        "common/lexers/stringstream.cpp",
-        "common/lexers/tokenstream.cpp",
-        "common/math/constants.cpp",
-        "common/simd/sse.cpp",
-        "common/sys/alloc.cpp",
-        "common/sys/barrier.cpp",
-        "common/sys/condition.cpp",
-        "common/sys/estring.cpp",
-        "common/sys/filename.cpp",
-        "common/sys/library.cpp",
-        "common/sys/mutex.cpp",
-        "common/sys/regression.cpp",
-        "common/sys/sysinfo.cpp",
-        "common/sys/thread.cpp",
-        "common/tasking/taskschedulerinternal.cpp",
-        "kernels/builders/primrefgen.cpp",
-        "kernels/bvh/bvh.cpp",
-        "kernels/bvh/bvh4_factory.cpp",
-        "kernels/bvh/bvh8_factory.cpp",
-        "kernels/bvh/bvh_builder.cpp",
-        "kernels/bvh/bvh_builder_morton.cpp",
-        "kernels/bvh/bvh_builder_sah.cpp",
-        "kernels/bvh/bvh_builder_sah_mb.cpp",
-        "kernels/bvh/bvh_builder_sah_spatial.cpp",
-        "kernels/bvh/bvh_builder_twolevel.cpp",
-        "kernels/bvh/bvh_collider.cpp",
-        "kernels/bvh/bvh_intersector1.cpp",
-        "kernels/bvh/bvh_intersector1_bvh4.cpp",
-        "kernels/bvh/bvh_intersector_hybrid.cpp",
-        "kernels/bvh/bvh_intersector_hybrid4_bvh4.cpp",
-        "kernels/bvh/bvh_refit.cpp",
-        "kernels/bvh/bvh_rotate.cpp",
-        "kernels/bvh/bvh_statistics.cpp",
-        "kernels/common/acceln.cpp",
-        "kernels/common/accelset.cpp",
-        "kernels/common/alloc.cpp",
-        "kernels/common/device.cpp",
-        "kernels/common/geometry.cpp",
-        "kernels/common/rtcore.cpp",
-        "kernels/common/rtcore_builder.cpp",
-        "kernels/common/scene.cpp",
-        "kernels/common/scene_triangle_mesh.cpp",
-        "kernels/common/scene_verify.cpp",
-        "kernels/common/stat.cpp",
-        "kernels/common/state.cpp",
-        "kernels/geometry/primitive4.cpp",
+    def cmake_build(target, source, env):
+        if "LIBRARY_PATH" not in env:
+            print("Error: 'LIBRARY_PATH' is not defined in env")
+            return
+        library_path = env["LIBRARY_PATH"]
+        configure_command = ["cmake", "-B", "build"]
+        if "CMAKE_OPTIONS" in env:
+            configure_command = configure_command + env["CMAKE_OPTIONS"]
+        build_command = ["cmake", "--build", "build"]
+
+        subprocess.run(configure_command, cwd=library_path)
+        subprocess.run(build_command, cwd=library_path)
+
+        for entry in target:
+            library_file = os.path.join(
+                library_path, "build", os.path.basename(str(entry))
+            )
+            shutil.move(library_file, library_path)
+
+    def get_source_files(directory):
+        source = glob.glob(os.path.join(directory, "**/*.cpp"), recursive=True)
+        # Exclude files in build directory.
+        build = glob.glob(os.path.join(directory, "build/**/*.cpp"), recursive=True)
+        source = list(set(source) - set(build))
+        return source
+
+    # Build embree library.
+    embree_directory = "#third-party/embree/"
+    embree_path = str(Entry(embree_directory))
+    embree_build_path = os.path.join(embree_path, "build")
+    if GetOption("clean") and os.path.isdir(embree_build_path):
+        shutil.rmtree(embree_build_path)
+        print("Removed", embree_build_path)
+
+    # Order determines link order.
+    embree_libraries = [
+        "libembree4.a",
+        "libembree_avx2.a",
+        "libembree_avx.a",
+        "libembree_sse42.a",
+        "libsimd.a",
+        "libtasking.a",
+        "liblexers.a",
+        "libmath.a",
+        "libsys.a",
     ]
-
-    third_party_sources = [third_party_dir + file for file in embree_src]
-
-    env_raycast.Prepend(CPPPATH=[third_party_dir, third_party_dir + "include"])
-    env_raycast.Append(
-        CPPDEFINES=[
-            "EMBREE_TARGET_SSE2",
-            "EMBREE_LOWEST_ISA",
-            "TASKING_INTERNAL",
-            "NDEBUG",
+    embree_sources = get_source_files(embree_path)
+    embree_targets = []
+    for embree_library in embree_libraries:
+        embree_targets.append(os.path.join(embree_directory, embree_library))
+    embree_env = env_modules.Clone()
+    embree_env.disable_warnings()
+    embree_env.Append(LIBRARY_PATH=embree_path)
+    embree_env.Append(
+        CMAKE_OPTIONS=[
+            "-DEMBREE_STATIC_LIB=ON",
+            "-DEMBREE_TASKING_SYSTEM=INTERNAL",
+            "-DEMBREE_MAX_ISA=AVX2",
+            "-DEMBREE_TUTORIALS=OFF",
         ]
     )
+    if env["use_llvm"]:
+        embree_env.Append(
+            CMAKE_OPTIONS=[
+                "-DCMAKE_C_COMPILER=clang",
+                "-DCMAKE_CXX_COMPILER=clang++",
+            ]
+        )
+    embree_env.Command(embree_targets, embree_sources, cmake_build)
 
-    if not env.msvc:
-        if env["arch"] in ["x86", "x86_64"]:
-            env_raycast.Append(CPPFLAGS=["-msse2", "-mxsave"])
-
-        if env["platform"] == "windows":
-            env_raycast.Append(CPPFLAGS=["-mstackrealign"])
+    # Add embree library dependencies.
+    env_raycast.Append(CPPPATH=[os.path.join(embree_directory, "include")])
+    env.Append(LIBS=embree_libraries)
+    env.Append(LIBPATH=[embree_directory])
 
     if env["platform"] == "windows":
         if env.msvc:
@@ -86,23 +92,8 @@ if env["builtin_embree"]:
         else:
             env.Append(LIBS=["psapi"])
 
-    env_third_party = env_raycast.Clone()
-    env_third_party.disable_warnings()
-    env_third_party.add_source_files(third_party_obj, third_party_sources)
 
-    if not env["arch"] in ["x86", "x86_64"] or env.msvc:
-        # Embree needs those, it will automatically use SSE2NEON in ARM
-        env_third_party.Append(CPPDEFINES=["__SSE2__", "__SSE__"])
-
-    env.modules_sources += third_party_obj
-
-
-# Rebel source files
-
+# Build raycast module.
 module_obj = []
-
 env_raycast.add_source_files(module_obj, "*.cpp")
 env.modules_sources += module_obj
-
-# Needed to force rebuilding the module files when the third-party library is updated.
-env.Depends(module_obj, third_party_obj)

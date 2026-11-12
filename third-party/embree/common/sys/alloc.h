@@ -131,9 +131,7 @@ namespace embree
       typedef std::ptrdiff_t difference_type;
 
       __forceinline pointer allocate( size_type n ) {
-        // Rebel changes start.
-        abort();
-        // Rebel changes end.
+        throw std::runtime_error("no allocation supported");
       }
 
       __forceinline void deallocate( pointer p, size_type n ) {

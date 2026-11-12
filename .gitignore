@@ -60,6 +60,9 @@ obj/
 # Python generated
 __pycache__/
 
+# CMake generated
+build/
+
 # Temporary files
 *.tmp
 

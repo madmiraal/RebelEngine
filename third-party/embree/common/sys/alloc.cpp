@@ -20,9 +20,7 @@ namespace embree
     assert((align & (align-1)) == 0);
     void* ptr = _mm_malloc(size,align);
     if (size != 0 && ptr == nullptr)
-      // Rebel changes start.
-      abort();
-      // Rebel changes end.
+      throw std::bad_alloc();
     return ptr;
   }
 
@@ -52,9 +50,7 @@ namespace embree
       ptr = sycl::aligned_alloc_shared(align,size,*device,*context);
 
     if (size != 0 && ptr == nullptr)
-      // Rebel changes start.
-      abort();
-      // Rebel changes end.
+      throw std::bad_alloc();
 
     return ptr;
   }
@@ -87,9 +83,7 @@ namespace embree
     }
 
     if (size != 0 && ptr == nullptr)
-      // Rebel changes start.
-      abort();
-      // Rebel changes end.
+      throw std::bad_alloc();
 
     return ptr;
   }
@@ -205,9 +199,7 @@ namespace embree
     /* fall back to 4k pages */
     int flags = MEM_COMMIT | MEM_RESERVE;
     char* ptr = (char*) VirtualAlloc(nullptr,bytes,flags,PAGE_READWRITE);
-    // Rebel changes start.
-    if (ptr == nullptr) abort();
-    // Rebel changes end.
+    if (ptr == nullptr) throw std::bad_alloc();
     hugepages = false;
     return ptr;
   }
@@ -224,9 +216,7 @@ namespace embree
       return bytesOld;
 
     if (!VirtualFree((char*)ptr+bytesNew,bytesOld-bytesNew,MEM_DECOMMIT))
-      // Rebel changes start.
-      abort();
-      // Rebel changes end.
+      throw std::bad_alloc();
 
     return bytesNew;
   }
@@ -237,9 +227,7 @@ namespace embree
       return;
 
     if (!VirtualFree(ptr,0,MEM_RELEASE))
-      // Rebel changes start.
-      abort();
-      // Rebel changes end.
+      throw std::bad_alloc();
   }
 
   void os_advise(void *ptr, size_t bytes)
@@ -343,9 +331,7 @@ namespace embree
 
     /* fallback to 4k pages */
     void* ptr = (char*) mmap(0, bytes, PROT_READ | PROT_WRITE, MAP_PRIVATE | MAP_ANON, -1, 0);
-    // Rebel changes start.
-    if (ptr == MAP_FAILED) abort();
-    // Rebel changes end.
+    if (ptr == MAP_FAILED) throw std::bad_alloc();
     hugepages = false;
 
     /* advise huge page hint for THP */
@@ -362,9 +348,7 @@ namespace embree
       return bytesOld;
 
     if (munmap((char*)ptr+bytesNew,bytesOld-bytesNew) == -1)
-      // Rebel changes start.
-      abort();
-      // Rebel changes end.
+      throw std::bad_alloc();
 
     return bytesNew;
   }
@@ -378,9 +362,7 @@ namespace embree
     const size_t pageSize = hugepages ? PAGE_SIZE_2M : PAGE_SIZE_4K;
     bytes = (bytes+pageSize-1) & ~(pageSize-1);
     if (munmap(ptr,bytes) == -1)
-      // Rebel changes start.
-      abort();
-      // Rebel changes end.
+      throw std::bad_alloc();
   }
 
   /* hint for transparent huge pages (THP) */
