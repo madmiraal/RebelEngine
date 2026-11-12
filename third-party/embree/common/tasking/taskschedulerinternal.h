@@ -126,9 +126,7 @@ namespace embree
       {
         size_t ofs = bytes + ((align - stackPtr) & (align-1));
         if (stackPtr + ofs > CLOSURE_STACK_SIZE)
-          // Rebel changes start.
-          abort();
-          // Rebel changes end.
+          throw std::runtime_error("closure stack overflow");
         stackPtr += ofs;
         return &stack[stackPtr-bytes];
       }
@@ -137,9 +135,7 @@ namespace embree
       __forceinline void push_right(Thread& thread, const size_t size, const Closure& closure, TaskGroupContext* context)
       {
         if (right >= TASK_STACK_SIZE)
-          // Rebel changes start.
-          abort();
-          // Rebel changes end.
+          throw std::runtime_error("task stack overflow");
 
 	/* allocate new task on right side of stack */
         size_t oldStackPtr = stackPtr;
@@ -293,9 +289,7 @@ namespace embree
 
       /* re-throw proper exception */
       if (except != nullptr) {
-        // Rebel changes start.
-        abort();
-        // Rebel changes end.
+        std::rethrow_exception(except);
       }
     }
 

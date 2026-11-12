@@ -23,9 +23,7 @@ namespace embree
         },&context);
       TaskScheduler::wait();
       if (context.cancellingException != nullptr) {
-        // Rebel changes start.
-        abort();
-        // Rebel changes end.
+        std::rethrow_exception(context.cancellingException);
       }
     }
 #elif defined(TASKING_TBB)
@@ -35,17 +33,13 @@ namespace embree
         func(i);
       },context);
     if (context.is_group_execution_cancelled())
-      // Rebel changes start.
-      abort();
-      // Rebel changes end.
+      throw std::runtime_error("task cancelled");
   #else
     tbb::parallel_for(Index(0),N,Index(1),[&](Index i) {
         func(i);
       });
     if (tbb::task::self().is_cancelled())
-      // Rebel changes start.
-      abort();
-      // Rebel changes end.
+      throw std::runtime_error("task cancelled");
   #endif
 
 #elif defined(TASKING_PPL)
@@ -67,9 +61,7 @@ namespace embree
     TaskScheduler::spawn(first,last,minStepSize,func,&context);
     TaskScheduler::wait();
     if (context.cancellingException != nullptr) {
-      // Rebel changes start.
-      abort();
-      // Rebel changes end.
+      std::rethrow_exception(context.cancellingException);
     }
 
 #elif defined(TASKING_TBB)
@@ -79,17 +71,13 @@ namespace embree
         func(range<Index>(r.begin(),r.end()));
       },context);
     if (context.is_group_execution_cancelled())
-      // Rebel changes start.
-      abort();
-      // Rebel changes end.
+      throw std::runtime_error("task cancelled");
   #else
     tbb::parallel_for(tbb::blocked_range<Index>(first,last,minStepSize),[&](const tbb::blocked_range<Index>& r) {
         func(range<Index>(r.begin(),r.end()));
       });
     if (tbb::task::self().is_cancelled())
-      // Rebel changes start.
-      abort();
-      // Rebel changes end.
+      throw std::runtime_error("task cancelled");
   #endif
 
 #elif defined(TASKING_PPL)
@@ -121,17 +109,13 @@ namespace embree
           func(i);
         },tbb::simple_partitioner(),context);
       if (context.is_group_execution_cancelled())
-        // Rebel changes start.
-        abort();
-        // Rebel changes end.
+        throw std::runtime_error("task cancelled");
     #else
       tbb::parallel_for(Index(0),N,Index(1),[&](Index i) {
           func(i);
         },tbb::simple_partitioner());
       if (tbb::task::self().is_cancelled())
-        // Rebel changes start.
-        abort();
-        // Rebel changes end.
+        throw std::runtime_error("task cancelled");
     #endif
   }
 
@@ -146,17 +130,13 @@ namespace embree
           func(i);
         },ap,context);
       if (context.is_group_execution_cancelled())
-        // Rebel changes start.
-        abort();
-        // Rebel changes end.
+        throw std::runtime_error("task cancelled");
     #else
       tbb::parallel_for(Index(0),N,Index(1),[&](Index i) {
           func(i);
         },ap);
       if (tbb::task::self().is_cancelled())
-        // Rebel changes start.
-        abort();
-        // Rebel changes end.
+        throw std::runtime_error("task cancelled");
     #endif
   }
 

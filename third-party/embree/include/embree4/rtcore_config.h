@@ -3,42 +3,41 @@
 
 #pragma once
 
+#if !defined(EMBREE_SYCL_SUPPORT)
+/* #undef EMBREE_SYCL_SUPPORT */
+#endif
+
 #define RTC_VERSION_MAJOR 4
 #define RTC_VERSION_MINOR 4
 #define RTC_VERSION_PATCH 1
 #define RTC_VERSION 40401
 #define RTC_VERSION_STRING "4.4.1"
 
-// Rebel changes start.
 #define RTC_MAX_INSTANCE_LEVEL_COUNT 1
-// Rebel changes end.
 
+#define EMBREE_GEOMETRY_INSTANCE_ARRAY
 #if defined(EMBREE_GEOMETRY_INSTANCE_ARRAY)
   #define RTC_GEOMETRY_INSTANCE_ARRAY
 #endif
 
-// Rebel changes start.
-#define EMBREE_MIN_WIDTH 0
-// Rebel changes end.
+#define EMBREE_SYCL_GEOMETRY_CALLBACK 0
 
+#define EMBREE_MIN_WIDTH 0
 #define RTC_MIN_WIDTH EMBREE_MIN_WIDTH
 
 #if !defined(EMBREE_STATIC_LIB)
-  // Rebel changes start.
-  #define EMBREE_STATIC_LIB
-  // Rebel changes end.
+#define EMBREE_STATIC_LIB
 #endif
+/* #undef EMBREE_API_NAMESPACE */
 
 #if defined(EMBREE_API_NAMESPACE)
-// Rebel changes start.
-#  define RTC_NAMESPACE
-#  define RTC_NAMESPACE_BEGIN namespace {
+#  define RTC_NAMESPACE 
+#  define RTC_NAMESPACE_BEGIN namespace  {
 #  define RTC_NAMESPACE_END }
-#  define RTC_NAMESPACE_USE using namespace;
+#  define RTC_NAMESPACE_USE using namespace ;
 #  define RTC_API_EXTERN_C
 #  define RTC_API_EXTERN_CPP
 #  undef EMBREE_API_NAMESPACE
-// Rebel changes end.
 #else
 #  define RTC_NAMESPACE
 #  define RTC_NAMESPACE_BEGIN

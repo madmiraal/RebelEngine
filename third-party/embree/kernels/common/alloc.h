@@ -190,9 +190,7 @@ namespace embree
       , primrefarray(device,0)
     {
       if (osAllocation && useUSM)
-        // Rebel changes start.
-        abort();
-        // Rebel changes end.
+        throw std::runtime_error("USM allocation cannot be combined with OS allocation.");
 
       for (size_t i=0; i<MAX_THREAD_USED_BLOCK_SLOTS; i++)
       {
@@ -505,9 +503,7 @@ namespace embree
         if (myUsedBlocks) {
           void* ptr = myUsedBlocks->malloc(device,bytes,align,partial);
           if (ptr == nullptr && !blockAllocation)
-            // Rebel changes start.
-            abort();
-            // Rebel changes end.
+            throw std::bad_alloc();
           if (ptr) return ptr;
         }
 

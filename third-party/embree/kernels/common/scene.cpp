@@ -962,10 +962,16 @@ namespace embree
     }
 
     /* initiate build */
-    // Rebel changes start.
-    TaskScheduler::TaskGroupContext context;
-    scheduler->spawn_root([&]() { commit_task(); Lock<MutexSys> lock(taskGroup->schedulerMutex); taskGroup->scheduler = nullptr; }, &context, 1, !join);
-    // Rebel changes end.
+    try {
+      TaskScheduler::TaskGroupContext context;
+      scheduler->spawn_root([&]() { commit_task(); Lock<MutexSys> lock(taskGroup->schedulerMutex); taskGroup->scheduler = nullptr; }, &context, 1, !join);
+    }
+    catch (...) {
+      accels_clear();
+      Lock<MutexSys> lock(taskGroup->schedulerMutex);
+      taskGroup->scheduler = nullptr;
+      throw;
+    }
   }
 
 #endif

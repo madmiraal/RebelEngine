@@ -46,14 +46,15 @@ Files copied from the library source:
 - License: Apache 2.0
 
 Files copied from the library source:
-- All cpp files listed in `modules/raycast/update_embree.py`
-- All header files in the directories listed in `modules/raycast/update_embree.py`
-The `modules/raycast/update_embree.py` script is used to pull the
-relevant files from the latest Embree release and apply some automatic changes.
+- All files in `common`, `include`, `kernels`, `scripts` and `tests`.
+- CMakeLists.txt
+- LICENSE.txt
+- README.md
 
-Note: Includes changes required to remove exceptions and fix minor build errors.
-They are marked with `// Rebel changes start.` and `// Rebel changes end.`
-Patch files for the changes are included in the patches/ folder.
+Note: This library is built with CMake using the embree library's CMake files.
+CMake is needed to generate the code for advanced vector arithmetic extensions.
+This allows Rebel to use the advanced vector arithmetic extensions too.
+The use of AVX2 is enabled by default with GCC 15.
 
 
 ## enet

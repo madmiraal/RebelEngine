@@ -46,10 +46,13 @@ namespace embree
     {
       Task* prevTask = thread.task;
       thread.task = this;
-      // Rebel changes start.
-      if (context->cancellingException == nullptr)
-        closure->execute();
-      // Rebel changes end.
+      try {
+        if (context->cancellingException == nullptr)
+          closure->execute();
+      } catch (...) {
+        if (context->cancellingException == nullptr)
+          context->cancellingException = std::current_exception();
+      }
       thread.task = prevTask;
       add_dependencies(-1);
     }

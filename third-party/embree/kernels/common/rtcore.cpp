@@ -341,9 +341,7 @@ RTC_NAMESPACE_BEGIN;
     if (quality != RTC_BUILD_QUALITY_LOW &&
         quality != RTC_BUILD_QUALITY_MEDIUM &&
         quality != RTC_BUILD_QUALITY_HIGH)
-      // Rebel changes start.
-      abort();
-      // Rebel changes end.
+      throw std::runtime_error("invalid build quality");
     scene->setBuildQuality(quality);
     RTC_CATCH_END2(scene);
   }
@@ -1794,9 +1792,7 @@ RTC_API void rtcSetGeometryTransform(RTCGeometry hgeometry, unsigned int timeSte
         quality != RTC_BUILD_QUALITY_MEDIUM &&
         quality != RTC_BUILD_QUALITY_HIGH &&
         quality != RTC_BUILD_QUALITY_REFIT)
-      // Rebel changes start.
-      abort();
-      // Rebel changes end.
+      throw std::runtime_error("invalid build quality");
     geometry->setBuildQuality(quality);
     RTC_CATCH_END2(geometry);
   }
