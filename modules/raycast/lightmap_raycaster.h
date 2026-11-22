@@ -4,6 +4,9 @@
 //
 // SPDX-License-Identifier: MIT
 
+#ifndef LIGHTMAP_RAYCASTER_H
+#define LIGHTMAP_RAYCASTER_H
+
 #include "core/object.h"
 #include "scene/3d/lightmapper.h"
 #include "scene/resources/mesh.h"
@@ -13,10 +16,36 @@
 class LightmapRaycasterEmbree : public LightmapRaycaster {
     GDCLASS(LightmapRaycasterEmbree, LightmapRaycaster);
 
+public:
+    LightmapRaycasterEmbree();
+    ~LightmapRaycasterEmbree() override;
+
+    void add_mesh(
+        const Vector<Vector3>& vertices,
+        const Vector<Vector3>& normals,
+        const Vector<Vector2>& uv2s,
+        unsigned int id
+    ) override;
+
+    bool intersect(Ray& ray) override;
+    void intersect(Vector<Ray>& rays) override;
+
+    void set_mesh_alpha_texture(
+        Ref<Image> alpha_image,
+        unsigned int id
+    ) override;
+    void set_mesh_filter(const Set<int>& mesh_ids) override;
+    void clear_mesh_filter() override;
+
+    void commit() override;
+
+    static LightmapRaycaster* create_embree_raycaster();
+    static void make_default_raycaster();
+
 private:
-    struct AlphaTextureData {
+    struct AlphaTexture {
         Vector<uint8_t> data;
-        Vector2i size;
+        Size2i size;
 
         uint8_t sample(float u, float v) const;
     };
@@ -24,36 +53,10 @@ private:
     RTCDevice embree_device;
     RTCScene embree_scene;
 
-    static void filter_function(
-        const struct RTCFilterFunctionNArguments* p_args
-    );
+    static void filter_function(const RTCFilterFunctionNArguments* arguments);
 
-    Map<unsigned int, AlphaTextureData> alpha_textures;
+    Map<unsigned int, AlphaTexture> alpha_textures;
     Set<int> filter_meshes;
-
-public:
-    bool intersect(Ray& p_ray) override;
-
-    void intersect(Vector<Ray>& r_rays) override;
-
-    void add_mesh(
-        const Vector<Vector3>& p_vertices,
-        const Vector<Vector3>& p_normals,
-        const Vector<Vector2>& p_uv2s,
-        unsigned int p_id
-    ) override;
-    void set_mesh_alpha_texture(
-        Ref<Image> p_alpha_texture,
-        unsigned int p_id
-    ) override;
-    void commit() override;
-
-    void set_mesh_filter(const Set<int>& p_mesh_ids) override;
-    void clear_mesh_filter() override;
-
-    static LightmapRaycaster* create_embree_raycaster();
-    static void make_default_raycaster();
-
-    LightmapRaycasterEmbree();
-    ~LightmapRaycasterEmbree() override;
 };
+
+#endif // LIGHTMAP_RAYCASTER_H

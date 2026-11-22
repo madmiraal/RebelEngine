@@ -10,213 +10,19 @@
 #include <pmmintrin.h>
 #endif
 
-LightmapRaycaster* LightmapRaycasterEmbree::create_embree_raycaster() {
-    return memnew(LightmapRaycasterEmbree);
+static void embree_error_handler(void*, RTCError, const char* error_string) {
+    print_error("Embree error: " + String(error_string));
 }
 
-void LightmapRaycasterEmbree::make_default_raycaster() {
-    create_function = create_embree_raycaster;
-}
-
-void LightmapRaycasterEmbree::filter_function(
-    const struct RTCFilterFunctionNArguments* p_args
+static float blerp(
+    const float c00,
+    const float c10,
+    const float c01,
+    const float c11,
+    const float tx,
+    const float ty
 ) {
-    RTCHit* hit = (RTCHit*)p_args->hit;
-
-    unsigned int geomID = hit->geomID;
-    float u             = hit->u;
-    float v             = hit->v;
-
-    LightmapRaycasterEmbree* scene =
-        (LightmapRaycasterEmbree*)p_args->geometryUserPtr;
-    RTCGeometry geom = rtcGetGeometry(scene->embree_scene, geomID);
-
-    rtcInterpolate0(
-        geom,
-        hit->primID,
-        hit->u,
-        hit->v,
-        RTC_BUFFER_TYPE_VERTEX_ATTRIBUTE,
-        0,
-        &hit->u,
-        2
-    );
-
-    if (scene->alpha_textures.has(geomID)) {
-        const AlphaTextureData& alpha_texture = scene->alpha_textures[geomID];
-
-        if (alpha_texture.sample(hit->u, hit->v) < 128) {
-            p_args->valid[0] = 0;
-            return;
-        }
-    }
-
-    rtcInterpolate0(
-        geom,
-        hit->primID,
-        u,
-        v,
-        RTC_BUFFER_TYPE_VERTEX_ATTRIBUTE,
-        1,
-        &hit->Ng_x,
-        3
-    );
-}
-
-bool LightmapRaycasterEmbree::intersect(Ray& r_ray) {
-    rtcIntersect1(embree_scene, (RTCRayHit*)&r_ray);
-    return r_ray.geomID != RTC_INVALID_GEOMETRY_ID;
-}
-
-void LightmapRaycasterEmbree::intersect(Vector<Ray>& r_rays) {
-    Ray* rays = r_rays.ptrw();
-    for (int i = 0; i < r_rays.size(); ++i) {
-        intersect(rays[i]);
-    }
-}
-
-void LightmapRaycasterEmbree::set_mesh_alpha_texture(
-    Ref<Image> p_alpha_texture,
-    unsigned int p_id
-) {
-    if (p_alpha_texture.is_valid()
-        && p_alpha_texture->get_size() != Vector2i()) {
-        AlphaTextureData tex;
-        tex.size = p_alpha_texture->get_size();
-        tex.data.resize(tex.size.x * tex.size.y);
-
-        {
-            PoolVector<uint8_t>::Read r = p_alpha_texture->get_data().read();
-            uint8_t* ptrw               = tex.data.ptrw();
-            for (int i = 0; i < tex.size.x * tex.size.y; ++i) {
-                ptrw[i] = r[i];
-            }
-        }
-
-        alpha_textures.insert(p_id, tex);
-    }
-}
-
-float blerp(float c00, float c10, float c01, float c11, float tx, float ty) {
     return Math::lerp(Math::lerp(c00, c10, tx), Math::lerp(c01, c11, tx), ty);
-}
-
-uint8_t LightmapRaycasterEmbree::AlphaTextureData::sample(
-    float u,
-    float v
-) const {
-    float x = u * size.x;
-    float y = v * size.y;
-    int xi  = (int)x;
-    int yi  = (int)y;
-
-    uint8_t texels[4];
-
-    for (int i = 0; i < 4; ++i) {
-        int sample_x = CLAMP(xi + i % 2, 0, size.x - 1);
-        int sample_y = CLAMP(yi + i / 2, 0, size.y - 1);
-        texels[i]    = data[sample_y * size.x + sample_x];
-    }
-
-    return Math::round(
-        blerp(texels[0], texels[1], texels[2], texels[3], x - xi, y - yi)
-    );
-}
-
-void LightmapRaycasterEmbree::add_mesh(
-    const Vector<Vector3>& p_vertices,
-    const Vector<Vector3>& p_normals,
-    const Vector<Vector2>& p_uv2s,
-    unsigned int p_id
-) {
-    RTCGeometry embree_mesh =
-        rtcNewGeometry(embree_device, RTC_GEOMETRY_TYPE_TRIANGLE);
-
-    rtcSetGeometryVertexAttributeCount(embree_mesh, 2);
-
-    int vertex_count = p_vertices.size();
-
-    ERR_FAIL_COND(vertex_count % 3 != 0);
-    ERR_FAIL_COND(vertex_count != p_uv2s.size());
-    ERR_FAIL_COND(!p_normals.empty() && vertex_count != p_normals.size());
-
-    Vector3* embree_vertices = (Vector3*)rtcSetNewGeometryBuffer(
-        embree_mesh,
-        RTC_BUFFER_TYPE_VERTEX,
-        0,
-        RTC_FORMAT_FLOAT3,
-        sizeof(Vector3),
-        vertex_count
-    );
-    memcpy(embree_vertices, p_vertices.ptr(), sizeof(Vector3) * vertex_count);
-
-    Vector2* embree_light_uvs = (Vector2*)rtcSetNewGeometryBuffer(
-        embree_mesh,
-        RTC_BUFFER_TYPE_VERTEX_ATTRIBUTE,
-        0,
-        RTC_FORMAT_FLOAT2,
-        sizeof(Vector2),
-        vertex_count
-    );
-    memcpy(embree_light_uvs, p_uv2s.ptr(), sizeof(Vector2) * vertex_count);
-
-    uint32_t* embree_triangles = (uint32_t*)rtcSetNewGeometryBuffer(
-        embree_mesh,
-        RTC_BUFFER_TYPE_INDEX,
-        0,
-        RTC_FORMAT_UINT3,
-        sizeof(uint32_t) * 3,
-        vertex_count / 3
-    );
-    for (int i = 0; i < vertex_count; i++) {
-        embree_triangles[i] = i;
-    }
-
-    if (!p_normals.empty()) {
-        Vector3* embree_normals = (Vector3*)rtcSetNewGeometryBuffer(
-            embree_mesh,
-            RTC_BUFFER_TYPE_VERTEX_ATTRIBUTE,
-            1,
-            RTC_FORMAT_FLOAT3,
-            sizeof(Vector3),
-            vertex_count
-        );
-        memcpy(embree_normals, p_normals.ptr(), sizeof(Vector3) * vertex_count);
-    }
-
-    rtcCommitGeometry(embree_mesh);
-    rtcSetGeometryIntersectFilterFunction(embree_mesh, filter_function);
-    rtcSetGeometryUserData(embree_mesh, this);
-    rtcAttachGeometryByID(embree_scene, embree_mesh, p_id);
-    rtcReleaseGeometry(embree_mesh);
-}
-
-void LightmapRaycasterEmbree::commit() {
-    rtcCommitScene(embree_scene);
-}
-
-void LightmapRaycasterEmbree::set_mesh_filter(const Set<int>& p_mesh_ids) {
-    for (Set<int>::Element* E = p_mesh_ids.front(); E; E = E->next()) {
-        rtcDisableGeometry(rtcGetGeometry(embree_scene, E->get()));
-    }
-    rtcCommitScene(embree_scene);
-    filter_meshes = p_mesh_ids;
-}
-
-void LightmapRaycasterEmbree::clear_mesh_filter() {
-    for (Set<int>::Element* E = filter_meshes.front(); E; E = E->next()) {
-        rtcEnableGeometry(rtcGetGeometry(embree_scene, E->get()));
-    }
-    rtcCommitScene(embree_scene);
-    filter_meshes.clear();
-}
-
-void embree_error_handler(
-    void* p_user_data,
-    RTCError p_code,
-    const char* p_str
-) {
-    print_error("Embree error: " + String(p_str));
 }
 
 LightmapRaycasterEmbree::LightmapRaycasterEmbree() {
@@ -243,4 +49,200 @@ LightmapRaycasterEmbree::~LightmapRaycasterEmbree() {
     if (embree_device != nullptr) {
         rtcReleaseDevice(embree_device);
     }
+}
+
+void LightmapRaycasterEmbree::add_mesh(
+    const Vector<Vector3>& vertices,
+    const Vector<Vector3>& normals,
+    const Vector<Vector2>& uv2s,
+    const unsigned int id
+) {
+    RTCGeometry embree_mesh =
+        rtcNewGeometry(embree_device, RTC_GEOMETRY_TYPE_TRIANGLE);
+    rtcSetGeometryVertexAttributeCount(embree_mesh, 2);
+
+    const int vertex_count = vertices.size();
+    ERR_FAIL_COND(vertex_count % 3 != 0);
+    ERR_FAIL_COND(vertex_count != uv2s.size());
+    ERR_FAIL_COND(!normals.empty() && vertex_count != normals.size());
+
+    auto* embree_vertices = static_cast<Vector3*>(rtcSetNewGeometryBuffer(
+        embree_mesh,
+        RTC_BUFFER_TYPE_VERTEX,
+        0,
+        RTC_FORMAT_FLOAT3,
+        sizeof(Vector3),
+        vertex_count
+    ));
+    memcpy(embree_vertices, vertices.ptr(), sizeof(Vector3) * vertex_count);
+
+    auto* embree_light_uvs = static_cast<Vector2*>(rtcSetNewGeometryBuffer(
+        embree_mesh,
+        RTC_BUFFER_TYPE_VERTEX_ATTRIBUTE,
+        0,
+        RTC_FORMAT_FLOAT2,
+        sizeof(Vector2),
+        vertex_count
+    ));
+    memcpy(embree_light_uvs, uv2s.ptr(), sizeof(Vector2) * vertex_count);
+
+    auto* embree_triangles = static_cast<uint32_t*>(rtcSetNewGeometryBuffer(
+        embree_mesh,
+        RTC_BUFFER_TYPE_INDEX,
+        0,
+        RTC_FORMAT_UINT3,
+        sizeof(uint32_t) * 3,
+        vertex_count / 3
+    ));
+    for (int i = 0; i < vertex_count; i++) {
+        embree_triangles[i] = i;
+    }
+
+    if (!normals.empty()) {
+        auto* embree_normals = static_cast<Vector3*>(rtcSetNewGeometryBuffer(
+            embree_mesh,
+            RTC_BUFFER_TYPE_VERTEX_ATTRIBUTE,
+            1,
+            RTC_FORMAT_FLOAT3,
+            sizeof(Vector3),
+            vertex_count
+        ));
+        memcpy(embree_normals, normals.ptr(), sizeof(Vector3) * vertex_count);
+    }
+
+    rtcCommitGeometry(embree_mesh);
+    rtcSetGeometryIntersectFilterFunction(embree_mesh, filter_function);
+    rtcSetGeometryUserData(embree_mesh, this);
+    rtcAttachGeometryByID(embree_scene, embree_mesh, id);
+    rtcReleaseGeometry(embree_mesh);
+}
+
+bool LightmapRaycasterEmbree::intersect(Ray& ray) {
+    rtcIntersect1(embree_scene, reinterpret_cast<RTCRayHit*>(&ray));
+    return ray.geomID != RTC_INVALID_GEOMETRY_ID;
+}
+
+void LightmapRaycasterEmbree::intersect(Vector<Ray>& rays) {
+    Ray* rays_ptrw = rays.ptrw();
+    for (int i = 0; i < rays.size(); ++i) {
+        intersect(rays_ptrw[i]);
+    }
+}
+
+void LightmapRaycasterEmbree::set_mesh_alpha_texture(
+    Ref<Image> alpha_image,
+    const unsigned int id
+) {
+    if (alpha_image.is_valid() && alpha_image->get_size() != Vector2i()) {
+        AlphaTexture alpha_texture;
+        alpha_texture.size = alpha_image->get_size();
+        alpha_texture.data.resize(alpha_image->get_data().size());
+
+        const PoolVector<uint8_t>::Read alpha_image_data =
+            alpha_image->get_data().read();
+        uint8_t* alpha_texture_data = alpha_texture.data.ptrw();
+        for (int i = 0; i < alpha_texture.data.size(); i++) {
+            alpha_texture_data[i] = alpha_image_data[i];
+        }
+
+        alpha_textures.insert(id, alpha_texture);
+    }
+}
+
+void LightmapRaycasterEmbree::set_mesh_filter(const Set<int>& mesh_ids) {
+    for (Set<int>::Element* E = mesh_ids.front(); E; E = E->next()) {
+        rtcDisableGeometry(rtcGetGeometry(embree_scene, E->get()));
+    }
+    commit();
+    filter_meshes = mesh_ids;
+}
+
+void LightmapRaycasterEmbree::clear_mesh_filter() {
+    for (Set<int>::Element* E = filter_meshes.front(); E; E = E->next()) {
+        rtcEnableGeometry(rtcGetGeometry(embree_scene, E->get()));
+    }
+    commit();
+    filter_meshes.clear();
+}
+
+void LightmapRaycasterEmbree::commit() {
+    rtcCommitScene(embree_scene);
+}
+
+LightmapRaycaster* LightmapRaycasterEmbree::create_embree_raycaster() {
+    return memnew(LightmapRaycasterEmbree);
+}
+
+void LightmapRaycasterEmbree::make_default_raycaster() {
+    create_function = create_embree_raycaster;
+}
+
+void LightmapRaycasterEmbree::filter_function(
+    const RTCFilterFunctionNArguments* arguments
+) {
+    const auto rtc_hit             = reinterpret_cast<RTCHit*>(arguments->hit);
+    const unsigned int geometry_id = rtc_hit->geomID;
+
+    auto* ray_caster =
+        static_cast<LightmapRaycasterEmbree*>(arguments->geometryUserPtr);
+    RTCGeometry geometry =
+        rtcGetGeometry(ray_caster->embree_scene, geometry_id);
+
+    rtcInterpolate0(
+        geometry,
+        rtc_hit->primID,
+        rtc_hit->u,
+        rtc_hit->v,
+        RTC_BUFFER_TYPE_VERTEX_ATTRIBUTE,
+        0,
+        &rtc_hit->u,
+        2
+    );
+
+    if (ray_caster->alpha_textures.has(geometry_id)) {
+        const AlphaTexture& alpha_texture =
+            ray_caster->alpha_textures[geometry_id];
+        if (alpha_texture.sample(rtc_hit->u, rtc_hit->v) < 128) {
+            arguments->valid[0] = 0;
+            return;
+        }
+    }
+
+    rtcInterpolate0(
+        geometry,
+        rtc_hit->primID,
+        rtc_hit->u,
+        rtc_hit->v,
+        RTC_BUFFER_TYPE_VERTEX_ATTRIBUTE,
+        1,
+        &rtc_hit->Ng_x,
+        3
+    );
+}
+
+uint8_t LightmapRaycasterEmbree::AlphaTexture::sample(
+    const float u,
+    const float v
+) const {
+    const float x = u * static_cast<float>(size.x);
+    const float y = v * static_cast<float>(size.y);
+    const int xi  = static_cast<int>(x);
+    const int yi  = static_cast<int>(y);
+
+    uint8_t texels[4];
+
+    for (int i = 0; i < 4; ++i) {
+        const int sample_x = CLAMP(xi + i % 2, 0, size.x - 1);
+        const int sample_y = CLAMP(yi + i / 2, 0, size.y - 1);
+        texels[i]          = data[sample_y * size.x + sample_x];
+    }
+
+    return static_cast<uint8_t>(Math::round(blerp(
+        texels[0],
+        texels[1],
+        texels[2],
+        texels[3],
+        x - static_cast<float>(xi),
+        y - static_cast<float>(yi)
+    )));
 }
